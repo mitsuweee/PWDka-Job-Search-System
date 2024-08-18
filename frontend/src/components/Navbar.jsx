@@ -61,13 +61,14 @@ const Navbar = () => {
             <button onClick={() => handleNavigation('/')} className="nav-link mx-2 font-roboto text-[#007bff] text-lg font-bold py-2 px-4 rounded-lg bg-[#e3edf7] shadow-lg transition duration-300 hover:bg-[#007bff] hover:text-white">Home</button>
             <button onClick={() => handleNavigation('/about')} className="nav-link mx-2 font-roboto text-[#007bff] text-lg font-bold py-2 px-4 rounded-lg bg-[#e3edf7] shadow-lg transition duration-300 hover:bg-[#007bff] hover:text-white">About</button>
             <button onClick={() => handleNavigation('/contactpage')} className="nav-link mx-2 font-roboto text-[#007bff] text-lg font-bold py-2 px-4 rounded-lg bg-[#e3edf7] shadow-lg transition duration-300 hover:bg-[#007bff] hover:text-white">Contact</button>
-            <button 
-              onClick={isRegistered ? () => handleNavigation('/profile') : null} 
-              disabled={!isRegistered} 
-              className={`nav-link mx-2 font-roboto text-[#007bff] text-lg font-bold py-2 px-4 rounded-lg ${isRegistered ? 'bg-[#e3edf7] hover:bg-[#007bff] hover:text-white' : 'bg-gray-400 cursor-not-allowed'}`}
-            >
-              <span className="material-symbols-outlined">person</span>
-            </button>
+            {isRegistered && (
+              <button 
+                onClick={() => handleNavigation('/profile')}
+                className="nav-link mx-2 font-roboto text-[#007bff] text-lg font-bold py-2 px-4 rounded-lg bg-[#e3edf7] shadow-lg transition duration-300 hover:bg-[#007bff] hover:text-white"
+              >
+                <span className="material-symbols-outlined">person</span>
+              </button>
+            )}
           </div>
         </div>
       </nav>
