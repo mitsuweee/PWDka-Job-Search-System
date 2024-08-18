@@ -23,7 +23,7 @@ const ContactUs = () => (
 
       <div className="mt-4 md:mt-8">
         <a
-          href="#"
+          href="https://mail.google.com/mail/?view=cm&fs=1&to=pwdkateam@gmail.com"
           className="inline-block rounded bg-custom-blue px-12 py-3 text-sm font-medium text-white transition hover:bg-blue-300 focus:outline-none focus:ring focus:ring-yellow-400"
         >
           pwdkateam@gmail.com
