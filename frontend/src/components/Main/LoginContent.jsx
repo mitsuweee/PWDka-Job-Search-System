@@ -12,14 +12,14 @@ const LoginComp = () => {
             <p className="text-[#007bff] text-left font-extrabold leading-snug tracking-tight mb-4 md:text-4xl">Login.</p>
             <div>
               <div className="grid grid-cols-2 gap-4">
-                <div className="rounded-md w-full pt-3 pr-0 pb-3 pl-0 inline-flex items-center justify-center bg-[#007bff] text-white cursor-pointer hover:bg-gray-600">
+                {/* <div className="rounded-md w-full pt-3 pr-0 pb-3 pl-0 inline-flex items-center justify-center bg-[#007bff] text-white cursor-pointer hover:bg-gray-600">
                   <p>
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" className="mr-1">
                       <path d="M20.283,10.356h-8.327v3.451h4.792c-0.446,2.193-2.313,3.453-4.792,3.453c-2.923,0-5.279-2.356-5.279-5.28 c0-2.923,2.356-5.279,5.279-5.279c1.259,0,2.397,0.447,3.29,1.178l2.6-2.599c-1.584-1.381-3.615-2.233-5.89-2.233 c-4.954,0-8.934,3.979-8.934,8.934c0,4.955,3.979,8.934,8.934,8.934c4.467,0,8.529-3.249,8.529-8.934 C20.485,11.453,20.404,10.884,20.283,10.356z"/>
                     </svg>
                   </p>
                   <p className="text-xl">Google</p>
-                </div>
+                </div> */}
 
                 <div className="rounded-md w-full inline-flex items-center justify-center bg-white border-2 text-gray-800 pt-3 pr-0 pb-3 pl-0 cursor-pointer border-gray-300">
                   <p>
