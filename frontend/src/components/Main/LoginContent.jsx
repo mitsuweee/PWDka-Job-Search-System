@@ -6,7 +6,7 @@ const LoginComp = () => {
       <div className="bg-custom-bg rounded-xl sm:p-10 flex flex-col items-center">
         <div className="grid lg:gap-x-10 lg:grid-cols-12 lg:gap-y-8 grid-cols-1">
           <div className="hidden lg:col-span-5 lg:block">
-            <img src="src/imgs/smiley-woman-working-laptop.jpg" className="rounded-2xl w-full h-full object-cover" alt="Smiley woman working on laptop"/>
+            <img src="/imgs/smiley-woman-working-laptop.jpg" className="rounded-2xl w-full h-full object-cover" alt="Smiley woman working on laptop"/>
           </div>
           <div className="pt-8 pr-8 pb-8 pl-8 lg:col-span-7">
             <p className="text-[#007bff] text-left font-extrabold leading-snug tracking-tight mb-4 md:text-4xl">Login.</p>
