@@ -25,7 +25,7 @@ const Footer = () => {
           </a>
           <ul className="flex flex-wrap items-center mb-6 text-sm font-bold text-[#0083FF] sm:mb-0">
             <li><a
-                href="#"
+                href="/about"
                 onClick={handleAbout}
                 className="hover:underline me-4 md:me-6"
               >
@@ -33,7 +33,7 @@ const Footer = () => {
               </a></li>
             <li>
               <a
-                href="#"
+                href="/privacypolicy"
                 onClick={handlePrivacyPolicy}
                 className="hover:underline me-4 md:me-6"
               >
@@ -41,7 +41,7 @@ const Footer = () => {
               </a>
             </li>
             <li><a
-                href="#"
+                href="/contact"
                 onClick={handleContact}
                 className="hover:underline me-4 md:me-6"
               >
