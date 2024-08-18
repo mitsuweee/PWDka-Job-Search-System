@@ -157,12 +157,9 @@ const AdminDashboard = () => {
   const itemsPerPage = 6; // Set the number of items per page to 6
   const [selectedJob, setSelectedJob] = useState(null);
 
-  const handleFilterChange = (selectedFilter) => {
-    setFilter(selectedFilter);
-  };
-
-  const handleSearchChange = (query) => {
-    setSearchQuery(query);
+  const handleSectionChange = (section) => {
+    setCurrentSection(section);
+    setIsSidebarOpen(false); // Close the sidebar after clicking a button
   };
 
   const sortData = (data) => {
@@ -183,17 +180,14 @@ const AdminDashboard = () => {
     return data.slice(startIndex, startIndex + itemsPerPage);
   };
 
-  const renderHome = () => {
-    return (
-      <div className="p-6 bg-blue-500 rounded-xl shadow-xl text-center">
-        <h2 className="text-3xl font-bold mb-4 text-white">Hello Admin</h2>
-        <p className="text-xl text-white">
-          You have access to various administrative functionalities such as verifying users and companies, viewing all users and companies, managing job listings, and more.
-        </p>
-      </div>
-    );
-  };
-
+  const renderHome = () => (
+    <div className="p-6 bg-blue-500 rounded-xl shadow-xl text-center">
+      <h2 className="text-3xl font-bold mb-4 text-white">Hello Admin</h2>
+      <p className="text-xl text-white">
+        You have access to various administrative functionalities such as verifying users and companies, viewing all users and companies, managing job listings, and more.
+      </p>
+    </div>
+  );
   const renderVerifyUsers = () => {
     const user = {
       id: 1,
@@ -207,51 +201,71 @@ const AdminDashboard = () => {
       contactNumber: '555-1234',
       email: 'johndoe@example.com',
     };
-
+  
     return (
-      <div>
-        <h2 className="text-xl font-bold mb-4 text-custom-blue text-center">Verify User</h2>
-        <div key={user.id} className="mb-6 p-4 bg-blue-500 rounded-xl shadow-xl text-center">
-          <h3 className="text-3xl font-bold mb-4 text-white">Single User</h3>
-          <p className="text-2xl mb-8 text-white">User Details</p>
-          <div className="flex justify-center">
-            <img
-              src={user.profilePicture}
-              alt={user.fullName}
-              className="w-24 h-24 rounded-full mb-4"
-            />
+      <div className="w-full p-4 bg-blue-500 rounded-xl shadow-xl text-center">
+        <h2 className="text-3xl font-bold mb-4 text-white">Verify User</h2>
+        <p className="text-2xl mb-8 text-white">User Details</p>
+        <div className="flex justify-center mb-4">
+          <img
+            src={user.profilePicture}
+            alt={user.fullName}
+            className="w-24 h-24 rounded-full"
+          />
+        </div>
+        <div className="text-left text-white space-y-4">
+          <div>
+            <p className="font-semibold text-lg">Full Name:</p>
+            <p className="text-xl bg-custom-bg rounded-md text-custom-blue p-2">{user.fullName}</p>
           </div>
-          <div className="flex flex-col md:flex-row justify-between text-left text-white space-y-4 md:space-y-0">
-            <div className="flex-1 md:mr-4">
-              <p className="font-semibold text-lg">Full Name:</p>
-              <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">{user.fullName}</p>
-
-              <p className="font-semibold text-lg">PWD ID:</p>
-              <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">{user.pwdId}</p>
-
-              <p className="font-semibold text-lg">Disability:</p>
-              <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">{user.disability}</p>
-
-              <p className="font-semibold text-lg">Address:</p>
-              <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">{user.address}</p>
-            </div>
-            <div className="flex-1 md:ml-4">
-              <p className="font-semibold text-lg">City:</p>
-              <p className="text-xl bg-custom-bg rounded-md text-custom-blue">{user.city}</p>
-              <p className="font-semibold text-lg">Birthdate:</p>
-              <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">{user.birthdate}</p>
-
-              <p className="font-semibold text-lg">Contact Number:</p>
-              <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">{user.contactNumber}</p>
-
-              <p className="font-semibold text-lg">Email:</p>
-              <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">{user.email}</p>
-            </div>
+          <div>
+            <p className="font-semibold text-lg">PWD ID:</p>
+            <p className="text-xl bg-custom-bg rounded-md text-custom-blue p-2">{user.pwdId}</p>
           </div>
-          <div className="flex justify-between items-center mt-9 bg-white p-6 rounded-lg shadow-lg">
-            <button className="cursor-pointer transition-all bg-blue-600 text-white px-6 py-2 rounded-lg
-              border-blue-700 border-b-[4px] hover:brightness-110 hover:-translate-y-[1px]
-              hover:border-b-[6px] active:border-b-[2px] active:brightness-90 active:translate-y-[2px]">
+          <div>
+            <p className="font-semibold text-lg">Disability:</p>
+            <p className="text-xl bg-custom-bg rounded-md text-custom-blue p-2">{user.disability}</p>
+          </div>
+          <div>
+            <p className="font-semibold text-lg">Address:</p>
+            <p className="text-xl bg-custom-bg rounded-md text-custom-blue p-2">{user.address}</p>
+          </div>
+          <div>
+            <p className="font-semibold text-lg">City:</p>
+            <p className="text-xl bg-custom-bg rounded-md text-custom-blue p-2">{user.city}</p>
+          </div>
+          <div>
+            <p className="font-semibold text-lg">Birthdate:</p>
+            <p className="text-xl bg-custom-bg rounded-md text-custom-blue p-2">{user.birthdate}</p>
+          </div>
+          <div>
+            <p className="font-semibold text-lg">Contact Number:</p>
+            <p className="text-xl bg-custom-bg rounded-md text-custom-blue p-2">{user.contactNumber}</p>
+          </div>
+          <div>
+            <p className="font-semibold text-lg">Email:</p>
+            <p className="text-xl bg-custom-bg rounded-md text-custom-blue p-2">{user.email}</p>
+          </div>
+        </div>
+        <div className="flex justify-between items-center mt-8 bg-white p-4 rounded-lg shadow-lg">
+          <button className="cursor-pointer transition-all bg-blue-600 text-white px-4 py-2 rounded-lg border-blue-700 border-b-[4px] hover:brightness-110 hover:-translate-y-[1px] hover:border-b-[6px] active:border-b-[2px] active:brightness-90 active:translate-y-[2px]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+          </button>
+          <div className="flex space-x-4">
+            <button className="cursor-pointer transition-all bg-green-500 text-white px-4 py-2 rounded-lg border-green-600 border-b-[4px] hover:brightness-110 hover:-translate-y-[1px] hover:border-b-[6px] active:border-b-[2px] active:brightness-90 active:translate-y-[2px]">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6"
@@ -263,51 +277,11 @@ const AdminDashboard = () => {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M15 19l-7-7 7-7"
+                  d="M5 13l4 4L19 7"
                 />
               </svg>
             </button>
-            <div className="flex space-x-4">
-              <button className="cursor-pointer transition-all bg-green-500 text-white px-6 py-2 rounded-lg
-                border-green-600 border-b-[4px] hover:brightness-110 hover:-translate-y-[1px]
-                hover:border-b-[6px] active:border-b-[2px] active:brightness-90 active:translate-y-[2px]">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-              </button>
-              <button className="cursor-pointer transition-all bg-red-500 text-white px-6 py-2 rounded-lg
-                border-red-600 border-b-[4px] hover:brightness-110 hover:-translate-y-[1px]
-                hover:border-b-[6px] active:border-b-[2px] active:brightness-90 active:translate-y-[2px]">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-            </div>
-            <button className="cursor-pointer transition-all bg-blue-600 text-white px-6 py-2 rounded-lg
-              border-blue-700 border-b-[4px] hover:brightness-110 hover:-translate-y-[1px]
-              hover:border-b-[6px] active:border-b-[2px] active:brightness-90 active:translate-y-[2px]">
+            <button className="cursor-pointer transition-all bg-red-500 text-white px-4 py-2 rounded-lg border-red-600 border-b-[4px] hover:brightness-110 hover:-translate-y-[1px] hover:border-b-[6px] active:border-b-[2px] active:brightness-90 active:translate-y-[2px]">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6"
@@ -319,11 +293,27 @@ const AdminDashboard = () => {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M9 5l7 7-7 7"
+                  d="M6 18L18 6M6 6l12 12"
                 />
               </svg>
             </button>
           </div>
+          <button className="cursor-pointer transition-all bg-blue-600 text-white px-4 py-2 rounded-lg border-blue-700 border-b-[4px] hover:brightness-110 hover:-translate-y-[1px] hover:border-b-[6px] active:border-b-[2px] active:brightness-90 active:translate-y-[2px]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </button>
         </div>
       </div>
     );
@@ -339,36 +329,56 @@ const AdminDashboard = () => {
       contactNumber: '555-5678',
       companyEmail: 'contact@acmecorp.com',
     };
-
+  
     return (
-      <div>
-        <h2 className="text-xl font-bold mb-4 text-custom-blue">Verify Company</h2>
-        <div key={company.id} className="mb-6 p-4 bg-blue-500 rounded-xl shadow-xl">
-          <h3 className="text-3xl font-bold mb-4 text-white">Single Company</h3>
-          <p className="text-2xl mb-8 text-white">Company Details</p>
-          <div className="flex flex-col text-left text-white">
+      <div className="w-full p-4 bg-blue-500 rounded-xl shadow-xl text-center">
+        <h2 className="text-3xl font-bold mb-4 text-white">Verify Company</h2>
+        <p className="text-2xl mb-8 text-white">Company Details</p>
+        <div className="text-left text-white space-y-4">
+          <div>
             <p className="font-semibold text-lg">Company Name:</p>
-            <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">{company.companyName}</p>
-
+            <p className="text-xl bg-custom-bg rounded-md text-custom-blue p-2">{company.companyName}</p>
+          </div>
+          <div>
             <p className="font-semibold text-lg">Address:</p>
-            <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">{company.address}</p>
-
+            <p className="text-xl bg-custom-bg rounded-md text-custom-blue p-2">{company.address}</p>
+          </div>
+          <div>
             <p className="font-semibold text-lg">City:</p>
-            <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">{company.city}</p>
-
+            <p className="text-xl bg-custom-bg rounded-md text-custom-blue p-2">{company.city}</p>
+          </div>
+          <div>
             <p className="font-semibold text-lg">Company Description:</p>
-            <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">{company.companyDescription}</p>
-
+            <p className="text-xl bg-custom-bg rounded-md text-custom-blue p-2">{company.companyDescription}</p>
+          </div>
+          <div>
             <p className="font-semibold text-lg">Contact Number:</p>
-            <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">{company.contactNumber}</p>
-
+            <p className="text-xl bg-custom-bg rounded-md text-custom-blue p-2">{company.contactNumber}</p>
+          </div>
+          <div>
             <p className="font-semibold text-lg">Company Email:</p>
-            <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">{company.companyEmail}</p>
+            <p className="text-xl bg-custom-bg rounded-md text-custom-blue p-2">{company.companyEmail}</p>
           </div>
-          <div className="flex justify-between items-center mt-9 bg-white p-6 rounded-lg shadow-lg">
-            <button className="cursor-pointer transition-all bg-blue-600 text-white px-6 py-2 rounded-lg
-              border-blue-700 border-b-[4px] hover:brightness-110 hover:-translate-y-[1px]
-              hover:border-b-[6px] active:border-b-[2px] active:brightness-90 active:translate-y-[2px]">
+        </div>
+        <div className="flex justify-between items-center mt-8 bg-white p-4 rounded-lg shadow-lg">
+          <button className="cursor-pointer transition-all bg-blue-600 text-white px-4 py-2 rounded-lg border-blue-700 border-b-[4px] hover:brightness-110 hover:-translate-y-[1px] hover:border-b-[6px] active:border-b-[2px] active:brightness-90 active:translate-y-[2px]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+          </button>
+          <div className="flex space-x-4">
+            <button className="cursor-pointer transition-all bg-green-500 text-white px-4 py-2 rounded-lg border-green-600 border-b-[4px] hover:brightness-110 hover:-translate-y-[1px] hover:border-b-[6px] active:border-b-[2px] active:brightness-90 active:translate-y-[2px]">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6"
@@ -380,51 +390,11 @@ const AdminDashboard = () => {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M15 19l-7-7 7-7"
+                  d="M5 13l4 4L19 7"
                 />
               </svg>
             </button>
-            <div className="flex space-x-4">
-              <button className="cursor-pointer transition-all bg-green-500 text-white px-6 py-2 rounded-lg
-                border-green-600 border-b-[4px] hover:brightness-110 hover:-translate-y-[1px]
-                hover:border-b-[6px] active:border-b-[2px] active:brightness-90 active:translate-y-[2px]">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-              </button>
-              <button className="cursor-pointer transition-all bg-red-500 text-white px-6 py-2 rounded-lg
-                border-red-600 border-b-[4px] hover:brightness-110 hover:-translate-y-[1px]
-                hover:border-b-[6px] active:border-b-[2px] active:brightness-90 active:translate-y-[2px]">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-            </div>
-            <button className="cursor-pointer transition-all bg-blue-600 text-white px-6 py-2 rounded-lg
-              border-blue-700 border-b-[4px] hover:brightness-110 hover:-translate-y-[1px]
-              hover:border-b-[6px] active:border-b-[2px] active:brightness-90 active:translate-y-[2px]">
+            <button className="cursor-pointer transition-all bg-red-500 text-white px-4 py-2 rounded-lg border-red-600 border-b-[4px] hover:brightness-110 hover:-translate-y-[1px] hover:border-b-[6px] active:border-b-[2px] active:brightness-90 active:translate-y-[2px]">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6"
@@ -436,15 +406,32 @@ const AdminDashboard = () => {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M9 5l7 7-7 7"
+                  d="M6 18L18 6M6 6l12 12"
                 />
               </svg>
             </button>
           </div>
+          <button className="cursor-pointer transition-all bg-blue-600 text-white px-4 py-2 rounded-lg border-blue-700 border-b-[4px] hover:brightness-110 hover:-translate-y-[1px] hover:border-b-[6px] active:border-b-[2px] active:brightness-90 active:translate-y-[2px]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </button>
         </div>
       </div>
     );
   };
+  
 
   const renderViewAllUsers = () => {
     const users = [
@@ -498,7 +485,7 @@ const AdminDashboard = () => {
     return (
       <div>
         <h2 className="text-xl font-bold mb-4 text-custom-blue">View All Users</h2>
-        <SearchBar searchQuery={searchQuery} onSearchChange={handleSearchChange} />
+        <SearchBar searchQuery={searchQuery} onSearchChange={setSearchQuery} />
         <div className="flex flex-wrap gap-4">
           {paginatedUsers.length > 0 ? (
             paginatedUsers.map((user) => (
@@ -591,7 +578,7 @@ const AdminDashboard = () => {
     return (
       <div>
         <h2 className="text-xl font-bold mb-4 text-custom-blue">View All Verified Companies</h2>
-        <SearchBar searchQuery={searchQuery} onSearchChange={handleSearchChange} />
+        <SearchBar searchQuery={searchQuery} onSearchChange={setSearchQuery} />
         <div className="flex flex-wrap gap-4">
           {paginatedCompanies.length > 0 ? (
             paginatedCompanies.map((company) => (
@@ -667,7 +654,7 @@ const AdminDashboard = () => {
     return (
       <div>
         <h2 className="text-xl font-bold mb-4 text-custom-blue">View All Job Listings</h2>
-        <SearchBar searchQuery={searchQuery} onSearchChange={handleSearchChange} />
+        <SearchBar searchQuery={searchQuery} onSearchChange={setSearchQuery} />
         <div className="flex flex-wrap gap-4">
           {paginatedJobListings.length > 0 ? (
             paginatedJobListings.map((listing) => (
@@ -875,8 +862,6 @@ const AdminDashboard = () => {
       // Add more users as needed
     ];
 
-
-
     const filteredUsers = users.filter((user) =>
       user.fullName.toLowerCase().includes(searchQuery.toLowerCase())
     );
@@ -972,9 +957,8 @@ const AdminDashboard = () => {
         address: '456 Business Ave',
         city: 'Metropolis',
       },
-      // Add more job listings as need
+      // Add more job listings as needed
     ];
-
 
     const filteredJobListings = jobListings.filter((job) =>
       job.jobName.toLowerCase().includes(searchQuery.toLowerCase())
@@ -1048,7 +1032,7 @@ const AdminDashboard = () => {
     <div className="flex flex-col md:flex-row min-h-screen bg-blue-100">
       {/* Sidebar */}
       <aside
-        className={`bg-custom-blue w-full md:w-[300px] lg:w-[250px] p-4 flex flex-col items-center md:relative fixed top-0 left-0 min-h-screen h-full transition-transform transform${
+        className={`bg-custom-blue w-full md:w-[300px] lg:w-[250px] p-4 flex flex-col items-center md:relative fixed top-0 left-0 min-h-screen h-full transition-transform transform ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
         } md:translate-x-0 z-50 md:z-auto rounded-xl md:ml-4 md:mt-6 lg:ml-8 lg:mt-8`}
       >
@@ -1060,109 +1044,55 @@ const AdminDashboard = () => {
         </button>
         <button
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
-          }}
-          onClick={() => {
-            setCurrentSection('home');
-            setIsSidebarOpen(false);
-          }}
+          onClick={() => handleSectionChange('home')}
         >
           Home
         </button>
         <button
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
-          }}
-          onClick={() => {
-            setCurrentSection('verifyUsers');
-            setIsSidebarOpen(false);
-          }}
+          onClick={() => handleSectionChange('verifyUsers')}
         >
           Verify Users
         </button>
         <button
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
-          }}
-          onClick={() => {
-            setCurrentSection('verifyCompany');
-            setIsSidebarOpen(false);
-          }}
+          onClick={() => handleSectionChange('verifyCompany')}
         >
           Verify Company
         </button>
         <button
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
-          }}
-          onClick={() => {
-            setCurrentSection('viewAllUsers');
-            setIsSidebarOpen(false);
-          }}
+          onClick={() => handleSectionChange('viewAllUsers')}
         >
           View All Users
         </button>
         <button
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
-          }}
-          onClick={() => {
-            setCurrentSection('viewAllCompany');
-            setIsSidebarOpen(false);
-          }}
+          onClick={() => handleSectionChange('viewAllCompany')}
         >
           View All Companies
         </button>
         <button
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
-          }}
-          onClick={() => {
-            setCurrentSection('viewAllJobListings');
-            setIsSidebarOpen(false);
-          }}
+          onClick={() => handleSectionChange('viewAllJobListings')}
         >
           View All Job Listings
         </button>
         <button
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
-          }}
-          onClick={() => {
-            setCurrentSection('updateJobListings');
-            setIsSidebarOpen(false);
-          }}
+          onClick={() => handleSectionChange('updateJobListings')}
         >
           Update Job Listings
         </button>
         <button
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
-          }}
-          onClick={() => {
-            setCurrentSection('deleteUsers');
-            setIsSidebarOpen(false);
-          }}
+          onClick={() => handleSectionChange('deleteUsers')}
         >
           Delete Users
         </button>
         <button
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
-          }}
-          onClick={() => {
-            setCurrentSection('deleteJobListings');
-            setIsSidebarOpen(false);
-          }}
+          onClick={() => handleSectionChange('deleteJobListings')}
         >
           Delete Job Listings
         </button>
