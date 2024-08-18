@@ -10,14 +10,9 @@ import Contact from './pages/Contact.jsx';
 import About from './pages/About.jsx';
 import SignUp from './pages/SignUp.jsx';
 import JobListingPage from './pages/JobListPage.jsx';
-import UserProfile from './pages/UserProfile.jsx';
-import CompanyProfile from './pages/CompanyProfile.jsx';
+import Profile from './components/Profile/Profile.jsx';  // Corrected import path
 import ApplyPg from './pages/ApplyPg.jsx';
 import Faq from './pages/Faq.jsx';
-
-
-
-// mitsui
 
 function App() {
   return (
@@ -33,12 +28,9 @@ function App() {
         <Route path="/about" element={<About/>} />
         <Route path="/signup" element={<SignUp/>} />
         <Route path="/joblist" element={<JobListingPage/>} />
-        <Route path="/uprofile" element={<UserProfile/>} />
-        <Route path="/cprofile" element={<CompanyProfile/>} />
+        <Route path="/profile" element={<Profile/>} />  {/* Unified profile route */}
         <Route path="/apply" element={<ApplyPg/>} />
         <Route path="/faqs" element={<Faq/>} />
-        
-
       </Routes>
     </Router>
   );
