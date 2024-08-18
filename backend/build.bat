@@ -3,9 +3,9 @@
 :: Navigate to the frontend directory
 cd ../frontend
 
-:: Run the build command
+:: Run the build command synchronously
 echo Building frontend...
-npm run build
+call npm run build
 
 :: Check if the build was successful
 if %errorlevel% neq 0 (
@@ -19,5 +19,4 @@ echo Frontend build successful.
 cd ../backend
 
 :: Start the server
-echo Starting the backend server...
 node server.js
