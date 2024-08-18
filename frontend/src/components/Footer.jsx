@@ -41,7 +41,7 @@ const Footer = () => {
               </a>
             </li>
             <li><a
-                href="/contact"
+                href="/contactpage"
                 onClick={handleContact}
                 className="hover:underline me-4 md:me-6"
               >
