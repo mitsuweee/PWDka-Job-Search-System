@@ -17,7 +17,7 @@ import Faq from './pages/Faq.jsx';
 
 
 
-// mitsui
+// lmao
 
 function App() {
   return (
