@@ -30,7 +30,7 @@ const LoginComp = () => {
                   <p className="text-xl">Apple</p>
                 </div> */}
               </div>
-              <p className="text-sm text-center text-gray-600 pt-4 pr-0 pb-2 pl-0 border-b-2 border-[#1f2937] font-bold">OR</p>
+              {/* <p className="text-sm text-center text-gray-600 pt-4 pr-0 pb-2 pl-0 border-b-2 border-[#1f2937] font-bold">OR</p> */}
             </div>
             <div>
               <div className="w-full mt-3 mr-auto mb-3 ml-auto">
