@@ -1,0 +1,1 @@
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.defaultSchema=void 0,exports.defaultSchema={"background-color":"rgb(var(--backgroundPrimary) / var(--tw-bg-opacity, 1))",color:"rgb(var(--content1) / var(--tw-text-opacity, 1))"};

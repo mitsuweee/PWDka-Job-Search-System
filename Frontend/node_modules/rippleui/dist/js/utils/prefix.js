@@ -1,0 +1,1 @@
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.addPrefix=void 0;const addPrefix=(e={})=>{let r={};return Object.keys(e).map((d=>{r[`--${d}`]=e[d]})),r};exports.addPrefix=addPrefix;

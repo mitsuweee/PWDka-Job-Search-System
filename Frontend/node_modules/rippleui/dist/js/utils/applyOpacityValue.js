@@ -1,0 +1,1 @@
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.applyOpacityValue=void 0;const applyOpacityValue=a=>({opacityValue:p})=>void 0===p?`rgb(var(${a}))`:`rgb(var(${a}) / ${p})`;exports.applyOpacityValue=applyOpacityValue;

@@ -1,0 +1,1 @@
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.backgroundDark=exports.background=void 0,exports.background={backgroundPrimary:"252 252 252",backgroundSecondary:"248 248 248",border:"226 226 226"},exports.backgroundDark={backgroundPrimary:"22 22 22",backgroundSecondary:"28 28 28",border:"52 52 52"};

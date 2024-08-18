@@ -1,0 +1,1 @@
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.isValid=exports.isEmpty=void 0;const isEmpty=s=>0===Object.keys(s).length;exports.isEmpty=isEmpty;const isValid=s=>s&&!(0,exports.isEmpty)(s);exports.isValid=isValid;
