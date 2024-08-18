@@ -30,7 +30,7 @@
                 <button onClick={handleGetStarted} className="transition duration-200 hover:bg-blue-900 focus:shadow-outline focus:outline-none bg-blue-700 text-white inline-flex font-semibold tracking-wide text-medium h-12 shadow-md items-center justify-center pr-6 pl-6 mr-6 rounded-lg">
                   Get Started
                 </button>
-                <a href="#" className="text-black items-center inline-flex font-semibold pt-2 pr-2 pb-2 pl-2 transition-colors duration-200 hover:text-blue-300">
+                <a href="/login" className="text-black items-center inline-flex font-semibold pt-2 pr-2 pb-2 pl-2 transition-colors duration-200 hover:text-blue-300">
                   <p>Login</p>
                 </a>
               </div>
