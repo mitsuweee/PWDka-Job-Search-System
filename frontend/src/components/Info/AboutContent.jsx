@@ -84,7 +84,7 @@
                 <div className="relative h-64 sm:h-80 lg:h-full rounded">
                   <img
                     alt=""
-                    src="src/imgs/pwd1.jpg"
+                    src="/imgs/pwd1.jpg"
                     className="absolute inset-0 h-full w-full object-cover rounded-3xl hover:scale-110 transition-transform duration-500"
                   />
                 </div>
@@ -126,7 +126,7 @@
                 <div className="relative h-64 sm:h-80 lg:h-full rounded">
                   <img
                     alt=""
-                    src="src/imgs/pwd3.jpg"
+                    src="/imgs/pwd3.jpg"
                     className="absolute inset-0 h-full w-full object-cover rounded-2xl hover:scale-110 transition-transform duration-500"
                   />
                 </div>
@@ -178,13 +178,13 @@
           
           <div className="grid mt-0 mr-auto mb-0 ml-auto gap-10 row-gap-8 sm:row-gap-10 lg:max-w-screen-lg sm:grid-cols-2 lg:grid-cols-3">
             {[
-              { name: 'Kyle Anakin Aguas', role: 'Frontend/Backend Developer', img: 'src/imgs/kyle.jpg' },
-              { name: 'Carlos Miguel Bundac', role: 'Frontend/UI UX Designer', img: 'src/imgs/ako.jpg' },
-              { name: 'Liv Andre Centeno', role: 'Database/Backend Developer', img: 'src/imgs/liv.jpg' },
-              { name: 'Joshua Brioso', role: 'Developer', img: 'src/imgs/brioso.jpg' },
-              { name: 'Kevin Allen Guia', role: 'Frontend Developer', img: 'src/imgs/kev.jpg' },
-              { name: 'Ace Pleno', role: 'Frontend Developer', img: 'src/imgs/ace.jpg' },
-              { name: 'Mitsui Ortega', role: 'Tagautos/Buto', img: 'src/imgs/mits.jpg' },
+              { name: 'Kyle Anakin Aguas', role: 'Frontend/ Integration', img: '/imgs/kyle.jpg' },
+              { name: 'Carlos Miguel Bundac', role: 'Frontend/ UI UX Designer', img: '/imgs/ako.jpg' },
+              { name: 'Liv Andre Centeno', role: 'Integration / Database/Backend Developer', img: '/imgs/liv.jpg' },
+              { name: 'Joshua Brioso', role: 'Developer', img: '/imgs/brioso.jpg' },
+              { name: 'Kevin Allen Guia', role: 'Frontend Developer', img: '/imgs/kev.jpg' },
+              { name: 'Ace Pleno', role: 'Frontend Developer', img: '/imgs/ace.jpg' },
+              { name: 'Mitsui Ortega', role: 'Frontend/ Integration/ Backend', img: '/imgs/mits.jpg' },
             ].map((member) => (
               <div className="flex hover-effect rounded-xl" key={member.name}>
                 <img src={member.img} className="shadow object-cover mt-0 mr-4 mb-0 ml-0 rounded-full w-20 h-20" />
