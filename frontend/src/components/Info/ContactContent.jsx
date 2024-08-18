@@ -34,7 +34,7 @@ const ContactUs = () => (
 
   <img
     alt=""
-    src="src\imgs\pwd2.jpg"
+    src="\imgs\pwd2.jpg"
     className="h-full w-full object-cover sm:h-[calc(100%_-_2rem)] sm:self-end sm:rounded-ss-[30px] md:h-[calc(100%_-_4rem)] md:rounded-ss-[60px]"
   />
 </section>
