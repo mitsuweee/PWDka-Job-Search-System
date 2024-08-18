@@ -4,6 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    
+      "backend": "node server.js",
+    "frontend": "npm run dev --prefix frontend",
+    "start": "concurrently 'npm run backend', 'npm run frontend'",
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
@@ -21,6 +25,7 @@
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.20",
+    "concurrently": "^8.2.2",
     "eslint": "^9.8.0",
     "eslint-plugin-react": "^7.35.0",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
