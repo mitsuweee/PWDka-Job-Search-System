@@ -1,14 +1,14 @@
 
 @font-face {
   font-family: 'sfprobold'; /* Keep the name as Bold */
-  src: url('Font/SFPRODISPLAYBOLD.OTF') format('opentype'); /* Ensure the correct file is referenced */
+  src: url('/Font/SFPRODISPLAYBOLD.OTF') format('opentype'); /* Ensure the correct file is referenced */
   font-weight: bold; /* Bold weight for this font */
   font-style: normal;
 }
 
 @font-face {
   font-family: 'sfpromed'; /* Keep the name as Bold */
-  src: url('Font/SFPRODISPLAYMEDIUM.OTF') format('opentype'); /* Ensure the correct file is referenced */
+  src: url('/Font/SFPRODISPLAYMEDIUM.OTF') format('opentype'); /* Ensure the correct file is referenced */
   font-weight: normal; /* Bold weight for this font */
   font-style: normal;
 }
