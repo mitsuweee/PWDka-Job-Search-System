@@ -4,7 +4,7 @@ const {adminModel} = require('../models/admin_model')
 const util = require('./util')
 const bcrypt = require('bcrypt')
 
-
+// stats
 
 const registerAdmin = async (req, res, next) => {
 
