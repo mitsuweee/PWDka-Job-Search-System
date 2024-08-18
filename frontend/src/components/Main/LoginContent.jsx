@@ -58,7 +58,7 @@ const LoginComp = () => {
               <button className="hover:bg-gray-600 rounded-md text-xl pt-3 pr-3 pb-3 pl-3 bg-[#007bff] font-semibold text-white w-full text-center">Submit</button>
               <div className="flex items-center justify-start border-t-2 border-[#1f2937] mt-6 mr-0 mb-0 ml-0 pt-6 pr-0 pb-0 pl-0">
                 <p className="text-sm text-gray-800">Not a member?</p>
-                <a href="#" className="text-sm text-[#007bff] mt-0 mr-0 mb-0 ml-2">Sign Up</a>
+                <a href="/signup" className="text-sm text-[#007bff] mt-0 mr-0 mb-0 ml-2">Sign Up</a>
               </div>
             </div>
           </div>
