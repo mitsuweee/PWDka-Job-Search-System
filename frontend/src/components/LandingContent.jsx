@@ -12,7 +12,7 @@
       <div>
         <div className="bg-transparent pt-16 pr-4 pb-16 pl-4 flex mr-auto ml-auto flex-col items-center relative lg:flex-row lg:py-32 xl:py-48 md:px-8 max-w-screen-2xl">
           <div className="flex justify-center items-center w-full h-full overflow-hidden lg:w-1/2 lg:justify-end lg:bottom-0 lg:left-0 lg:items-center">
-            <img src="src/imgs/landing photo.png" className="object-contain object-top lg:w-auto lg:h-full w-full h-auto" />
+            <img src="/imgs/landing photo.png" className="object-contain object-top lg:w-auto lg:h-full w-full h-auto" />
           </div>
           <div className="mr-auto ml-auto flex justify-end relative max-w-xl xl:pr-32 lg:max-w-screen-xl">
             <div className="mb-16 lg:pr-5 lg:max-w-lg lg:mb-0">

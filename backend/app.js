@@ -2,9 +2,12 @@ const express = require('express')
 const app = express()
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
+const path = require('path')
 
 const database = require("./api/models/connection_db")
 database.connectDatabase()
+
+app.use(express.static(path.join(__dirname, 'frontend', 'build')));
 
 
 const adminRouter = require('./api/routers/admin_router')
@@ -17,6 +20,9 @@ const jobApplicationRouter = require('./api/routers/jobapplication_router')
 app.use(morgan('dev')) 
 app.use(bodyParser.urlencoded({extended: false})) 
 app.use(bodyParser.json())
+
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
 
 //HEADER SETTINGS
 app.use((req, res, next)=> {

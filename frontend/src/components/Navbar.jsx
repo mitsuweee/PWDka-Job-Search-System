@@ -23,7 +23,7 @@ const Navbar = () => {
             onClick={() => handleNavigation('/')} 
             aria-label="Brand"
           >
-            <img className="w-26 h-14" src="./src/imgs/LOGO PWDKA.png" alt="Logo" />
+            <img className="w-26 h-14" src="/imgs/LOGO PWDKA.png" alt="Logo" />
           </a>
           <div className="sm:hidden">
             <button 
