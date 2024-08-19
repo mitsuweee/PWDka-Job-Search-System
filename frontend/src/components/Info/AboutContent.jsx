@@ -103,12 +103,6 @@
                     Our mission is to create inclusive opportunities for persons with disabilities, recognizing their potential and the value they bring.
                     We are dedicated to fostering a supportive environment where diverse talents can thrive, driving innovation and success for both individuals and a company.
                   </p>
-                  <a
-                    href="#"
-                    className="mt-8 inline-block rounded-lg border border-indigo-600 bg-[#007bff] px-12 py-3 text-sm font-medium text-white shadow-lg button-hover"
-                  >
-                    Get in Touch
-                  </a>
                 </div>
               </div>
             </div>
@@ -146,12 +140,7 @@
                     Our goal is to create pathways that drive mutual success and progress, fostering a culture of inclusivity that enriches organizations and transforms industries.
                     By integrating diverse talents, we help companies unlock their full potential and achieve sustainable success.
                   </p>
-                  <a
-                    href="#"
-                    className="mt-8 inline-block rounded-lg border border-indigo-600 bg-[#007bff] px-12 py-3 text-sm font-medium text-white shadow-lg button-hover"
-                  >
-                    Get in Touch
-                  </a>
+                  
                 </div>
               </div>
             </div>
