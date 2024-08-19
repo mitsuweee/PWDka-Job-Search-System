@@ -16,6 +16,7 @@ const Signup = () => {
     disability: '',
     password: '',
     reEnterPassword: '',
+    pwdID: '',
     idPicture: '',
     profilePicture: '',
     selfieWithID: '',
@@ -58,6 +59,7 @@ const Signup = () => {
         disability: '',
         password: '',
         reEnterPassword: '',
+        pwdID: '',
         idPicture: '',
         profilePicture: '',
         selfieWithID: '',
@@ -83,9 +85,12 @@ const Signup = () => {
     console.log(formType === 'user' ? userFormValues : companyFormValues);
   };
 
+  const commonInputStyles = {
+    boxShadow: 'inset 13px 13px 27px #d1dae3, inset -13px -13px 27px #f5ffff',
+  };
+
   const renderUserForm = () => (
     <form className="mt-8 grid grid-cols-12 gap-6" onSubmit={handleSubmit}>
-      {/* User form fields */}
       <div className="col-span-12 md:col-span-8">
         <div className="grid grid-cols-2 gap-6">
           <div>
@@ -98,7 +103,8 @@ const Signup = () => {
               name="firstName"
               value={userFormValues.firstName}
               onChange={handleInputChange}
-              className="mt-2 w-full h-10 rounded-md border-gray-300 bg-white text-lg text-gray-700 shadow-sm"
+              className="mt-2 w-full h-10 rounded-md bg-white text-lg text-gray-700 focus:outline-none"
+              style={commonInputStyles}
               required
             />
           </div>
@@ -113,7 +119,8 @@ const Signup = () => {
               name="middleInitial"
               value={userFormValues.middleInitial}
               onChange={handleInputChange}
-              className="mt-2 w-full h-10 rounded-md border-gray-300 bg-white text-lg text-gray-700 shadow-sm"
+              className="mt-2 w-full h-10 rounded-md bg-white text-lg text-gray-700 focus:outline-none"
+              style={commonInputStyles}
               required
             />
           </div>
@@ -128,7 +135,8 @@ const Signup = () => {
               name="lastName"
               value={userFormValues.lastName}
               onChange={handleInputChange}
-              className="mt-2 w-full rounded-md h-10 border-gray-300 bg-white text-lg text-gray-700 shadow-sm"
+              className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
+              style={commonInputStyles}
               required
             />
           </div>
@@ -142,7 +150,8 @@ const Signup = () => {
               name="gender"
               value={userFormValues.gender}
               onChange={handleInputChange}
-              className="mt-2 w-full rounded-md h-10 border-gray-300 bg-white text-lg text-gray-700 shadow-sm"
+              className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
+              style={commonInputStyles}
               required
             >
               <option value="" disabled>
@@ -163,7 +172,8 @@ const Signup = () => {
               name="birthdate"
               value={userFormValues.birthdate}
               onChange={handleInputChange}
-              className="mt-2 w-full rounded-md h-10 border-gray-300 bg-white text-lg text-gray-700 shadow-sm"
+              className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
+              style={commonInputStyles}
               required
             />
           </div>
@@ -178,7 +188,8 @@ const Signup = () => {
               name="address"
               value={userFormValues.address}
               onChange={handleInputChange}
-              className="mt-2 w-full rounded-md h-10 border-gray-300 bg-white text-lg text-gray-700 shadow-sm"
+              className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
+              style={commonInputStyles}
               required
             />
           </div>
@@ -193,7 +204,8 @@ const Signup = () => {
               name="city"
               value={userFormValues.city}
               onChange={handleInputChange}
-              className="mt-2 w-full rounded-md h-10 border-gray-300 bg-white text-lg text-gray-700 shadow-sm"
+              className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
+              style={commonInputStyles}
               required
             />
           </div>
@@ -208,7 +220,8 @@ const Signup = () => {
               name="contactNumber"
               value={userFormValues.contactNumber}
               onChange={handleInputChange}
-              className="mt-2 w-full rounded-md h-10 border-gray-300 bg-white text-lg text-gray-700 shadow-sm"
+              className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
+              style={commonInputStyles}
               required
             />
           </div>
@@ -222,7 +235,8 @@ const Signup = () => {
               name="disability"
               value={userFormValues.disability}
               onChange={handleInputChange}
-              className="mt-2 w-full rounded-md h-10 border-gray-300 bg-white text-lg text-gray-700 shadow-sm"
+              className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
+              style={commonInputStyles}
               required
             >
               <option value="" disabled>
@@ -238,7 +252,6 @@ const Signup = () => {
               <option value="visual">Visual Disability</option>
               <option value="cancer">Cancer (RA11215)</option>
               <option value="rare">Rare Disease (RA10747)</option>
-              {/* Add disability options here */}
             </select>
           </div>
 
@@ -252,7 +265,8 @@ const Signup = () => {
               name="email"
               value={userFormValues.email}
               onChange={handleInputChange}
-              className="mt-2 w-full rounded-md h-10 border-gray-300 bg-white text-lg text-gray-700 shadow-sm"
+              className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
+              style={commonInputStyles}
               required
             />
           </div>
@@ -267,7 +281,8 @@ const Signup = () => {
               name="password"
               value={userFormValues.password}
               onChange={handleInputChange}
-              className="mt-2 w-full rounded-md h-10 border-gray-300 bg-white text-lg text-gray-700 shadow-sm"
+              className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
+              style={commonInputStyles}
               required
             />
           </div>
@@ -282,7 +297,8 @@ const Signup = () => {
               name="reEnterPassword"
               value={userFormValues.reEnterPassword}
               onChange={handleInputChange}
-              className="mt-2 w-full rounded-md h-10 border-gray-300 bg-white text-lg text-gray-700 shadow-sm"
+              className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
+              style={commonInputStyles}
               required
             />
           </div>
@@ -291,6 +307,22 @@ const Signup = () => {
 
       <div className="col-span-12 md:col-span-4">
         <div>
+          <label htmlFor="pwdID" className="block text-lg font-medium text-gray-700">
+            PWD ID
+          </label>
+          <input
+            type="text"
+            id="pwdID"
+            name="pwdID"
+            value={userFormValues.pwdID}
+            onChange={handleInputChange}
+            className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
+            style={commonInputStyles}
+            required
+          />
+        </div>
+
+        <div className="mt-4">
           <label htmlFor="idPicture" className="block text-lg font-medium text-gray-700">
             PWD ID Picture
           </label>
@@ -300,7 +332,8 @@ const Signup = () => {
             name="idPicture"
             value={userFormValues.idPicture}
             onChange={handleInputChange}
-            className="mt-2 w-full rounded-md h-10 border-gray-300 bg-white text-lg text-gray-700 shadow-sm"
+            className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
+            style={commonInputStyles}
             accept="image/*"
             required
           />
@@ -316,7 +349,8 @@ const Signup = () => {
             name="profilePicture"
             value={userFormValues.profilePicture}
             onChange={handleInputChange}
-            className="mt-2 w-full rounded-md h-10 border-gray-300 bg-white text-lg text-gray-700 shadow-sm"
+            className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
+            style={commonInputStyles}
             accept="image/*"
             required
           />
@@ -332,7 +366,8 @@ const Signup = () => {
             name="selfieWithID"
             value={userFormValues.selfieWithID}
             onChange={handleInputChange}
-            className="mt-2 w-full rounded-md h-10 border-gray-300 bg-white text-lg text-gray-700 shadow-sm"
+            className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
+            style={commonInputStyles}
             accept="image/*"
           />
         </div>
@@ -342,13 +377,13 @@ const Signup = () => {
         <button
           type="button"
           onClick={handleReset}
-          className="px-6 py-2 text-lg font-medium text-white bg-gray-600 rounded-md shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
+          className="px-6 py-2 text-lg shadow-xl font-medium text-white bg-gray-600 rounded-md shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
         >
           Reset
         </button>
         <button
           type="submit"
-          className="px-6 py-2 text-lg font-medium text-white bg-blue-600 rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="px-6 py-2 text-lg  shadow-xl font-medium text-white bg-blue-600 rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           Sign Up
         </button>
@@ -358,7 +393,6 @@ const Signup = () => {
 
   const renderCompanyForm = () => (
     <form className="mt-8 grid grid-cols-12 gap-6" onSubmit={handleSubmit}>
-      {/* Company form fields */}
       <div className="col-span-12 md:col-span-8">
         <div className="grid grid-cols-2 gap-6">
           <div>
@@ -371,7 +405,8 @@ const Signup = () => {
               name="companyName"
               value={companyFormValues.companyName}
               onChange={handleInputChange}
-              className="mt-2 w-full h-10 rounded-md border-gray-300 bg-white text-lg text-gray-700 shadow-sm"
+              className="mt-2 w-full h-10 rounded-md bg-white text-lg text-gray-700 focus:outline-none"
+              style={commonInputStyles}
               required
             />
           </div>
@@ -386,7 +421,8 @@ const Signup = () => {
               name="companyDescription"
               value={companyFormValues.companyDescription}
               onChange={handleInputChange}
-              className="mt-2 w-full h-10 rounded-md border-gray-300 bg-white text-lg text-gray-700 shadow-sm"
+              className="mt-2 w-full h-10 rounded-md bg-white text-lg text-gray-700 focus:outline-none"
+              style={commonInputStyles}
               required
             />
           </div>
@@ -401,7 +437,8 @@ const Signup = () => {
               name="companyAddress"
               value={companyFormValues.companyAddress}
               onChange={handleInputChange}
-              className="mt-2 w-full rounded-md h-10 border-gray-300 bg-white text-lg text-gray-700 shadow-sm"
+              className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
+              style={commonInputStyles}
               required
             />
           </div>
@@ -416,7 +453,8 @@ const Signup = () => {
               name="companyCity"
               value={companyFormValues.companyCity}
               onChange={handleInputChange}
-              className="mt-2 w-full rounded-md h-10 border-gray-300 bg-white text-lg text-gray-700 shadow-sm"
+              className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
+              style={commonInputStyles}
               required
             />
           </div>
@@ -431,7 +469,8 @@ const Signup = () => {
               name="companyContactNumber"
               value={companyFormValues.companyContactNumber}
               onChange={handleInputChange}
-              className="mt-2 w-full rounded-md h-10 border-gray-300 bg-white text-lg text-gray-700 shadow-sm"
+              className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
+              style={commonInputStyles}
               required
             />
           </div>
@@ -446,7 +485,8 @@ const Signup = () => {
               name="companyEmail"
               value={companyFormValues.companyEmail}
               onChange={handleInputChange}
-              className="mt-2 w-full rounded-md h-10 border-gray-300 bg-white text-lg text-gray-700 shadow-sm"
+              className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
+              style={commonInputStyles}
               required
             />
           </div>
@@ -461,7 +501,8 @@ const Signup = () => {
               name="companyPassword"
               value={companyFormValues.companyPassword}
               onChange={handleInputChange}
-              className="mt-2 w-full rounded-md h-10 border-gray-300 bg-white text-lg text-gray-700 shadow-sm"
+              className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
+              style={commonInputStyles}
               required
             />
           </div>
@@ -476,7 +517,8 @@ const Signup = () => {
               name="companyReEnterPassword"
               value={companyFormValues.companyReEnterPassword}
               onChange={handleInputChange}
-              className="mt-2 w-full rounded-md h-10 border-gray-300 bg-white text-lg text-gray-700 shadow-sm"
+              className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
+              style={commonInputStyles}
               required
             />
           </div>
@@ -494,7 +536,8 @@ const Signup = () => {
             name="companyLogo"
             value={companyFormValues.companyLogo}
             onChange={handleInputChange}
-            className="mt-2 w-full rounded-md border-gray-300 bg-white text-lg text-gray-700 shadow-sm"
+            className="mt-2 w-full rounded-md bg-white text-lg text-gray-700 focus:outline-none"
+            style={commonInputStyles}
             accept="image/*"
           />
         </div>
@@ -560,7 +603,7 @@ const Signup = () => {
                 <button
                   className={`switchButton ${
                     formType === 'user' ? 'bg-blue-700 text-white' : 'bg-blue-500 text-white'
-                  } px-4 py-2 rounded-md`}
+                  } px-4 py-2 rounded-md  shadow-xl`}
                   onClick={() => setFormType('user')}
                 >
                   User
@@ -568,7 +611,7 @@ const Signup = () => {
                 <button
                   className={`switchButton ${
                     formType === 'company' ? 'bg-blue-700 text-white' : 'bg-blue-500 text-white'
-                  } px-4 py-2 rounded-md`}
+                  } px-4 py-2 rounded-md  shadow-xl`}
                   onClick={() => setFormType('company')}
                 >
                   Company
@@ -576,7 +619,9 @@ const Signup = () => {
               </div>
             </div>
 
-            {formType === 'user' ? renderUserForm() : renderCompanyForm()}
+            <div className="bg-custom-bg p-8  shadow-2xl rounded-2xl">
+              {formType === 'user' ? renderUserForm() : renderCompanyForm()}
+            </div>
           </div>
         </main>
       </div>
@@ -585,6 +630,8 @@ const Signup = () => {
 };
 
 export default Signup;
+
+
 
 // import React, { useState } from 'react';
 
