@@ -127,6 +127,8 @@ const Signup = () => {
                 alert(errorMessage);
             });
 
+            
+
     };
 
     const commonInputStyles = {
