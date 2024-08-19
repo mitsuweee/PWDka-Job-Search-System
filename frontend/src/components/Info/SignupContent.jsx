@@ -338,7 +338,14 @@ const Signup = () => {
         </div>
       </div>
 
-      <div className="col-span-12 flex justify-end">
+      <div className="col-span-12 flex justify-between">
+        <button
+          type="button"
+          onClick={handleReset}
+          className="px-6 py-2 text-lg font-medium text-white bg-gray-600 rounded-md shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
+        >
+          Reset
+        </button>
         <button
           type="submit"
           className="px-6 py-2 text-lg font-medium text-white bg-blue-600 rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -493,7 +500,14 @@ const Signup = () => {
         </div>
       </div>
 
-      <div className="col-span-12 flex justify-end">
+      <div className="col-span-12 flex justify-between">
+        <button
+          type="button"
+          onClick={handleReset}
+          className="px-6 py-2 text-lg font-medium text-white bg-gray-600 rounded-md shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
+        >
+          Reset
+        </button>
         <button
           type="submit"
           className="px-6 py-2 text-lg font-medium text-white bg-blue-600 rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
