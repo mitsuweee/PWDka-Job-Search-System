@@ -524,7 +524,7 @@ const Signup = () => {
         <section className="relative flex h-32 items-end bg-gray-900 lg:col-span-5 lg:h-full xl:col-span-6">
           <img
             alt=""
-            src="src\imgs\group-adult-workers-office-together.jpg"
+            src="\imgs\group-adult-workers-office-together.jpg"
             className="absolute inset-0 h-full w-full object-cover opacity-80"
           />
 
