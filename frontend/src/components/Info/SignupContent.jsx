@@ -81,8 +81,6 @@ const Signup = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission logic here, such as sending data to the backend
-    
     console.log(formType === 'user' ? userFormValues : companyFormValues);
   };
 
@@ -387,6 +385,7 @@ const Signup = () => {
           className="px-6 py-2 text-lg  shadow-xl font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           Sign Up
+
         </button>
       </div>
     </form>
