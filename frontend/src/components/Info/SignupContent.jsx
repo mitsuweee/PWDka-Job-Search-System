@@ -228,14 +228,14 @@ const Signup = () => {
               <option value="" disabled>
                 Select disability
               </option>
-              <option value="visual">Visual Disability</option>
               <option value="hearing">Deaf or Hard of Hearing</option>
+              <option value="intellectual">Intellectual Disability</option>
               <option value="learning">Learning Disability</option>
               <option value="mental">Mental Disability</option>
               <option value="physical">Physical Disability (Orthopedic)</option>
               <option value="psychosocial">Psychosocial Disability</option>
               <option value="speech">Speech and Language Impairment</option>
-              <option value="intellectual">Intellectual Disability</option>
+              <option value="visual">Visual Disability</option>
               <option value="cancer">Cancer (RA11215)</option>
               <option value="rare">Rare Disease (RA10747)</option>
               {/* Add disability options here */}
