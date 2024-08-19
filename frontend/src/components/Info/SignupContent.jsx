@@ -77,8 +77,14 @@ const Signup = () => {
     }
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Handle form submission logic here, such as sending data to the backend
+    console.log(formType === 'user' ? userFormValues : companyFormValues);
+  };
+
   const renderUserForm = () => (
-    <form className="mt-8 grid grid-cols-12 gap-6">
+    <form className="mt-8 grid grid-cols-12 gap-6" onSubmit={handleSubmit}>
       {/* User form fields */}
       <div className="col-span-12 md:col-span-8">
         <div className="grid grid-cols-2 gap-6">
@@ -222,7 +228,6 @@ const Signup = () => {
               <option value="" disabled>
                 Select disability
               </option>
-              <option value="" disabled>Select disability</option>
               <option value="visual">Visual Disability</option>
               <option value="hearing">Deaf or Hard of Hearing</option>
               <option value="learning">Learning Disability</option>
@@ -332,11 +337,20 @@ const Signup = () => {
           />
         </div>
       </div>
+
+      <div className="col-span-12 flex justify-end">
+        <button
+          type="submit"
+          className="px-6 py-2 text-lg font-medium text-white bg-blue-600 rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          Sign Up
+        </button>
+      </div>
     </form>
   );
 
   const renderCompanyForm = () => (
-    <form className="mt-8 grid grid-cols-12 gap-6">
+    <form className="mt-8 grid grid-cols-12 gap-6" onSubmit={handleSubmit}>
       {/* Company form fields */}
       <div className="col-span-12 md:col-span-8">
         <div className="grid grid-cols-2 gap-6">
@@ -478,6 +492,15 @@ const Signup = () => {
           />
         </div>
       </div>
+
+      <div className="col-span-12 flex justify-end">
+        <button
+          type="submit"
+          className="px-6 py-2 text-lg font-medium text-white bg-blue-600 rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          Sign Up
+        </button>
+      </div>
     </form>
   );
 
@@ -547,4 +570,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;  
+export default Signup;
