@@ -589,8 +589,7 @@ const Signup = () => {
             </h2>
 
             <p className="mt-4 leading-relaxed text-white/90">
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eligendi nam dolorum aliquam,
-              quibusdam aperiam voluptatum.
+            Where we focus on making the workplace welcoming and accessible for everyone, especially Persons with Disabilities (PWD). We're here to help you find the right job and connect with employers who value inclusivity. Join us today to be part of a community that cares about diversity. Sign up now and start your path to a rewarding career.
             </p>
           </div>
         </section>
