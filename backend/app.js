@@ -15,6 +15,7 @@ const verificationRouter = require('./api/routers/verification_router');
 const userRouter = require('./api/routers/user_router');
 const jobListingRouter = require('./api/routers/joblisting_router');
 const jobApplicationRouter = require('./api/routers/jobapplication_router');
+const loginRouter = require('./api/routers/login_router')
 
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -37,6 +38,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/admin', adminRouter);
+app.use('/login', loginRouter)
 app.use('/company', companyRouter);
 app.use('/verification', verificationRouter);
 app.use('/user', userRouter);
