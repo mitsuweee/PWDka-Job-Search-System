@@ -29,8 +29,7 @@ const commitmentStyle = {
   border: '1px solid rgba(0, 0, 0, 0.1)', // Optional border similar to shadow for emphasis
   color: '#333', // Text color
   textAlign: 'center', // Centered text to match the header style
-  width: '100%', // Full width, similar to header
-  border: '1px solid #007bff'
+  width: '100%', // Full width, similar to header'
   
 };
 
