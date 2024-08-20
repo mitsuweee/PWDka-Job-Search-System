@@ -1,11 +1,12 @@
 import { useState } from 'react';
+import axios from 'axios';
 
 const CompanyDashboard = () => {
   const [currentSection, setCurrentSection] = useState('postJob');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isFilterOpen, setIsFilterOpen] = useState(false); // New state for filter visibility
-  const [sortOption, setSortOption] = useState('newest'); // New state for sorting
-  const [showDisabilityOptions, setShowDisabilityOptions] = useState(false); // State to show/hide disability checkboxes
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [sortOption, setSortOption] = useState('newest');
+  const [showDisabilityOptions, setShowDisabilityOptions] = useState(false);
 
   // State for the Post Job section
   const [jobDetails, setJobDetails] = useState({
@@ -15,59 +16,45 @@ const CompanyDashboard = () => {
     qualifications: '',
     minSalary: '',
     maxSalary: '',
-    positionType: 'full-time', // default value
-    disabilityCategories: [], // New state for disability categories
-  });
-
-  // State for the Update Job Listings section
-  const [updatedDetails, setUpdatedDetails] = useState({
-    companyName: 'Acme Corporation',
-    positionName: 'Software Engineer',
-    jobDescription: 'Develop and maintain software solutions',
-    qualifications: "Bachelor's Degree in Computer Science",
-    salary: '$80,000/year',
     positionType: 'full-time',
+    disabilityCategories: [],
   });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setJobDetails({ ...jobDetails, [name]: value });
-  };
-
-  const handleCheckboxChange = (e) => {
-    const { value, checked } = e.target;
-    if (checked) {
-      setJobDetails((prevDetails) => ({
-        ...prevDetails,
-        disabilityCategories: [...prevDetails.disabilityCategories, value],
-      }));
-    } else {
-      setJobDetails((prevDetails) => ({
-        ...prevDetails,
-        disabilityCategories: prevDetails.disabilityCategories.filter(
-          (category) => category !== value
-        ),
-      }));
-    }
-  };
-
-  const toggleDisabilityOptions = () => {
-    setShowDisabilityOptions(!showDisabilityOptions);
-  };
-
-  
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Job Posted:', jobDetails);
-    // Implement actual post functionality
+
+    const data = JSON.stringify({
+      position_name: jobDetails.positionName.toLowerCase(),
+      description: jobDetails.jobDescription,
+      qualification: jobDetails.qualifications,
+      minimum_salary: jobDetails.minSalary,
+      maximum_salary: jobDetails.maxSalary,
+      positiontype_id: jobDetails.positionType,
+      disability_ids: jobDetails.disabilityCategories,
+    });
+
+    const config = {
+      method: 'post',
+      url: 'http://localhost:8080/joblisting/post/job', // Ensure this matches your backend endpoint
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: data,
+    };
+
+    axios(config)
+      .then((response) => {
+        console.log(response.data);
+        alert('Job posted successfully!')
+        
+      })
+      .catch((error) => {
+        const errorMessage = error.response?.data?.message || 'An error occurred';
+        console.log(error.response?.data);
+        alert(errorMessage);
+      });
   };
 
-  const handleUpdateSubmit = (e) => {
-    e.preventDefault();
-    console.log('Job Updated:', updatedDetails);
-    // Implement actual update functionality
-  };
   const renderPostJob = () => {
     return (
       <div>
@@ -201,6 +188,37 @@ const CompanyDashboard = () => {
     );
   };
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setJobDetails({ ...jobDetails, [name]: value });
+  };
+
+  const handleCheckboxChange = (e) => {
+    const { value, checked } = e.target;
+    if (checked) {
+      setJobDetails((prevDetails) => ({
+        ...prevDetails,
+        disabilityCategories: [...prevDetails.disabilityCategories, value],
+      }));
+    } else {
+      setJobDetails((prevDetails) => ({
+        ...prevDetails,
+        disabilityCategories: prevDetails.disabilityCategories.filter(
+          (category) => category !== value
+        ),
+      }));
+    }
+  };
+
+  const toggleDisabilityOptions = () => {
+    setShowDisabilityOptions(!showDisabilityOptions);
+  };
+
+  const handleUpdateSubmit = (e) => {
+    e.preventDefault();
+    console.log('Job Updated:', updatedDetails);
+    // Implement actual update functionality
+  };
   const handleUpdateChange = (e) => {
     const { name, value } = e.target;
     setUpdatedDetails({ ...updatedDetails, [name]: value });
