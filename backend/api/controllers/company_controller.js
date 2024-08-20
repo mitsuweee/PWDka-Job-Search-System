@@ -119,7 +119,20 @@ const registerCompany = async (req,res,next) => {
                                 from: 'livcenteno24@gmail.com',
                                 to: email,
                                 subject: 'Account Verification',
-                                text: `Dear ${name},\n\nThank you for registering. Your account is under review and will be activated once verified. We will notify you once the verification process is complete.\n\nBest regards,\nPWDKA Team`
+                                text: `Dear ${values.name},
+
+                                Thank you for registering. Your Company's account is under review and will be activated once verified. We will notify you once the verification process is complete.
+                                
+                                Here are the details you provided:
+                                
+                                - Company Name: ${values.name}
+                                - Address: ${values.address}, ${values.city}
+                                - Description: ${values.description}
+                                - Contact Number: ${values.contact_number}
+                                - Email: ${values.email}
+                                
+                                Best regards,
+                                PWDKA Team`
                             }
         
                             // Send the email
