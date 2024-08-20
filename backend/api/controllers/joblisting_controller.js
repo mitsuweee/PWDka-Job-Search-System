@@ -140,6 +140,10 @@ const viewJobListing = async (req,res,next) =>{
                     job_listing.maximum_salary, 
                     position_type.type AS position_type,
                     company.name AS company_name,
+                    company.email AS company_email,
+                    company.address AS company_address,
+                    company.contact_number AS company_contact_number,
+                    company.description AS company_description,
                     GROUP_CONCAT(disability.type SEPARATOR ', ') AS disability_types
                 FROM job_listing
                 JOIN position_type ON job_listing.positiontype_id = position_type.id 
@@ -215,7 +219,11 @@ const viewJobListingViaUserNewestToOldest = async (req,res,next) =>{
                     job_listing.minimum_salary,
                     job_listing.maximum_salary, 
                     position_type.type AS position_type,
-                    company.name AS company_name
+                    company.name AS company_name,
+                    company.email AS company_email,
+                    company.address AS company_address,
+                    company.contact_number AS company_contact_number,
+                    company.description AS company_description
                 FROM job_listing
                 JOIN position_type ON job_listing.positiontype_id = position_type.id 
                 JOIN company ON job_listing.company_id = company.id
@@ -282,7 +290,11 @@ const viewJobListingViaUserOldestToNewest = async (req,res,next) =>{
                     job_listing.minimum_salary,
                     job_listing.maximum_salary, 
                     position_type.type AS position_type,
-                    company.name AS company_name
+                    company.name AS company_name,
+                    company.email AS company_email,
+                    company.address AS company_address,
+                    company.contact_number AS company_contact_number,
+                    company.description AS company_description
                 FROM job_listing
                 JOIN position_type ON job_listing.positiontype_id = position_type.id 
                 JOIN company ON job_listing.company_id = company.id
@@ -349,6 +361,10 @@ const viewJobsCreatedByCompanyNewestToOldest = async (req, res, next) => {
                         job_listing.maximum_salary, 
                         position_type.type AS position_type,
                         company.name AS company_name,
+                        company.email AS company_email,
+                        company.address AS company_address,
+                        company.contact_number AS company_contact_number,
+                        company.description AS company_description,
                         GROUP_CONCAT(disability.type SEPARATOR ', ') AS disability_types,
                         job_listing.date_created
                     FROM job_listing
@@ -425,6 +441,10 @@ const viewJobsCreatedByCompanyOldestToNewest = async (req, res, next) => {
                     job_listing.maximum_salary, 
                     position_type.type AS position_type,
                     company.name AS company_name,
+                    company.email AS company_email,
+                    company.address AS company_address,
+                    company.contact_number AS company_contact_number,
+                    company.description AS company_description,
                     GROUP_CONCAT(disability.type SEPARATOR ', ') AS disability_types,
                     job_listing.date_created
                 FROM job_listing
