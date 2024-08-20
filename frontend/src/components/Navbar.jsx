@@ -57,18 +57,27 @@ const Navbar = () => {
         </div>
         <div id="navbar" className={`transition-all duration-300 ease-in-out ${isMenuOpen ? 'block' : 'hidden'} sm:flex sm:items-center sm:justify-end sm:ps-5`}>
           <div className={`flex flex-col sm:flex-row ${isMenuOpen ? 'block' : 'hidden'} sm:flex sm:items-center sm:justify-end sm:ps-5`}>
-            <button onClick={() => handleNavigation('/joblist')} className="nav-link mx-2 font-roboto text-[#e3edf7] text-lg font-bold py-2 px-4 rounded-lg bg-[#007bff] shadow-lg transition duration-300 hover:bg-white hover:text-[#007bff]">Browse Jobs</button>
             <button onClick={() => handleNavigation('/')} className="nav-link mx-2 font-roboto text-[#007bff] text-lg font-bold py-2 px-4 rounded-lg bg-[#e3edf7] shadow-lg transition duration-300 hover:bg-[#007bff] hover:text-white">Home</button>
             <button onClick={() => handleNavigation('/about')} className="nav-link mx-2 font-roboto text-[#007bff] text-lg font-bold py-2 px-4 rounded-lg bg-[#e3edf7] shadow-lg transition duration-300 hover:bg-[#007bff] hover:text-white">About</button>
             <button onClick={() => handleNavigation('/contactpage')} className="nav-link mx-2 font-roboto text-[#007bff] text-lg font-bold py-2 px-4 rounded-lg bg-[#e3edf7] shadow-lg transition duration-300 hover:bg-[#007bff] hover:text-white">Contact</button>
-            {isRegistered && (
-              <button 
-                onClick={() => handleNavigation('/profile')}
-                className="nav-link mx-2 font-roboto text-[#007bff] text-lg font-bold py-2 px-4 rounded-lg bg-[#e3edf7] shadow-lg transition duration-300 hover:bg-[#007bff] hover:text-white"
-              >
-                <span className="material-symbols-outlined">person</span>
-              </button>
-            )}
+           
+              {isRegistered && ( //Automatically hide the browse job and profile button if the user is not yet registered
+                <>
+                  <button 
+                    onClick={() => handleNavigation('/joblist')} 
+                    className="nav-link mx-2 font-roboto text-[#e3edf7] text-lg font-bold py-2 px-4 rounded-lg bg-[#007bff] shadow-lg transition duration-300 hover:bg-white hover:text-[#007bff]"
+                  >
+                    Browse Jobs
+                  </button>
+                  <button 
+                    onClick={() => handleNavigation('/profile')}
+                    className="nav-link mx-2 font-roboto text-[#007bff] text-lg font-bold py-2 px-4 rounded-lg bg-[#e3edf7] shadow-lg transition duration-300 hover:bg-[#007bff] hover:text-white"
+                  >
+                    <span className="material-symbols-outlined">person</span>
+                  </button>
+                </>
+              )}
+
           </div>
         </div>
       </nav>
