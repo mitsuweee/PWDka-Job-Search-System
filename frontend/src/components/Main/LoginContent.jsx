@@ -8,6 +8,7 @@ const LoginComp = () => {
   });
 
   const [showPassword, setShowPassword] = useState(false);
+  const [selectedRole, setSelectedRole] = useState("User"); // Default selection is "User"
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -18,38 +19,40 @@ const LoginComp = () => {
     e.preventDefault();
 
     const data = JSON.stringify({
-        email: formValues.email.toLowerCase(),
-        password: formValues.password,
+      email: formValues.email.toLowerCase(),
+      password: formValues.password,
+      role: selectedRole, // Add selected role to the payload
     });
 
     const config = {
-        method: "post",
-        url: "/login/auth",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        data: data,
+      method: "post",
+      url: "/login/auth",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: data,
     };
 
     axios(config)
-        .then(function (response) {
-            console.log(response.data);
-            alert(response.data.message);
+      .then(function (response) {
+        console.log(response.data);
+        alert(response.data.message);
 
-            // Store id and role in local storage or state
-            const { id, role } = response.data;
-            sessionStorage.setItem("userId", id);
-            sessionStorage.setItem("userRole", role);
+        // Store id and role in local storage or state
+        const { id, role } = response.data;
+        sessionStorage.setItem("userId", id);
+        sessionStorage.setItem("userRole", role);
 
-            // Redirect to MainContent.jsx
-            window.location.href = "/joblist";
-        })
-        .catch(function (error) {
-            const errorMessage = error.response?.data?.message || "An error occurred";
-            console.log(error.response?.data);
-            alert(errorMessage);
-        });
-};
+        // Redirect to MainContent.jsx
+        window.location.href = "/joblist";
+      })
+      .catch(function (error) {
+        const errorMessage =
+          error.response?.data?.message || "An error occurred";
+        console.log(error.response?.data);
+        alert(errorMessage);
+      });
+  };
 
   const commonInputStyles = {
     boxShadow:
@@ -62,7 +65,11 @@ const LoginComp = () => {
         <section className="relative flex h-32 items-end bg-gray-900 lg:col-span-5 lg:h-full xl:col-span-6">
           <img
             alt=""
-            src="/imgs/smiley-woman-working-laptop.jpg"
+            src={
+              selectedRole === "User"
+                ? "/imgs/smiley-woman-working-laptop.jpg" // Add photo here for User
+                : "/imgs/signup.png" // Add photo here for Company
+            }
             className="absolute inset-0 h-full w-full object-cover opacity-80"
           />
           <div className="hidden lg:relative lg:block lg:p-12">
@@ -90,17 +97,43 @@ const LoginComp = () => {
 
         <main className="flex items-start justify-start px-8 py-8 sm:px-12 lg:col-span-7 lg:px-16 lg:py-12 xl:col-span-6 bg-custom-bg">
           <div className="w-full">
+            <div className="flex justify-center mb-6 space-x-4">
+              <button
+                onClick={() => setSelectedRole("User")}
+                className={`px-4 py-2 text-lg font-medium rounded-md focus:outline-none focus:ring-2 ${
+                  selectedRole === "User"
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-200 text-gray-700"
+                }`}
+              >
+                User
+              </button>
+              <button
+                onClick={() => setSelectedRole("Company")}
+                className={`px-4 py-2 text-lg font-medium rounded-md focus:outline-none focus:ring-2 ${
+                  selectedRole === "Company"
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-200 text-gray-700"
+                }`}
+              >
+                Company
+              </button>
+            </div>
+
             <p className="text-[#007bff] text-left tetx-sfprobold font-extrabold leading-snug tracking-tight mb-4 md:text-4xl">
-              LOGIN
+              {`LOGIN AS ${selectedRole.toUpperCase()}`}
             </p>
             <div className="bg-custom-bg p-8 shadow-2xl rounded-2xl">
-              <form className="mt-8 grid grid-cols-12 gap-6" onSubmit={handleSubmit}>
+              <form
+                className="mt-8 grid grid-cols-12 gap-6"
+                onSubmit={handleSubmit}
+              >
                 <div className="col-span-12">
                   <label
                     htmlFor="email"
                     className="block text-lg font-medium text-gray-700"
                   >
-                    Your Email
+                    {`${selectedRole} Email`}
                   </label>
                   <div className="mt-2">
                     <input
@@ -111,7 +144,11 @@ const LoginComp = () => {
                       onChange={handleInputChange}
                       className="mt-2 w-full h-10 rounded-md bg-white text-lg text-gray-700 focus:outline-none"
                       style={commonInputStyles}
-                      placeholder="Ex: mitsui@gmail.com"
+                      placeholder={`Ex: ${
+                        selectedRole === "User"
+                          ? "mitsui@gmail.com"
+                          : "company@example.com"
+                      }`}
                       required
                     />
                   </div>
@@ -151,7 +188,7 @@ const LoginComp = () => {
                     type="submit"
                     className="px-6 py-2 text-lg shadow-xl font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
-                    Login
+                    {`Login as ${selectedRole}`}
                   </button>
                 </div>
               </form>
