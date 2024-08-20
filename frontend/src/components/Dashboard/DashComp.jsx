@@ -55,10 +55,7 @@ const CompanyDashboard = () => {
     setShowDisabilityOptions(!showDisabilityOptions);
   };
 
-  const handleUpdateChange = (e) => {
-    const { name, value } = e.target;
-    setUpdatedDetails({ ...updatedDetails, [name]: value });
-  };
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -71,23 +68,6 @@ const CompanyDashboard = () => {
     console.log('Job Updated:', updatedDetails);
     // Implement actual update functionality
   };
-
-  const handleSortChange = (option) => {
-    setSortOption(option);
-    setIsFilterOpen(false); // Close filter after selection
-    // Implement sorting logic here
-    console.log('Sort Option:', option);
-  };
-
-  const toggleFilterMenu = (e) => {
-    e.stopPropagation(); // Prevent click from propagating and closing the filter menu
-    setIsFilterOpen(!isFilterOpen);
-  };
-
-  const closeFilterMenu = () => {
-    setIsFilterOpen(false);
-  };
-
   const renderPostJob = () => {
     return (
       <div>
@@ -219,6 +199,26 @@ const CompanyDashboard = () => {
         </form>
       </div>
     );
+  };
+
+  const handleUpdateChange = (e) => {
+    const { name, value } = e.target;
+    setUpdatedDetails({ ...updatedDetails, [name]: value });
+  };
+  const handleSortChange = (option) => {
+    setSortOption(option);
+    setIsFilterOpen(false); // Close filter after selection
+    // Implement sorting logic here
+    console.log('Sort Option:', option);
+  };
+
+  const toggleFilterMenu = (e) => {
+    e.stopPropagation(); // Prevent click from propagating and closing the filter menu
+    setIsFilterOpen(!isFilterOpen);
+  };
+
+  const closeFilterMenu = () => {
+    setIsFilterOpen(false);
   };
 
   const renderUpdateJobListings = () => {
