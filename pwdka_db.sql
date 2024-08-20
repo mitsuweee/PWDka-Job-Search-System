@@ -20,8 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `pwdka_db`
 --
-DROP DATABASE `pwdka_db`
-CREATE DATABASE `pwdka_db`
+DROP DATABASE `pwdka_db`;
+CREATE DATABASE `pwdka_db`;
 -- --------------------------------------------------------
 
 --
