@@ -84,51 +84,63 @@ const Signup = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
-        // Create the data object with the correct property names
-        const data = JSON.stringify({
-            id: userFormValues.pwdID, // Assuming you have an id field
-            first_name: userFormValues.firstName.toLowerCase(),
-            middle_initial: userFormValues.middleInitial.toLowerCase(),
-            last_name: userFormValues.lastName.toLowerCase(),
-            address: userFormValues.address.toLowerCase(),
-            city: userFormValues.city.toLowerCase(),
-            gender: userFormValues.gender.toLowerCase(),
-            birth_date: userFormValues.birthdate,
-            email: userFormValues.email.toLowerCase(),
-            password: userFormValues.password,
-            confirm_password: userFormValues.reEnterPassword, // Matching `confirmPassword` with `reEnterPassword`
-            contact_number: userFormValues.contactNumber,
-            disability_id: userFormValues.disability, // Assuming disability_id is mapped to `disability`
-
-            // Change these values to BLOB (Encode File Data to UTF 8))
-            formal_picture: userFormValues.profilePicture,
-            picture_with_id: userFormValues.selfieWithID,
-            picture_of_pwd_id: userFormValues.idPicture,
-        });
-
-        console.log(data);
-
+    
+        const isCompany = formType === "company";
+    
+        const data = JSON.stringify(
+            isCompany
+                ? {
+                      name: companyFormValues.companyName.toLowerCase(),
+                      address: companyFormValues.companyAddress.toLowerCase(),
+                      city: companyFormValues.companyCity.toLowerCase(),
+                      description: companyFormValues.companyDescription,
+                      contact_number: companyFormValues.companyContactNumber,
+                      email: companyFormValues.companyEmail.toLowerCase(),
+                      password: companyFormValues.companyPassword,
+                      confirm_password: companyFormValues.companyReEnterPassword,
+                      profile_picture: companyFormValues.companyLogo, // Assuming companyLogo contains the image file data as a string or base64 encoded.
+                  }
+                : {
+                      id: userFormValues.pwdID,
+                      first_name: userFormValues.firstName.toLowerCase(),
+                      middle_initial: userFormValues.middleInitial.toLowerCase(),
+                      last_name: userFormValues.lastName.toLowerCase(),
+                      address: userFormValues.address.toLowerCase(),
+                      city: userFormValues.city.toLowerCase(),
+                      gender: userFormValues.gender.toLowerCase(),
+                      birth_date: userFormValues.birthdate,
+                      email: userFormValues.email.toLowerCase(),
+                      password: userFormValues.password,
+                      confirm_password: userFormValues.reEnterPassword,
+                      contact_number: userFormValues.contactNumber,
+                      disability_id: userFormValues.disability,
+                      formal_picture: userFormValues.profilePicture, // Assuming profilePicture contains the image file data as a string or base64 encoded.
+                      picture_with_id: userFormValues.selfieWithID, // Assuming selfieWithID contains the image file data as a string or base64 encoded.
+                      picture_of_pwd_id: userFormValues.idPicture, // Assuming idPicture contains the image file data as a string or base64 encoded.
+                  }
+        );
+    
         const config = {
             method: "post",
-            url: "/user/register", // Assuming this is for user registration
+            url: isCompany ? "/company/register" : "/user/register",
             headers: {
                 "Content-Type": "application/json",
             },
             data: data,
         };
-
+    
         axios(config)
-            .then(function (response) {
+            .then((response) => {
                 console.log(response.data);
                 alert(response.data.message);
             })
-            .catch(function (error) {
-                const errorMessage = error.response.data.message;
-                console.log(error.response.data);
+            .catch((error) => {
+                const errorMessage = error.response?.data?.message || "An error occurred";
+                console.log(error.response?.data);
                 alert(errorMessage);
             });
     };
+    
 
     const commonInputStyles = {
         boxShadow:
