@@ -42,7 +42,7 @@ const LoginComp = () => {
             sessionStorage.setItem("userRole", role);
 
             // Redirect to MainContent.jsx
-            window.location.href = "../Main/MainContent.jsx";
+            window.location.href = "/joblist";
         })
         .catch(function (error) {
             const errorMessage = error.response?.data?.message || "An error occurred";
