@@ -6,7 +6,6 @@ const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 
 const registerUser = async (req, res, next) => {
-    console.log(req.body);
 
     let id = req.body.id;
     let first_name = req.body.first_name.toLowerCase();
@@ -156,7 +155,7 @@ const registerUser = async (req, res, next) => {
                                     message: "Email already Exist",
                                 });
                             } else {
-                                const selectDisabilityIdQuery = `SELECT id from disability where type = ?`;
+                                const selectDisabilityIdQuery = `SELECT id, type from disability where type = ?`;
                                 const disabilityRows = await connection.query(
                                     selectDisabilityIdQuery,
                                     [disability_id]
@@ -226,7 +225,25 @@ const registerUser = async (req, res, next) => {
                                         from: "livcenteno24@gmail.com",
                                         to: email,
                                         subject: "Account Verification",
-                                        text: `Dear ${first_name},\n\nThank you for registering. Your account is under review and will be activated once verified. We will notify you once the verification process is complete.\n\nBest regards,\nPWDKA Team`,
+                                        text: `
+                                        Dear ${values.first_name},
+
+                                        Thank you for registering. Your account is under review and will be activated once verified. We will notify you once the verification process is complete.
+
+                                        Here are the details you provided:
+
+                                        - ID: ${values.id}
+                                        - Name: ${values.first_name} ${values.middle_initial} ${values.last_name}
+                                        - Address: ${values.address}, ${values.city}
+                                        - Gender: ${values.gender}
+                                        - Date of Birth: ${values.birth_date}
+                                        - Email: ${values.email}
+                                        - Contact Number: ${values.contact_number}
+                                        - Disability: ${disabilityRows[0].type}
+
+                                        Best regards,
+                                        PWDKA Team
+                                    `
                                     };
 
                                     // Send the email
