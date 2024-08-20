@@ -35,7 +35,14 @@ const LoginComp = () => {
         .then(function (response) {
             console.log(response.data);
             alert(response.data.message);
-            // Redirect or perform actions on successful login
+
+            // Store id and role in local storage or state
+            const { id, role } = response.data;
+            sessionStorage.setItem("userId", id);
+            sessionStorage.setItem("userRole", role);
+
+            // Redirect to MainContent.jsx
+            window.location.href = "../Main/MainContent.jsx";
         })
         .catch(function (error) {
             const errorMessage = error.response?.data?.message || "An error occurred";
