@@ -203,55 +203,55 @@ const AdminDashboard = () => {
     };
   
     return (
-      <div className="w-full p-8 bg-blue-500 rounded-xl shadow-xl text-center">
-        <h2 className="text-4xl font-bold mb-6 text-white">Verify User</h2>
-        <p className="text-3xl mb-8 text-white">User Details</p>
-        <div className="flex justify-center mb-6">
-          {/* Adjusted size of the image */}
+      <div className="w-full p-4 bg-blue-500 rounded-xl shadow-xl text-center">
+        <h2 className="text-3xl font-bold mb-4 text-white">Verify User</h2>
+        <p className="text-2xl mb-8 text-white">User Details</p>
+        <div className="flex justify-center mb-4">
           <img
             src={user.profilePicture}
-            className="w-36 h-36 rounded-full"
+            alt={user.fullName}
+            className="w-24 h-24 rounded-full"
           />
         </div>
-        <div className="text-left text-white space-y-6">
+        <div className="text-left text-white space-y-4">
           <div>
             <p className="font-semibold text-lg">Full Name:</p>
-            <p className="text-2xl bg-custom-bg rounded-md text-custom-blue p-4">{user.fullName}</p>
+            <p className="text-xl bg-custom-bg rounded-md text-custom-blue p-2">{user.fullName}</p>
           </div>
           <div>
             <p className="font-semibold text-lg">PWD ID:</p>
-            <p className="text-2xl bg-custom-bg rounded-md text-custom-blue p-4">{user.pwdId}</p>
+            <p className="text-xl bg-custom-bg rounded-md text-custom-blue p-2">{user.pwdId}</p>
           </div>
           <div>
             <p className="font-semibold text-lg">Disability:</p>
-            <p className="text-2xl bg-custom-bg rounded-md text-custom-blue p-4">{user.disability}</p>
+            <p className="text-xl bg-custom-bg rounded-md text-custom-blue p-2">{user.disability}</p>
           </div>
           <div>
             <p className="font-semibold text-lg">Address:</p>
-            <p className="text-2xl bg-custom-bg rounded-md text-custom-blue p-4">{user.address}</p>
+            <p className="text-xl bg-custom-bg rounded-md text-custom-blue p-2">{user.address}</p>
           </div>
           <div>
             <p className="font-semibold text-lg">City:</p>
-            <p className="text-2xl bg-custom-bg rounded-md text-custom-blue p-4">{user.city}</p>
+            <p className="text-xl bg-custom-bg rounded-md text-custom-blue p-2">{user.city}</p>
           </div>
           <div>
             <p className="font-semibold text-lg">Birthdate:</p>
-            <p className="text-2xl bg-custom-bg rounded-md text-custom-blue p-4">{user.birthdate}</p>
+            <p className="text-xl bg-custom-bg rounded-md text-custom-blue p-2">{user.birthdate}</p>
           </div>
           <div>
             <p className="font-semibold text-lg">Contact Number:</p>
-            <p className="text-2xl bg-custom-bg rounded-md text-custom-blue p-4">{user.contactNumber}</p>
+            <p className="text-xl bg-custom-bg rounded-md text-custom-blue p-2">{user.contactNumber}</p>
           </div>
           <div>
             <p className="font-semibold text-lg">Email:</p>
-            <p className="text-2xl bg-custom-bg rounded-md text-custom-blue p-4">{user.email}</p>
+            <p className="text-xl bg-custom-bg rounded-md text-custom-blue p-2">{user.email}</p>
           </div>
         </div>
-        <div className="flex justify-between items-center mt-12 bg-white p-6 rounded-lg shadow-lg">
-          <button className="cursor-pointer transition-all bg-blue-600 text-white px-6 py-4 rounded-lg border-blue-700 border-b-[4px] hover:brightness-110 hover:-translate-y-[1px] hover:border-b-[6px] active:border-b-[2px] active:brightness-90 active:translate-y-[2px]">
+        <div className="flex justify-between items-center mt-8 bg-white p-4 rounded-lg shadow-lg">
+          <button className="cursor-pointer transition-all bg-blue-600 text-white px-4 py-2 rounded-lg border-blue-700 border-b-[4px] hover:brightness-110 hover:-translate-y-[1px] hover:border-b-[6px] active:border-b-[2px] active:brightness-90 active:translate-y-[2px]">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-8 w-8"
+              className="h-6 w-6"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -264,11 +264,11 @@ const AdminDashboard = () => {
               />
             </svg>
           </button>
-          <div className="flex space-x-6">
-            <button className="cursor-pointer transition-all bg-green-500 text-white px-6 py-4 rounded-lg border-green-600 border-b-[4px] hover:brightness-110 hover:-translate-y-[1px] hover:border-b-[6px] active:border-b-[2px] active:brightness-90 active:translate-y-[2px]">
+          <div className="flex space-x-4">
+            <button className="cursor-pointer transition-all bg-green-500 text-white px-4 py-2 rounded-lg border-green-600 border-b-[4px] hover:brightness-110 hover:-translate-y-[1px] hover:border-b-[6px] active:border-b-[2px] active:brightness-90 active:translate-y-[2px]">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-8 w-8"
+                className="h-6 w-6"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -281,10 +281,10 @@ const AdminDashboard = () => {
                 />
               </svg>
             </button>
-            <button className="cursor-pointer transition-all bg-red-500 text-white px-6 py-4 rounded-lg border-red-600 border-b-[4px] hover:brightness-110 hover:-translate-y-[1px] hover:border-b-[6px] active:border-b-[2px] active:brightness-90 active:translate-y-[2px]">
+            <button className="cursor-pointer transition-all bg-red-500 text-white px-4 py-2 rounded-lg border-red-600 border-b-[4px] hover:brightness-110 hover:-translate-y-[1px] hover:border-b-[6px] active:border-b-[2px] active:brightness-90 active:translate-y-[2px]">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-8 w-8"
+                className="h-6 w-6"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -298,10 +298,10 @@ const AdminDashboard = () => {
               </svg>
             </button>
           </div>
-          <button className="cursor-pointer transition-all bg-blue-600 text-white px-6 py-4 rounded-lg border-blue-700 border-b-[4px] hover:brightness-110 hover:-translate-y-[1px] hover:border-b-[6px] active:border-b-[2px] active:brightness-90 active:translate-y-[2px]">
+          <button className="cursor-pointer transition-all bg-blue-600 text-white px-4 py-2 rounded-lg border-blue-700 border-b-[4px] hover:brightness-110 hover:-translate-y-[1px] hover:border-b-[6px] active:border-b-[2px] active:brightness-90 active:translate-y-[2px]">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-8 w-8"
+              className="h-6 w-6"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -318,8 +318,6 @@ const AdminDashboard = () => {
       </div>
     );
   };
-  
-
 
   const renderVerifyCompany = () => {
     const company = {
