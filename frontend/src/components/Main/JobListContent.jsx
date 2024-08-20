@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const JobListing = () => {
+  const [jobs, setJobs] = useState([]); // State to hold the jobs data
   const [selectedJobId, setSelectedJobId] = useState(null);
   const [isDetailsVisible, setIsDetailsVisible] = useState(false);
   const [isMoreInfoVisible, setIsMoreInfoVisible] = useState(false);
@@ -9,99 +11,47 @@ const JobListing = () => {
 
   const jobsPerPage = 4; // Number of jobs to display per page
 
-  const company = {
-    companyName: 'Sun Life',
-    companyEmail: 'info@sunlife.com',
-    companyContact: '+1 555-6789',
-    companyLocation: '2/F Sun Life Centre, 5th Avenue corner Rizal Drive, Taguig City, National Capital Reg, 1634',
-    companyDescription: 'Sun Life in the Philippines offers a diverse range of insurance, wealth, and asset management solutions to help every Filipino in their journey towards a brighter life. As the country’s first and longest-standing life insurer, we provide...',
-    companyImage: 'src/imgs/sunlife.png', // Add your image path here
-  };
+  useEffect(() => {
+    const userId = sessionStorage.getItem("userId");
 
-  const jobs = [
-    {
-      id: 1,
-      jobName: 'Full-stack Engineer Team Lead',
-      city: 'Manila',
-      positionType: 'Full-time',
-      salary: '$60,000 - $80,000',
-      description: 'Work with a team to lead full-stack development in .NET/Angular...',
-      qualifications: '3+ years of experience, Knowledge in .NET and Angular...',
-    },
-    {
-      id: 2,
-      jobName: 'Product Manager',
-      city: 'Gotham',
-      positionType: 'Full-time',
-      salary: '$90,000 - $110,000',
-      description: 'Manage product lifecycle from conception to launch...',
-      qualifications: '5+ years of experience, Proven leadership skills...',
-    },
-    {
-      id: 3,
-      jobName: 'Mechanical Engineer',
-      city: 'Star City',
-      positionType: 'Part-time',
-      salary: '$50,000 - $70,000',
-      description: 'Design and develop mechanical systems and components...',
-      qualifications: '4+ years of experience in mechanical design...',
-    },
-    {
-      id: 4,
-      jobName: 'Full-stack Engineer Team Lead',
-      city: 'Manila',
-      positionType: 'Full-time',
-      salary: '$60,000 - $80,000',
-      description: 'Work with a team to lead full-stack development in .NET/Angular...',
-      qualifications: '3+ years of experience, Knowledge in .NET and Angular...',
-    },
-    {
-      id: 5,
-      jobName: 'Product Manager',
-      city: 'Gotham',
-      positionType: 'Full-time',
-      salary: '$90,000 - $110,000',
-      description: 'Manage product lifecycle from conception to launch...',
-      qualifications: '5+ years of experience, Proven leadership skills...',
-    },
-    {
-      id: 6,
-      jobName: 'Mechanical Engineer',
-      city: 'Star City',
-      positionType: 'Part-time',
-      salary: '$50,000 - $70,000',
-      description: 'Design and develop mechanical systems and components...',
-      qualifications: '4+ years of experience in mechanical design...',
-    },
-    {
-      id: 7,
-      jobName: 'Mechanical Engineer',
-      city: 'Star City',
-      positionType: 'Part-time',
-      salary: '$50,000 - $70,000',
-      description: 'Design and develop mechanical systems and components...',
-      qualifications: '4+ years of experience in mechanical design...',
-    },
-    {
-      id: 8,
-      jobName: 'Mechanical Engineer',
-      city: 'Star City',
-      positionType: 'Part-time',
-      salary: '$50,000 - $70,000',
-      description: 'Design and develop mechanical systems and components...',
-      qualifications: '4+ years of experience in mechanical design...',
-    },
-    {
-      id: 9,
-      jobName: 'Mechanical Engineer',
-      city: 'Star City',
-      positionType: 'Part-time',
-      salary: '$50,000 - $70,000',
-      description: 'Design and develop mechanical systems and components...',
-      qualifications: '4+ years of experience in mechanical design...',
-    },
-    // Additional job entries can be added here
-  ];
+    const config = {
+      method: "get",
+      url: `/joblisting/view/newesttooldest/${userId}`,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log(response.data);
+
+        // Combine job and company details into one object per job
+        const fetchedJobs = response.data.data.map(job => ({
+          id: job.id,
+          jobName: job.position_name,
+          address: job.company_address,
+          positionType: job.position_type,
+          salary: `${job.minimum_salary}-${job.maximum_salary}`,
+          description: job.description,
+          qualifications: job.qualification,
+          companyName: job.company_name,
+          companyEmail: job.company_email,
+          companyContact: job.company_contact_number,
+          companyLocation: job.company_address,
+          companyDescription: job.company_description,
+          companyImage: 'src/imgs/sunlife.png', // Example image path
+        }));
+
+        setJobs(fetchedJobs); // Setting the jobs state
+      })
+      .catch(function (error) {
+        const errorMessage =
+          error.response?.data?.message || "An error occurred";
+        console.log(error.response?.data);
+        alert(errorMessage);
+      });
+  }, []);
 
   const filteredJobs = jobs.filter(job =>
     job.jobName.toLowerCase().includes(searchTerm.toLowerCase())
@@ -148,7 +98,7 @@ const JobListing = () => {
                   </h2>
                   <p className="text-white">
                     <span className="material-symbols-outlined mr-2">location_on</span>
-                    {job.city}
+                    {job.companyLocation}
                   </p>
                   <p className="font-semibold text-white">
                     <span className="material-symbols-outlined mr-2">schedule</span>
@@ -173,8 +123,8 @@ const JobListing = () => {
                     <h2 className="text-2xl font-bold mb-2 text-blue-600">
                       {job.jobName}
                     </h2>
-                    <p className="text-lg mb-2 text-gray-700">{company.companyName}</p>
-                    <p className="text-md mb-2 text-gray-500">{job.city}</p>
+                    <p className="text-lg mb-2 text-gray-700">{job.companyName}</p>
+                    <p className="text-md mb-2 text-gray-500">{job.companyLocation}</p>
                     <p className="font-bold text-md text-blue-600">{job.positionType}</p>
                     <p className="font-bold text-md mb-2 text-blue-600">{job.salary}</p>
                     <p className="text-md text-gray-700 mb-2">{job.description}</p>
@@ -195,17 +145,17 @@ const JobListing = () => {
                     {isMoreInfoVisible && (
                       <div className="mt-4 p-4 bg-blue-600 rounded-lg shadow-lg relative">
                         <img
-                          src={company.companyImage}
+                          src={job.companyImage}
                           alt="Company"
                           className="w-16 h-16 object-cover rounded-full absolute top-2 right-2"
                         />
                         <h3 className="text-lg font-bold text-white">Company Overview</h3>
-                        <p className="text-white"><strong>Company Name:</strong> {company.companyName}</p>
-                        <p className="text-white"><strong>Email:</strong> {company.companyEmail}</p>
-                        <p className="text-white"><strong>Contact Number:</strong> {company.companyContact}</p>
-                        <p className="text-white"><strong>Primary Location:</strong> {company.companyLocation}</p>
+                        <p className="text-white"><strong>Company Name:</strong> {job.companyName}</p>
+                        <p className="text-white"><strong>Email:</strong> {job.companyEmail}</p>
+                        <p className="text-white"><strong>Contact Number:</strong> {job.companyContact}</p>
+                        <p className="text-white"><strong>Primary Location:</strong> {job.companyLocation}</p>
                         <div className="text-md text-white">
-                          {company.companyDescription}
+                          {job.companyDescription}
                         </div>
                         <button
                           className="mt-2 text-white hover:underline"
@@ -300,12 +250,12 @@ const JobListing = () => {
               <h2 className="text-3xl font-bold mb-4 text-blue-600">{selectedJob.jobName}</h2>
               <p className="text-lg mb-2 text-gray-700 flex items-center">
                 <span className="material-symbols-outlined mr-2">work</span>
-                {company.companyName}
+                {selectedJob.companyName}
               </p>
 
               <p className="text-lg mb-4 text-gray-500">
                 <span className="material-symbols-outlined mr-2">location_on</span>
-                {selectedJob.city}
+                {selectedJob.companyLocation}
               </p>
               <p className="font-bold text-lg text-blue-600">
                 <span className="material-symbols-outlined mr-2">schedule</span>
@@ -336,17 +286,17 @@ const JobListing = () => {
             {isMoreInfoVisible && (
               <div className="mt-4 p-6 bg-blue-600 rounded-lg shadow-2xl relative">
                 <img
-                  src={company.companyImage}
+                  src={selectedJob.companyImage}
                   alt="Company"
                   className="w-20 h-20 object-cover rounded-full absolute top-6 right-6"
                 />
                 <h3 className="text-2xl font-bold text-white">Company Overview</h3>
-                <p className="text-white"><strong>Company Name:</strong> {company.companyName}</p>
-                <p className="text-white"><strong>Email:</strong> {company.companyEmail}</p>
-                <p className="text-white"><strong>Contact Number:</strong> {company.companyContact}</p>
-                <p className="text-white"><strong>Primary Location:</strong> {company.companyLocation}</p>
+                <p className="text-white"><strong>Company Name:</strong> {selectedJob.companyName}</p>
+                <p className="text-white"><strong>Email:</strong> {selectedJob.companyEmail}</p>
+                <p className="text-white"><strong>Contact Number:</strong> {selectedJob.companyContact}</p>
+                <p className="text-white"><strong>Primary Location:</strong> {selectedJob.companyLocation}</p>
                 <p className="text-lg text-white break-words">
-                  {company.companyDescription}
+                  {selectedJob.companyDescription}
                 </p>
               </div>
             )}

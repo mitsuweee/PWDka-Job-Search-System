@@ -1,24 +1,61 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const UserProf = () => {
   const [user, setUser] = useState({
-    profilePicture: 'https://via.placeholder.com/150',
-    fullName: 'Jane Doe',
-    about: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere dolores aliquid saepe sunt iusto ipsum earum natus omnis asperiores architecto praesentium dignissimos pariatur, ipsa cum? Voluptate vero eius at voluptas?',
-    disability: ['Physical'],
-    address: '1234 Elm Street',
-    city: 'Gotham',
-    contactNumber: '555-1234',
-    gender: 'Female',
-    birthdate: '1990-01-01',
-    email: 'jane.doe@example.com',
-    password: 'password123',
-    pictureWithId: 'https://via.placeholder.com/150',
-    pictureOfId: 'https://via.placeholder.com/150',
+    profilePicture: '',
+    fullName: '',
+    disability: '',
+    location: '',
+    contactNumber: '',
+    gender: '',
+    birthdate: '',
+    email: '',
+    pictureWithId: '',
+    pictureOfId: '',
   });
 
   const [isEditing, setIsEditing] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    const userId = sessionStorage.getItem("userId");
+    const config = {
+      method: "get",
+      url: `/user/view/${userId}`,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log(response.data.data);
+        setUser ({
+          fullName: response.data.data[0].full_name,
+          disability: response.data.data[0].type,
+          location: response.data.data[0].Location,
+          contactNumber: response.data.data[0].contact_number,
+          gender: response.data.data[0].gender,
+          birthdate: new Date(response.data.data[0].birth_date).toLocaleDateString('en-US'),
+          email: response.data.data[0].email,
+          pictureWithId: 'https://via.placeholder.com/150', // change this kapag maayos na
+          pictureOfId: 'https://via.placeholder.com/150',
+          profilePicture: 'https://via.placeholder.com/150'
+        })
+
+
+      })
+      .catch(function (error) {
+        const errorMessage =
+          error.response?.data?.message || "An error occurred";
+        console.log(error.response?.data);
+        alert(errorMessage);
+      });
+    console.log('Component is ready');
+    
+    // Any additional logic you want to execute on document ready can go here
+  }, []);
 
   const handleChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
@@ -53,14 +90,8 @@ const UserProf = () => {
         <div className="ml-6">
           <h2 className="text-3xl font-bold text-gray-900">{user.fullName}</h2>
           <div className="flex mt-2">
-            {user.disability.map((disability, index) => (
-              <span
-                key={index}
-                className="bg-blue-100 text-blue-700 text-sm font-semibold mr-2 px-2.5 py-0.5 rounded"
-              >
-                {disability}
-              </span>
-            ))}
+          <p className="bg-blue-100 text-blue-700 text-sm font-semibold mr-2 px-2.5 py-0.5 rounded">Disability:</p>
+          <p className="text-gray-600">{user.disability}</p>
           </div>
           <button
             onClick={handleEdit}
@@ -71,23 +102,14 @@ const UserProf = () => {
         </div>
       </div>
 
-      {/* About Section */}
-      <div className="mt-6">
-        <h3 className="text-lg font-semibold text-gray-800">About</h3>
-        <p className="text-gray-700 mt-2">{user.about}</p>
-      </div>
-
       {/* User Details Section */}
       <div className="mt-8 grid grid-cols-2 gap-8 text-left text-gray-800">
         <div>
           <div className="mb-4">
-            <p className="text-lg font-semibold text-gray-800">Address:</p>
-            <p className="text-gray-600">{user.address}</p>
+            <p className="text-lg font-semibold text-gray-800">Location:</p>
+            <p className="text-gray-600">{user.location}</p>
           </div>
-          <div className="mb-4">
-            <p className="text-lg font-semibold text-gray-800">City:</p>
-            <p className="text-gray-600">{user.city}</p>
-          </div>
+          
           <div className="mb-4">
             <p className="text-lg font-semibold text-gray-800">Contact Number:</p>
             <p className="text-gray-600">{user.contactNumber}</p>
