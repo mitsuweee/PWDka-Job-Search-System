@@ -18,30 +18,31 @@ const LoginComp = () => {
     e.preventDefault();
 
     const data = JSON.stringify({
-      email: formValues.email.toLowerCase(),
-      password: formValues.password,
+        email: formValues.email.toLowerCase(),
+        password: formValues.password,
     });
 
     const config = {
-      method: "post",
-      url: "/user/login",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      data: data,
+        method: "post",
+        url: "/login/auth",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        data: data,
     };
 
     axios(config)
-      .then(function (response) {
-        console.log(response.data);
-        alert(response.data.message);
-      })
-      .catch(function (error) {
-        const errorMessage = error.response.data.message;
-        console.log(error.response.data);
-        alert(errorMessage);
-      });
-  };
+        .then(function (response) {
+            console.log(response.data);
+            alert(response.data.message);
+            // Redirect or perform actions on successful login
+        })
+        .catch(function (error) {
+            const errorMessage = error.response?.data?.message || "An error occurred";
+            console.log(error.response?.data);
+            alert(errorMessage);
+        });
+};
 
   const commonInputStyles = {
     boxShadow:
