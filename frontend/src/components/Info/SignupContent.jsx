@@ -3,6 +3,8 @@ import axios from "axios";
 
 const Signup = () => {
     const [formType, setFormType] = useState("user");
+    const [showPassword, setShowPassword] = useState(false);
+    const [showReEnterPassword, setShowReEnterPassword] = useState(false);
 
     const [userFormValues, setUserFormValues] = useState({
         firstName: "",
@@ -126,9 +128,6 @@ const Signup = () => {
                 console.log(error.response.data);
                 alert(errorMessage);
             });
-
-            
-
     };
 
     const commonInputStyles = {
@@ -324,7 +323,7 @@ const Signup = () => {
                             <option value="Intellectual Disability">
                                 Intellectual Disability
                             </option>
-                            <option value="earning Disability">
+                            <option value="Learning Disability">
                                 Learning Disability
                             </option>
                             <option value="Mental Disability">
@@ -345,7 +344,7 @@ const Signup = () => {
                             <option value="Cancer (RA11215)">
                                 Cancer (RA11215)
                             </option>
-                            <option value="Rare Disease (RA10747">
+                            <option value="Rare Disease (RA10747)">
                                 Rare Disease (RA10747)
                             </option>
                         </select>
@@ -377,16 +376,25 @@ const Signup = () => {
                         >
                             Password
                         </label>
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            value={userFormValues.password}
-                            onChange={handleInputChange}
-                            className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
-                            style={commonInputStyles}
-                            required
-                        />
+                        <div className="relative">
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                id="password"
+                                name="password"
+                                value={userFormValues.password}
+                                onChange={handleInputChange}
+                                className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none pr-10"
+                                style={commonInputStyles}
+                                required
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-600 hover:text-blue-500"
+                            >
+                                {showPassword ? "Hide" : "Show"}
+                            </button>
+                        </div>
                     </div>
 
                     <div>
@@ -396,16 +404,27 @@ const Signup = () => {
                         >
                             Re-Enter Password
                         </label>
-                        <input
-                            type="password"
-                            id="reEnterPassword"
-                            name="reEnterPassword"
-                            value={userFormValues.reEnterPassword}
-                            onChange={handleInputChange}
-                            className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
-                            style={commonInputStyles}
-                            required
-                        />
+                        <div className="relative">
+                            <input
+                                type={showReEnterPassword ? "text" : "password"}
+                                id="reEnterPassword"
+                                name="reEnterPassword"
+                                value={userFormValues.reEnterPassword}
+                                onChange={handleInputChange}
+                                className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none pr-10"
+                                style={commonInputStyles}
+                                required
+                            />
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    setShowReEnterPassword(!showReEnterPassword)
+                                }
+                                className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-600 hover:text-blue-500"
+                            >
+                                {showReEnterPassword ? "Hide" : "Show"}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -633,16 +652,25 @@ const Signup = () => {
                         >
                             Password
                         </label>
-                        <input
-                            type="password"
-                            id="companyPassword"
-                            name="companyPassword"
-                            value={companyFormValues.companyPassword}
-                            onChange={handleInputChange}
-                            className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
-                            style={commonInputStyles}
-                            required
-                        />
+                        <div className="relative">
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                id="companyPassword"
+                                name="companyPassword"
+                                value={companyFormValues.companyPassword}
+                                onChange={handleInputChange}
+                                className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none pr-10"
+                                style={commonInputStyles}
+                                required
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-600 hover:text-blue-500"
+                            >
+                                {showPassword ? "Hide" : "Show"}
+                            </button>
+                        </div>
                     </div>
 
                     <div>
@@ -652,16 +680,27 @@ const Signup = () => {
                         >
                             Re-Enter Password
                         </label>
-                        <input
-                            type="password"
-                            id="companyReEnterPassword"
-                            name="companyReEnterPassword"
-                            value={companyFormValues.companyReEnterPassword}
-                            onChange={handleInputChange}
-                            className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
-                            style={commonInputStyles}
-                            required
-                        />
+                        <div className="relative">
+                            <input
+                                type={showReEnterPassword ? "text" : "password"}
+                                id="companyReEnterPassword"
+                                name="companyReEnterPassword"
+                                value={companyFormValues.companyReEnterPassword}
+                                onChange={handleInputChange}
+                                className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none pr-10"
+                                style={commonInputStyles}
+                                required
+                            />
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    setShowReEnterPassword(!showReEnterPassword)
+                                }
+                                className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-600 hover:text-blue-500"
+                            >
+                                {showReEnterPassword ? "Hide" : "Show"}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
