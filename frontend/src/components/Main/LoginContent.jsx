@@ -8,7 +8,6 @@ const LoginComp = () => {
   });
 
   const [showPassword, setShowPassword] = useState(false);
-  const [selectedRole, setSelectedRole] = useState("User"); // Default selection is "User"
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -23,7 +22,6 @@ const LoginComp = () => {
     const data = JSON.stringify({
       email: formValues.email.toLowerCase(),
       password: formValues.password,
-      role: selectedRole, // Add selected role to the payload
     });
 
     const config = {
@@ -42,8 +40,8 @@ const LoginComp = () => {
 
         // Store id and role in local storage or state
         const { id, role } = response.data;
-        sessionStorage.setItem("userId", id);
-        sessionStorage.setItem("userRole", role);
+        sessionStorage.setItem("Id", id);
+        sessionStorage.setItem("Role", role);
 
         if (role === "user"){
           window.location.href = "/joblist";
@@ -51,10 +49,6 @@ const LoginComp = () => {
         else {
           window.location.href = "/dashc";
         }
-
-
-        // Redirect to MainContent.jsx
-        // window.location.href = "/joblist";
       })
       .catch(function (error) {
         const errorMessage =

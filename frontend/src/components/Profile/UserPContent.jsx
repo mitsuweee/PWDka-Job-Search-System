@@ -19,7 +19,7 @@ const UserProf = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
-    const userId = sessionStorage.getItem("userId");
+    const userId = sessionStorage.getItem("Id");
     const config = {
       method: "get",
       url: `/user/view/${userId}`,

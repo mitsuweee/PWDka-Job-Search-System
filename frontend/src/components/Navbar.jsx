@@ -8,7 +8,7 @@ const Navbar = () => {
 
   useEffect(() => {
     // Check if userType is set in localStorage
-    const userType = sessionStorage.getItem('userId');
+    const userType = sessionStorage.getItem('Id');
     if (userType) {
       setIsRegistered(true);
     }

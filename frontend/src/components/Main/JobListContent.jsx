@@ -12,7 +12,7 @@ const JobListing = () => {
   const jobsPerPage = 4; // Number of jobs to display per page
 
   useEffect(() => {
-    const userId = sessionStorage.getItem("userId");
+    const userId = sessionStorage.getItem("Id");
 
     const config = {
       method: "get",
