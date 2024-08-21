@@ -13,6 +13,7 @@ import JobListingPage from './pages/JobListPage.jsx';
 import Profile from './components/Profile/Profile.jsx';  // Corrected import path
 import ApplyPg from './pages/ApplyPg.jsx';
 import Faq from './pages/Faq.jsx';
+import AdminLog from './pages/AdminLogin.jsx';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
         <Route path="/profile" element={<Profile/>} />  {/* Unified profile route */}
         <Route path="/apply" element={<ApplyPg/>} />
         <Route path="/faqs" element={<Faq/>} />
+        <Route path="/adminlogin" element={<AdminLog/>} />
       </Routes>
     </Router>
   );
