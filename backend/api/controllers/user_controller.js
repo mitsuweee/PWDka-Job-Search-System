@@ -557,4 +557,3 @@ module.exports = {
     userChangePassword,
     viewUserViaId,
 };
-

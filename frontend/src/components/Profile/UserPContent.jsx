@@ -198,59 +198,9 @@ const UserProf = () => {
                   className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
                 />
               </div>
-              <div className="mb-6">
-                <label className="block text-gray-600 font-semibold">Gender:</label>
-                <input
-                  type="text"
-                  name="gender"
-                  value={user.gender}
-                  onChange={handleChange}
-                  className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                  disabled
-                />
-              </div>
             </div>
             <div>
               <div className="mb-6">
-                <label className="block text-gray-600 font-semibold">Birthdate:</label>
-                <input
-                  type="date"
-                  name="birthdate"
-                  value={user.birthdate}
-                  onChange={handleChange}
-                  className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                  disabled
-                />
-              </div>
-              <div className="mb-6">
-                <label className="block text-gray-600 font-semibold">Email:</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={user.email}
-                  onChange={handleChange}
-                  className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                  disabled
-                />
-              </div>
-              <div className="mb-6">
-                <label className="block text-gray-600 font-semibold">Password:</label>
-                <div className="relative">
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    name="password"
-                    value={user.password}
-                    onChange={handleChange}
-                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                  />
-                  <button
-                    type="button"
-                    onClick={togglePasswordVisibility}
-                    className="absolute inset-y-0 right-0 px-3 text-gray-600 hover:text-gray-800"
-                  >
-                    {showPassword ? 'Hide' : 'Show'}
-                  </button>
-                </div>
               </div>
               <div className="mb-6">
                 <label className="block text-gray-600 font-semibold">Picture with ID:</label>
