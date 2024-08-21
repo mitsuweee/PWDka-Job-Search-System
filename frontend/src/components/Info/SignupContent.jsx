@@ -141,7 +141,6 @@ const Signup = () => {
             });
     };
     
-
     const commonInputStyles = {
         boxShadow:
             "inset 13px 13px 27px #d1dae3, inset -13px -13px 27px #f5ffff",
