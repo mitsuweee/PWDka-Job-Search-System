@@ -18,6 +18,8 @@ const LoginComp = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+   
+
     const data = JSON.stringify({
       email: formValues.email.toLowerCase(),
       password: formValues.password,
@@ -26,7 +28,7 @@ const LoginComp = () => {
 
     const config = {
       method: "post",
-      url: "/login/auth",
+      url: "/login/auth", // Use different URLs based on the role
       headers: {
         "Content-Type": "application/json",
       },
@@ -43,8 +45,16 @@ const LoginComp = () => {
         sessionStorage.setItem("userId", id);
         sessionStorage.setItem("userRole", role);
 
+        if (role === "user"){
+          window.location.href = "/joblist";
+        }
+        else {
+          window.location.href = "/dashc";
+        }
+
+
         // Redirect to MainContent.jsx
-        window.location.href = "/joblist";
+        // window.location.href = "/joblist";
       })
       .catch(function (error) {
         const errorMessage =
@@ -97,7 +107,7 @@ const LoginComp = () => {
 
         <main className="flex items-start justify-start px-8 py-8 sm:px-12 lg:col-span-7 lg:px-16 lg:py-12 xl:col-span-6 bg-custom-bg">
           <div className="w-full">
-            <div className="flex justify-center mb-6 space-x-4">
+            {/* <div className="flex justify-center mb-6 space-x-4">
               <button
                 onClick={() => setSelectedRole("User")}
                 className={`px-4 py-2 text-lg font-medium rounded-md focus:outline-none focus:ring-2 ${
@@ -118,7 +128,7 @@ const LoginComp = () => {
               >
                 Company
               </button>
-            </div>
+            </div> */}
 
             <p className="text-[#007bff] text-left tetx-sfprobold font-extrabold leading-snug tracking-tight mb-4 md:text-4xl">
               {`LOGIN AS ${selectedRole.toUpperCase()}`}

@@ -209,6 +209,8 @@ const loginCompany = async (req, res, next) => {
                 } else if (companyRows[0].status === "VERIFIED") {
                     return res.status(200).json({
                         successful: true,
+                        id: companyRows[0].id, // added role
+                        role: companyRows[0].role,
                         message: "Successfully Logged In."
                     })
                 } else {

@@ -316,7 +316,10 @@ const loginUser = async (req, res, next) => {
                 } else if (userRows[0].status === "VERIFIED") {
                     return res.status(200).json({
                         successful: true,
+                        id: userRows[0].id, // added role
+                        role: userRows[0].role,
                         message: "Successfully Logged In.",
+
                     });
                 } else {
                     return res.status(500).json({
