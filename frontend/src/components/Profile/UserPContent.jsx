@@ -206,6 +206,7 @@ const UserProf = () => {
                   value={user.gender}
                   onChange={handleChange}
                   className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                  disabled
                 />
               </div>
             </div>
@@ -218,6 +219,7 @@ const UserProf = () => {
                   value={user.birthdate}
                   onChange={handleChange}
                   className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                  disabled
                 />
               </div>
               <div className="mb-6">
@@ -228,6 +230,7 @@ const UserProf = () => {
                   value={user.email}
                   onChange={handleChange}
                   className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                  disabled
                 />
               </div>
               <div className="mb-6">
