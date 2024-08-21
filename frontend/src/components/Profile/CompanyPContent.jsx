@@ -1,16 +1,49 @@
-import { useState } from 'react';
+import axios from "axios";
+import { useState, useEffect } from "react";
 
 const CompanyProf = () => {
   const [company, setCompany] = useState({
-    logo: 'https://via.placeholder.com/150',  // Placeholder image URL
-    name: 'Tech Innovators Inc.',
-    email: 'info@techinnovators.com',
-    description: 'Leading company in the tech industry, providing cutting-edge solutions and services worldwide.',
-    address: '123 Innovation Way',
-    city: 'Silicon Valley',
-    contactNumber: '+1 800 123 4567',
-    password: 'SecureP@ssw0rd',
+    logo: "", // Placeholder image URL
+    name: "",
+    email: "",
+    description: "",
+    address: "",
+    city: "",
+    contactNumber: "",
+    password: "",
   });
+
+  useEffect(() => {
+    const userId = sessionStorage.getItem("Id");
+    const config = {
+      method: "get",
+      url: `/company/view/${userId}`,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log(response.data.data);
+        setCompany({
+          logo: "https://via.placeholder.com/150", // Placeholder image URL
+          name: response.data.data[0].name,
+          email: response.data.data[0].email,
+          description: response.data.data[0].description,
+          address: response.data.data[0].Location,
+          // city: response.data.data[0].name,
+          contactNumber: response.data.data[0].contact_number,
+        });
+      })
+      .catch(function (error) {
+        const errorMessage =
+          error.response?.data?.message || "An error occurred";
+        console.log(error.response?.data);
+        alert(errorMessage);
+      });
+    console.log("Component is ready");
+  }, []);
 
   const [isEditing, setIsEditing] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -33,7 +66,36 @@ const CompanyProf = () => {
 
   const handleUpdate = () => {
     setIsEditing(false);
-    alert('Company profile updated successfully!');
+
+    const updateCompanyProfile = JSON.stringify({
+      name: company.name,
+      address: company.address,
+      city: company.city,
+      description: company.description,
+      contact_number: company.contactNumber,
+      profile_picture: "https://via.placeholder.com/150",
+    });
+    const companyId = sessionStorage.getItem("Id");
+    var config = {
+      method: "put",
+      url: `/company/update/${companyId}`,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: updateCompanyProfile,
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+        alert(response.data.message);
+      })
+
+      .catch(function (error) {
+        console.log(error);
+        alert(error.response.data.message);
+      });
+    window.location.reload();
   };
 
   return (
@@ -80,7 +142,9 @@ const CompanyProf = () => {
             <p className="text-gray-600">{company.city}</p>
           </div>
           <div className="mb-4">
-            <p className="text-lg font-semibold text-gray-800">Contact Number:</p>
+            <p className="text-lg font-semibold text-gray-800">
+              Contact Number:
+            </p>
             <p className="text-gray-600">{company.contactNumber}</p>
           </div>
         </div>
@@ -93,7 +157,9 @@ const CompanyProf = () => {
           <div className="grid grid-cols-2 gap-8">
             <div>
               <div className="mb-6">
-                <label className="block text-gray-600 font-semibold">Email:</label>
+                <label className="block text-gray-600 font-semibold">
+                  Email:
+                </label>
                 <input
                   type="email"
                   name="email"
@@ -103,7 +169,9 @@ const CompanyProf = () => {
                 />
               </div>
               <div className="mb-6">
-                <label className="block text-gray-600 font-semibold">Address:</label>
+                <label className="block text-gray-600 font-semibold">
+                  Address:
+                </label>
                 <input
                   type="text"
                   name="address"
@@ -112,10 +180,10 @@ const CompanyProf = () => {
                   className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
                 />
               </div>
-            </div>
-            <div>
               <div className="mb-6">
-                <label className="block text-gray-600 font-semibold">City:</label>
+                <label className="block text-gray-600 font-semibold">
+                  City:
+                </label>
                 <input
                   type="text"
                   name="city"
@@ -124,8 +192,24 @@ const CompanyProf = () => {
                   className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
                 />
               </div>
+            </div>
+            <div>
               <div className="mb-6">
-                <label className="block text-gray-600 font-semibold">Contact Number:</label>
+                <label className="block text-gray-600 font-semibold">
+                  Description:
+                </label>
+                <input
+                  type="text"
+                  name="description"
+                  value={company.description}
+                  onChange={handleChange}
+                  className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                />
+              </div>
+              <div className="mb-6">
+                <label className="block text-gray-600 font-semibold">
+                  Contact Number:
+                </label>
                 <input
                   type="text"
                   name="contactNumber"

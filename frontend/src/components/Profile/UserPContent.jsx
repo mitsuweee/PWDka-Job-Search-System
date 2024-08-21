@@ -1,18 +1,18 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 const UserProf = () => {
   const [user, setUser] = useState({
-    profilePicture: '',
-    fullName: '',
-    disability: '',
-    location: '',
-    contactNumber: '',
-    gender: '',
-    birthdate: '',
-    email: '',
-    pictureWithId: '',
-    pictureOfId: '',
+    profilePicture: "",
+    fullName: "",
+    disability: "",
+    location: "",
+    contactNumber: "",
+    gender: "",
+    birthdate: "",
+    email: "",
+    pictureWithId: "",
+    pictureOfId: "",
   });
 
   const [isEditing, setIsEditing] = useState(false);
@@ -31,20 +31,20 @@ const UserProf = () => {
     axios(config)
       .then(function (response) {
         console.log(response.data.data);
-        setUser ({
+        setUser({
           fullName: response.data.data[0].full_name,
           disability: response.data.data[0].type,
           location: response.data.data[0].Location,
           contactNumber: response.data.data[0].contact_number,
           gender: response.data.data[0].gender,
-          birthdate: new Date(response.data.data[0].birth_date).toLocaleDateString('en-US'),
+          birthdate: new Date(
+            response.data.data[0].birth_date
+          ).toLocaleDateString("en-US"),
           email: response.data.data[0].email,
-          pictureWithId: 'https://via.placeholder.com/150', // change this kapag maayos na
-          pictureOfId: 'https://via.placeholder.com/150',
-          profilePicture: 'https://via.placeholder.com/150'
-        })
-
-
+          pictureWithId: "https://via.placeholder.com/150", // change this kapag maayos na
+          pictureOfId: "https://via.placeholder.com/150",
+          profilePicture: "https://via.placeholder.com/150",
+        });
       })
       .catch(function (error) {
         const errorMessage =
@@ -52,8 +52,8 @@ const UserProf = () => {
         console.log(error.response?.data);
         alert(errorMessage);
       });
-    console.log('Component is ready');
-    
+    console.log("Component is ready");
+
     // Any additional logic you want to execute on document ready can go here
   }, []);
 
@@ -62,7 +62,10 @@ const UserProf = () => {
   };
 
   const handleFileChange = (e) => {
-    setUser({ ...user, [e.target.name]: URL.createObjectURL(e.target.files[0]) });
+    setUser({
+      ...user,
+      [e.target.name]: URL.createObjectURL(e.target.files[0]),
+    });
   };
 
   const handleEdit = () => {
@@ -75,7 +78,7 @@ const UserProf = () => {
 
   const handleUpdate = () => {
     setIsEditing(false);
-    alert('Profile updated successfully!');
+    alert("Profile updated successfully!");
   };
 
   return (
@@ -90,8 +93,10 @@ const UserProf = () => {
         <div className="ml-6">
           <h2 className="text-3xl font-bold text-gray-900">{user.fullName}</h2>
           <div className="flex mt-2">
-          <p className="bg-blue-100 text-blue-700 text-sm font-semibold mr-2 px-2.5 py-0.5 rounded">Disability:</p>
-          <p className="text-gray-600">{user.disability}</p>
+            <p className="bg-blue-100 text-blue-700 text-sm font-semibold mr-2 px-2.5 py-0.5 rounded">
+              Disability:
+            </p>
+            <p className="text-gray-600">{user.disability}</p>
           </div>
           <button
             onClick={handleEdit}
@@ -109,9 +114,11 @@ const UserProf = () => {
             <p className="text-lg font-semibold text-gray-800">Location:</p>
             <p className="text-gray-600">{user.location}</p>
           </div>
-          
+
           <div className="mb-4">
-            <p className="text-lg font-semibold text-gray-800">Contact Number:</p>
+            <p className="text-lg font-semibold text-gray-800">
+              Contact Number:
+            </p>
             <p className="text-gray-600">{user.contactNumber}</p>
           </div>
           <div className="mb-4">
@@ -131,7 +138,9 @@ const UserProf = () => {
 
           <div className="flex justify-between mt-6">
             <div className="w-1/2 pr-2">
-              <p className="text-lg font-semibold text-gray-800">Picture with ID</p>
+              <p className="text-lg font-semibold text-gray-800">
+                Picture with ID
+              </p>
               {user.pictureWithId ? (
                 <img
                   src={user.pictureWithId}
@@ -145,7 +154,9 @@ const UserProf = () => {
               )}
             </div>
             <div className="w-1/2 pl-2">
-              <p className="text-lg font-semibold text-gray-800">Picture of ID</p>
+              <p className="text-lg font-semibold text-gray-800">
+                Picture of ID
+              </p>
               {user.pictureOfId ? (
                 <img
                   src={user.pictureOfId}
@@ -169,7 +180,9 @@ const UserProf = () => {
           <div className="grid grid-cols-2 gap-8">
             <div>
               <div className="mb-6">
-                <label className="block text-gray-600 font-semibold">Address:</label>
+                <label className="block text-gray-600 font-semibold">
+                  Address:
+                </label>
                 <input
                   type="text"
                   name="address"
@@ -179,7 +192,9 @@ const UserProf = () => {
                 />
               </div>
               <div className="mb-6">
-                <label className="block text-gray-600 font-semibold">City:</label>
+                <label className="block text-gray-600 font-semibold">
+                  City:
+                </label>
                 <input
                   type="text"
                   name="city"
@@ -189,7 +204,9 @@ const UserProf = () => {
                 />
               </div>
               <div className="mb-6">
-                <label className="block text-gray-600 font-semibold">Contact Number:</label>
+                <label className="block text-gray-600 font-semibold">
+                  Contact Number:
+                </label>
                 <input
                   type="text"
                   name="contactNumber"
@@ -200,10 +217,11 @@ const UserProf = () => {
               </div>
             </div>
             <div>
+              <div className="mb-6"></div>
               <div className="mb-6">
-              </div>
-              <div className="mb-6">
-                <label className="block text-gray-600 font-semibold">Picture with ID:</label>
+                <label className="block text-gray-600 font-semibold">
+                  Picture with ID:
+                </label>
                 <input
                   type="file"
                   name="pictureWithId"
@@ -213,7 +231,9 @@ const UserProf = () => {
                 />
               </div>
               <div className="mb-6">
-                <label className="block text-gray-600 font-semibold">Picture of ID:</label>
+                <label className="block text-gray-600 font-semibold">
+                  Picture of ID:
+                </label>
                 <input
                   type="file"
                   name="pictureOfId"
