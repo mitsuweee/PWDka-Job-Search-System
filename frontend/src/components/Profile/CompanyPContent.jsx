@@ -134,25 +134,6 @@ const CompanyProf = () => {
                   className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
                 />
               </div>
-              <div className="mb-6">
-                <label className="block text-gray-600 font-semibold">Password:</label>
-                <div className="relative">
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    name="password"
-                    value={company.password}
-                    onChange={handleChange}
-                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                  />
-                  <button
-                    type="button"
-                    onClick={togglePasswordVisibility}
-                    className="absolute inset-y-0 right-0 px-3 text-gray-600 hover:text-gray-800"
-                  >
-                    {showPassword ? "Hide" : "Show"}
-                  </button>
-                </div>
-              </div>
             </div>
           </div>
           <button

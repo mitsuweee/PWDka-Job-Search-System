@@ -24,6 +24,7 @@ const CompanyDashboard = () => {
     e.preventDefault();
 
     const data = JSON.stringify({
+      company_id: sessionStorage.getItem("Id"),
       position_name: jobDetails.positionName.toLowerCase(),
       description: jobDetails.jobDescription,
       qualification: jobDetails.qualifications,
@@ -31,7 +32,10 @@ const CompanyDashboard = () => {
       maximum_salary: jobDetails.maxSalary,
       positiontype_id: jobDetails.positionType,
       disability_ids: jobDetails.disabilityCategories,
+
     });
+
+    console.log(data)
 
     const config = {
       method: 'post',
