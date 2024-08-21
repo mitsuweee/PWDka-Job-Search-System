@@ -13,6 +13,8 @@ const postJobs = async (req, res, next) => {
     let company_id = req.body.company_id
     let disability_ids = req.body.disability_ids
 
+    console.log(req.body)
+
     if(!position_name || !description || !qualification || !positiontype_id || !company_id || !disability_ids){
         return res.status(404).json({
             successful : false,
@@ -43,7 +45,7 @@ const postJobs = async (req, res, next) => {
     
             try {
 
-                const selectPositionTypeId = `SELECT id FROM position_type WHERE id = ?`
+                const selectPositionTypeId = `SELECT id FROM position_type WHERE type = ?`
                 const positionTypeRows = await connection.query(selectPositionTypeId, [positiontype_id])
 
                 if(positionTypeRows.length === 0) {
@@ -59,7 +61,7 @@ const postJobs = async (req, res, next) => {
                 `
 
                     const values = jobListingModel(position_name, description, qualification, minimum_salary, maximum_salary, positiontype_id, company_id)
-                    const jobListingObj = [values.position_name, values.description, values.qualification, values.minimum_salary, values.maximum_salary, values.positiontype_id, values.company_id]
+                    const jobListingObj = [values.position_name, values.description, values.qualification, values.minimum_salary, values.maximum_salary, positionTypeRows[0].id, values.company_id]
                     const result = await connection.query(insertJobQuery, jobListingObj)
         
                     const jobListingId = result.insertId 
@@ -67,7 +69,7 @@ const postJobs = async (req, res, next) => {
                     for (let disability_id of disability_ids) {
             
 
-                        const selectDisabilityIdQuery = `Select id FROM disability where id = ?`
+                        const selectDisabilityIdQuery = `Select id FROM disability where type = ?`
                         const rows = await connection.query(selectDisabilityIdQuery, [disability_id])
 
                         if(rows.length === 0){
@@ -83,7 +85,7 @@ const postJobs = async (req, res, next) => {
                             INSERT INTO disability_job_listing (disability_id, joblisting_id)
                             VALUES (?, ?)
                         `
-                        await connection.query(insertDisabilityJobQuery, [disability_id, jobListingId])
+                        await connection.query(insertDisabilityJobQuery, [rows[0].id, jobListingId])
                         }
                     }
         
