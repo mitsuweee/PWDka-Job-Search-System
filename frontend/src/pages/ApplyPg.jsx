@@ -1,7 +1,7 @@
-import React from 'react'
-import Footer from '../components/Footer'
-import Navbar from '../components/Navbar'
-import ApplyPage from '../components/ApplyContent'
+import React from "react";
+import Footer from "../components/Footer";
+import Navbar from "../components/Navbar";
+import ApplyPage from "../components/ApplyContent";
 
 const ApplyPg = () => {
   return (
@@ -9,12 +9,12 @@ const ApplyPg = () => {
       <header>
         <Navbar />
       </header>
-        <ApplyPage/>
+      <ApplyPage />
       <footer>
         <Footer />
       </footer>
     </div>
-  )
-}
+  );
+};
 
-export default ApplyPg
+export default ApplyPg;
