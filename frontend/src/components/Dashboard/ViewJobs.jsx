@@ -78,6 +78,33 @@ const ViewJobs = () => {
     window.location.reload();
   };
 
+  const handleDelete = (jobId) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this job listing?"
+    );
+    if (confirmDelete) {
+      const config = {
+        method: "delete",
+        url: `/joblisting/delete/${jobId}`,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      axios(config)
+        .then((response) => {
+          alert("Job listing deleted successfully!");
+          setJobListings((prevListings) =>
+            prevListings.filter((listing) => listing.id !== jobId)
+          );
+        })
+        .catch((error) => {
+          console.log(error);
+          alert(error.response.data.message);
+        });
+    }
+  };
+
   const handleUpdateChange = (e) => {
     const { name, value } = e.target;
     setUpdatedDetails((prevState) => ({
@@ -274,23 +301,31 @@ const ViewJobs = () => {
                     {listing.disabilityTypes}
                   </p>
 
-                  {/* Update Button */}
-                  <button
-                    className="mt-4 py-2 px-4 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition duration-300"
-                    onClick={() => {
-                      setUpdatedDetails({
-                        id: listing.id,
-                        positionName: listing.jobName,
-                        jobDescription: listing.description,
-                        qualifications: listing.qualifications,
-                        salary: `${listing.minSalary}-${listing.maxSalary}`,
-                        positionType: listing.positionType,
-                      });
-                      setIsEditing(true);
-                    }}
-                  >
-                    Update
-                  </button>
+                  {/* Update and Delete Buttons */}
+                  <div className="mt-4 flex space-x-4">
+                    <button
+                      className="py-2 px-4 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition duration-300"
+                      onClick={() => {
+                        setUpdatedDetails({
+                          id: listing.id,
+                          positionName: listing.jobName,
+                          jobDescription: listing.description,
+                          qualifications: listing.qualifications,
+                          salary: `${listing.minSalary}-${listing.maxSalary}`,
+                          positionType: listing.positionType,
+                        });
+                        setIsEditing(true);
+                      }}
+                    >
+                      Update
+                    </button>
+                    <button
+                      className="py-2 px-4 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition duration-300"
+                      onClick={() => handleDelete(listing.id)}
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
               </div>
             ))

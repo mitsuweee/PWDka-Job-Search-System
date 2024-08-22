@@ -1,16 +1,16 @@
 import React from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import PostJob from "../components/Dashboard/PostJobs";
+import ViewJobs from "../components/Dashboard/ViewJobs";
 
-const PostJobPage = () => {
+const ViewJobsPage = () => {
   return (
     <div>
       <div className="bg-[#E3EDF7] min-h-screen flex flex-col">
         <header>
           <Navbar />
         </header>
-        <PostJob />
+        <ViewJobs />
         <footer>
           <Footer />
         </footer>
@@ -19,4 +19,4 @@ const PostJobPage = () => {
   );
 };
 
-export default PostJobPage;
+export default ViewJobsPage;
