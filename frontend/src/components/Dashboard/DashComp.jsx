@@ -1,22 +1,22 @@
-import { useState } from 'react';
-import axios from 'axios';
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 const CompanyDashboard = () => {
-  const [currentSection, setCurrentSection] = useState('postJob');
+  const [currentSection, setCurrentSection] = useState("postJob");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [sortOption, setSortOption] = useState('newest');
+  const [sortOption, setSortOption] = useState("newest");
   const [showDisabilityOptions, setShowDisabilityOptions] = useState(false);
 
   // State for the Post Job section
   const [jobDetails, setJobDetails] = useState({
-    companyName: '',
-    positionName: '',
-    jobDescription: '',
-    qualifications: '',
-    minSalary: '',
-    maxSalary: '',
-    positionType: 'full-time',
+    companyName: "",
+    positionName: "",
+    jobDescription: "",
+    qualifications: "",
+    minSalary: "",
+    maxSalary: "",
+    positionType: "full-time",
     disabilityCategories: [],
   });
 
@@ -32,16 +32,15 @@ const CompanyDashboard = () => {
       maximum_salary: jobDetails.maxSalary,
       positiontype_id: jobDetails.positionType,
       disability_ids: jobDetails.disabilityCategories,
-
     });
 
-    console.log(data)
+    console.log(data);
 
     const config = {
-      method: 'post',
-      url: 'http://localhost:8080/joblisting/post/job', // Ensure this matches your backend endpoint
+      method: "post",
+      url: "http://localhost:8080/joblisting/post/job", // Ensure this matches your backend endpoint
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       data: data,
     };
@@ -49,11 +48,11 @@ const CompanyDashboard = () => {
     axios(config)
       .then((response) => {
         console.log(response.data);
-        alert('Job posted successfully!')
-        
+        alert("Job posted successfully!");
       })
       .catch((error) => {
-        const errorMessage = error.response?.data?.message || 'An error occurred';
+        const errorMessage =
+          error.response?.data?.message || "An error occurred";
         console.log(error.response?.data);
         alert(errorMessage);
       });
@@ -63,7 +62,10 @@ const CompanyDashboard = () => {
     return (
       <div>
         <h2 className="text-xl font-bold mb-1 text-custom-blue">Post a Job</h2>
-        <form onSubmit={handleSubmit} className="bg-blue-500 p-6 rounded-xl shadow-xl text-center ">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-blue-500 p-6 rounded-xl shadow-xl text-center "
+        >
           <div className="mb-4 text-left">
             <label className="block mb-2 text-white">Position Name</label>
             <input
@@ -145,25 +147,29 @@ const CompanyDashboard = () => {
               onClick={toggleDisabilityOptions}
               className="bg-green-500 text-white px-4 py-2 rounded shadow-lg"
             >
-              {showDisabilityOptions ? 'Hide Disability Options' : 'Show Disability Options'}
+              {showDisabilityOptions
+                ? "Hide Disability Options"
+                : "Show Disability Options"}
             </button>
           </div>
 
           {showDisabilityOptions && (
             <div className="mb-4 text-left bg-gray-200 p-4 rounded-lg shadow-lg">
-              <label className="block mb-2 text-black font-bold">Disability Categories</label>
+              <label className="block mb-2 text-black font-bold">
+                Disability Categories
+              </label>
               <div className="flex flex-col space-y-2 text-black">
                 {[
-                  'Visual Disability',
-                  'Deaf or Hard of Hearing',
-                  'Learning Disability',
-                  'Mental Disability',
-                  'Physical Disability (Orthopedic)',
-                  'Psychosocial Disability',
-                  'Speech and Language Impairment',
-                  'Intellectual Disability',
-                  'Cancer (RA11215)',
-                  'Rare Disease (RA10747)',
+                  "Visual Disability",
+                  "Deaf or Hard of Hearing",
+                  "Learning Disability",
+                  "Mental Disability",
+                  "Physical Disability (Orthopedic)",
+                  "Psychosocial Disability",
+                  "Speech and Language Impairment",
+                  "Intellectual Disability",
+                  "Cancer (RA11215)",
+                  "Rare Disease (RA10747)",
                 ].map((category) => (
                   <label key={category} className="flex items-center">
                     <input
@@ -220,7 +226,7 @@ const CompanyDashboard = () => {
 
   const handleUpdateSubmit = (e) => {
     e.preventDefault();
-    console.log('Job Updated:', updatedDetails);
+    console.log("Job Updated:", updatedDetails);
     // Implement actual update functionality
   };
   const handleUpdateChange = (e) => {
@@ -231,7 +237,7 @@ const CompanyDashboard = () => {
     setSortOption(option);
     setIsFilterOpen(false); // Close filter after selection
     // Implement sorting logic here
-    console.log('Sort Option:', option);
+    console.log("Sort Option:", option);
   };
 
   const toggleFilterMenu = (e) => {
@@ -263,7 +269,7 @@ const CompanyDashboard = () => {
             />
           </div>
           <div className="mb-4 text-left">
-          <label className="block mb-2 text-white">Job Description</label>
+            <label className="block mb-2 text-white">Job Description</label>
             <textarea
               name="jobDescription"
               value={updatedDetails.jobDescription}
@@ -306,7 +312,10 @@ const CompanyDashboard = () => {
               <option value="part-time">Part-time</option>
             </select>
           </div>
-          <button type="submit" className="bg-green-500 text-white py-2 px-4 rounded">
+          <button
+            type="submit"
+            className="bg-green-500 text-white py-2 px-4 rounded"
+          >
             Update Job
           </button>
         </form>
@@ -318,37 +327,37 @@ const CompanyDashboard = () => {
     const jobListings = [
       {
         id: 1,
-        companyName: 'Acme Corporation',
-        jobName: 'Software Engineer',
-        description: 'Develop and maintain software solutions',
-        address: '456 Business Ave',
-        city: 'Metropolis',
+        companyName: "Acme Corporation",
+        jobName: "Software Engineer",
+        description: "Develop and maintain software solutions",
+        address: "456 Business Ave",
+        city: "Metropolis",
       },
       {
         id: 2,
-        companyName: 'Wayne Enterprises',
-        jobName: 'Product Manager',
-        description: 'Oversee product development from start to finish',
-        address: '1007 Mountain Drive',
-        city: 'Gotham',
+        companyName: "Wayne Enterprises",
+        jobName: "Product Manager",
+        description: "Oversee product development from start to finish",
+        address: "1007 Mountain Drive",
+        city: "Gotham",
       },
       {
         id: 3,
-        companyName: 'Queen Industries',
-        jobName: 'Mechanical Engineer',
-        description: 'Design and develop mechanical systems',
-        address: 'Starling City',
-        city: 'Star City',
+        companyName: "Queen Industries",
+        jobName: "Mechanical Engineer",
+        description: "Design and develop mechanical systems",
+        address: "Starling City",
+        city: "Star City",
       },
     ];
 
     // Sort the job listings based on the selected sort option
     const sortedJobListings = jobListings.sort((a, b) => {
-      if (sortOption === 'newest') {
+      if (sortOption === "newest") {
         return b.id - a.id;
-      } else if (sortOption === 'oldest') {
+      } else if (sortOption === "oldest") {
         return a.id - b.id;
-      } else if (sortOption === 'a-z') {
+      } else if (sortOption === "a-z") {
         return a.companyName.localeCompare(b.companyName);
       }
       return 0;
@@ -357,7 +366,9 @@ const CompanyDashboard = () => {
     return (
       <div>
         <div className="flex justify-between items-center">
-          <h2 className="text-xl font-bold mb-4 text-custom-blue">View All Job Listings</h2>
+          <h2 className="text-xl font-bold mb-4 text-custom-blue">
+            View All Job Listings
+          </h2>
           <div className="relative">
             <button
               className="py-2 px-4 mb-0 rounded-lg bg-blue-600 text-white"
@@ -366,28 +377,37 @@ const CompanyDashboard = () => {
               Filter
             </button>
             {isFilterOpen && (
-              <div className="absolute right-0 top-full mt-0 space-y-2 bg-white p-4 shadow-lg rounded-lg" onClick={(e) => e.stopPropagation()}>
+              <div
+                className="absolute right-0 top-full mt-0 space-y-2 bg-white p-4 shadow-lg rounded-lg"
+                onClick={(e) => e.stopPropagation()}
+              >
                 <button
                   className={`py-2 px-4 rounded-lg w-full ${
-                    sortOption === 'newest' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-blue-900'
+                    sortOption === "newest"
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-200 text-blue-900"
                   }`}
-                  onClick={() => handleSortChange('newest')}
+                  onClick={() => handleSortChange("newest")}
                 >
                   Newest
                 </button>
                 <button
                   className={`py-2 px-4 rounded-lg w-full ${
-                    sortOption === 'oldest' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-blue-900'
+                    sortOption === "oldest"
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-200 text-blue-900"
                   }`}
-                  onClick={() => handleSortChange('oldest')}
+                  onClick={() => handleSortChange("oldest")}
                 >
                   Oldest
                 </button>
                 <button
                   className={`py-2 px-4 rounded-lg w-full ${
-                    sortOption === 'a-z' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-blue-900'
+                    sortOption === "a-z"
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-200 text-blue-900"
                   }`}
-                  onClick={() => handleSortChange('a-z')}
+                  onClick={() => handleSortChange("a-z")}
                 >
                   A-Z
                 </button>
@@ -403,7 +423,9 @@ const CompanyDashboard = () => {
                 className="flex-1 min-w-[300px] p-4 bg-blue-500 rounded shadow-xl transition-transform duration-200 ease-in-out hover:scale-105 hover:bg-blue-600"
               >
                 <div className="flex flex-col text-left">
-                  <p className="font-semibold text-lg text-white">Company Name:</p>
+                  <p className="font-semibold text-lg text-white">
+                    Company Name:
+                  </p>
                   <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">
                     {listing.companyName}
                   </p>
@@ -413,7 +435,9 @@ const CompanyDashboard = () => {
                     {listing.jobName}
                   </p>
 
-                  <p className="font-semibold text-lg text-white">Description:</p>
+                  <p className="font-semibold text-lg text-white">
+                    Description:
+                  </p>
                   <p className="mb-2 text-xl  bg-custom-bg rounded-md text-custom-blue">
                     {listing.description}
                   </p>
@@ -442,27 +466,27 @@ const CompanyDashboard = () => {
     const applicants = [
       {
         id: 1,
-        fullName: 'Bruce Wayne',
-        email: 'bruce@wayneenterprises.com',
-        resumeLink: 'https://example.com/bruce_resume.pdf',
-        jobAppliedFor: 'Product Manager',
+        fullName: "Bruce Wayne",
+        email: "bruce@wayneenterprises.com",
+        resumeLink: "https://example.com/bruce_resume.pdf",
+        jobAppliedFor: "Product Manager",
       },
       {
         id: 2,
-        fullName: 'Clark Kent',
-        email: 'clark@dailyplanet.com',
-        resumeLink: 'https://example.com/clark_resume.pdf',
-        jobAppliedFor: 'Reporter',
+        fullName: "Clark Kent",
+        email: "clark@dailyplanet.com",
+        resumeLink: "https://example.com/clark_resume.pdf",
+        jobAppliedFor: "Reporter",
       },
     ];
 
     // Sort the applicants based on the selected sort option
     const sortedApplicants = applicants.sort((a, b) => {
-      if (sortOption === 'newest') {
+      if (sortOption === "newest") {
         return b.id - a.id;
-      } else if (sortOption === 'oldest') {
+      } else if (sortOption === "oldest") {
         return a.id - b.id;
-      } else if (sortOption === 'a-z') {
+      } else if (sortOption === "a-z") {
         return a.fullName.localeCompare(b.fullName);
       }
       return 0;
@@ -471,7 +495,9 @@ const CompanyDashboard = () => {
     return (
       <div>
         <div className="flex justify-between items-center">
-          <h2 className="text-xl font-bold mb-4 text-custom-blue">View Applicants</h2>
+          <h2 className="text-xl font-bold mb-4 text-custom-blue">
+            View Applicants
+          </h2>
           <div className="relative">
             <button
               className="py-2 px-4 mb-3 rounded-lg bg-blue-600 text-white"
@@ -480,28 +506,37 @@ const CompanyDashboard = () => {
               Filter
             </button>
             {isFilterOpen && (
-              <div className="absolute right-0 mt-2 space-y-2 bg-white p-4 shadow-lg rounded-lg" onClick={(e) => e.stopPropagation()}>
+              <div
+                className="absolute right-0 mt-2 space-y-2 bg-white p-4 shadow-lg rounded-lg"
+                onClick={(e) => e.stopPropagation()}
+              >
                 <button
                   className={`py-2 px-4 rounded-lg w-full ${
-                    sortOption === 'newest' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-blue-900'
+                    sortOption === "newest"
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-200 text-blue-900"
                   }`}
-                  onClick={() => handleSortChange('newest')}
+                  onClick={() => handleSortChange("newest")}
                 >
                   Newest
                 </button>
                 <button
                   className={`py-2 px-4 rounded-lg w-full ${
-                    sortOption === 'oldest' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-blue-900'
+                    sortOption === "oldest"
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-200 text-blue-900"
                   }`}
-                  onClick={() => handleSortChange('oldest')}
+                  onClick={() => handleSortChange("oldest")}
                 >
                   Oldest
                 </button>
                 <button
                   className={`py-2 px-4 rounded-lg w-full ${
-                    sortOption === 'a-z' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-blue-900'
+                    sortOption === "a-z"
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-200 text-blue-900"
                   }`}
-                  onClick={() => handleSortChange('a-z')}
+                  onClick={() => handleSortChange("a-z")}
                 >
                   A-Z
                 </button>
@@ -517,7 +552,9 @@ const CompanyDashboard = () => {
                 className="flex-1 min-w-[300px] p-4 bg-blue-500 rounded shadow-xl transition-transform duration-200 ease-in-out hover:scale-105 hover:bg-blue-600"
               >
                 <div className="flex flex-col text-left">
-                  <p className="font-semibold text-lg text-white ">Full Name:</p>
+                  <p className="font-semibold text-lg text-white ">
+                    Full Name:
+                  </p>
                   <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">
                     {applicant.fullName}
                   </p>
@@ -527,7 +564,9 @@ const CompanyDashboard = () => {
                     {applicant.email}
                   </p>
 
-                  <p className="font-semibold text-lg  text-white">Job Applied For:</p>
+                  <p className="font-semibold text-lg  text-white">
+                    Job Applied For:
+                  </p>
                   <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">
                     {applicant.jobAppliedFor}
                   </p>
@@ -561,25 +600,38 @@ const CompanyDashboard = () => {
   const renderDeleteJobListings = () => {
     const jobListing = {
       id: 1,
-      companyName: 'Acme Corporation',
-      jobName: 'Software Engineer',
-      description: 'Develop and maintain software solutions',
-      address: '456 Business Ave',
-      city: 'Metropolis', // Just for display purposes
+      companyName: "Acme Corporation",
+      jobName: "Software Engineer",
+      description: "Develop and maintain software solutions",
+      address: "456 Business Ave",
+      city: "Metropolis", // Just for display purposes
     };
 
     return (
       <div>
         <h2 className="text-xl font-bold mb-4">Delete Job Listing</h2>
-        <div key={jobListing.id} className="mb-6 p-4 bg-blue-500 rounded shadow text-center">
+        <div
+          key={jobListing.id}
+          className="mb-6 p-4 bg-blue-500 rounded shadow text-center"
+        >
           <h3 className="text-3xl font-bold mb-4">Single Job Listing</h3>
           <p className="text-2xl mb-8">Job Details</p>
           <div className="flex flex-col items-center">
-            <p><strong>Company Name:</strong> {jobListing.companyName}</p>
-            <p><strong>Job Name:</strong> {jobListing.jobName}</p>
-            <p><strong>Description:</strong> {jobListing.description}</p>
-            <p><strong>Address:</strong> {jobListing.address}</p>
-            <p><strong>City:</strong> {jobListing.city}</p>
+            <p>
+              <strong>Company Name:</strong> {jobListing.companyName}
+            </p>
+            <p>
+              <strong>Job Name:</strong> {jobListing.jobName}
+            </p>
+            <p>
+              <strong>Description:</strong> {jobListing.description}
+            </p>
+            <p>
+              <strong>Address:</strong> {jobListing.address}
+            </p>
+            <p>
+              <strong>City:</strong> {jobListing.city}
+            </p>
           </div>
           <div className="flex justify-center items-center mt-8">
             <button className="bg-red-500 text-white py-2 px-4 rounded-full flex items-center justify-center">
@@ -605,11 +657,14 @@ const CompanyDashboard = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen bg-blue-100" onClick={closeFilterMenu}>
+    <div
+      className="flex flex-col md:flex-row min-h-screen bg-blue-100"
+      onClick={closeFilterMenu}
+    >
       {/* Sidebar */}
       <aside
         className={`bg-custom-blue w-full md:w-[300px] lg:w-[250px] p-4 flex flex-col items-center md:relative fixed top-0 left-0 min-h-screen h-full transition-transform transform ${
-          isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 z-50 md:z-auto `}
       >
         <button
@@ -624,7 +679,7 @@ const CompanyDashboard = () => {
             boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
           }}
           onClick={() => {
-            setCurrentSection('postJob');
+            setCurrentSection("postJob");
             setIsSidebarOpen(false);
           }}
         >
@@ -636,7 +691,7 @@ const CompanyDashboard = () => {
             boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
           }}
           onClick={() => {
-            setCurrentSection('viewAllJobListings');
+            setCurrentSection("viewAllJobListings");
             setIsSidebarOpen(false);
           }}
         >
@@ -648,7 +703,7 @@ const CompanyDashboard = () => {
             boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
           }}
           onClick={() => {
-            setCurrentSection('updateJobListings');
+            setCurrentSection("updateJobListings");
             setIsSidebarOpen(false);
           }}
         >
@@ -660,7 +715,7 @@ const CompanyDashboard = () => {
             boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
           }}
           onClick={() => {
-            setCurrentSection('applicants');
+            setCurrentSection("applicants");
             setIsSidebarOpen(false);
           }}
         >
@@ -672,7 +727,7 @@ const CompanyDashboard = () => {
             boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
           }}
           onClick={() => {
-            setCurrentSection('deleteJobListings');
+            setCurrentSection("deleteJobListings");
             setIsSidebarOpen(false);
           }}
         >
@@ -683,7 +738,7 @@ const CompanyDashboard = () => {
       {/* Mobile Toggle Button */}
       <button
         className={`md:hidden bg-custom-blue text-white p-4 fixed top-4 left-4 z-50 rounded-xl mt-11 transition-transform ${
-          isSidebarOpen ? 'hidden' : ''
+          isSidebarOpen ? "hidden" : ""
         }`}
         onClick={() => setIsSidebarOpen(true)}
       >
@@ -694,11 +749,12 @@ const CompanyDashboard = () => {
       <main className="flex-grow p-8 bg-custom-bg">
         <h1 className="text-3xl font-bold text-blue-900">Company Dashboard</h1>
         <div className="mt-0.5">
-          {currentSection === 'postJob' && renderPostJob()}
-          {currentSection === 'viewAllJobListings' && renderViewAllJobListings()}
-          {currentSection === 'updateJobListings' && renderUpdateJobListings()}
-          {currentSection === 'applicants' && renderApplicants()}
-          {currentSection === 'deleteJobListings' && renderDeleteJobListings()}
+          {currentSection === "postJob" && renderPostJob()}
+          {currentSection === "viewAllJobListings" &&
+            renderViewAllJobListings()}
+          {currentSection === "updateJobListings" && renderUpdateJobListings()}
+          {currentSection === "applicants" && renderApplicants()}
+          {currentSection === "deleteJobListings" && renderDeleteJobListings()}
         </div>
       </main>
     </div>
