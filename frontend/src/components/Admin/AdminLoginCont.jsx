@@ -163,9 +163,8 @@ const AdminLogin = () => {
             type="submit"
             className="block w-full rounded-lg bg-custom-blue px-5 py-3 text-sm font-medium text-white"
           >
-            Sign in 
+            Sign in
           </button>
-
         </form>
       </div>
     </div>

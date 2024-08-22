@@ -7,6 +7,7 @@ const CompanyDashboard = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [sortOption, setSortOption] = useState("newest");
   const [showDisabilityOptions, setShowDisabilityOptions] = useState(false);
+  const [jobListings, setJobListings] = useState([]);
 
   // State for the Post Job section
   const [jobDetails, setJobDetails] = useState({
@@ -33,9 +34,7 @@ const CompanyDashboard = () => {
       positiontype_id: jobDetails.positionType,
       disability_ids: jobDetails.disabilityCategories,
     });
-
     console.log(data);
-
     const config = {
       method: "post",
       url: "http://localhost:8080/joblisting/post/job", // Ensure this matches your backend endpoint
@@ -323,34 +322,45 @@ const CompanyDashboard = () => {
     );
   };
 
+  // VIEW ALL JOBLISTING
+  useEffect(() => {
+    const companyId = sessionStorage.getItem("Id");
+
+    const config = {
+      method: "get",
+      url: `/joblisting/view/newesttooldest/company/${companyId}`,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log(response.data);
+
+        // Assuming the response contains a list of jobs for the company
+        const fetchedJobListings = response.data.data.map((job) => ({
+          id: job.id,
+          jobName: job.position_name,
+          description: job.description,
+          qualifications: job.qualification,
+          minSalary: job.minimum_salary,
+          maxSalary: job.maximum_salary,
+          positionType: job.position_type,
+          disabilityTypes: job.disability_types,
+        }));
+
+        setJobListings(fetchedJobListings); // Setting the job listings state
+      })
+      .catch(function (error) {
+        const errorMessage =
+          error.response?.data?.message || "An error occurred";
+        console.log(error.response?.data);
+        alert(errorMessage);
+      });
+  }, []);
+
   const renderViewAllJobListings = () => {
-    //try lang tangina ayaw gumana
-    const [jobListings, setJobListings] = useState([]);
-
-    useEffect(() => {
-      const companyId = sessionStorage.getItem("Id");
-      const fetchJobListings = () => {
-        const config = {
-          method: "get",
-          url: `/joblisting/view/newesttooldest/${companyId}`,
-          headers: {
-            "Content-Type": "application/json",
-          },
-        };
-
-        axios(config)
-          .then(function (response) {
-            console.log(JSON.stringify(response.data));
-            setJobListings(response.data.fetchJobListings); // Assuming the response data structure
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-      };
-
-      fetchJobListings();
-    }, []);
-
     // Sort the job listings based on the selected sort option
     const sortedJobListings = jobListings.sort((a, b) => {
       if (sortOption === "newest") {
@@ -358,7 +368,7 @@ const CompanyDashboard = () => {
       } else if (sortOption === "oldest") {
         return a.id - b.id;
       } else if (sortOption === "a-z") {
-        return a.companyName.localeCompare(b.companyName);
+        return a.jobName.localeCompare(b.jobName);
       }
       return 0;
     });
@@ -372,7 +382,7 @@ const CompanyDashboard = () => {
           <div className="relative">
             <button
               className="py-2 px-4 mb-0 rounded-lg bg-blue-600 text-white"
-              onClick={toggleFilterMenu}
+              onClick={() => setIsFilterOpen(!isFilterOpen)}
             >
               Filter
             </button>
@@ -387,7 +397,7 @@ const CompanyDashboard = () => {
                       ? "bg-blue-600 text-white"
                       : "bg-gray-200 text-blue-900"
                   }`}
-                  onClick={() => handleSortChange("newest")}
+                  onClick={() => setSortOption("newest")}
                 >
                   Newest
                 </button>
@@ -397,7 +407,7 @@ const CompanyDashboard = () => {
                       ? "bg-blue-600 text-white"
                       : "bg-gray-200 text-blue-900"
                   }`}
-                  onClick={() => handleSortChange("oldest")}
+                  onClick={() => setSortOption("oldest")}
                 >
                   Oldest
                 </button>
@@ -407,7 +417,7 @@ const CompanyDashboard = () => {
                       ? "bg-blue-600 text-white"
                       : "bg-gray-200 text-blue-900"
                   }`}
-                  onClick={() => handleSortChange("a-z")}
+                  onClick={() => setSortOption("a-z")}
                 >
                   A-Z
                 </button>
@@ -424,32 +434,45 @@ const CompanyDashboard = () => {
               >
                 <div className="flex flex-col text-left">
                   <p className="font-semibold text-lg text-white">
-                    Company Name:
+                    Position Name:
                   </p>
                   <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">
-                    {listing.companyName}
-                  </p>
-
-                  <p className="font-semibold text-lg text-white">Job Name:</p>
-                  <p className="mb-2 text-xl  bg-custom-bg rounded-md text-custom-blue">
                     {listing.jobName}
                   </p>
 
                   <p className="font-semibold text-lg text-white">
-                    Description:
+                    Job Description:
                   </p>
-                  <p className="mb-2 text-xl  bg-custom-bg rounded-md text-custom-blue">
+                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">
                     {listing.description}
                   </p>
 
-                  <p className="font-semibold text-lg text-white">Address:</p>
-                  <p className="mb-2 text-xl  bg-custom-bg rounded-md text-custom-blue">
-                    {listing.address}
+                  <p className="font-semibold text-lg text-white">
+                    Qualifications:
+                  </p>
+                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">
+                    {listing.qualifications}
                   </p>
 
-                  <p className="font-semibold text-lg text-white ">City:</p>
-                  <p className="text-xl  bg-custom-bg rounded-md text-custom-blue ">
-                    {listing.city}
+                  <p className="font-semibold text-lg text-white">
+                    Salary Range:
+                  </p>
+                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">
+                    {`${listing.minSalary} - ${listing.maxSalary}`}
+                  </p>
+
+                  <p className="font-semibold text-lg text-white">
+                    Position Type:
+                  </p>
+                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">
+                    {listing.positionType}
+                  </p>
+
+                  <p className="font-semibold text-lg text-white">
+                    Disability Types:
+                  </p>
+                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">
+                    {listing.disabilityTypes}
                   </p>
                 </div>
               </div>
@@ -461,7 +484,6 @@ const CompanyDashboard = () => {
       </div>
     );
   };
-
   const renderApplicants = () => {
     const applicants = [
       {
