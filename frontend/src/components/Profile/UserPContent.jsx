@@ -43,7 +43,7 @@ const UserProf = () => {
             response.data.data[0].birth_date
           ).toLocaleDateString("en-US"),
           email: response.data.data[0].email,
-          pictureWithId: "https://via.placeholder.com/150", // change this kapag maayos na
+          pictureWithId: "https://via.placeholder.com/150",
           pictureOfId: "https://via.placeholder.com/150",
           profilePicture: "https://via.placeholder.com/150",
         });
@@ -55,8 +55,6 @@ const UserProf = () => {
         alert(errorMessage);
       });
     console.log("Component is ready");
-
-    // Any additional logic you want to execute on document ready can go here
   }, []);
 
   const handleChange = (e) => {
@@ -74,17 +72,14 @@ const UserProf = () => {
     setIsEditing(!isEditing);
   };
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
-
   const handleUpdate = () => {
     setIsEditing(false);
+
     const updateUserProfile = JSON.stringify({
       address: user.address,
       city: user.city,
       contact_number: user.contactNumber,
-      profile_picture: "https://via.placeholder.com/150",
+      formal_picture: user.profilePicture,
     });
     const userId = sessionStorage.getItem("Id");
     var config = {
@@ -139,10 +134,13 @@ const UserProf = () => {
       <div className="mt-8 grid grid-cols-2 gap-8 text-left text-gray-800">
         <div>
           <div className="mb-4">
-            <p className="text-lg font-semibold text-gray-800">Location:</p>
-            <p className="text-gray-600">{user.address + " " + user.city}</p>
+            <p className="text-lg font-semibold text-gray-800">Address:</p>
+            <p className="text-gray-600">{user.address}</p>
           </div>
-
+          <div className="mb-4">
+            <p className="text-lg font-semibold text-gray-800">City:</p>
+            <p className="text-gray-600">{user.city}</p>
+          </div>
           <div className="mb-4">
             <p className="text-lg font-semibold text-gray-800">
               Contact Number:
@@ -245,15 +243,13 @@ const UserProf = () => {
               </div>
             </div>
             <div>
-              <div className="mb-6"></div>
               <div className="mb-6">
                 <label className="block text-gray-600 font-semibold">
                   Profile Picture:
                 </label>
                 <input
                   type="file"
-                  name="pictureOfId"
-                  value={user.profilePicture}
+                  name="profilePicture"
                   accept="image/png, image/jpeg"
                   onChange={handleFileChange}
                   className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
