@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 const JobListing = () => {
   const [jobs, setJobs] = useState([]); // State to hold the jobs data
   const [selectedJobId, setSelectedJobId] = useState(null);
   const [isDetailsVisible, setIsDetailsVisible] = useState(false);
   const [isMoreInfoVisible, setIsMoreInfoVisible] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
   const jobsPerPage = 4; // Number of jobs to display per page
@@ -27,7 +27,7 @@ const JobListing = () => {
         console.log(response.data);
 
         // Combine job and company details into one object per job
-        const fetchedJobs = response.data.data.map(job => ({
+        const fetchedJobs = response.data.data.map((job) => ({
           id: job.id,
           jobName: job.position_name,
           address: job.company_address,
@@ -40,7 +40,7 @@ const JobListing = () => {
           companyContact: job.company_contact_number,
           companyLocation: job.company_address,
           companyDescription: job.company_description,
-          companyImage: 'src/imgs/sunlife.png', // Example image path
+          companyImage: "src/imgs/sunlife.png", // Example image path
         }));
 
         setJobs(fetchedJobs); // Setting the jobs state
@@ -53,7 +53,7 @@ const JobListing = () => {
       });
   }, []);
 
-  const filteredJobs = jobs.filter(job =>
+  const filteredJobs = jobs.filter((job) =>
     job.jobName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -66,7 +66,7 @@ const JobListing = () => {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  const selectedJob = jobs.find(job => job.id === selectedJobId);
+  const selectedJob = jobs.find((job) => job.id === selectedJobId);
 
   return (
     <div className="flex flex-col lg:flex-row w-full h-full">
@@ -79,7 +79,9 @@ const JobListing = () => {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <h1 className="text-3xl font-bold mb-6 text-blue-600 text-'sfprobold">Jobs for You</h1>
+        <h1 className="text-3xl font-bold mb-6 text-blue-600 text-'sfprobold">
+          Jobs for You
+        </h1>
         <div className="space-y-4">
           {currentJobs.length > 0 ? (
             currentJobs.map((job) => (
@@ -97,15 +99,21 @@ const JobListing = () => {
                     {job.jobName}
                   </h2>
                   <p className="text-white">
-                    <span className="material-symbols-outlined mr-2">location_on</span>
+                    <span className="material-symbols-outlined mr-2">
+                      location_on
+                    </span>
                     {job.companyLocation}
                   </p>
                   <p className="font-semibold text-white">
-                    <span className="material-symbols-outlined mr-2">schedule</span>
+                    <span className="material-symbols-outlined mr-2">
+                      schedule
+                    </span>
                     {job.positionType}
                   </p>
                   <p className="font-semibold text-white">
-                    <span className="material-symbols-outlined mr-2">payments</span>
+                    <span className="material-symbols-outlined mr-2">
+                      payments
+                    </span>
                     {job.salary}
                   </p>
                   <p className="text-gray-200 mt-2">{job.description}</p>
@@ -123,13 +131,27 @@ const JobListing = () => {
                     <h2 className="text-2xl font-bold mb-2 text-blue-600">
                       {job.jobName}
                     </h2>
-                    <p className="text-lg mb-2 text-gray-700">{job.companyName}</p>
-                    <p className="text-md mb-2 text-gray-500">{job.companyLocation}</p>
-                    <p className="font-bold text-md text-blue-600">{job.positionType}</p>
-                    <p className="font-bold text-md mb-2 text-blue-600">{job.salary}</p>
-                    <p className="text-md text-gray-700 mb-2">{job.description}</p>
-                    <p className="mt-2 text-md font-semibold text-gray-800">Qualifications:</p>
-                    <p className="text-md text-gray-700">{job.qualifications}</p>
+                    <p className="text-lg mb-2 text-gray-700">
+                      {job.companyName}
+                    </p>
+                    <p className="text-md mb-2 text-gray-500">
+                      {job.companyLocation}
+                    </p>
+                    <p className="font-bold text-md text-blue-600">
+                      {job.positionType}
+                    </p>
+                    <p className="font-bold text-md mb-2 text-blue-600">
+                      {job.salary}
+                    </p>
+                    <p className="text-md text-gray-700 mb-2">
+                      {job.description}
+                    </p>
+                    <p className="mt-2 text-md font-semibold text-gray-800">
+                      Qualifications:
+                    </p>
+                    <p className="text-md text-gray-700">
+                      {job.qualifications}
+                    </p>
                     <div className="mt-4 flex space-x-4">
                       <button className="bg-blue-500 text-white py-2 px-4 rounded-full shadow-lg hover:bg-blue-600 transition transform hover:scale-105">
                         Apply Now
@@ -149,11 +171,22 @@ const JobListing = () => {
                           alt="Company"
                           className="w-16 h-16 object-cover rounded-full absolute top-2 right-2"
                         />
-                        <h3 className="text-lg font-bold text-white">Company Overview</h3>
-                        <p className="text-white"><strong>Company Name:</strong> {job.companyName}</p>
-                        <p className="text-white"><strong>Email:</strong> {job.companyEmail}</p>
-                        <p className="text-white"><strong>Contact Number:</strong> {job.companyContact}</p>
-                        <p className="text-white"><strong>Primary Location:</strong> {job.companyLocation}</p>
+                        <h3 className="text-lg font-bold text-white">
+                          Company Overview
+                        </h3>
+                        <p className="text-white">
+                          <strong>Company Name:</strong> {job.companyName}
+                        </p>
+                        <p className="text-white">
+                          <strong>Email:</strong> {job.companyEmail}
+                        </p>
+                        <p className="text-white">
+                          <strong>Contact Number:</strong> {job.companyContact}
+                        </p>
+                        <p className="text-white">
+                          <strong>Primary Location:</strong>{" "}
+                          {job.companyLocation}
+                        </p>
                         <div className="text-md text-white">
                           {job.companyDescription}
                         </div>
@@ -207,8 +240,8 @@ const JobListing = () => {
                   onClick={() => paginate(index + 1)}
                   className={`block size-8 rounded border text-center leading-8 ${
                     currentPage === index + 1
-                      ? 'border-blue-600 bg-blue-600 text-white'
-                      : 'border-gray-100 bg-white text-gray-900'
+                      ? "border-blue-600 bg-blue-600 text-white"
+                      : "border-gray-100 bg-white text-gray-900"
                   }`}
                 >
                   {index + 1}
@@ -219,7 +252,9 @@ const JobListing = () => {
             {/* Next Page Button */}
             <li>
               <button
-                onClick={() => currentPage < totalPages && paginate(currentPage + 1)}
+                onClick={() =>
+                  currentPage < totalPages && paginate(currentPage + 1)
+                }
                 className="inline-flex size-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900"
                 disabled={currentPage === totalPages}
               >
@@ -247,14 +282,18 @@ const JobListing = () => {
         {selectedJob ? (
           <div>
             <div className="p-6 bg-white rounded-lg shadow-2xl">
-              <h2 className="text-3xl font-bold mb-4 text-blue-600">{selectedJob.jobName}</h2>
+              <h2 className="text-3xl font-bold mb-4 text-blue-600">
+                {selectedJob.jobName}
+              </h2>
               <p className="text-lg mb-2 text-gray-700 flex items-center">
                 <span className="material-symbols-outlined mr-2">work</span>
                 {selectedJob.companyName}
               </p>
 
               <p className="text-lg mb-4 text-gray-500">
-                <span className="material-symbols-outlined mr-2">location_on</span>
+                <span className="material-symbols-outlined mr-2">
+                  location_on
+                </span>
                 {selectedJob.companyLocation}
               </p>
               <p className="font-bold text-lg text-blue-600">
@@ -265,9 +304,15 @@ const JobListing = () => {
                 <span className="material-symbols-outlined mr-2">payments</span>
                 {selectedJob.salary}
               </p>
-              <p className="text-lg text-gray-700 mb-4">{selectedJob.description}</p>
-              <p className="mt-4 text-lg font-semibold text-gray-800">Qualifications:</p>
-              <p className="text-lg text-gray-700">{selectedJob.qualifications}</p>
+              <p className="text-lg text-gray-700 mb-4">
+                {selectedJob.description}
+              </p>
+              <p className="mt-4 text-lg font-semibold text-gray-800">
+                Qualifications:
+              </p>
+              <p className="text-lg text-gray-700">
+                {selectedJob.qualifications}
+              </p>
               <div className="mt-6 flex space-x-4">
                 <a href="/apply">
                   <button className="bg-blue-500 text-white py-3 px-6 rounded-full shadow-lg hover:bg-blue-600 hover:shadow-2xl transition transform hover:scale-105">
@@ -290,11 +335,22 @@ const JobListing = () => {
                   alt="Company"
                   className="w-20 h-20 object-cover rounded-full absolute top-6 right-6"
                 />
-                <h3 className="text-2xl font-bold text-white">Company Overview</h3>
-                <p className="text-white"><strong>Company Name:</strong> {selectedJob.companyName}</p>
-                <p className="text-white"><strong>Email:</strong> {selectedJob.companyEmail}</p>
-                <p className="text-white"><strong>Contact Number:</strong> {selectedJob.companyContact}</p>
-                <p className="text-white"><strong>Primary Location:</strong> {selectedJob.companyLocation}</p>
+                <h3 className="text-2xl font-bold text-white">
+                  Company Overview
+                </h3>
+                <p className="text-white">
+                  <strong>Company Name:</strong> {selectedJob.companyName}
+                </p>
+                <p className="text-white">
+                  <strong>Email:</strong> {selectedJob.companyEmail}
+                </p>
+                <p className="text-white">
+                  <strong>Contact Number:</strong> {selectedJob.companyContact}
+                </p>
+                <p className="text-white">
+                  <strong>Primary Location:</strong>{" "}
+                  {selectedJob.companyLocation}
+                </p>
                 <p className="text-lg text-white break-words">
                   {selectedJob.companyDescription}
                 </p>
@@ -303,7 +359,9 @@ const JobListing = () => {
           </div>
         ) : (
           <div className="p-6 bg-white rounded-lg shadow-lg text-center">
-            <p className="text-xl text-gray-600">Select a job listing to view details</p>
+            <p className="text-xl text-gray-600">
+              Select a job listing to view details
+            </p>
           </div>
         )}
       </div>
