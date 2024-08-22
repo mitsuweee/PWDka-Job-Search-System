@@ -8,6 +8,7 @@ const CompanyDashboard = () => {
   const [sortOption, setSortOption] = useState("newest");
   const [showDisabilityOptions, setShowDisabilityOptions] = useState(false);
   const [jobListings, setJobListings] = useState([]);
+  const [isEditing, setIsEditing] = useState(false);
 
   // State for the Post Job section
   const [jobDetails, setJobDetails] = useState({
@@ -223,15 +224,11 @@ const CompanyDashboard = () => {
     setShowDisabilityOptions(!showDisabilityOptions);
   };
 
-  const handleUpdateSubmit = (e) => {
-    e.preventDefault();
-    console.log("Job Updated:", updatedDetails);
-    // Implement actual update functionality
-  };
   const handleUpdateChange = (e) => {
     const { name, value } = e.target;
-    setUpdatedDetails({ ...updatedDetails, [name]: value });
+    setUpdatedDetails({ updatedDetails, [name]: value });
   };
+
   const handleSortChange = (option) => {
     setSortOption(option);
     setIsFilterOpen(false); // Close filter after selection
@@ -247,85 +244,10 @@ const CompanyDashboard = () => {
   const closeFilterMenu = () => {
     setIsFilterOpen(false);
   };
-
-  const renderUpdateJobListings = () => {
-    return (
-      <div>
-        <h2 className="text-xl font-bold mb-4">Update Job Listing</h2>
-        <form
-          onSubmit={handleUpdateSubmit}
-          className="bg-blue-500 p-6 rounded shadow-md text-center"
-        >
-          <div className="mb-4 text-left">
-            <label className="block mb-2 text-white">Position Name</label>
-            <input
-              type="text"
-              name="positionName"
-              value={updatedDetails.positionName}
-              onChange={handleUpdateChange}
-              className="p-2 w-full rounded"
-              required
-            />
-          </div>
-          <div className="mb-4 text-left">
-            <label className="block mb-2 text-white">Job Description</label>
-            <textarea
-              name="jobDescription"
-              value={updatedDetails.jobDescription}
-              onChange={handleUpdateChange}
-              className="p-2 w-full rounded"
-              required
-            />
-          </div>
-          <div className="mb-4 text-left">
-            <label className="block mb-2 text-white">Qualifications</label>
-            <textarea
-              name="qualifications"
-              value={updatedDetails.qualifications}
-              onChange={handleUpdateChange}
-              className="p-2 w-full rounded"
-              required
-            />
-          </div>
-          <div className="mb-4 text-left">
-            <label className="block mb-2 text-white">Salary</label>
-            <input
-              type="text"
-              name="salary"
-              value={updatedDetails.salary}
-              onChange={handleUpdateChange}
-              className="p-2 w-full rounded"
-              required
-            />
-          </div>
-          <div className="mb-4 text-left">
-            <label className="block mb-2 text-white">Position Type</label>
-            <select
-              name="positionType"
-              value={updatedDetails.positionType}
-              onChange={handleUpdateChange}
-              className="p-2 w-full rounded"
-              required
-            >
-              <option value="full-time">Full-time</option>
-              <option value="part-time">Part-time</option>
-            </select>
-          </div>
-          <button
-            type="submit"
-            className="bg-green-500 text-white py-2 px-4 rounded"
-          >
-            Update Job
-          </button>
-        </form>
-      </div>
-    );
-  };
-
+  const [updatedDetails, setUpdatedDetails] = useState({});
   // VIEW ALL JOBLISTING
   useEffect(() => {
     const companyId = sessionStorage.getItem("Id");
-
     const config = {
       method: "get",
       url: `/joblisting/view/newesttooldest/company/${companyId}`,
@@ -333,11 +255,9 @@ const CompanyDashboard = () => {
         "Content-Type": "application/json",
       },
     };
-
     axios(config)
       .then(function (response) {
         console.log(response.data);
-
         // Assuming the response contains a list of jobs for the company
         const fetchedJobListings = response.data.data.map((job) => ({
           id: job.id,
@@ -349,7 +269,6 @@ const CompanyDashboard = () => {
           positionType: job.position_type,
           disabilityTypes: job.disability_types,
         }));
-
         setJobListings(fetchedJobListings); // Setting the job listings state
       })
       .catch(function (error) {
@@ -359,9 +278,7 @@ const CompanyDashboard = () => {
         alert(errorMessage);
       });
   }, []);
-
   const renderViewAllJobListings = () => {
-    // Sort the job listings based on the selected sort option
     const sortedJobListings = jobListings.sort((a, b) => {
       if (sortOption === "newest") {
         return b.id - a.id;
@@ -372,7 +289,6 @@ const CompanyDashboard = () => {
       }
       return 0;
     });
-
     return (
       <div>
         <div className="flex justify-between items-center">
@@ -474,6 +390,25 @@ const CompanyDashboard = () => {
                   <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">
                     {listing.disabilityTypes}
                   </p>
+
+                  {/* Update Button */}
+                  <button
+                    className="mt-4 py-2 px-4 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition duration-300"
+                    onClick={() => {
+                      // Set the selected job details to the update form
+                      setUpdatedDetails({
+                        positionName: listing.jobName,
+                        jobDescription: listing.description,
+                        qualifications: listing.qualifications,
+                        salary: `${listing.minSalary}-${listing.maxSalary}`,
+                        positionType: listing.positionType,
+                      });
+                      sessionStorage.setItem("JobId", listing.id);
+                      setIsEditing(true); // Show the update form
+                    }}
+                  >
+                    Update
+                  </button>
                 </div>
               </div>
             ))
@@ -481,6 +416,120 @@ const CompanyDashboard = () => {
             <p>No job listings found.</p>
           )}
         </div>
+
+        {/* Conditionally Render the Update Form */}
+        {isEditing && renderUpdateJobListings()}
+      </div>
+    );
+  };
+
+  const handleUpdateSubmit = (e) => {
+    e.preventDefault();
+    setIsEditing(false);
+
+    const updateJobListing = JSON.stringify({
+      position_name: updatedDetails.positionName,
+      description: updatedDetails.jobDescription,
+      qualification: updatedDetails.qualifications,
+      minimum_salary: parseFloat(updatedDetails.salary.split("-")[0]),
+      maximum_salary: parseFloat(updatedDetails.salary.split("-")[1]),
+      positiontype_id: updatedDetails.positionType === "full-time" ? 1 : 2, // Assuming 1 is for full-time and 2 for part-time
+    });
+
+    const jobId = sessionStorage.getItem("JobId"); // Assuming jobId is stored in session storage
+    const config = {
+      method: "put",
+      url: `/joblisting/update/${jobId}`,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: updateJobListing,
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+        alert(response.data.message);
+      })
+      .catch(function (error) {
+        console.log(error);
+        alert(error.response.data.message);
+      });
+
+    window.location.reload(); // Refresh the page to reflect changes
+  };
+
+  // Include the updated renderUpdateJobListings function
+  const renderUpdateJobListings = () => {
+    return (
+      <div>
+        <h2 className="text-xl font-bold mb-4">Update Job Listing</h2>
+        <form
+          onSubmit={handleUpdateSubmit}
+          className="bg-blue-500 p-6 rounded shadow-md text-center"
+        >
+          <div className="mb-4 text-left">
+            <label className="block mb-2 text-white">Position Name</label>
+            <input
+              type="text"
+              name="positionName"
+              value={updatedDetails.positionName}
+              onChange={handleUpdateChange}
+              className="p-2 w-full rounded"
+              required
+            />
+          </div>
+          <div className="mb-4 text-left">
+            <label className="block mb-2 text-white">Job Description</label>
+            <textarea
+              name="jobDescription"
+              value={updatedDetails.jobDescription}
+              onChange={handleUpdateChange}
+              className="p-2 w-full rounded"
+              required
+            />
+          </div>
+          <div className="mb-4 text-left">
+            <label className="block mb-2 text-white">Qualifications</label>
+            <textarea
+              name="qualifications"
+              value={updatedDetails.qualifications}
+              onChange={handleUpdateChange}
+              className="p-2 w-full rounded"
+              required
+            />
+          </div>
+          <div className="mb-4 text-left">
+            <label className="block mb-2 text-white">Salary</label>
+            <input
+              type="text"
+              name="salary"
+              value={updatedDetails.salary}
+              onChange={handleUpdateChange}
+              className="p-2 w-full rounded"
+              required
+            />
+          </div>
+          <div className="mb-4 text-left">
+            <label className="block mb-2 text-white">Position Type</label>
+            <select
+              name="positionType"
+              value={updatedDetails.positionType}
+              onChange={handleUpdateChange}
+              className="p-2 w-full rounded"
+              required
+            >
+              <option value="full-time">Full-time</option>
+              <option value="part-time">Part-time</option>
+            </select>
+          </div>
+          <button
+            type="submit"
+            className="bg-green-500 text-white py-2 px-4 rounded"
+          >
+            Update Job
+          </button>
+        </form>
       </div>
     );
   };
@@ -618,7 +667,6 @@ const CompanyDashboard = () => {
       </div>
     );
   };
-
   const renderDeleteJobListings = () => {
     const jobListing = {
       id: 1,
@@ -677,7 +725,6 @@ const CompanyDashboard = () => {
       </div>
     );
   };
-
   return (
     <div
       className="flex flex-col md:flex-row min-h-screen bg-blue-100"
@@ -719,18 +766,7 @@ const CompanyDashboard = () => {
         >
           View All Job Listings
         </button>
-        <button
-          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
-          }}
-          onClick={() => {
-            setCurrentSection("updateJobListings");
-            setIsSidebarOpen(false);
-          }}
-        >
-          Update Job Listings
-        </button>
+
         <button
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
           style={{
@@ -774,6 +810,7 @@ const CompanyDashboard = () => {
           {currentSection === "postJob" && renderPostJob()}
           {currentSection === "viewAllJobListings" &&
             renderViewAllJobListings()}
+          {isEditing && renderUpdateJobListings()}
           {currentSection === "updateJobListings" && renderUpdateJobListings()}
           {currentSection === "applicants" && renderApplicants()}
           {currentSection === "deleteJobListings" && renderDeleteJobListings()}
