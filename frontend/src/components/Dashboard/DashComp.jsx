@@ -74,7 +74,9 @@ const CompanyDashboard = () => {
               value={jobDetails.positionName}
               onChange={handleChange}
               className="p-2 w-full rounded shadow-lg"
-              style={{ boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)" }}
+              style={{
+                boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
+              }}
               required
             />
           </div>
@@ -85,7 +87,9 @@ const CompanyDashboard = () => {
               value={jobDetails.jobDescription}
               onChange={handleChange}
               className="p-2 w-full rounded shadow-lg"
-              style={{ boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)" }}
+              style={{
+                boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
+              }}
               required
             />
           </div>
@@ -96,7 +100,9 @@ const CompanyDashboard = () => {
               value={jobDetails.qualifications}
               onChange={handleChange}
               className="p-2 w-full rounded shadow-lg"
-              style={{ boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)" }}
+              style={{
+                boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
+              }}
               required
             />
           </div>
@@ -109,7 +115,9 @@ const CompanyDashboard = () => {
                 value={jobDetails.minSalary}
                 onChange={handleChange}
                 className="p-2 w-full rounded shadow-lg"
-                style={{ boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)" }}
+                style={{
+                  boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
+                }}
                 required
               />
             </div>
@@ -121,7 +129,9 @@ const CompanyDashboard = () => {
                 value={jobDetails.maxSalary}
                 onChange={handleChange}
                 className="p-2 w-full rounded shadow-lg"
-                style={{ boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)" }}
+                style={{
+                  boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
+                }}
                 required
               />
             </div>
@@ -133,7 +143,9 @@ const CompanyDashboard = () => {
               value={jobDetails.positionType}
               onChange={handleChange}
               className="p-2 w-full rounded shadow-lg"
-              style={{ boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)" }}
+              style={{
+                boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
+              }}
               required
             >
               <option value="full-time">Full-time</option>
@@ -226,7 +238,10 @@ const CompanyDashboard = () => {
 
   const handleUpdateChange = (e) => {
     const { name, value } = e.target;
-    setUpdatedDetails({ updatedDetails, [name]: value });
+    setUpdatedDetails((prevState) => ({
+      ...prevState, // spread the previous state
+      [name]: value, // update the specific field
+    }));
   };
 
   const handleSortChange = (option) => {
@@ -397,14 +412,17 @@ const CompanyDashboard = () => {
                     onClick={() => {
                       // Set the selected job details to the update form
                       setUpdatedDetails({
+                        id: listing.id,
                         positionName: listing.jobName,
                         jobDescription: listing.description,
                         qualifications: listing.qualifications,
                         salary: `${listing.minSalary}-${listing.maxSalary}`,
                         positionType: listing.positionType,
                       });
-                      sessionStorage.setItem("JobId", listing.id);
                       setIsEditing(true); // Show the update form
+                      {
+                        isEditing && renderUpdateJobListings();
+                      }
                     }}
                   >
                     Update
@@ -418,7 +436,6 @@ const CompanyDashboard = () => {
         </div>
 
         {/* Conditionally Render the Update Form */}
-        {isEditing && renderUpdateJobListings()}
       </div>
     );
   };
@@ -428,6 +445,7 @@ const CompanyDashboard = () => {
     setIsEditing(false);
 
     const updateJobListing = JSON.stringify({
+      id: updatedDetails.id,
       position_name: updatedDetails.positionName,
       description: updatedDetails.jobDescription,
       qualification: updatedDetails.qualifications,
@@ -436,10 +454,9 @@ const CompanyDashboard = () => {
       positiontype_id: updatedDetails.positionType === "full-time" ? 1 : 2, // Assuming 1 is for full-time and 2 for part-time
     });
 
-    const jobId = sessionStorage.getItem("JobId"); // Assuming jobId is stored in session storage
     const config = {
       method: "put",
-      url: `/joblisting/update/${jobId}`,
+      url: `/joblisting/update/${updatedDetails.id}`,
       headers: {
         "Content-Type": "application/json",
       },
