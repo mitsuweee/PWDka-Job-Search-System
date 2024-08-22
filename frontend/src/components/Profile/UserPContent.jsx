@@ -6,7 +6,8 @@ const UserProf = () => {
     profilePicture: "",
     fullName: "",
     disability: "",
-    location: "",
+    city: "",
+    address: "",
     contactNumber: "",
     gender: "",
     birthdate: "",
@@ -34,7 +35,8 @@ const UserProf = () => {
         setUser({
           fullName: response.data.data[0].full_name,
           disability: response.data.data[0].type,
-          location: response.data.data[0].Location,
+          city: response.data.data[0].city,
+          address: response.data.data[0].address,
           contactNumber: response.data.data[0].contact_number,
           gender: response.data.data[0].gender,
           birthdate: new Date(
@@ -112,7 +114,7 @@ const UserProf = () => {
         <div>
           <div className="mb-4">
             <p className="text-lg font-semibold text-gray-800">Location:</p>
-            <p className="text-gray-600">{user.location}</p>
+            <p className="text-gray-600">{user.address + " " + user.city}</p>
           </div>
 
           <div className="mb-4">

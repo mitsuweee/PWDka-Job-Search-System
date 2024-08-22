@@ -31,8 +31,8 @@ const CompanyProf = () => {
           name: response.data.data[0].name,
           email: response.data.data[0].email,
           description: response.data.data[0].description,
-          address: response.data.data[0].Location,
-          // city: response.data.data[0].name,
+          address: response.data.data[0].address,
+          city: response.data.data[0].city,
           contactNumber: response.data.data[0].contact_number,
         });
       })

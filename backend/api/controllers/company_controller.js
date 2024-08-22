@@ -403,7 +403,7 @@ const viewCompanyViaId = async (req, res, next) => {
 
       try {
         const selectQuery = `
-                   SELECT id, name, description, CONCAT(address, ' ', city) AS Location, contact_number, email, 
+                   SELECT id, name, description, address, city, contact_number, email, 
                    profile_picture 
                    FROM company 
                    where id = ?`;
