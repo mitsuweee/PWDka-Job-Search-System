@@ -324,32 +324,32 @@ const CompanyDashboard = () => {
   };
 
   const renderViewAllJobListings = () => {
-    const jobListings = [
-      {
-        id: 1,
-        companyName: "Acme Corporation",
-        jobName: "Software Engineer",
-        description: "Develop and maintain software solutions",
-        address: "456 Business Ave",
-        city: "Metropolis",
-      },
-      {
-        id: 2,
-        companyName: "Wayne Enterprises",
-        jobName: "Product Manager",
-        description: "Oversee product development from start to finish",
-        address: "1007 Mountain Drive",
-        city: "Gotham",
-      },
-      {
-        id: 3,
-        companyName: "Queen Industries",
-        jobName: "Mechanical Engineer",
-        description: "Design and develop mechanical systems",
-        address: "Starling City",
-        city: "Star City",
-      },
-    ];
+    //try lang tangina ayaw gumana
+    const [jobListings, setJobListings] = useState([]);
+
+    useEffect(() => {
+      const companyId = sessionStorage.getItem("Id");
+      const fetchJobListings = () => {
+        const config = {
+          method: "get",
+          url: `/joblisting/view/newesttooldest/${companyId}`,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        };
+
+        axios(config)
+          .then(function (response) {
+            console.log(JSON.stringify(response.data));
+            setJobListings(response.data.fetchJobListings); // Assuming the response data structure
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      };
+
+      fetchJobListings();
+    }, []);
 
     // Sort the job listings based on the selected sort option
     const sortedJobListings = jobListings.sort((a, b) => {
