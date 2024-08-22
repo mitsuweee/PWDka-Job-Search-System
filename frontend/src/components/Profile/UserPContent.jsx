@@ -80,7 +80,33 @@ const UserProf = () => {
 
   const handleUpdate = () => {
     setIsEditing(false);
-    alert("Profile updated successfully!");
+    const updateUserProfile = JSON.stringify({
+      address: user.address,
+      city: user.city,
+      contact_number: user.contactNumber,
+      profile_picture: "https://via.placeholder.com/150",
+    });
+    const userId = sessionStorage.getItem("Id");
+    var config = {
+      method: "put",
+      url: `/user/update/${userId}`,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: updateUserProfile,
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+        alert(response.data.message);
+      })
+
+      .catch(function (error) {
+        console.log(error);
+        alert(error.response.data.message);
+      });
+    window.location.reload();
   };
 
   return (
@@ -222,23 +248,12 @@ const UserProf = () => {
               <div className="mb-6"></div>
               <div className="mb-6">
                 <label className="block text-gray-600 font-semibold">
-                  Picture with ID:
-                </label>
-                <input
-                  type="file"
-                  name="pictureWithId"
-                  accept="image/png, image/jpeg"
-                  onChange={handleFileChange}
-                  className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                />
-              </div>
-              <div className="mb-6">
-                <label className="block text-gray-600 font-semibold">
-                  Picture of ID:
+                  Profile Picture:
                 </label>
                 <input
                   type="file"
                   name="pictureOfId"
+                  value={user.profilePicture}
                   accept="image/png, image/jpeg"
                   onChange={handleFileChange}
                   className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
