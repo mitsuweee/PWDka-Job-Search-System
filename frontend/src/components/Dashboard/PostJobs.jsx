@@ -118,15 +118,6 @@ const PostJob = () => {
         >
           View Applicants
         </a>
-        <a
-          href="/delete-job"
-          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
-          }}
-        >
-          Delete Job Listings
-        </a>
       </aside>
 
       {/* Mobile Toggle Button */}
