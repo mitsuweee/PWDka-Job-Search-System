@@ -14,6 +14,7 @@ import Profile from './components/Profile/Profile.jsx';  // Corrected import pat
 import ApplyPg from './pages/ApplyPg.jsx';
 import Faq from './pages/Faq.jsx';
 import AdminLog from './pages/AdminLogin.jsx';
+import PostJobPage from './pages/PostJobPage.jsx';
 
 function App() {
   return (
@@ -33,6 +34,8 @@ function App() {
         <Route path="/apply" element={<ApplyPg/>} />
         <Route path="/faqs" element={<Faq/>} />
         <Route path="/adminlogin" element={<AdminLog/>} />
+        <Route path="/dashboard/postjob" element={<PostJobPage/>} />
+
       </Routes>
     </Router>
   );
