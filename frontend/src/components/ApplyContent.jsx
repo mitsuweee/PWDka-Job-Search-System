@@ -34,7 +34,7 @@ const ApplyPage = () => {
 
         const config = {
           method: "post",
-          url: "http://localhost:8080/jobapplication/upload/resume",
+          url: "/jobapplication/upload/resume",
           headers: {
             "Content-Type": "application/json",
           },
