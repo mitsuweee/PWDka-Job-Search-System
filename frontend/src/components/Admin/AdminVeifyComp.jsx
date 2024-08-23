@@ -32,6 +32,7 @@ const AdminVerifyComp = () => {
 
     return (
       <div className="flex justify-center items-center h-full w-full bg-blue-500 p-4 rounded-2xl">
+        
         <div className="w-full max-w-4xl h-full bg-white p-8 rounded-lg shadow-xl flex flex-col justify-center items-center">
           <h2 className="text-3xl font-bold mb-4 text-gray-800 text-center">
             Verify Company
@@ -139,7 +140,7 @@ const AdminVerifyComp = () => {
           &times;
         </button>
         <a
-          href="/dashboard/home"
+          href="/admin/dashboard"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
           style={{
             boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
@@ -148,13 +149,76 @@ const AdminVerifyComp = () => {
           Home
         </a>
         <a
-          href="/dashboard/verify-company"
+          href="/admin/dashboard/VerifyUsers"
+          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
+          style={{
+            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
+          }}
+        >
+          Verify Users
+        </a>
+        <a
+          href="/admin/dashboard/VerifyComps"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
           style={{
             boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
           }}
         >
           Verify Company
+        </a>
+        <a
+          href="/admin/dashboard/ViewUsers"
+          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
+          style={{
+            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
+          }}
+        >
+          View All Users
+        </a>
+        <a
+          href="/admin/dashboard/ViewCompany"
+          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
+          style={{
+            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
+          }}
+        >
+          View All Companies
+        </a>
+        <a
+          href="/admin/dashboard/ViewJobs"
+          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
+          style={{
+            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
+          }}
+        >
+          View All Job Listings
+        </a>
+        <a
+          href="/admin/dashboard/DeleteUser"
+          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
+          style={{
+            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
+          }}
+        >
+          Delete Users
+        </a>
+        <a
+          href="/admin/dashboard/DeleteJob"
+          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
+          style={{
+            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
+          }}
+        >
+          Delete Job Listings
+        </a>
+        <a
+          href="/admin/dashboard/DeleteCompany"
+          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
+          style={{
+            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
+          }}
+        >
+          Delete Company
         </a>
         <button
           className="bg-red-400 text-white rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-red-500 transition-all duration-200 ease-in-out mt-6"
@@ -163,7 +227,6 @@ const AdminVerifyComp = () => {
           Logout
         </button>
       </aside>
-
       {/* Mobile Toggle Button */}
       <button
         className={`md:hidden bg-custom-blue text-white p-4 fixed top-4 left-4 z-50 rounded-xl mt-11 transition-transform ${
