@@ -979,12 +979,16 @@ const AdminDashboard = () => {
     );
   };
   const handleLogout = () => {
-    // Clear user session or token
-    localStorage.removeItem('token'); // Assuming you're storing a token in localStorage
+    const confirmed = window.confirm("Are you sure you want to logout?");
+    if (confirmed) {
+      // Clear user session or token
+      localStorage.removeItem('token'); // Assuming you're storing a token in localStorage
   
-    // Redirect to login page or homepage
-    window.location.href = '/login'; // Adjust the path as needed
+      // Redirect to login page
+      window.location.href = '/login'; // Adjust the path as needed
+    }
   };
+  
   
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-blue-100">
@@ -1001,68 +1005,66 @@ const AdminDashboard = () => {
     &times;
   </button>
   <button
-    className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
-    onClick={() => handleSectionChange('home')}
-  >
-    Home
-  </button>
+          className="text-white md:hidden self-end size-10"
+          onClick={() => setIsSidebarOpen(false)}
+        >
+          &times;
+        </button>
+        <button
+          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
+          onClick={() => handleSectionChange('home')}
+        >
+          Home
+        </button>
+        <button
+          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
+          onClick={() => handleSectionChange('verifyUsers')}
+        >
+          Verify Users
+        </button>
+        <button
+          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
+          onClick={() => handleSectionChange('verifyCompany')}
+        >
+          Verify Company
+        </button>
+        <button
+          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
+          onClick={() => handleSectionChange('viewAllUsers')}
+        >
+          View All Users
+        </button>
+        <button
+          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
+          onClick={() => handleSectionChange('viewAllCompany')}
+        >
+          View All Companies
+        </button>
+        <button
+          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
+          onClick={() => handleSectionChange('viewAllJobListings')}
+        >
+          View All Job Listings
+        </button>
+        <button
+          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
+          onClick={() => handleSectionChange('updateJobListings')}
+        >
+          Update Job Listings
+        </button>
+        <button
+          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
+          onClick={() => handleSectionChange('deleteUsers')}
+        >
+          Delete Users
+        </button>
   <button
-    className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
-    onClick={() => handleSectionChange('verifyUsers')}
-  >
-    Verify Users
-  </button>
-  <button
-    className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
-    onClick={() => handleSectionChange('verifyCompany')}
-  >
-    Verify Company
-  </button>
-  <button
-    className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
-    onClick={() => handleSectionChange('viewAllUsers')}
-  >
-    View All Users
-  </button>
-  <button
-    className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
-    onClick={() => handleSectionChange('viewAllCompany')}
-  >
-    View All Companies
-  </button>
-  <button
-    className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
-    onClick={() => handleSectionChange('viewAllJobListings')}
-  >
-    View All Job Listings
-  </button>
-  <button
-    className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
-    onClick={() => handleSectionChange('updateJobListings')}
-  >
-    Update Job Listings
-  </button>
-  <button
-    className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
-    onClick={() => handleSectionChange('deleteUsers')}
-  >
-    Delete Users
-  </button>
-  <button
-    className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
-    onClick={() => handleSectionChange('deleteJobListings')}
-  >
-    Delete Job Listings
-  </button>
-
-  <button
-    className="bg-red-400 text-white rounded-xl py-1 px-2 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out mt-6"
+    className="bg-red-500 text-white rounded-xl py-1 px-2 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out mt-6"
     onClick={handleLogout}
   >
     Logout
   </button>
 </aside>
-
 
 
       {/* Mobile Toggle Button */}

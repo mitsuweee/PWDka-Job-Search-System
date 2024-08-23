@@ -2,9 +2,19 @@ import { useState } from "react";
 const CompanyDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
+  const handleLogout = () => {
+    const confirmed = window.confirm("Are you sure you want to logout?");
+    if (confirmed) {
+      // Redirect to the login route
+      window.location.href = "/login";
+    }
+  };
+  
+
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-blue-100">
       {/* Sidebar */}
+ 
       <aside
   className={`bg-custom-blue w-full md:w-[300px] lg:w-[250px] p-4 flex flex-col items-center md:relative fixed top-0 left-0 min-h-screen h-full transition-transform transform ${
     isSidebarOpen ? "translate-x-0" : "-translate-x-full"
@@ -44,14 +54,13 @@ const CompanyDashboard = () => {
     View Applicants
   </a>
 
-  <a
-    href="/logout"
+  <button
     className="bg-red-400 text-white rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-red-500 transition-all duration-200 ease-in-out mt-6"
+    onClick={handleLogout}
   >
     Logout
-  </a>
+  </button>
 </aside>
-
 
       {/* Mobile Toggle Button */}
       <button
