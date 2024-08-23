@@ -1,15 +1,12 @@
 import React from "react";
-import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import UserProf from "../components/Profile/UserPContent";
+import AdminVerifyUsers from "../components/Admin/AdminVerifyUsers";
 
-const UserProfile = () => {
+const AdminVerUsers = () => {
   return (
     <div className="bg-[#E3EDF7] min-h-screen flex flex-col">
-      <header>
-        <Navbar />
-      </header>
-      <UserProf />
+      <AdminVerifyUsers />
       <footer>
         <Footer />
       </footer>
@@ -17,4 +14,4 @@ const UserProfile = () => {
   );
 };
 
-export default UserProfile;
+export default AdminVerUsers;

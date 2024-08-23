@@ -16,6 +16,14 @@ import Faq from "./pages/Faq.jsx";
 import AdminLog from "./pages/AdminLogin.jsx";
 import PostJobPage from "./pages/PostJobPage.jsx";
 import ViewJobsPage from "./pages/ViewJobsPage.jsx";
+import AdminVerUsers from "./pages/AdminVerUser.jsx";
+import AdminVerComps from "./pages/AdminVerComp.jsx";
+import AdminViewUserss from "./pages/AdminViewUserss.jsx";
+import AdminViewCompss from "./pages/AdminViewCompss.jsx";
+import AdminViewJobss from "./pages/AdminViewJobss.jsx";
+import AdminDelUserss from "./pages/AdminDelUserss.jsx";
+import AdminDelJobss from "./pages/AdminDelJobss.jsx";
+import AdminDelCompss from "./pages/AdminDelCompss.jsx";
 
 function App() {
   return (
@@ -25,19 +33,46 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/main" element={<MainPage />} />
         <Route path="/dashc" element={<DashboardCompany />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="admin/dashboard" element={<Dashboard />} />
         <Route path="/privacypolicy" element={<PrivacyPol />} />
         <Route path="/contactpage" element={<Contact />} />
         <Route path="/about" element={<About />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/joblist" element={<JobListingPage />} />
         <Route path="/profile" element={<Profile />} />{" "}
+        <Route
+          path="/admin/dashboard/VerifyUsers"
+          element={<AdminVerUsers />}
+        />
+        <Route
+          path="/admin/dashboard/VerifyComps"
+          element={<AdminVerComps />}
+        />
+        <Route
+          path="/admin/dashboard/ViewUsers"
+          element={<AdminViewUserss />}
+        />
+        <Route
+          path="/admin/dashboard/ViewCompany"
+          element={<AdminViewCompss />}
+        />
+        <Route path="/admin/dashboard/ViewJobs" element={<AdminViewJobss />} />
+        <Route
+          path="/admin/dashboard/DeleteUser"
+          element={<AdminDelUserss />}
+        />
+        <Route path="/admin/dashboard/DeleteJob" element={<AdminDelJobss />} />
+        <Route
+          path="/admin/dashboard/DeleteCompany"
+          element={<AdminDelCompss />}
+        />
         {/* Unified profile route */}
         <Route path="/apply" element={<ApplyPg />} />
         <Route path="/dashboard/ViewJobs" element={<ViewJobsPage />} />
         <Route path="/faqs" element={<Faq />} />
         <Route path="/adminlogin" element={<AdminLog />} />
         <Route path="/dashboard/postjob" element={<PostJobPage />} />
+        {/* <Route path="" */}
       </Routes>
     </Router>
   );

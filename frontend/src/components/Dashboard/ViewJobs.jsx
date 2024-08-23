@@ -42,6 +42,15 @@ const ViewJobs = () => {
       });
   }, []);
 
+  const handleLogout = () => {
+    const confirmed = window.confirm("Are you sure you want to logout?");
+    if (confirmed) {
+      sessionStorage.removeItem("Id");
+      sessionStorage.removeItem("Role");
+      window.location.href = "/login";
+    }
+  };
+
   const handleUpdateSubmit = (e) => {
     e.preventDefault();
     setIsEditing(false);
@@ -381,6 +390,13 @@ const ViewJobs = () => {
         >
           View Applicants
         </a>
+
+        <button
+          className="bg-red-400 text-white rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-red-500 transition-all duration-200 ease-in-out mt-6"
+          onClick={handleLogout}
+        >
+          Logout
+        </button>
       </aside>
 
       {/* Mobile Toggle Button */}

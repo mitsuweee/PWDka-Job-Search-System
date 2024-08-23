@@ -1,18 +1,22 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const CompanyDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     const confirmed = window.confirm("Are you sure you want to logout?");
     if (confirmed) {
-      // Redirect to the login route
-      window.location.href = "/login";
+      // Clear session storage and redirect to the login route
+      sessionStorage.removeItem("Id");
+      sessionStorage.removeItem("Role");
+      navigate("/login");
     }
   };
 
   const handleGoBack = () => {
-    window.history.back();
+    navigate(-1); // This navigates back to the previous page
   };
 
   return (
@@ -78,7 +82,9 @@ const CompanyDashboard = () => {
       {/* Main Content */}
       <main className="flex-grow p-8 bg-custom-bg">
         <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-blue-900">Company Dashboard</h1>
+          <h1 className="text-3xl font-bold text-blue-900">
+            Company Dashboard
+          </h1>
           <button
             onClick={handleGoBack}
             className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
@@ -86,9 +92,7 @@ const CompanyDashboard = () => {
             Back
           </button>
         </div>
-        <div className="mt-4">
-          {/* Render content based on the section */}
-        </div>
+        <div className="mt-4">{/* Render content based on the section */}</div>
       </main>
     </div>
   );

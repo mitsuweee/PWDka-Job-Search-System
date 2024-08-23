@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const AdminDashboard = () => {
+const AdminViewUsers = () => {
+  const [users, setUsers] = useState([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -18,6 +19,115 @@ const AdminDashboard = () => {
 
   const handleGoBack = () => {
     navigate(-1); // This navigates back to the previous page
+  };
+
+  useEffect(() => {
+    const config = {
+      method: "get",
+      url: "/admin/view/users", // API endpoint
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    axios(config)
+      .then((response) => {
+        console.log("Full response data:", response.data); // Logs the entire response data
+
+        const fetchedUsers = response.data.data
+          .filter((user) => user.isVerified) // Filter to show only verified users
+          .map((user) => ({
+            id: user.id,
+            fullName: user.full_name, // Assuming 'full_name' is the correct key
+            pwdId: user.pwd_id, // Assuming 'pwd_id' is the correct key
+            disability: user.disability,
+            address: user.address,
+            city: user.city,
+            birthdate: user.birthdate,
+            contactNumber: user.contact_number, // Assuming 'contact_number' is the correct key
+            email: user.email,
+          }));
+
+        console.log("Filtered and processed users:", fetchedUsers); // Logs the processed array of users
+        setUsers(fetchedUsers); // Update the state with the processed users
+      })
+      .catch((error) => {
+        const errorMessage =
+          error.response?.data?.message || "An error occurred";
+        console.log("Error:", error.response?.data); // Logs the error response
+        alert(errorMessage);
+      });
+  }, []);
+
+  const renderViewAllUsers = () => {
+    return (
+      <div>
+        <h2 className="text-xl font-bold mb-4 text-custom-blue">
+          View All Verified Users
+        </h2>
+        <div className="flex flex-wrap gap-4">
+          {users.length > 0 ? (
+            users.map((user) => (
+              <div
+                key={user.id}
+                className="flex-1 min-w-[300px] p-4 bg-blue-500 rounded-xl shadow-xl"
+              >
+                <div className="flex flex-col text-left text-white">
+                  <img
+                    src={
+                      user.profilePicture || "https://via.placeholder.com/150"
+                    } // Fallback to placeholder if no image
+                    alt={user.fullName}
+                    className="w-24 h-24 rounded-full mb-4"
+                  />
+                  <p className="font-semibold text-lg">Full Name:</p>
+                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">
+                    {user.fullName}
+                  </p>
+
+                  <p className="font-semibold text-lg">PWD ID:</p>
+                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">
+                    {user.pwdId}
+                  </p>
+
+                  <p className="font-semibold text-lg">Disability:</p>
+                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">
+                    {user.disability}
+                  </p>
+
+                  <p className="font-semibold text-lg">Address:</p>
+                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">
+                    {user.address}
+                  </p>
+
+                  <p className="font-semibold text-lg">City:</p>
+                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">
+                    {user.city}
+                  </p>
+
+                  <p className="font-semibold text-lg">Birthdate:</p>
+                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">
+                    {user.birthdate}
+                  </p>
+
+                  <p className="font-semibold text-lg">Contact Number:</p>
+                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">
+                    {user.contactNumber}
+                  </p>
+
+                  <p className="font-semibold text-lg">Email:</p>
+                  <p className="text-xl bg-custom-bg rounded-md text-custom-blue">
+                    {user.email}
+                  </p>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p className="text-white">No verified users found.</p>
+          )}
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -144,10 +254,10 @@ const AdminDashboard = () => {
             Back
           </button>
         </div>
-        <div className="mt-4">{/* Render content based on the section */}</div>
+        <div className="mt-4">{renderViewAllUsers()}</div>
       </main>
     </div>
   );
 };
 
-export default AdminDashboard;
+export default AdminViewUsers;

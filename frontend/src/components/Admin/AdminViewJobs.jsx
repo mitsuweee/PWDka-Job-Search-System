@@ -1,15 +1,49 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const AdminDashboard = () => {
+const AdminViewJobs = () => {
+  const [jobListings, setJobListings] = useState([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchJobListings = async () => {
+      const config = {
+        method: "get",
+        url: "http://localhost:8080/admin/view/all/joblisting/newesttooldest",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      axios(config)
+        .then((response) => {
+          console.log(response.data);
+          const fetchedJobListings = response.data.data.map((job) => ({
+            id: job.id,
+            companyName: job.company_name,
+            jobName: job.position_name,
+            description: job.description,
+            address: job.address,
+            city: job.city,
+          }));
+          setJobListings(fetchedJobListings);
+        })
+        .catch((error) => {
+          const errorMessage =
+            error.response?.data?.message || "An error occurred";
+          console.log(error.response?.data);
+          alert(errorMessage);
+        });
+    };
+
+    fetchJobListings();
+  }, []);
 
   const handleLogout = () => {
     const confirmed = window.confirm("Are you sure you want to logout?");
     if (confirmed) {
-      // Clear session storage and redirect to the login route
       sessionStorage.removeItem("Id");
       sessionStorage.removeItem("Role");
       navigate("/login");
@@ -18,6 +52,55 @@ const AdminDashboard = () => {
 
   const handleGoBack = () => {
     navigate(-1); // This navigates back to the previous page
+  };
+
+  const renderViewAllJobListings = () => {
+    return (
+      <div>
+        <h2 className="text-xl font-bold mb-4 text-custom-blue">
+          View All Job Listings
+        </h2>
+        <div className="flex flex-wrap gap-4">
+          {jobListings.length > 0 ? (
+            jobListings.map((listing) => (
+              <div
+                key={listing.id}
+                className="flex-1 min-w-[300px] p-4 bg-blue-500 rounded-xl shadow-xl"
+              >
+                <div className="flex flex-col text-left text-white">
+                  <p className="font-semibold text-lg">Company Name:</p>
+                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">
+                    {listing.companyName}
+                  </p>
+
+                  <p className="font-semibold text-lg">Job Name:</p>
+                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">
+                    {listing.jobName}
+                  </p>
+
+                  <p className="font-semibold text-lg">Description:</p>
+                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">
+                    {listing.description}
+                  </p>
+
+                  <p className="font-semibold text-lg">Address:</p>
+                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">
+                    {listing.address}
+                  </p>
+
+                  <p className="font-semibold text-lg">City:</p>
+                  <p className="text-xl bg-custom-bg rounded-md text-custom-blue">
+                    {listing.city}
+                  </p>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p className="text-white">No job listings found.</p>
+          )}
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -144,10 +227,10 @@ const AdminDashboard = () => {
             Back
           </button>
         </div>
-        <div className="mt-4">{/* Render content based on the section */}</div>
+        <div className="mt-4">{renderViewAllJobListings()}</div>
       </main>
     </div>
   );
 };
 
-export default AdminDashboard;
+export default AdminViewJobs;
