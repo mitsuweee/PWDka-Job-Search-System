@@ -20,17 +20,15 @@ const AdminViewComp = () => {
       axios(config)
         .then((response) => {
           console.log(response.data);
-          const fetchedCompanies = response.data.data
-            .filter((company) => company.isVerified)
-            .map((company) => ({
-              id: company.id,
-              companyName: company.company_name,
-              address: company.address,
-              city: company.city,
-              companyDescription: company.description,
-              contactNumber: company.contact_number,
-              companyEmail: company.email,
-            }));
+          const fetchedCompanies = response.data.data.map((company) => ({
+            id: company.id,
+            companyName: company.company_name,
+            address: company.address,
+            city: company.city,
+            companyDescription: company.description,
+            contactNumber: company.contact_number,
+            companyEmail: company.email,
+          }));
           setCompanies(fetchedCompanies);
         })
         .catch((error) => {

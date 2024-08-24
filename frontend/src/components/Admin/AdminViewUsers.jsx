@@ -33,20 +33,17 @@ const AdminViewUsers = () => {
     axios(config)
       .then((response) => {
         console.log("Full response data:", response.data); // Logs the entire response data
-
-        const fetchedUsers = response.data.data
-          .filter((user) => user.isVerified) // Filter to show only verified users
-          .map((user) => ({
-            id: user.id,
-            fullName: user.full_name, // Assuming 'full_name' is the correct key
-            pwdId: user.pwd_id, // Assuming 'pwd_id' is the correct key
-            disability: user.disability,
-            address: user.address,
-            city: user.city,
-            birthdate: user.birthdate,
-            contactNumber: user.contact_number, // Assuming 'contact_number' is the correct key
-            email: user.email,
-          }));
+        const fetchedUsers = response.data.data.map((user) => ({
+          id: user.id,
+          fullName: user.full_name, // Assuming 'full_name' is the correct key
+          pwdId: user.pwd_id, // Assuming 'pwd_id' is the correct key
+          disability: user.disability,
+          address: user.address,
+          city: user.city,
+          birthdate: user.birthdate,
+          contactNumber: user.contact_number, // Assuming 'contact_number' is the correct key
+          email: user.email,
+        }));
 
         console.log("Filtered and processed users:", fetchedUsers); // Logs the processed array of users
         setUsers(fetchedUsers); // Update the state with the processed users
@@ -66,6 +63,7 @@ const AdminViewUsers = () => {
           View All Verified Users
         </h2>
         <div className="flex flex-wrap gap-4">
+          <script>console.log (users);</script>
           {users.length > 0 ? (
             users.map((user) => (
               <div
