@@ -4,7 +4,11 @@ import axios from "axios";
 
 const AdminViewJobs = () => {
   const [jobListings, setJobListings] = useState([]);
+  const [filteredJobListings, setFilteredJobListings] = useState([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [jobsPerPage] = useState(5); // Number of jobs to display per page
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -19,7 +23,6 @@ const AdminViewJobs = () => {
 
       axios(config)
         .then((response) => {
-          console.log(response.data);
           const fetchedJobListings = response.data.data.map((job) => ({
             id: job.id,
             companyName: job.company_name,
@@ -29,11 +32,11 @@ const AdminViewJobs = () => {
             city: job.city,
           }));
           setJobListings(fetchedJobListings);
+          setFilteredJobListings(fetchedJobListings); // Initialize filtered jobs
         })
         .catch((error) => {
           const errorMessage =
             error.response?.data?.message || "An error occurred";
-          console.log(error.response?.data);
           alert(errorMessage);
         });
     };
@@ -54,15 +57,49 @@ const AdminViewJobs = () => {
     navigate(-1); // This navigates back to the previous page
   };
 
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+    if (e.target.value !== "") {
+      const filteredJobs = jobListings.filter((job) =>
+        job.companyName.toLowerCase().includes(e.target.value.toLowerCase())
+      );
+      setFilteredJobListings(filteredJobs);
+    } else {
+      setFilteredJobListings(jobListings);
+    }
+  };
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  // Get current jobs
+  const indexOfLastJob = currentPage * jobsPerPage;
+  const indexOfFirstJob = indexOfLastJob - jobsPerPage;
+  const currentJobs = filteredJobListings.slice(
+    indexOfFirstJob,
+    indexOfLastJob
+  );
+
   const renderViewAllJobListings = () => {
     return (
       <div>
         <h2 className="text-xl font-bold mb-4 text-custom-blue">
           View All Job Listings
         </h2>
+        <div className="flex justify-center mb-4">
+  <input
+    type="text"
+    placeholder="Search by company name..."
+    className="p-2 border border-gray-300 rounded-lg w-full md:w-1/2"
+    value={searchTerm}
+    onChange={handleSearch}
+  />
+</div>
+
         <div className="flex flex-wrap gap-4">
-          {jobListings.length > 0 ? (
-            jobListings.map((listing) => (
+          {currentJobs.length > 0 ? (
+            currentJobs.map((listing) => (
               <div
                 key={listing.id}
                 className="flex-1 min-w-[300px] p-4 bg-blue-500 rounded-xl shadow-xl"
@@ -97,6 +134,25 @@ const AdminViewJobs = () => {
             ))
           ) : (
             <p className="text-white">No job listings found.</p>
+          )}
+        </div>
+        {/* Pagination */}
+        <div className="flex justify-center mt-6">
+          {Array.from(
+            { length: Math.ceil(filteredJobListings.length / jobsPerPage) },
+            (_, index) => (
+              <button
+                key={index + 1}
+                onClick={() => handlePageChange(index + 1)}
+                className={`mx-1 px-3 py-1 rounded-lg ${
+                  currentPage === index + 1
+                    ? "bg-blue-900 text-white"
+                    : "bg-gray-200 text-blue-900"
+                }`}
+              >
+                {index + 1}
+              </button>
+            )
           )}
         </div>
       </div>

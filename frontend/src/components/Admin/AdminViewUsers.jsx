@@ -4,13 +4,16 @@ import axios from "axios";
 
 const AdminViewUsers = () => {
   const [users, setUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const usersPerPage = 4;
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleLogout = () => {
     const confirmed = window.confirm("Are you sure you want to logout?");
     if (confirmed) {
-      // Clear session storage and redirect to the login route
       sessionStorage.removeItem("Id");
       sessionStorage.removeItem("Role");
       navigate("/login");
@@ -36,25 +39,39 @@ const AdminViewUsers = () => {
         const fetchedUsers = response.data.data.map((user) => ({
           id: user.id,
           fullName: user.full_name, // Assuming 'full_name' is the correct key
-          pwdId: user.id, 
-          disability: user.type,
+          pwdId: user.pwd_id, // Assuming 'pwd_id' is the correct key
+          disability: user.disability,
           address: user.address,
           city: user.city,
-          birthdate: user.birth_date,
-          contactNumber: user.contact_number, // Assuming 'contact_number' is the correct key
+          birthdate: user.birthdate,
+          contactNumber: user.contact_number,
           email: user.email,
         }));
-
-        console.log("Filtered and processed users:", fetchedUsers); // Logs the processed array of users
-        setUsers(fetchedUsers); // Update the state with the processed users
+        setUsers(fetchedUsers);
+        setFilteredUsers(fetchedUsers);
       })
       .catch((error) => {
         const errorMessage =
           error.response?.data?.message || "An error occurred";
-        console.log("Error:", error.response?.data); // Logs the error response
         alert(errorMessage);
       });
   }, []);
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+    const filtered = users.filter((user) =>
+      user.fullName.toLowerCase().includes(e.target.value.toLowerCase())
+    );
+    setFilteredUsers(filtered);
+    setCurrentPage(1); // Reset to the first page after search
+  };
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  // Get current users
+  const indexOfLastUser = currentPage * usersPerPage;
+  const indexOfFirstUser = indexOfLastUser - usersPerPage;
+  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
 
   const renderViewAllUsers = () => {
     return (
@@ -62,10 +79,18 @@ const AdminViewUsers = () => {
         <h2 className="text-xl font-bold mb-4 text-custom-blue">
           View All Verified Users
         </h2>
+        <div className="flex justify-center mb-4">
+          <input
+            type="text"
+            placeholder="Search by user name..."
+            className="p-2 border border-gray-300 rounded-lg w-full md:w-1/2"
+            value={searchTerm}
+            onChange={handleSearch}
+          />
+        </div>
         <div className="flex flex-wrap gap-4">
-          <script>console.log (users);</script>
-          {users.length > 0 ? (
-            users.map((user) => (
+          {currentUsers.length > 0 ? (
+            currentUsers.map((user) => (
               <div
                 key={user.id}
                 className="flex-1 min-w-[300px] p-4 bg-blue-500 rounded-xl shadow-xl"
@@ -74,7 +99,7 @@ const AdminViewUsers = () => {
                   <img
                     src={
                       user.profilePicture || "https://via.placeholder.com/150"
-                    } // Fallback to placeholder if no image
+                    }
                     alt={user.fullName}
                     className="w-24 h-24 rounded-full mb-4"
                   />
@@ -122,6 +147,26 @@ const AdminViewUsers = () => {
             ))
           ) : (
             <p className="text-white">No verified users found.</p>
+          )}
+        </div>
+
+        {/* Pagination */}
+        <div className="flex justify-center mt-6">
+          {Array.from(
+            { length: Math.ceil(filteredUsers.length / usersPerPage) },
+            (_, index) => (
+              <button
+                key={index + 1}
+                onClick={() => paginate(index + 1)}
+                className={`mx-1 px-3 py-1 rounded-lg ${
+                  currentPage === index + 1
+                    ? "bg-blue-900 text-white"
+                    : "bg-gray-200 text-blue-900"
+                }`}
+              >
+                {index + 1}
+              </button>
+            )
           )}
         </div>
       </div>
@@ -230,7 +275,6 @@ const AdminViewUsers = () => {
           Logout
         </button>
       </aside>
-
       {/* Mobile Toggle Button */}
       <button
         className={`md:hidden bg-custom-blue text-white p-4 fixed top-4 left-4 z-50 rounded-xl mt-11 transition-transform ${

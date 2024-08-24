@@ -4,6 +4,10 @@ import axios from "axios";
 
 const AdminViewComp = () => {
   const [companies, setCompanies] = useState([]);
+  const [filteredCompanies, setFilteredCompanies] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const companiesPerPage = 4;
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -30,6 +34,7 @@ const AdminViewComp = () => {
             companyEmail: company.email,
           }));
           setCompanies(fetchedCompanies);
+          setFilteredCompanies(fetchedCompanies);
         })
         .catch((error) => {
           console.log(error);
@@ -39,6 +44,24 @@ const AdminViewComp = () => {
 
     fetchCompanies();
   }, []);
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+    const filtered = companies.filter((company) =>
+      company.companyName.toLowerCase().includes(e.target.value.toLowerCase())
+    );
+    setFilteredCompanies(filtered);
+    setCurrentPage(1); // Reset to the first page after search
+  };
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const indexOfLastCompany = currentPage * companiesPerPage;
+  const indexOfFirstCompany = indexOfLastCompany - companiesPerPage;
+  const currentCompanies = filteredCompanies.slice(
+    indexOfFirstCompany,
+    indexOfLastCompany
+  );
 
   const handleLogout = () => {
     const confirmed = window.confirm("Are you sure you want to logout?");
@@ -60,9 +83,18 @@ const AdminViewComp = () => {
         <h2 className="text-xl font-bold mb-4 text-custom-blue">
           View All Verified Companies
         </h2>
+        <div className="flex justify-center mb-4">
+          <input
+            type="text"
+            placeholder="Search by company name..."
+            className="p-2 border border-gray-300 rounded-lg w-full md:w-1/2"
+            value={searchTerm}
+            onChange={handleSearch}
+          />
+        </div>
         <div className="flex flex-wrap gap-4">
-          {companies.length > 0 ? (
-            companies.map((company) => (
+          {currentCompanies.length > 0 ? (
+            currentCompanies.map((company) => (
               <div
                 key={company.id}
                 className="flex-1 min-w-[300px] p-4 bg-blue-500 rounded-xl shadow-xl"
@@ -102,6 +134,26 @@ const AdminViewComp = () => {
             ))
           ) : (
             <p className="text-white">No companies found.</p>
+          )}
+        </div>
+
+        {/* Pagination */}
+        <div className="flex justify-center mt-6">
+          {Array.from(
+            { length: Math.ceil(filteredCompanies.length / companiesPerPage) },
+            (_, index) => (
+              <button
+                key={index + 1}
+                onClick={() => paginate(index + 1)}
+                className={`mx-1 px-3 py-1 rounded-lg ${
+                  currentPage === index + 1
+                    ? "bg-blue-900 text-white"
+                    : "bg-gray-200 text-blue-900"
+                }`}
+              >
+                {index + 1}
+              </button>
+            )
           )}
         </div>
       </div>
