@@ -17,7 +17,7 @@ const postJobs = async (req, res, next) => {
     if(!position_name || !description || !qualification || !positiontype_id || !company_id || !disability_ids || disability_ids.length === 0){
         return res.status(404).json({
             successful : false,
-            message : "One or more details are missing, or the disability_ids array is empty"
+            message : "One or more details are missing"
         })
     }
     else if(util.checkSpecialChar(position_name)){

@@ -466,7 +466,7 @@ const Signup = () => {
             id="pwdID"
             name="pwdID"
             value={userFormValues.pwdID}
-            onChange={handleFileChange}
+            onChange={handleInputChange}
             className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
             style={commonInputStyles}
             required

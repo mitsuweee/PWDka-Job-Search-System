@@ -152,7 +152,7 @@ const registerCompany = async (req, res, next) => {
               return res.status(200).json({
                 successful: true,
                 message:
-                  "Successfully Registered Company! Before having the capability to access our website, We will check if all the data you have inputed is legitimate. Please wait for our email verification if the Company is accepted or rejected. Thank you!",
+                  "Successfully Registered Company! We Will update you via email once the company is verified. Thank you!",
               });
             }
           }
@@ -295,7 +295,7 @@ const updateCompany = async (req, res, next) => {
         } else {
           return res.status(200).json({
             successful: true,
-            message: "Company updated successfully",
+            message: "Company Details updated successfully",
           });
         }
       } finally {

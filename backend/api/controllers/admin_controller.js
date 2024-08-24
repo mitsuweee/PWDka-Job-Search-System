@@ -4,8 +4,6 @@ const {adminModel} = require('../models/admin_model')
 const util = require('./util')
 const bcrypt = require('bcrypt')
 
-// miguel
-
 const registerAdmin = async (req, res, next) => {
 
     let firstName = req.body.firstName.toLowerCase()
@@ -25,7 +23,7 @@ const registerAdmin = async (req, res, next) => {
     else if (util.checkNumbersAndSpecialChar(firstName) || util.checkNumbersAndSpecialChar(lastName)) {
         return res.status(400).json({
         successful: false,
-        message: "Invalid First Name or Last Name format"
+        message: "Invalid Name format"
         })
     }
 

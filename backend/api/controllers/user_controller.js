@@ -252,7 +252,7 @@ const registerUser = async (req, res, next) => {
                                     return res.status(200).json({
                                         successful: true,
                                         message:
-                                            "Successfully Registered User! Before having the capability to access our website, We will check if all the data you have inputed is legitimate. Please wait for our email verification if the User is accepted or rejected. Thank you!",
+                                            "Successfully Registered User! We will update you via email once the user's account is verified. Thank you!",
                                     });
                                 }
                             }
@@ -396,7 +396,7 @@ const updateUser = async (req, res, next) => {
                 } else {
                     return res.status(200).json({
                         successful: true,
-                        message: "User updated successfully",
+                        message: "User Details updated successfully",
                     });
                 }
             } finally {
