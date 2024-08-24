@@ -241,7 +241,7 @@ const viewCompanies = async (req, res, next) => {
 
         try{
               const selectQuery = `
-              SELECT id, name, description, CONCAT(address, ' ', city) AS Location, contact_number, email, profile_picture FROM company where status = 'VERIFIED'`
+              SELECT id, name, description, address, city, contact_number, email, profile_picture FROM company where status = 'VERIFIED'`
 
               const rows = await connection.query(selectQuery)
 
