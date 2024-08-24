@@ -200,10 +200,11 @@ const viewUsers = async (req, res, next) => {
                const selectQuery = `
                SELECT 
                     user.id, 
-                    disability.type,
+                    disability.type AS type,
                     CONCAT(user.first_name, ' ', user.middle_initial,'. ', user.last_name) AS full_name,
                     email, 
-                    CONCAT(address, ' ', city) AS Location,
+                    address,
+                    city,
                     gender,
                     birth_date,
                     contact_number,
@@ -240,7 +241,7 @@ const viewCompanies = async (req, res, next) => {
 
         try{
               const selectQuery = `
-              SELECT id, name, description, CONCAT(address, ' ', city) AS Location, contact_number, email, profile_picture FROM company where status = 'VERIFIED'`
+              SELECT id, name, description, address, city, contact_number, email, profile_picture FROM company where status = 'VERIFIED'`
 
               const rows = await connection.query(selectQuery)
 

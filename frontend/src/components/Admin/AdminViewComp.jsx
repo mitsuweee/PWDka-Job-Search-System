@@ -22,7 +22,7 @@ const AdminViewComp = () => {
           console.log(response.data);
           const fetchedCompanies = response.data.data.map((company) => ({
             id: company.id,
-            companyName: company.company_name,
+            companyName: company.name,
             address: company.address,
             city: company.city,
             companyDescription: company.description,
