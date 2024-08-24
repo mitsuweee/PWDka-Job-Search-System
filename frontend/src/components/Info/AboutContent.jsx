@@ -168,7 +168,7 @@
           <div className="grid mt-0 mr-auto mb-0 ml-auto gap-10 row-gap-8 sm:row-gap-10 lg:max-w-screen-lg sm:grid-cols-2 lg:grid-cols-3">
             {[
               { name: 'Kyle Anakin Aguas', role: 'Frontend/ Integration', img: '/imgs/kyle.jpg' },
-              { name: 'Carlos Miguel Bundac', role: 'Frontend/ UI UX Designer', img: '/imgs/ako.jpg' },
+              { name: 'Carlos Miguel Bundac', role: 'Lead Frontend Developer / UI UX Designer / Integration', img: '/imgs/ako.jpg' },
               { name: 'Liv Andre Centeno', role: 'Integration / Database/Backend Developer', img: '/imgs/liv.jpg' },
               { name: 'Joshua Brioso', role: 'Developer', img: '/imgs/brioso.jpg' },
               { name: 'Kevin Allen Guia', role: 'Frontend Developer', img: '/imgs/kev.jpg' },
