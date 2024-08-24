@@ -35,7 +35,7 @@ const PostJob = () => {
       qualification: jobDetails.qualifications,
       minimum_salary: jobDetails.minSalary,
       maximum_salary: jobDetails.maxSalary,
-      positiontype_id: jobDetails.positionType === "full-time" ? 1 : 2,
+      positiontype_id: jobDetails.positionType,
       disability_ids: jobDetails.disabilityCategories,
     });
 
