@@ -200,10 +200,11 @@ const viewUsers = async (req, res, next) => {
                const selectQuery = `
                SELECT 
                     user.id, 
-                    disability.type,
+                    disability.type AS type,
                     CONCAT(user.first_name, ' ', user.middle_initial,'. ', user.last_name) AS full_name,
                     email, 
-                    CONCAT(address, ' ', city) AS Location,
+                    address,
+                    city,
                     gender,
                     birth_date,
                     contact_number,
