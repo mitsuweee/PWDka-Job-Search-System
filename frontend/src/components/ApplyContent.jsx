@@ -6,12 +6,20 @@ const ApplyPage = () => {
   const [pdfPreviewUrl, setPdfPreviewUrl] = useState(null);
   const [error, setError] = useState("");
 
+  const MAX_FILE_SIZE = 16777215; // 16,777,215 bytes (16MB)
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file && file.type === "application/pdf") {
-      setResume(file);
-      setPdfPreviewUrl(URL.createObjectURL(file)); // Create a URL for the PDF file to preview it
-      setError("");
+      if (file.size <= MAX_FILE_SIZE) {
+        setResume(file);
+        setPdfPreviewUrl(URL.createObjectURL(file)); // Create a URL for the PDF file to preview it
+        setError("");
+      } else {
+        setError("File size exceeds 16MB. Please upload a smaller file.");
+        setResume(null);
+        setPdfPreviewUrl(null);
+      }
     } else {
       setError("Please upload a PDF file.");
       setResume(null);
@@ -24,12 +32,12 @@ const ApplyPage = () => {
     if (resume) {
       const reader = new FileReader();
       reader.onload = () => {
-        const resumeBase64 = reader.result.split(",")[1];
+        const resume = reader.result.split(",")[1];
 
         const data = JSON.stringify({
           user_id: sessionStorage.getItem("userId"), // Assuming userId is stored in sessionStorage
-          joblisting_id: 62, // Use the joblisting_id from URL params
-          resume: resumeBase64,
+          joblisting_id: sessionStorage.getItem("jobId"), // Use the joblisting_id from URL params
+          resume: resume,
         });
 
         const config = {
