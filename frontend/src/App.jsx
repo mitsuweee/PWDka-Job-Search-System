@@ -24,6 +24,7 @@ import AdminViewJobss from "./pages/AdminViewJobss.jsx";
 import AdminDelUserss from "./pages/AdminDelUserss.jsx";
 import AdminDelJobss from "./pages/AdminDelJobss.jsx";
 import AdminDelCompss from "./pages/AdminDelCompss.jsx";
+import CompanyViewAppl from "./pages/CompanyViewAppl.jsx";
 
 function App() {
   return (
@@ -73,6 +74,7 @@ function App() {
         <Route path="/adminlogin" element={<AdminLog />} />
         <Route path="/dashboard/postjob" element={<PostJobPage />} />
         {/* <Route path="" */}
+        <Route path="/company/viewapplicants" element={<CompanyViewAppl />} />
       </Routes>
     </Router>
   );
