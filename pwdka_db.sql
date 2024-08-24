@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 20, 2024 at 07:56 AM
+-- Generation Time: Aug 24, 2024 at 05:36 PM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,8 +20,7 @@ SET time_zone = "+00:00";
 --
 -- Database: `pwdka_db`
 --
-DROP DATABASE `pwdka_db`;
-CREATE DATABASE `pwdka_db`;
+
 -- --------------------------------------------------------
 
 --
@@ -48,7 +47,8 @@ INSERT INTO `admin` (`id`, `role`, `first_name`, `last_name`, `email`, `password
 (18, 'admin', 'liv andre', 'centeno', 'livcenteno2k@gmail.comewew', '$2b$10$H/VjTXmBF8NxMOcRQify4Os9eqIWGgZMzLTyXMFvcfOzv1RSqnHNq'),
 (19, 'admin', 'liv andre', 'centeno', 'livcenteno2k@gmail.com', '$2b$10$jP.0Z13PApPlWE4.PbzqX.MqA0cPFMyj1LsPbMCDx3GfxkzvbiCKe'),
 (20, 'admin', 'liv andre', 'centeno', 'livcenteno@yahoo.com', '$2b$10$XXOfS23fO0Qz0GIu8zEKRep93Y8IGBFSdYtZzsKb6JCPXxDO61HnK'),
-(21, 'admin', 'liv andre', 'centeno', 'liv24@gmail.com', '$2b$10$b5rS7icBlFTVfc9Uwv1eu.nmpanp0ooMClva.qedoHSxMiqVaz8g2');
+(21, 'admin', 'liv andre', 'centeno', 'liv24@gmail.com', '$2b$10$b5rS7icBlFTVfc9Uwv1eu.nmpanp0ooMClva.qedoHSxMiqVaz8g2'),
+(22, 'admin', 'mitsui', 'ortega', 'admin@gmail.com', '$2b$10$7EedWD3zEOBn4Vi9V9ich.Vml3YM9HUVsvQSfuHLyNJlIOHlZcaue');
 
 -- --------------------------------------------------------
 
@@ -77,12 +77,13 @@ CREATE TABLE `company` (
 INSERT INTO `company` (`id`, `role`, `status`, `name`, `address`, `city`, `description`, `contact_number`, `email`, `password`, `profile_picture`) VALUES
 (1, 'company', 'VERIFIED', '23 parang jordan', '23 Jordan Street', 'Chicago City', 'Gawa ni jordan the great, from 1993', '09412345123', 'eqwevqweqw@yahoo.com', 'ecqwecq2', 0x65717764617364),
 (2, 'company', 'PENDING', 'Liv Andre', 'Centeno', 'csc', 'dsa', '09686022965', 'trrcscscsxjghcxy@gmail.com', '1Dwdsca%a', ''),
-(4, 'company', 'VERIFIED', 'tr!nity', 'Cen23t eno', 'csc', 'ds,,,,a', '09412345123', 'trrcscscdssxjghcxy@gewmail.com', '$2b$10$oHIKRl2/lEOWOC4J5NnaBOYwW/XNK2wnd8e/b2aM4h3ldW7Shy6pG', ''),
-(5, 'company', 'PENDING', 'tr!nity', 'Cen23t eno', 'csc', 'ds,,,,a', '09412345123', 'trrcscscdssxjvdghcxy@gewmail.com', '$2b$10$O2GzCj0pOhV5YtgmdDgOieySQxbp/1wzNModBuD2NBd4OwVqN.Qbe', 0x65717764617364),
-(8, 'company', 'VERIFIED', 'tr!nity', 'cen23t eno', 'csc', 'ds,,,,a', '09412345123', 'livceneqwewqteno2k@gmail.com', '$2b$10$1aSmFVOGQ20TIS.etNt5wuWm60D5EuftdqzOHccAv1VDrtMrYNeqK', 0x65717764617364),
-(9, 'company', 'PENDING', 'tr!nity', 'cen23t eno', 'csc', 'ds,,,,a', '09412345123', 'livcenteno2k@gmail.com', '$2b$10$MNcqsw76sQt.T6OnakGBLOqu2yPj1nNFrF74XH7UQDs4XeW1ejV7q', 0x65717764617364),
-(10, 'company', 'PENDING', 'tr!nity', 'cen23t eno', 'csc', 'ds,,,,a', '09412345123', 'livcenteno2k@gmail.comzxc', '$2b$10$KFeXF4yh5NUN13zR2rPHkOT5Iybg.dfV.ggYmtMCIs.U23J4vnf.u', 0x65717764617364),
-(11, 'company', 'PENDING', 'tr!nity', 'cen23t eno', 'csc', 'ds,,,,a', '09412345123', 'livcenteno123@yahoo.com', '$2b$10$zIVxFD2qRANlmpSW3Gdhqe72EFldwaE8MRGSFfWi2GuuCwW6vqTD2', 0x65717764617364);
+(4, 'company', 'VERIFIED', 'HAHAHAHA', 'Cen23t eno', 'csc', 'ds,,,,a', '09412345123', 'trrcscscdssxjghcxy@gewmail.com', '$2b$10$oHIKRl2/lEOWOC4J5NnaBOYwW/XNK2wnd8e/b2aM4h3ldW7Shy6pG', ''),
+(5, 'company', 'PENDING', 'GAME', 'Cen23t eno', 'csc', 'ds,,,,a', '09412345123', 'trrcscscdssxjvdghcxy@gewmail.com', '$2b$10$O2GzCj0pOhV5YtgmdDgOieySQxbp/1wzNModBuD2NBd4OwVqN.Qbe', 0x65717764617364),
+(8, 'company', 'VERIFIED', 'ANO KA', 'cen23t eno', 'csc', 'ds,,,,a', '09412345123', 'livceneqwewqteno2k@gmail.com', '$2b$10$1aSmFVOGQ20TIS.etNt5wuWm60D5EuftdqzOHccAv1VDrtMrYNeqK', 0x65717764617364),
+(9, 'company', 'PENDING', 'wews', 'cen23t eno', 'csc', 'ds,,,,a', '09412345123', 'livcenteno2k@gmail.com', '$2b$10$MNcqsw76sQt.T6OnakGBLOqu2yPj1nNFrF74XH7UQDs4XeW1ejV7q', 0x65717764617364),
+(10, 'company', 'PENDING', 'lmao', 'cen23t eno', 'csc', 'ds,,,,a', '09412345123', 'livcenteno2k@gmail.comzxc', '$2b$10$KFeXF4yh5NUN13zR2rPHkOT5Iybg.dfV.ggYmtMCIs.U23J4vnf.u', 0x65717764617364),
+(11, 'company', 'PENDING', 'tr!nity', 'cen23t eno', 'csc', 'ds,,,,a', '09412345123', 'livcenteno123@yahoo.com', '$2b$10$zIVxFD2qRANlmpSW3Gdhqe72EFldwaE8MRGSFfWi2GuuCwW6vqTD2', 0x65717764617364),
+(13, 'company', 'VERIFIED', 'Tech Innovators Inc.', 'sadsadasdasdasdasdasda', 'Netskie City', 'Leading company in the tech industry, providing cutting-edge solutions and services worldwide.', '09123456781', 'tech23@gmail.com', '$2b$10$u.5NHTldFYlQqMlvmFb.vuKRs3FXFFBz7JJ4WfuubWCN3Fw./DOTy', 0x68747470733a2f2f7669612e706c616365686f6c6465722e636f6d2f313530);
 
 -- --------------------------------------------------------
 
@@ -143,7 +144,15 @@ INSERT INTO `disability_job_listing` (`id`, `disability_id`, `joblisting_id`) VA
 (27, 1, 51),
 (32, 3, 57),
 (33, 2, 57),
-(34, 1, 58);
+(34, 1, 58),
+(44, 8, 62),
+(45, 1, 62),
+(46, 3, 62),
+(47, 9, 63),
+(48, 10, 63),
+(59, 8, 69),
+(61, 8, 71),
+(62, 1, 71);
 
 -- --------------------------------------------------------
 
@@ -200,7 +209,11 @@ INSERT INTO `job_listing` (`id`, `date_created`, `position_name`, `description`,
 (46, '2024-08-14 23:51:06', 'eqweqwfull stack developer', 'Cen23t eno', 'csc', 300, 500, 1, 8),
 (51, '2024-08-14 23:51:06', 'eqweqwfull stack developer', 'Cen23t eno', 'csc', 300, 500, 1, 8),
 (57, '2024-08-14 23:51:09', 'eqweqwfull stack developer', 'Cen23t eno', 'csc', 0, 8, 1, 8),
-(58, '2024-08-14 23:51:06', 'Disabiility For 1', 'Cen23t eno', 'csc', 0, 8, 1, 8);
+(58, '2024-08-14 23:51:06', 'Disabiility For 1', 'Cen23t eno', 'csc', 0, 8, 1, 8),
+(62, '2024-08-22 17:59:14', 'aljames', 'sadasdas', 'dsadsad', 15000, 30000, 1, 13),
+(63, '2024-08-22 17:59:47', 'hevabi', 'sadasdas', 'dsadsad', 15000, 30000, 1, 13),
+(69, '2024-08-22 22:36:39', 'ahhahaha', 'ASDASDSAD', 'ASDASDASD', 23000, 25000, 1, 13),
+(71, '2024-08-24 17:22:46', 'techsupport ni mits', 'ASDASDSAD', 'SADSAD', 15000, 232323, 1, 13);
 
 -- --------------------------------------------------------
 
@@ -256,6 +269,9 @@ INSERT INTO `user` (`id`, `role`, `status`, `first_name`, `middle_initial`, `las
 ('12-4243-432-1234567', 'user', 'PENDING', 'liv andre', 'j', 'centeno', '4152 ponte', 'makati city', 'male', '2003-11-24', 'liv213213@yahoo.com', '$2b$10$aXeHakL/8HKl3IIljLOjvenH9TXYmPrv.WHhQF0ag3S1haBaYHF.a', '09686022965', 1, 0x65717764617364, 0x65717764617364, 0x65717764617364),
 ('12-4243-435-1234567', 'user', 'PENDING', 'liv andre', 'j', 'centeno', '4152 ponte', 'makati city', 'male', '2003-11-24', 'livcenteno@gmail.com', '$2b$10$RI7Ecr/KeaaD3L.xyKFSmOHXOzT9LqqnmGMhORHWxnaR.bCh8B8uy', '09686022965', 1, 0x65717764617364, 0x65717764617364, 0x65717764617364),
 ('12-4343-432-1234567', 'user', 'VERIFIED', 'liv andre', 'j', 'centeno', '4152 ponte', 'makati city', 'male', '0000-00-00', 'liv213@yahoo.com', '$2b$10$awgKn8DSVjTRP05v4DT0PeYG3kAYvPIsxmHUj/uT6Noj5/kDq1wyG', '09686022965', 1, 0x65717764617364, 0x65717764617364, 0x65717764617364),
+('13-7607-000-1234567', 'user', 'VERIFIED', 'mitsui', 't', 'asdasdsad', 'brgy butot balat lumilipad', 'marikina city', 'male', '2003-02-20', 'sadsada23@gmail.com', '$2b$10$PhrVrS2tpl1NrPt2VME02ewqRLMPf.ZBWLme/SLRQ/Ih.Ye/I3QNK', '09123456789', 1, 0x68747470733a2f2f7669612e706c616365686f6c6465722e636f6d2f313530, 0x433a5c66616b65706174685c73686573682e6a7067, 0x433a5c66616b65706174685c73686573682e6a7067),
+('13-7607-000-3212567', 'user', 'VERIFIED', 'hev', 'b', 'abi', 'tomas morato', 'quezon city', 'male', '2005-02-22', 'hevabi@gmail.com', '$2b$10$jlNpvzJf7kR7ssRX.15GI.a1hFKYrNWSQO2OL3rcKgQ/ymdRifFwu', '09123466689', 7, 0x433a5c66616b65706174685c31362e706e67, 0x433a5c66616b65706174685c31362e706e67, 0x433a5c66616b65706174685c31362e706e67),
+('13-7607-122-0012567', 'user', 'VERIFIED', 'asdasd', 'a', 'asd', 'maghimay', 'tas ipasa mo city', 'male', '2000-10-22', 'aljames@gmail.com', '$2b$10$H.cMNQzUnP1FGF6jxwhnS.p70axOG1bwKyaqOG7np10QIfVycAUrW', '09054358584', 1, 0x68747470733a2f2f7669612e706c616365686f6c6465722e636f6d2f313530, 0x433a5c66616b65706174685c31362e706e67, 0x433a5c66616b65706174685c31362e706e67),
 ('5', 'user', 'VERIFIED', 'liv andre', 'j', 'dela cruz', '4152 ponte', 'makati city', '', '0000-00-00', 'livcdsadsenteno22k@gmail.com', '$2b$10$Gziu377S9T4ELknDD/JcEuffiue58tBDB0eIfog0X6OanVWpGbxwO', '09686022965', 3, 0x65717764617364, 0x65717764617364, 0x65717764617364),
 ('9394-922339-42213', 'user', 'PENDING', 'liv andre', 'j', 'dela cruz', '8406 trabaho street', 'mandaluyong city', 'malelele', '0000-00-00', 'livcenteno222k@gmail.com', '$2b$10$KpxMD7vnvMm8L95FWOkeQeOqu.rPOWiGQcPreT1Y6HCshVK2Kkr8O', '09686022934', 1, 0x657177657177, 0x65717764617364, 0x65717764617364),
 ('9394-9239-4213', 'user', 'VERIFIED', 'liv andre', 'j', 'dela cruz', '4152 ponte', 'makati city', 'malelele', '0000-00-00', 'livcenteeweno2k@gmail.com', '$2b$10$rHyWs7v4SuaUh4Rng6BTX.eF2nkQescobP2txXR67u0dsufJ2T1Hy', '09686022965', 1, 0x65717764617364, 0x65717764617364, 0x65717764617364),
@@ -328,13 +344,13 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `admin`
 --
 ALTER TABLE `admin`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `company`
 --
 ALTER TABLE `company`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `disability`
@@ -346,7 +362,7 @@ ALTER TABLE `disability`
 -- AUTO_INCREMENT for table `disability_job_listing`
 --
 ALTER TABLE `disability_job_listing`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
 
 --
 -- AUTO_INCREMENT for table `job_application`
@@ -358,7 +374,7 @@ ALTER TABLE `job_application`
 -- AUTO_INCREMENT for table `job_listing`
 --
 ALTER TABLE `job_listing`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
 
 --
 -- AUTO_INCREMENT for table `position_type`
