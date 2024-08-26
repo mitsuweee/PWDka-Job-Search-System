@@ -74,6 +74,16 @@ const ViewApplicants = () => {
     console.log(`Applicant with id ${id} deleted`);
   };
 
+  const handleLogout = () => {
+    const confirmed = window.confirm("Are you sure you want to logout?");
+    if (confirmed) {
+        sessionStorage.removeItem("Id");
+        sessionStorage.removeItem("Role");
+        window.location.href = "/login";
+    }
+};
+
+
   // Sort the applicants based on the selected sort option
   const sortedApplicants = applicants.sort((a, b) => {
     if (sortOption === "newest") {
@@ -129,10 +139,7 @@ const ViewApplicants = () => {
 
         <button
           className="bg-red-400 text-white rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-red-500 transition-all duration-200 ease-in-out mt-6"
-          onClick={() => {
-            // Replace with your logout logic
-            console.log("Logged out");
-          }}
+          onClick={handleLogout}
         >
           Logout
         </button>
