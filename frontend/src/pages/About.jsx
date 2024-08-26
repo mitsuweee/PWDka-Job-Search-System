@@ -1,7 +1,7 @@
-import React from 'react'
-import Navbar from '../components/Navbar'
-import Footer from '../components/Footer'
-import AboutUs from '../components/Info/AboutContent'
+import React from "react";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import AboutUs from "../components/Info/AboutContent";
 
 const About = () => {
   return (
@@ -9,12 +9,12 @@ const About = () => {
       <header>
         <Navbar />
       </header>
-        <AboutUs/>
+      <AboutUs />
       <footer>
         <Footer />
       </footer>
     </div>
-  )
-}
+  );
+};
 
-export default About
+export default About;
