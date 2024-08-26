@@ -129,23 +129,23 @@ const CompanyProf = () => {
         <div>
           <div className="mb-4">
             <p className="text-lg font-semibold text-gray-800">Email:</p>
-            <p className="text-gray-600">{company.email}</p>
+            <p className="text-gray-600 bg-gray-400 p-5 rounded-lg">{company.email}</p>
           </div>
           <div className="mb-4">
             <p className="text-lg font-semibold text-gray-800">Address:</p>
-            <p className="text-gray-600">{company.address}</p>
+            <p className="text-gray-600 bg-gray-400 p-5 rounded-lg">{company.address}</p>
           </div>
         </div>
         <div>
           <div className="mb-4">
             <p className="text-lg font-semibold text-gray-800">City:</p>
-            <p className="text-gray-600">{company.city}</p>
+            <p className="text-gray-600 bg-gray-400 p-5 rounded-lg">{company.city}</p>
           </div>
           <div className="mb-4">
             <p className="text-lg font-semibold text-gray-800">
               Contact Number:
             </p>
-            <p className="text-gray-600">{company.contactNumber}</p>
+            <p className="text-gray-600 bg-gray-400 p-5 rounded-lg">{company.contactNumber}</p>
           </div>
         </div>
       </div>

@@ -135,31 +135,31 @@ const UserProf = () => {
         <div>
           <div className="mb-4">
             <p className="text-lg font-semibold text-gray-800">Address:</p>
-            <p className="text-gray-600">{user.address}</p>
+            <p className="text-gray-600 bg-gray-400 p-5 rounded-lg">{user.address}</p>
           </div>
           <div className="mb-4">
             <p className="text-lg font-semibold text-gray-800">City:</p>
-            <p className="text-gray-600">{user.city}</p>
+            <p className="text-gray-600 bg-gray-400 p-5 rounded-lg">{user.city}</p>
           </div>
           <div className="mb-4">
             <p className="text-lg font-semibold text-gray-800">
               Contact Number:
             </p>
-            <p className="text-gray-600">{user.contactNumber}</p>
+            <p className="text-gray-600 bg-gray-400 p-5 rounded-lg">{user.contactNumber}</p>
           </div>
           <div className="mb-4">
             <p className="text-lg font-semibold text-gray-800">Gender:</p>
-            <p className="text-gray-600">{user.gender}</p>
+            <p className="text-gray-600 bg-gray-400 p-5 rounded-lg">{user.gender}</p>
           </div>
         </div>
         <div>
           <div className="mb-4">
             <p className="text-lg font-semibold text-gray-800">Birthdate:</p>
-            <p className="text-gray-600">{user.birthdate}</p>
+            <p className="text-gray-600 bg-gray-400 p-5 rounded-lg">{user.birthdate}</p>
           </div>
           <div className="mb-4">
             <p className="text-lg font-semibold text-gray-800">Email:</p>
-            <p className="text-gray-600">{user.email}</p>
+            <p className="text-gray-600 bg-gray-400 p-5 rounded-md">{user.email}</p>
           </div>
 
           <div className="flex justify-between mt-6">
