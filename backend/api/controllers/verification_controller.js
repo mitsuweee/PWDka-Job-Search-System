@@ -1,336 +1,252 @@
-const { json } = require('body-parser')
-const database = require('../models/connection_db')
-const nodemailer = require('nodemailer')
+const { json } = require("body-parser");
+const knex = require("../models/connection_db");
+const nodemailer = require("nodemailer");
 
-
+// View pending users
 const viewPendingUsers = async (req, res, next) => {
+  try {
+    const rows = await knex("user")
+      .join("disability", "user.disability_id", "disability.id")
+      .select(
+        "user.id",
+        "disability.type",
+        knex.raw(
+          "CONCAT(user.first_name, ' ', user.middle_initial, '. ', user.last_name) AS full_name"
+        ),
+        "user.email",
+        knex.raw("CONCAT(user.address, ' ', user.city) AS Location"),
+        "user.gender",
+        "user.birth_date",
+        "user.contact_number",
+        "user.formal_picture"
+      )
+      .where("user.status", "PENDING");
 
-    try{
-        const connection = await database.pool.getConnection()
+    return res.status(200).json({
+      successful: true,
+      message: "Successfully Retrieved Users",
+      data: rows,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      successful: false,
+      message: err.message,
+    });
+  }
+};
 
-        try{
-               const selectQuery = `
-               SELECT 
-                    user.id, 
-                    disability.type,
-                    CONCAT(user.first_name, ' ', user.middle_initial,'. ', user.last_name) AS full_name,
-                    email, 
-                    CONCAT(address, ' ', city) AS Location,
-                    gender,
-                    birth_date,
-                    contact_number,
-                    formal_picture 
-               FROM user 
-               JOIN disability ON user.disability_id = disability.id
-               where status = 'PENDING'`
+// Verify company
+const verifyCompany = async (req, res, next) => {
+  const id = req.params.id;
 
-              const rows = await connection.query(selectQuery)
+  if (!id) {
+    return res.status(404).json({
+      successful: false,
+      message: "ID is missing",
+    });
+  }
 
-              return res.status(200).json({
-                successful : true,
-                message : "Successfully Retrieved Users",
-                data : rows
-              })
-        }
-        finally{
-            connection.release()
-        }
+  try {
+    const company = await knex("company").select("email").where({ id }).first();
+
+    if (!company) {
+      return res.status(404).json({
+        successful: false,
+        message: "Company not found",
+      });
     }
-    catch(err){
-        return res.status(500).json({
-            successful : false, 
-            message : err.message
-        })
+
+    await knex("company").where({ id }).update({ status: "VERIFIED" });
+
+    const transporter = nodemailer.createTransport({
+      service: "Gmail",
+      auth: {
+        user: "livcenteno24@gmail.com",
+        pass: "your_password",
+      },
+    });
+
+    const mailOptions = {
+      from: "livcenteno24@gmail.com",
+      to: company.email,
+      subject: "ACCOUNT VERIFIED!",
+      text: `Dear User,\n\nCongratulations! Your company has been successfully verified. You can now access our platform.\n\nBest regards,\nPWDKA TEAM`,
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    return res.status(200).json({
+      successful: true,
+      message: "Successfully Verified Company!",
+    });
+  } catch (err) {
+    return res.status(500).json({
+      successful: false,
+      message: err.message,
+    });
+  }
+};
+
+// Decline company
+const declineCompany = async (req, res, next) => {
+  const id = req.params.id;
+
+  if (!id) {
+    return res.status(404).json({
+      successful: false,
+      message: "ID is missing",
+    });
+  }
+
+  try {
+    const company = await knex("company").select("email").where({ id }).first();
+
+    if (!company) {
+      return res.status(404).json({
+        successful: false,
+        message: "Company not found",
+      });
     }
-}
 
-const verifyCompany = async (req,res,next) =>{
+    await knex("company").where({ id }).del();
 
-    let id = req.params.id
+    const transporter = nodemailer.createTransport({
+      service: "Gmail",
+      auth: {
+        user: "livcenteno24@gmail.com",
+        pass: "your_password",
+      },
+    });
 
+    const mailOptions = {
+      from: "livcenteno24@gmail.com",
+      to: company.email,
+      subject: "UNABLE TO VERIFY COMPANY",
+      text: `Dear User,\n\nYour request to verify your company has been declined. Ensure the company is legitimate and all data entered is correct. The company can request verification again by re-registering.\n\nSincerely Yours,\nPWDKA TEAM`,
+    };
 
-    if(id == null){
-        return res.status(404).json({
-            successful : false, 
-            message : "id is missing"
-        })
+    await transporter.sendMail(mailOptions);
+
+    return res.status(200).json({
+      successful: true,
+      message: "Successfully Deleted Company",
+    });
+  } catch (err) {
+    return res.status(500).json({
+      successful: false,
+      message: err.message,
+    });
+  }
+};
+
+// Verify user
+const verifyUser = async (req, res, next) => {
+  const id = req.params.id;
+
+  if (!id) {
+    return res.status(404).json({
+      successful: false,
+      message: "ID is missing",
+    });
+  }
+
+  try {
+    const user = await knex("user").select("email").where({ id }).first();
+
+    if (!user) {
+      return res.status(404).json({
+        successful: false,
+        message: "User not found",
+      });
     }
-    else{
 
-        try{
-            const connection = await database.pool.getConnection()
+    await knex("user").where({ id }).update({ status: "VERIFIED" });
 
-            try{
-                const selectQuery = 'SELECT email FROM company WHERE id = ?'
-                const rows = await connection.query(selectQuery, [id])
+    const transporter = nodemailer.createTransport({
+      service: "Gmail",
+      auth: {
+        user: "livcenteno24@gmail.com",
+        pass: "your_password",
+      },
+    });
 
-                if (rows.length === 0) {
-                    return res.status(404).json({
-                        successful: false,
-                        message: "Company not found"
-                    })
-                }
-                else {
-                    const updateQuery = `UPDATE company SET status = 'VERIFIED' WHERE id = ?`
+    const mailOptions = {
+      from: "livcenteno24@gmail.com",
+      to: user.email,
+      subject: "ACCOUNT VERIFIED!",
+      text: `Dear User,\n\nCongratulations! Your account has been successfully verified. You can now access our platform.\n\nBest regards,\nPWDKA TEAM`,
+    };
 
-                    connection.query(updateQuery, [id])
-                    const transporter = nodemailer.createTransport({
-                        service: 'Gmail', 
-                        auth: {
-                            user: 'livcenteno24@gmail.com',
-                            pass: 'glwg czmw tmdb rzvn' 
-                        }
-                    })
+    await transporter.sendMail(mailOptions);
 
-                   
-                    const mailOptions = {
-                        from: 'livcenteno24@gmail.com',
-                        to: rows[0].email,
-                        subject: 'ACCOUNT VERIFIED!',
-                        text: `Dear User,\n\nCongratulations! Your company has been successfully verified. You can now access our platform.\n\nBest regards,\nPWDKA TEAM`
-                    }
+    return res.status(200).json({
+      successful: true,
+      message: "Successfully Verified User!",
+    });
+  } catch (err) {
+    return res.status(500).json({
+      successful: false,
+      message: err.message,
+    });
+  }
+};
 
-                    // Send the email
-                    await transporter.sendMail(mailOptions)
+// Decline user
+const declineUser = async (req, res, next) => {
+  const id = req.params.id;
 
-                    return res.status(200).json({
-                        successful : true, 
-                        message : "Successfully Verified Company!"
-                    })
-                }
-    
+  if (!id) {
+    return res.status(404).json({
+      successful: false,
+      message: "ID is missing",
+    });
+  }
 
-            }
-            finally{
-                connection.release()
-            }
-        }
-        catch(err){
-            return res.status(500).json({
-                successful : false, 
-                message : err.message
-            })
-        }
+  try {
+    const user = await knex("user").select("email").where({ id }).first();
+
+    if (!user) {
+      return res.status(404).json({
+        successful: false,
+        message: "User not found",
+      });
     }
-}
 
-const declineCompany = async (req,res,next) =>{
+    await knex("user").where({ id }).del();
 
-    let id = req.params.id
+    const transporter = nodemailer.createTransport({
+      service: "Gmail",
+      auth: {
+        user: "livcenteno24@gmail.com",
+        pass: "your_password",
+      },
+    });
 
+    const mailOptions = {
+      from: "livcenteno24@gmail.com",
+      to: user.email,
+      subject: "UNABLE TO VERIFY USER",
+      text: `Dear User,\n\nYour request to verify your account has been declined. Ensure all data entered is correct. You can request verification again by re-registering.\n\nSincerely Yours,\nPWDKA TEAM`,
+    };
 
-    if(id == null){
-        return res.status(404).json({
-            successful : false, 
-            message : "id is missing"
-        })
-    }
-    else{
+    await transporter.sendMail(mailOptions);
 
-        try{
-            const connection = await database.pool.getConnection()
-
-            try{
-                const selectQuery = 'SELECT email FROM company WHERE id = ?'
-                const rows = await connection.query(selectQuery, [id])
-
-                if (rows.length === 0) {
-                    return res.status(404).json({
-                        successful: false,
-                        message: "Company not found"
-                    })
-                }
-                else {
-                    const deleteQuery = `DELETE FROM company WHERE id = ?`
-
-                    connection.query(deleteQuery, [id])
-                    const transporter = nodemailer.createTransport({
-                        service: 'Gmail', 
-                        auth: {
-                            user: 'livcenteno24@gmail.com',
-                            pass: 'glwg czmw tmdb rzvn' 
-                        }
-                    })
-
-                   
-                    const mailOptions = {
-                        from: 'livcenteno24@gmail.com',
-                        to: rows[0].email,
-                        subject: 'UNABLE TO VERIFY COMPANY',
-                        text: `Dear User,\n\nYour Request To verify your company has been declined. Make sure the company is legitimate and all data that has been entered is correct. \nThe company can make another request to verify the account by registering again\n\nSincerely Yours,\nPWDKA TEAM`
-                    }
-
-                    // Send the email
-                    await transporter.sendMail(mailOptions)
-
-                    return res.status(200).json({
-                        successful : true, 
-                        message : "Successfully Deleted Company"
-                    })
-                }
-    
-
-            }
-            finally{
-                connection.release()
-            }
-        }
-        catch(err){
-            return res.status(500).json({
-                successful : false, 
-                message : err.message
-            })
-        }
-    }
-}
-
-const verifyUser = async (req,res,next) =>{
-
-    let id = req.params.id
-
-
-    if(id == null){
-        return res.status(404).json({
-            successful : false, 
-            message : "id is missing"
-        })
-    }
-    else{
-
-        try{
-            const connection = await database.pool.getConnection()
-
-            try{
-
-                const selectQuery = 'SELECT email FROM user WHERE id = ?'
-                const rows = await connection.query(selectQuery, [id])
-
-                if (rows.length === 0) {
-                    return res.status(404).json({
-                        successful: false,
-                        message: "user not found"
-                    })
-                }
-                else{
-
-                    const updateQuery = `UPDATE user SET status = 'VERIFIED' WHERE id = ?`
-                    connection.query(updateQuery, [id])
-                    const transporter = nodemailer.createTransport({
-                        service: 'Gmail', 
-                        auth: {
-                            user: 'livcenteno24@gmail.com',
-                            pass: 'glwg czmw tmdb rzvn' 
-                        }
-                    })
-
-                   
-                    const mailOptions = {
-                        from: 'livcenteno24@gmail.com',
-                        to: rows[0].email,
-                        subject: 'ACCOUNT VERIFIED!',
-                        text: `Dear User,\n\nCongratulations! Your Account has been successfully verified. You can now access our platform.\n\nBest regards,\nPWDKA TEAM`
-                    }
-
-                    // Send the email
-                    await transporter.sendMail(mailOptions)
-    
-                    return res.status(200).json({
-                        successful : true, 
-                        message : "Successfully Verified User!"
-                    })
-    
-                }   
-        
-            }
-            finally{
-                connection.release()
-            }
-        }
-        catch(err){
-            return res.status(500).json({
-                successful : false, 
-                message : err.message
-            })
-        }
-    }
-}
-
-const declineUser = async (req,res,next) =>{
-
-    let id = req.params.id
-
-
-    if(id == null){
-        return res.status(404).json({
-            successful : false, 
-            message : "id is missing"
-        })
-    }
-    else{
-
-        try{
-            const connection = await database.pool.getConnection()
-
-            try{
-                const selectQuery = 'SELECT email FROM user WHERE id = ?'
-                const rows = await connection.query(selectQuery, [id])
-
-                if (rows.length === 0) {
-                    return res.status(404).json({
-                        successful: false,
-                        message: "user not found"
-                    })
-                }
-                else {
-                    const deleteQuery = `DELETE FROM user WHERE id = ?`
-
-                    connection.query(deleteQuery, [id])
-                    const transporter = nodemailer.createTransport({
-                        service: 'Gmail', 
-                        auth: {
-                            user: 'livcenteno24@gmail.com',
-                            pass: 'glwg czmw tmdb rzvn' 
-                        }
-                    })
-
-                   
-                    const mailOptions = {
-                        from: 'livcenteno24@gmail.com',
-                        to: rows[0].email,
-                        subject: 'UNABLE TO VERIFY USER',
-                        text: `Dear User,\n\nYour Request To verify your account has been declined. Make sure all data that has been entered is correct. \nThe user can make another request to verify the account by registering again\n\nSincerely Yours,\nPWDKA TEAM`
-                    }
-
-                    // Send the email
-                    await transporter.sendMail(mailOptions)
-
-                    return res.status(200).json({
-                        successful : true, 
-                        message : "Successfully Deleted user"
-                    })
-                }
-    
-
-            }
-            finally{
-                connection.release()
-            }
-        }
-        catch(err){
-            return res.status(500).json({
-                successful : false, 
-                message : err.message
-            })
-        }
-    }
-}
-
-
+    return res.status(200).json({
+      successful: true,
+      message: "Successfully Deleted User",
+    });
+  } catch (err) {
+    return res.status(500).json({
+      successful: false,
+      message: err.message,
+    });
+  }
+};
 
 module.exports = {
-    verifyCompany,
-    verifyUser,
-    declineCompany,
-    declineUser,
-    viewPendingUsers
-}
+  verifyCompany,
+  verifyUser,
+  declineCompany,
+  declineUser,
+  viewPendingUsers,
+};
