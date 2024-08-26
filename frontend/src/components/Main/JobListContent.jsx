@@ -232,9 +232,7 @@ const JobListing = () => {
             {/* Previous Page Button */}
             <li>
               <button
-                onClick={() =>
-                  currentPage > 1 && paginate(currentPage - 1)
-                }
+                onClick={() => currentPage > 1 && paginate(currentPage - 1)}
                 className="inline-flex size-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900"
                 disabled={currentPage === 1}
               >
