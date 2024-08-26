@@ -65,6 +65,7 @@ const ViewJobs = () => {
       qualification: updatedDetails.qualifications,
       minimum_salary: parseFloat(updatedDetails.salary.split("-")[0]),
       maximum_salary: parseFloat(updatedDetails.salary.split("-")[1]),
+      // disability_types: updatedDetails.disabilityTypes,
       positiontype_id: updatedDetails.positionType === "full-time" ? 1 : 2,
     });
 
