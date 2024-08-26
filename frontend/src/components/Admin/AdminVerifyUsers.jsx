@@ -58,7 +58,6 @@ const AdminVerifyUsers = () => {
       method: "put",
       url: `http://localhost:8080/verification/user/${user.id}`,
       headers: {
-        "User-Agent": "Apidog/1.0.0 (https://apidog.com)",
         "Content-Type": "application/json",
       },
     };

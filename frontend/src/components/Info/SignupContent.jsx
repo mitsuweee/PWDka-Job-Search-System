@@ -1,14 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const encodeFileToBase64 = (file) => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = (error) => reject(error);
-  });
-};
+const MAX_FILE_SIZE = 16777215; // 16,777,215 bytes (16MB)
 
 const Signup = () => {
   const [formType, setFormType] = useState("user");
@@ -46,6 +39,86 @@ const Signup = () => {
     companyLogo: "",
   });
 
+  const handleCompanyLogChange = (e) => {
+    const file = e.target.files[0];
+
+    if (file && (file.type === "image/png" || file.type === "image/jpeg")) {
+      if (file.size <= MAX_FILE_SIZE) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const base64Data = reader.result.split(",")[1]; // Remove the prefix
+          console.log(base64Data);
+          companyFormValues.companyLogo = base64Data;
+        };
+        reader.readAsDataURL(file);
+      } else {
+        alert("File size exceeds 16MB. Please upload a smaller file.");
+      }
+    } else {
+      alert("Please upload a jpeg/png file.");
+    }
+  };
+
+  const handleUserProfilePicture = (e) => {
+    const file = e.target.files[0];
+
+    if (file && (file.type === "image/png" || file.type === "image/jpeg")) {
+      if (file.size <= MAX_FILE_SIZE) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const base64Data = reader.result.split(",")[1]; // Remove the prefix
+          console.log(base64Data);
+          userFormValues.profilePicture = base64Data;
+        };
+        reader.readAsDataURL(file);
+      } else {
+        alert("File size exceeds 16MB. Please upload a smaller file.");
+      }
+    } else {
+      alert("Please upload a jpeg/png file.");
+    }
+  };
+
+  const handleUserPWDIdPicture = (e) => {
+    const file = e.target.files[0];
+
+    if (file && (file.type === "image/png" || file.type === "image/jpeg")) {
+      if (file.size <= MAX_FILE_SIZE) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const base64Data = reader.result.split(",")[1]; // Remove the prefix
+          console.log(base64Data);
+          userFormValues.picture_of_pwd_id = base64Data;
+        };
+        reader.readAsDataURL(file);
+      } else {
+        alert("File size exceeds 16MB. Please upload a smaller file.");
+      }
+    } else {
+      alert("Please upload a jpeg/png file.");
+    }
+  };
+
+  const handleUserPictureWithPWDId = (e) => {
+    const file = e.target.files[0];
+
+    if (file && (file.type === "image/png" || file.type === "image/jpeg")) {
+      if (file.size <= MAX_FILE_SIZE) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const base64Data = reader.result.split(",")[1]; // Remove the prefix
+          console.log(base64Data);
+          userFormValues.picture_with_id = base64Data;
+        };
+        reader.readAsDataURL(file);
+      } else {
+        alert("File size exceeds 16MB. Please upload a smaller file.");
+      }
+    } else {
+      alert("Please upload a jpeg/png file.");
+    }
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
@@ -53,20 +126,6 @@ const Signup = () => {
       setUserFormValues({ ...userFormValues, [name]: value });
     } else {
       setCompanyFormValues({ ...companyFormValues, [name]: value });
-    }
-  };
-
-  const handleFileChange = async (e) => {
-    const { name, files } = e.target;
-    const file = files[0];
-
-    if (file) {
-      const base64 = await encodeFileToBase64(file);
-      if (formType === "user") {
-        setUserFormValues({ ...userFormValues, [name]: base64 });
-      } else {
-        setCompanyFormValues({ ...companyFormValues, [name]: base64 });
-      }
     }
   };
 
@@ -485,7 +544,7 @@ const Signup = () => {
             id="idPicture"
             name="idPicture"
             value={userFormValues.idPicture} // Encode this image data to UTF 8
-            onChange={handleInputChange}
+            onChange={handleUserPWDIdPicture}
             className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
             style={commonInputStyles}
             accept="image/*"
@@ -505,7 +564,7 @@ const Signup = () => {
             id="profilePicture"
             name="profilePicture"
             value={userFormValues.profilePicture} // Encode this image data to UTF 8
-            onChange={handleInputChange}
+            onChange={handleUserProfilePicture}
             className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
             style={commonInputStyles}
             accept="image/*"
@@ -525,7 +584,7 @@ const Signup = () => {
             id="selfieWithID"
             name="selfieWithID"
             value={userFormValues.selfieWithID} // Encode this image data to UTF 8
-            onChange={handleInputChange}
+            onChange={handleUserPictureWithPWDId}
             className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
             style={commonInputStyles}
             accept="image/*"
@@ -740,7 +799,7 @@ const Signup = () => {
             id="companyLogo"
             name="companyLogo"
             value={companyFormValues.companyLogo}
-            onChange={handleInputChange}
+            onChange={handleCompanyLogChange}
             className="mt-2 w-full rounded-md bg-white text-lg text-gray-700 focus:outline-none"
             style={commonInputStyles}
             accept="image/*"
