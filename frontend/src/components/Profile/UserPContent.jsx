@@ -46,7 +46,7 @@ const UserProf = () => {
           email: userData.email,
           pictureWithId: "https://via.placeholder.com/150",
           pictureOfId: "https://via.placeholder.com/150",
-          profilePicture: userData.formal_picture || "", // Ensure it's a valid base64 string or set to an empty string
+          profilePicture: `data:image/png;base64,${userData.formal_picture}`,
         });
       })
       .catch(function (error) {
@@ -58,34 +58,25 @@ const UserProf = () => {
     console.log("Component is ready");
   }, []);
 
+  const MAX_FILE_SIZE = 16777215; // 16,777,215 bytes (16MB)
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
 
     if (file && (file.type === "image/png" || file.type === "image/jpeg")) {
-      if (file.size <= 16777215) {
-        // 16MB
+      if (file.size <= MAX_FILE_SIZE) {
         const reader = new FileReader();
         reader.onloadend = () => {
-          // Convert file to base64 string and update the user state
-          setUser({
-            ...user,
-            [e.target.name]: reader.result.split(",")[1], // Store the base64 string without the prefix
-          });
+          const base64Data = reader.result.split(",")[1]; // Remove the prefix
+          console.log(base64Data);
+          user.profilePicture = base64Data;
         };
-        reader.readAsDataURL(file); // Read file as base64 string
+        reader.readAsDataURL(file);
       } else {
-        alert("File size exceeds 16MB. Please upload a smaller image.");
-        setUser({
-          ...user,
-          [e.target.name]: null,
-        });
+        alert("File size exceeds 16MB. Please upload a smaller file.");
       }
     } else {
-      alert("Please upload a PNG or JPEG image file.");
-      setUser({
-        ...user,
-        [e.target.name]: null,
-      });
+      alert("Please upload a jpeg/png file.");
     }
   };
 
@@ -99,6 +90,8 @@ const UserProf = () => {
 
   const handleUpdate = () => {
     setIsEditing(false);
+
+    console.log(user);
 
     const updateUserProfile = JSON.stringify({
       address: user.address,
@@ -139,11 +132,7 @@ const UserProf = () => {
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <img
-            src={
-              user.profilePicture
-                ? `data:image/png;base64,${user.profilePicture}`
-                : "https://via.placeholder.com/150"
-            }
+            src={user.profilePicture}
             alt="Profile"
             className="w-24 h-24 rounded-full border-4 border-blue-700 shadow-lg"
           />
@@ -215,41 +204,6 @@ const UserProf = () => {
             <p className="text-gray-600 bg-gray-400 p-5 rounded-md">
               {user.email}
             </p>
-          </div>
-
-          <div className="flex justify-between mt-6">
-            <div className="w-1/2 pr-2">
-              <p className="text-lg font-semibold text-gray-800">
-                Picture with ID
-              </p>
-              {user.pictureWithId ? (
-                <img
-                  src={user.pictureWithId}
-                  alt="Picture with ID"
-                  className="rounded-lg shadow-md mt-2"
-                />
-              ) : (
-                <div className="bg-gray-100 text-gray-600 py-6 rounded-lg mt-2">
-                  Picture with ID
-                </div>
-              )}
-            </div>
-            <div className="w-1/2 pl-2">
-              <p className="text-lg font-semibold text-gray-800">
-                Picture of ID
-              </p>
-              {user.pictureOfId ? (
-                <img
-                  src={user.pictureOfId}
-                  alt="Picture of ID"
-                  className="rounded-lg shadow-md mt-2"
-                />
-              ) : (
-                <div className="bg-gray-100 text-gray-600 py-6 rounded-lg mt-2">
-                  Picture of ID
-                </div>
-              )}
-            </div>
           </div>
         </div>
       </div>

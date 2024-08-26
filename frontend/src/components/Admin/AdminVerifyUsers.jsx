@@ -1,14 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const AdminVerifyUsers = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
   const handleLogout = () => {
     const confirmed = window.confirm("Are you sure you want to logout?");
     if (confirmed) {
-      // Clear session storage and redirect to the login route
       sessionStorage.removeItem("Id");
       sessionStorage.removeItem("Role");
       navigate("/login");
@@ -16,21 +17,65 @@ const AdminVerifyUsers = () => {
   };
 
   const handleGoBack = () => {
-    navigate(-1); // This navigates back to the previous page
+    navigate(-1);
   };
 
-  const user = {
-    id: 1,
-    profilePicture: "https://via.placeholder.com/150",
-    fullName: "John Doe",
-    pwdId: "PWD123456",
-    disability: "Visual Impairment",
-    address: "123 Main St, Apt 4B",
-    city: "Metropolis",
-    birthdate: "1990-01-01",
-    contactNumber: "555-1234",
-    email: "johndoe@example.com",
+  useEffect(() => {
+    const config = {
+      method: "get",
+      url: "http://localhost:8080/verification/view/users",
+      headers: {
+        "User-Agent": "Apidog/1.0.0 (https://apidog.com)",
+        "Content-Type": "application/json",
+      },
+    };
+
+    axios(config)
+      .then(function (response) {
+        const userData = response.data.data[0]; // Assuming you get an array of users
+        setUser({
+          id: userData.id,
+          fullName: userData.full_name,
+          pwdId: userData.id,
+          disability: userData.type,
+          address: userData.Location,
+          city: userData.city,
+          birthdate: new Date(userData.birth_date).toLocaleDateString("en-US"),
+          contactNumber: userData.contact_number,
+          email: userData.email,
+          profilePicture: `data:image/png;base64,${userData.formal_picture}`,
+          pictureWithId: `data:image/png;base64,${userData.picture_with_id}`,
+          pictureOfPwdId: `data:image/png;base64,${userData.picture_of_pwd_id}`,
+        });
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, []);
+
+  const handleApprove = () => {
+    const config = {
+      method: "put",
+      url: `http://localhost:8080/verification/user/${user.id}`,
+      headers: {
+        "User-Agent": "Apidog/1.0.0 (https://apidog.com)",
+        "Content-Type": "application/json",
+      },
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+        alert("User approved successfully!");
+        // Here you can add further logic, such as navigating to the next user or updating the UI
+      })
+      .catch(function (error) {
+        console.log(error);
+        alert("An error occurred while approving the user.");
+      });
   };
+
+  if (!user) return <div>Loading...</div>;
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-blue-100">
@@ -50,7 +95,7 @@ const AdminVerifyUsers = () => {
           href="/admin/dashboard"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
           style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
+            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
           }}
         >
           Home
@@ -59,7 +104,7 @@ const AdminVerifyUsers = () => {
           href="/admin/dashboard/VerifyUsers"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
           style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
+            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
           }}
         >
           Verify Users
@@ -68,7 +113,7 @@ const AdminVerifyUsers = () => {
           href="/admin/dashboard/VerifyComps"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
           style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
+            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
           }}
         >
           Verify Company
@@ -77,7 +122,7 @@ const AdminVerifyUsers = () => {
           href="/admin/dashboard/ViewUsers"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
           style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
+            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
           }}
         >
           View All Users
@@ -86,7 +131,7 @@ const AdminVerifyUsers = () => {
           href="/admin/dashboard/ViewCompany"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
           style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
+            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
           }}
         >
           View All Companies
@@ -95,7 +140,7 @@ const AdminVerifyUsers = () => {
           href="/admin/dashboard/ViewJobs"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
           style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
+            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
           }}
         >
           View All Job Listings
@@ -104,7 +149,7 @@ const AdminVerifyUsers = () => {
           href="/admin/dashboard/DeleteUser"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
           style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
+            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
           }}
         >
           Delete Users
@@ -113,7 +158,7 @@ const AdminVerifyUsers = () => {
           href="/admin/dashboard/DeleteJob"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
           style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
+            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
           }}
         >
           Delete Job Listings
@@ -122,7 +167,7 @@ const AdminVerifyUsers = () => {
           href="/admin/dashboard/DeleteCompany"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
           style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
+            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
           }}
         >
           Delete Company
@@ -229,6 +274,30 @@ const AdminVerifyUsers = () => {
                   </p>
                 </div>
               </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 text-left text-gray-800 w-full mt-6">
+                <div>
+                  <p className="font-semibold text-base sm:text-lg">
+                    Picture with ID:
+                  </p>
+                  <img
+                    src={user.pictureWithId}
+                    alt="Picture with ID"
+                    className="w-full h-auto rounded-lg shadow-lg"
+                  />
+                </div>
+                <div>
+                  <p className="font-semibold text-base sm:text-lg">
+                    Picture of PWD ID:
+                  </p>
+                  <img
+                    src={user.pictureOfPwdId}
+                    alt="Picture of PWD ID"
+                    className="w-full h-auto rounded-lg shadow-lg"
+                  />
+                </div>
+              </div>
+
               <div className="flex flex-col sm:flex-row justify-center mt-4 sm:mt-8 space-y-2 sm:space-y-0 sm:space-x-4">
                 <button className="transition-all bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 shadow flex items-center justify-center">
                   <svg
@@ -247,7 +316,10 @@ const AdminVerifyUsers = () => {
                   </svg>
                   Previous
                 </button>
-                <button className="transition-all bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 shadow">
+                <button
+                  className="transition-all bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 shadow"
+                  onClick={handleApprove}
+                >
                   Approve
                 </button>
                 <button className="transition-all bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 shadow">

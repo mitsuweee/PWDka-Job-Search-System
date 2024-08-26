@@ -13,7 +13,8 @@ const viewPendingUsers = async (req, res, next) => {
           "CONCAT(user.first_name, ' ', user.middle_initial, '. ', user.last_name) AS full_name"
         ),
         "user.email",
-        knex.raw("CONCAT(user.address, ' ', user.city) AS Location"),
+        "user.address",
+        "user.city",
         "user.gender",
         "user.birth_date",
         "user.contact_number",
