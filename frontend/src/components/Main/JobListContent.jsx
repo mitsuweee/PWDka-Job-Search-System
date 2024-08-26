@@ -9,6 +9,8 @@ const JobListing = () => {
   const [isMoreInfoVisible, setIsMoreInfoVisible] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [sortOption, setSortOption] = useState("newest");
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const jobsPerPage = 4; // Number of jobs to display per page
   const navigate = useNavigate();
@@ -41,7 +43,7 @@ const JobListing = () => {
           companyContact: job.company_contact_number,
           companyLocation: job.company_address,
           companyDescription: job.company_description,
-          companyImage: "src/imgs/sunlife.png", // Example image path
+          companyImage: "https://via.placeholder.com/80", // Placeholder for company logo
         }));
 
         setJobs(fetchedJobs); // Setting the jobs state
@@ -54,9 +56,20 @@ const JobListing = () => {
       });
   }, []);
 
-  const filteredJobs = jobs.filter((job) =>
-    job.jobName.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredJobs = jobs
+    .filter((job) =>
+      job.jobName.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .sort((a, b) => {
+      if (sortOption === "newest") {
+        return b.id - a.id;
+      } else if (sortOption === "oldest") {
+        return a.id - b.id;
+      } else if (sortOption === "a-z") {
+        return a.jobName.localeCompare(b.jobName);
+      }
+      return 0;
+    });
 
   // Pagination Logic
   const indexOfLastJob = currentPage * jobsPerPage;
@@ -90,6 +103,52 @@ const JobListing = () => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
+          <div className="relative">
+            <button
+              className="ml-4 px-8 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition"
+              onClick={() => setIsFilterOpen(!isFilterOpen)}
+            >
+              Filter
+            </button>
+            {isFilterOpen && (
+              <div
+                className="absolute right-0 top-full mt-0 bg-white p-4 shadow-lg rounded-lg z-50"
+                style={{ marginTop: "0" }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <button
+                  className={`py-2 px-4 rounded-lg w-full ${
+                    sortOption === "newest"
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-200 text-blue-900"
+                  }`}
+                  onClick={() => setSortOption("newest")}
+                >
+                  Newest
+                </button>
+                <button
+                  className={`py-2 px-3 rounded-lg w-full ${
+                    sortOption === "oldest"
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-200 text-blue-900"
+                  }`}
+                  onClick={() => setSortOption("oldest")}
+                >
+                  Oldest
+                </button>
+                <button
+                  className={`py-2 px-4 rounded-lg w-full ${
+                    sortOption === "a-z"
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-200 text-blue-900"
+                  }`}
+                  onClick={() => setSortOption("a-z")}
+                >
+                  A-Z
+                </button>
+              </div>
+            )}
+          </div>
           <button
             onClick={handleLogout}
             className="ml-4 px-4 py-2 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 transition"
@@ -105,36 +164,47 @@ const JobListing = () => {
             currentJobs.map((job) => (
               <div key={job.id}>
                 <div
-                  className="p-4 bg-blue-500 rounded-lg shadow-lg cursor-pointer hover:bg-blue-600 transition transform hover:scale-105"
+                  className="p-4 bg-blue-500 rounded-lg shadow-3xl cursor-pointer hover:bg-blue-600 transition transform hover:scale-95 flex items-center"
                   onClick={() => {
                     setSelectedJobId(job.id);
                     setIsDetailsVisible(true); // Show job details below the clicked div on mobile
                     setIsMoreInfoVisible(false); // Reset more info visibility
                   }}
                 >
-                  <h2 className="text-xl font-bold text-white">
-                    <span className="material-symbols-outlined mr-2">work</span>
-                    {job.jobName}
-                  </h2>
-                  <p className="text-white">
-                    <span className="material-symbols-outlined mr-2">
-                      location_on
-                    </span>
-                    {job.companyLocation}
-                  </p>
-                  <p className="font-semibold text-white">
-                    <span className="material-symbols-outlined mr-2">
-                      schedule
-                    </span>
-                    {job.positionType}
-                  </p>
-                  <p className="font-semibold text-white">
-                    <span className="material-symbols-outlined mr-2">
-                      payments
-                    </span>
-                    {job.salary}
-                  </p>
-                  <p className="text-gray-200 mt-2">{job.description}</p>
+                  {/* Company Logo */}
+                  <img
+                    src={job.companyImage}
+                    alt="Company Logo"
+                    className="w-24 h-24 object-cover rounded-xl mr-4 shadow-xl"
+                  />
+                  {/* Job Details */}
+                  <div>
+                    <h2 className="text-xl font-bold text-white">
+                      <span className="material-symbols-outlined mr-2">
+                        work
+                      </span>
+                      {job.jobName}
+                    </h2>
+                    <p className="text-white">
+                      <span className="material-symbols-outlined mr-2">
+                        location_on
+                      </span>
+                      {job.companyLocation}
+                    </p>
+                    <p className="font-semibold text-white">
+                      <span className="material-symbols-outlined mr-2">
+                        schedule
+                      </span>
+                      {job.positionType}
+                    </p>
+                    <p className="font-semibold text-white">
+                      <span className="material-symbols-outlined mr-2">
+                        payments
+                      </span>
+                      {job.salary}
+                    </p>
+                    <p className="text-gray-200 mt-2">{job.description}</p>
+                  </div>
                 </div>
                 {/* Mobile-Only Popup */}
                 {isDetailsVisible && selectedJobId === job.id && (
@@ -187,7 +257,7 @@ const JobListing = () => {
                         <img
                           src={job.companyImage}
                           alt="Company"
-                          className="w-16 h-16 object-cover rounded-full absolute top-2 right-2"
+                          className="w-22 h-22 object-cover rounded-2xl absolute top-2 right-2"
                         />
                         <h3 className="text-lg font-bold text-white">
                           Company Overview
