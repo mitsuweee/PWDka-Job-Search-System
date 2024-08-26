@@ -88,14 +88,14 @@ const AdminViewJobs = () => {
           View All Job Listings
         </h2>
         <div className="flex justify-center mb-4">
-  <input
-    type="text"
-    placeholder="Search by company name..."
-    className="p-2 border border-gray-300 rounded-lg w-full md:w-1/2"
-    value={searchTerm}
-    onChange={handleSearch}
-  />
-</div>
+          <input
+            type="text"
+            placeholder="Search by company name..."
+            className="p-2 border border-gray-300 rounded-lg w-full md:w-1/2"
+            value={searchTerm}
+            onChange={handleSearch}
+          />
+        </div>
 
         <div className="flex flex-wrap gap-4">
           {currentJobs.length > 0 ? (
@@ -255,7 +255,7 @@ const AdminViewJobs = () => {
           Delete Company
         </a>
         <button
-          className="bg-red-400 text-white rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-red-500 transition-all duration-200 ease-in-out mt-6"
+          className="bg-red-600 text-white rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-red-500 transition-all duration-200 ease-in-out mt-6"
           onClick={handleLogout}
         >
           Logout

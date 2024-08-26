@@ -32,7 +32,6 @@ const AdminVerifyComp = () => {
 
     return (
       <div className="flex justify-center items-center h-full w-full bg-blue-500 p-4 rounded-2xl">
-        
         <div className="w-full max-w-4xl h-full bg-white p-8 rounded-lg shadow-xl flex flex-col justify-center items-center">
           <h2 className="text-3xl font-bold mb-4 text-gray-800 text-center">
             Verify Company
@@ -221,7 +220,7 @@ const AdminVerifyComp = () => {
           Delete Company
         </a>
         <button
-          className="bg-red-400 text-white rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-red-500 transition-all duration-200 ease-in-out mt-6"
+          className="bg-red-600 text-white rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-red-500 transition-all duration-200 ease-in-out mt-6"
           onClick={handleLogout}
         >
           Logout
