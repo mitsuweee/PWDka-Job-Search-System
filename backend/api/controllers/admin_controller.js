@@ -4,6 +4,7 @@ const { adminModel } = require("../models/admin_model");
 const util = require("./util");
 const bcrypt = require("bcrypt");
 
+//stststs
 const registerAdmin = async (req, res, next) => {
   let firstName = req.body.firstName.toLowerCase();
   let lastName = req.body.lastName.toLowerCase();
