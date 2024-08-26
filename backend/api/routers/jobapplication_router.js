@@ -11,7 +11,7 @@ jobApplicationRouter.post(
 
 jobApplicationRouter.get(
   "/applications/:id",
-  jobApplicationController.viewAllUsersApplicationsViaCompanyId
+  jobApplicationController.viewAllUsersApplicationsViaJobListingId
 ); // View All APPLICATION VIA COMPANY ID
 
 module.exports = jobApplicationRouter;

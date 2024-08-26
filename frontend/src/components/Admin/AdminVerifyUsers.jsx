@@ -128,7 +128,7 @@ const AdminVerifyUsers = () => {
           Delete Company
         </a>
         <button
-          className="bg-red-400 text-white rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-red-500 transition-all duration-200 ease-in-out mt-6"
+          className="bg-red-600 text-white rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-red-500 transition-all duration-200 ease-in-out mt-6"
           onClick={handleLogout}
         >
           Logout
@@ -173,7 +173,9 @@ const AdminVerifyUsers = () => {
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 text-left text-gray-800 w-full">
                 <div>
-                  <p className="font-semibold text-base sm:text-lg">Full Name:</p>
+                  <p className="font-semibold text-base sm:text-lg">
+                    Full Name:
+                  </p>
                   <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
                     {user.fullName}
                   </p>
@@ -185,7 +187,9 @@ const AdminVerifyUsers = () => {
                   </p>
                 </div>
                 <div>
-                  <p className="font-semibold text-base sm:text-lg">Disability:</p>
+                  <p className="font-semibold text-base sm:text-lg">
+                    Disability:
+                  </p>
                   <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
                     {user.disability}
                   </p>
@@ -203,7 +207,9 @@ const AdminVerifyUsers = () => {
                   </p>
                 </div>
                 <div>
-                  <p className="font-semibold text-base sm:text-lg">Birthdate:</p>
+                  <p className="font-semibold text-base sm:text-lg">
+                    Birthdate:
+                  </p>
                   <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
                     {user.birthdate}
                   </p>

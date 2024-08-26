@@ -123,7 +123,7 @@ const ViewApplicants = () => {
 
         <button
           onClick={handleLogout}
-          className="ml-4 px-4 py-2 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 transition"
+          className="bg-red-600 text-white rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-red-500 transition-all duration-200 ease-in-out mt-6"
         >
           Logout
         </button>
