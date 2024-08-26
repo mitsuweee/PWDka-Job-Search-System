@@ -65,7 +65,7 @@ const uploadResume = async (req, res, next) => {
   }
 };
 
-const viewAllUsersApplicationsViaCompanyId = async (req, res, next) => {
+const viewAllUsersApplicationsViaJobListingId = async (req, res, next) => {
   const { id } = req.params;
 
   if (!id) {
@@ -104,7 +104,7 @@ const viewAllUsersApplicationsViaCompanyId = async (req, res, next) => {
       .join("user", "job_application.user_id", "user.id")
       .join("disability", "user.disability_id", "disability.id")
       .join("job_listing", "job_application.joblisting_id", "job_listing.id")
-      .where("job_listing.company_id", id);
+      .where("job_listing.id", id);
 
     if (applications.length === 0) {
       return res.status(404).json({
@@ -175,6 +175,6 @@ const deleteJobApplication = async (req, res, next) => {
 
 module.exports = {
   uploadResume,
-  viewAllUsersApplicationsViaCompanyId,
+  viewAllUsersApplicationsViaJobListingId,
   deleteJobApplication,
 };
