@@ -4,16 +4,16 @@ import { useNavigate } from "react-router-dom";
 
 const CompanyProf = () => {
   const [company, setCompany] = useState({
-    logo: "", // Placeholder image URL
+    logo: "",
     name: "",
     email: "",
     description: "",
     address: "",
     city: "",
     contactNumber: "",
-    password: "",
   });
 
+  const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,17 +28,18 @@ const CompanyProf = () => {
 
     axios(config)
       .then(function (response) {
-        console.log(response.data.data);
+        const companyData = response.data.data;
+
         setCompany({
-          logo: "https://via.placeholder.com/150", // Placeholder image URL
-          name: response.data.data.name,
-          email: response.data.data.email,
-          description: response.data.data.description,
-          address: response.data.data.address,
-          city: response.data.data.city,
-          contactNumber: response.data.data.contact_number,
+          logo: `data:image/png;base64,${companyData.logo}`, // Assuming the logo is returned as a base64 string
+          name: companyData.name,
+          email: companyData.email,
+          description: companyData.description,
+          address: companyData.address,
+          city: companyData.city,
+          contactNumber: companyData.contact_number,
         });
-        console.log(company);
+        console.log(companyData);
       })
       .catch(function (error) {
         const errorMessage =
@@ -49,14 +50,33 @@ const CompanyProf = () => {
     console.log("Component is ready");
   }, []);
 
-  const [isEditing, setIsEditing] = useState(false);
+  const MAX_FILE_SIZE = 16777215; // 16,777,215 bytes (16MB)
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+
+    if (file && (file.type === "image/png" || file.type === "image/jpeg")) {
+      if (file.size <= MAX_FILE_SIZE) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const base64Data = reader.result.split(",")[1]; // Remove the prefix
+          console.log(base64Data);
+          setCompany((prevCompany) => ({
+            ...prevCompany,
+            logo: base64Data,
+          }));
+        };
+        reader.readAsDataURL(file);
+      } else {
+        alert("File size exceeds 16MB. Please upload a smaller file.");
+      }
+    } else {
+      alert("Please upload a jpeg/png file.");
+    }
+  };
 
   const handleChange = (e) => {
     setCompany({ ...company, [e.target.name]: e.target.value });
-  };
-
-  const handleFileChange = (e) => {
-    setCompany({ ...company, logo: URL.createObjectURL(e.target.files[0]) });
   };
 
   const handleEdit = () => {
@@ -72,10 +92,11 @@ const CompanyProf = () => {
       city: company.city,
       description: company.description,
       contact_number: company.contactNumber,
-      profile_picture: "https://via.placeholder.com/150",
+      logo: company.logo, // This now contains the base64 string
     });
+
     const companyId = sessionStorage.getItem("Id");
-    var config = {
+    const config = {
       method: "put",
       url: `/company/update/${companyId}`,
       headers: {
@@ -89,7 +110,6 @@ const CompanyProf = () => {
         console.log(JSON.stringify(response.data));
         alert(response.data.message);
       })
-
       .catch(function (error) {
         console.log(error);
         alert(error.response.data.message);
@@ -98,7 +118,7 @@ const CompanyProf = () => {
   };
 
   const handleGoBack = () => {
-    navigate(-1); // Navigates to the previous page
+    navigate(-1); // Navigate to the previous page
   };
 
   return (
@@ -107,7 +127,7 @@ const CompanyProf = () => {
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <img
-            src={company.logo}
+            src={`data:image/png;base64,${company.logo}`}
             alt="Company Logo"
             className="w-24 h-24 rounded-full border-4 border-blue-700 shadow-lg"
           />
@@ -236,6 +256,18 @@ const CompanyProf = () => {
                   name="contactNumber"
                   value={company.contactNumber}
                   onChange={handleChange}
+                  className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                />
+              </div>
+              <div className="mb-6">
+                <label className="block text-gray-600 font-semibold">
+                  Logo:
+                </label>
+                <input
+                  type="file"
+                  name="logo"
+                  accept="image/png, image/jpeg"
+                  onChange={handleFileChange}
                   className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
                 />
               </div>

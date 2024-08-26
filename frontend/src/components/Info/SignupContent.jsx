@@ -39,7 +39,7 @@ const Signup = () => {
     companyLogo: "",
   });
 
-  const handleCompanyLogChange = (e) => {
+  const handleFileChange = (e, type) => {
     const file = e.target.files[0];
 
     if (file && (file.type === "image/png" || file.type === "image/jpeg")) {
@@ -48,67 +48,16 @@ const Signup = () => {
         reader.onloadend = () => {
           const base64Data = reader.result.split(",")[1]; // Remove the prefix
           console.log(base64Data);
-          companyFormValues.companyLogo = base64Data;
-        };
-        reader.readAsDataURL(file);
-      } else {
-        alert("File size exceeds 16MB. Please upload a smaller file.");
-      }
-    } else {
-      alert("Please upload a jpeg/png file.");
-    }
-  };
 
-  const handleUserProfilePicture = (e) => {
-    const file = e.target.files[0];
-
-    if (file && (file.type === "image/png" || file.type === "image/jpeg")) {
-      if (file.size <= MAX_FILE_SIZE) {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          const base64Data = reader.result.split(",")[1]; // Remove the prefix
-          console.log(base64Data);
-          userFormValues.profilePicture = base64Data;
-        };
-        reader.readAsDataURL(file);
-      } else {
-        alert("File size exceeds 16MB. Please upload a smaller file.");
-      }
-    } else {
-      alert("Please upload a jpeg/png file.");
-    }
-  };
-
-  const handleUserPWDIdPicture = (e) => {
-    const file = e.target.files[0];
-
-    if (file && (file.type === "image/png" || file.type === "image/jpeg")) {
-      if (file.size <= MAX_FILE_SIZE) {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          const base64Data = reader.result.split(",")[1]; // Remove the prefix
-          console.log(base64Data);
-          userFormValues.picture_of_pwd_id = base64Data;
-        };
-        reader.readAsDataURL(file);
-      } else {
-        alert("File size exceeds 16MB. Please upload a smaller file.");
-      }
-    } else {
-      alert("Please upload a jpeg/png file.");
-    }
-  };
-
-  const handleUserPictureWithPWDId = (e) => {
-    const file = e.target.files[0];
-
-    if (file && (file.type === "image/png" || file.type === "image/jpeg")) {
-      if (file.size <= MAX_FILE_SIZE) {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          const base64Data = reader.result.split(",")[1]; // Remove the prefix
-          console.log(base64Data);
-          userFormValues.picture_with_id = base64Data;
+          if (type === "userProfile") {
+            userFormValues.profilePicture = base64Data;
+          } else if (type === "selfieWithID") {
+            userFormValues.selfieWithID = base64Data;
+          } else if (type === "idPicture") {
+            userFormValues.idPicture = base64Data;
+          } else if (type === "companyLogo") {
+            companyFormValues.companyLogo = base64Data;
+          }
         };
         reader.readAsDataURL(file);
       } else {
@@ -544,7 +493,7 @@ const Signup = () => {
             id="idPicture"
             name="idPicture"
             value={userFormValues.idPicture} // Encode this image data to UTF 8
-            onChange={handleUserPWDIdPicture}
+            onChange={handleFileChange}
             className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
             style={commonInputStyles}
             accept="image/*"
@@ -564,7 +513,7 @@ const Signup = () => {
             id="profilePicture"
             name="profilePicture"
             value={userFormValues.profilePicture} // Encode this image data to UTF 8
-            onChange={handleUserProfilePicture}
+            onChange={handleFileChange}
             className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
             style={commonInputStyles}
             accept="image/*"
@@ -584,7 +533,7 @@ const Signup = () => {
             id="selfieWithID"
             name="selfieWithID"
             value={userFormValues.selfieWithID} // Encode this image data to UTF 8
-            onChange={handleUserPictureWithPWDId}
+            onChange={handleFileChange}
             className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
             style={commonInputStyles}
             accept="image/*"
@@ -799,7 +748,7 @@ const Signup = () => {
             id="companyLogo"
             name="companyLogo"
             value={companyFormValues.companyLogo}
-            onChange={handleCompanyLogChange}
+            onChange={handleFileChange}
             className="mt-2 w-full rounded-md bg-white text-lg text-gray-700 focus:outline-none"
             style={commonInputStyles}
             accept="image/*"

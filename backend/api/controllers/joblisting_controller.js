@@ -178,7 +178,7 @@ const viewJobListing = async (req, res, next) => {
         const processedRows = rows.map((row) => ({
           ...row,
           company_profile_picture: row.company_profile_picture
-            ? row.company_profile_picture.toString("base64")
+            ? row.company_profile_picture.toString()
             : null,
         }));
 
@@ -253,7 +253,7 @@ const viewJobListingViaUserNewestToOldest = async (req, res, next) => {
         const processedRows = rows.map((row) => ({
           ...row,
           company_profile_picture: row.company_profile_picture
-            ? row.company_profile_picture.toString("base64")
+            ? row.company_profile_picture.toString()
             : null,
         }));
 
@@ -347,7 +347,7 @@ const viewJobsCreatedByCompanyNewestToOldest = async (req, res, next) => {
     const processedRows = rows.map((row) => ({
       ...row,
       company_profile_picture: row.company_profile_picture
-        ? row.company_profile_picture.toString("base64")
+        ? row.company_profile_picture.toString()
         : null,
     }));
 
