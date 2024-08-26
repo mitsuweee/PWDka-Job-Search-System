@@ -34,20 +34,21 @@ const UserProf = () => {
       .then(function (response) {
         console.log(response.data.data);
         setUser({
-          fullName: response.data.data[0].full_name,
-          disability: response.data.data[0].type,
-          city: response.data.data[0].city,
-          address: response.data.data[0].address,
-          contactNumber: response.data.data[0].contact_number,
-          gender: response.data.data[0].gender,
-          birthdate: new Date(
-            response.data.data[0].birth_date
-          ).toLocaleDateString("en-US"),
-          email: response.data.data[0].email,
+          fullName: response.data.data.full_name,
+          disability: response.data.data.type,
+          city: response.data.data.city,
+          address: response.data.data.address,
+          contactNumber: response.data.data.contact_number,
+          gender: response.data.data.gender,
+          birthdate: new Date(response.data.data.birth_date).toLocaleDateString(
+            "en-US"
+          ),
+          email: response.data.data.email,
           pictureWithId: "https://via.placeholder.com/150",
           pictureOfId: "https://via.placeholder.com/150",
           profilePicture: "https://via.placeholder.com/150",
         });
+        console.log(user);
       })
       .catch(function (error) {
         const errorMessage =

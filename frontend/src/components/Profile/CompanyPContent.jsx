@@ -31,13 +31,14 @@ const CompanyProf = () => {
         console.log(response.data.data);
         setCompany({
           logo: "https://via.placeholder.com/150", // Placeholder image URL
-          name: response.data.data[0].name,
-          email: response.data.data[0].email,
-          description: response.data.data[0].description,
-          address: response.data.data[0].address,
-          city: response.data.data[0].city,
-          contactNumber: response.data.data[0].contact_number,
+          name: response.data.data.name,
+          email: response.data.data.email,
+          description: response.data.data.description,
+          address: response.data.data.address,
+          city: response.data.data.city,
+          contactNumber: response.data.data.contact_number,
         });
+        console.log(company);
       })
       .catch(function (error) {
         const errorMessage =

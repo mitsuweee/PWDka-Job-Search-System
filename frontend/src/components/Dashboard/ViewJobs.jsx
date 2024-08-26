@@ -370,6 +370,11 @@ const ViewJobs = () => {
                     >
                       Delete
                     </button>
+                    <a href={"/company/viewapplicants?id=" + listing.id}>
+                      <button className="bg-blue-500 text-white py-3 px-6 rounded-full shadow-lg hover:bg-blue-600 hover:shadow-2xl transition transform hover:scale-105">
+                        View Applicants
+                      </button>
+                    </a>
                   </div>
                 </div>
               </div>
