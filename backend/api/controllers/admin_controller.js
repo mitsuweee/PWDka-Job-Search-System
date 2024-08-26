@@ -1,927 +1,825 @@
-const { json } = require('body-parser')
-const database = require('../models/connection_db')
-const {adminModel} = require('../models/admin_model')
-const util = require('./util')
-const bcrypt = require('bcrypt')
+const { json } = require("body-parser");
+const knex = require("../models/connection_db");
+const { adminModel } = require("../models/admin_model");
+const util = require("./util");
+const bcrypt = require("bcrypt");
 
 const registerAdmin = async (req, res, next) => {
+  let firstName = req.body.firstName.toLowerCase();
+  let lastName = req.body.lastName.toLowerCase();
+  let email = req.body.email.toLowerCase();
+  let password = req.body.password;
+  let confirmPassword = req.body.confirm_password;
 
-    let firstName = req.body.firstName.toLowerCase()
-    let lastName = req.body.lastName.toLowerCase()
-    let email = req.body.email.toLowerCase()
-    let password = req.body.password
-    let confirmPassword = req.body.confirm_password
+  if (!firstName || !lastName || !email || !password) {
+    return res.status(400).json({
+      successful: false,
+      message: "One or more details are missing",
+    });
+  }
 
+  if (
+    util.checkNumbersAndSpecialChar(firstName) ||
+    util.checkNumbersAndSpecialChar(lastName)
+  ) {
+    return res.status(400).json({
+      successful: false,
+      message: "Invalid Name format",
+    });
+  }
 
-    if (!firstName || !lastName || !email || !password) {
-        return res.status(400).json({
+  if (!util.checkEmail(email)) {
+    return res.status(400).json({
+      successful: false,
+      message: "Invalid Email",
+    });
+  }
+
+  if (!util.checkPassword(password)) {
+    return res.status(400).json({
+      successful: false,
+      message:
+        "Invalid Password Format. It should have at least one digit, one uppercase, one lowercase, one special character, and be at least 8 characters in length",
+    });
+  }
+
+  if (password !== confirmPassword) {
+    return res.status(400).json({
+      successful: false,
+      message: "Passwords do not match",
+    });
+  }
+
+  try {
+    // Check if email exists in any table
+    const adminExists = await knex("admin").where({ email }).first();
+    const userExists = await knex("user").where({ email }).first();
+    const companyExists = await knex("company").where({ email }).first();
+
+    if (adminExists || userExists || companyExists) {
+      return res.status(400).json({
         successful: false,
-        message: "One or more details are missing"
-        })
+        message: "Email already exists",
+      });
     }
 
-    else if (util.checkNumbersAndSpecialChar(firstName) || util.checkNumbersAndSpecialChar(lastName)) {
-        return res.status(400).json({
-        successful: false,
-        message: "Invalid Name format"
-        })
-    }
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    else if (!util.checkEmail(email)) {
-        return res.status(400).json({
-        successful: false,
-        message: "Invalid Email"
-        })
-    }
-    else if(!util.checkPassword(password)){
-        return res.status(400).json({
-            successful : false,
-            message : "Invalid Password Format. It should have atleast one digit, one uppercase, one lowercase, one special character, and atleast 8 in length"
-        })
-    }
-    else if(password != confirmPassword){
-        return res.status(400).json({
-            successful : false, 
-            message : "Passwords does not match"
-        })
-    }
-    else{
-        try {
-            const connection = await database.pool.getConnection()
-    
-            try {
-                const selectQuery = `SELECT email FROM admin WHERE email = ?`
-                const rows = await connection.query(selectQuery, [email])
-    
-                if (rows.length > 0) {
-                    return res.status(400).json({
-                     successful: false,
-                     message: "Email already exists"
-                    })
-                }
-    
-               else{
+    // Insert new admin
+    const newAdmin = {
+      first_name: firstName,
+      last_name: lastName,
+      email,
+      password: hashedPassword,
+    };
 
-                const selectEmailQuery = `SELECT email from user WHERE email = ?`
-                const emailRows = await connection.query(selectEmailQuery, [email])
+    await knex("admin").insert(newAdmin);
 
-                if(emailRows.length > 0){
-                    return res.status(400).json({
-                        successful : false,
-                        message : "Email already Exist"
-                    })
-                }
-                else{
-                        const selectEmailQuery = `SELECT email from company WHERE email = ?`
-                        const emailRows = await connection.query(selectEmailQuery, [email])
-
-                        if(emailRows.length > 0){
-                            return res.status(400).json({
-                                successful : false,
-                                message : "Email already Exist"
-                            })
-                        }
-                        else{
-                            const insertQuery = `INSERT INTO admin (first_name, last_name, email, password) VALUES (?, ?, ?, ?)`
-                            const hashedPassword = await bcrypt.hash(password, 10)
-                            const values = adminModel(firstName, lastName, email, hashedPassword)
-                            const adminObj = [values.first_name, values.last_name, values.email, values.password]
-                            
-                            await connection.query(insertQuery, adminObj)
-                
-                            return res.status(200).json({
-                                successful: true,
-                                message: "Successfully Registered Admin"
-                            })
-                        }
-                    }
-                }
-    
-            } finally {
-                connection.release()
-            }
-    
-        } catch (err) {
-            return res.status(500).json({
-                successful: false,
-                message: err.message
-            })
-        }
-    }
-}
+    return res.status(200).json({
+      successful: true,
+      message: "Successfully Registered Admin",
+    });
+  } catch (err) {
+    return res.status(500).json({
+      successful: false,
+      message: err.message,
+    });
+  }
+};
 
 const loginAdmin = async (req, res, next) => {
-    let email = req.body.email.toLowerCase()
-    let password = req.body.password
+  let email = req.body.email.toLowerCase();
+  let password = req.body.password;
 
-    if (!email || !password) {
-        return res.status(404).json({
-            successful: false,
-            message: "Email or Password is missing"
-        })
-    } else {
-        try {
-            const connection = await database.pool.getConnection()
+  if (!email || !password) {
+    return res.status(400).json({
+      successful: false,
+      message: "Email or Password is missing",
+    });
+  } else {
+    try {
+      // Query the admin table using Knex
+      const adminRow = await knex("admin").where({ email }).first();
 
-            try {
-                const selectAdminQuery = `SELECT id, email, password FROM admin WHERE email = ?`
-                const adminRows = await connection.query(selectAdminQuery, [email])
+      if (!adminRow) {
+        return res.status(400).json({
+          successful: false,
+          message: "Invalid Credentials",
+        });
+      }
 
-                if (adminRows.length === 0) {
-                    return res.status(400).json({
-                        successful: false,
-                        message: "Invalid Credentials"
-                    })
-                }
+      const storedPassword = adminRow.password;
+      const passwordMatch = await bcrypt.compare(password, storedPassword);
 
-                const storedPassword = adminRows[0].password
-                const passwordMatch = await bcrypt.compare(password, storedPassword)
-
-                if (!passwordMatch) {
-                    return res.status(400).json({
-                        successful: false,
-                        message: "Invalid Credentials"
-                    })
-                }
-               else {
-                    return res.status(200).json({
-                        successful: true,
-                        message: "Successfully Login"
-                    })
-                }
-            } finally {
-                connection.release()
-            }
-        } catch (err) {
-            return res.status(500).json({
-                successful: false,
-                message: err.message
-            })
-        }
+      if (!passwordMatch) {
+        return res.status(400).json({
+          successful: false,
+          message: "Invalid Credentials",
+        });
+      } else {
+        return res.status(200).json({
+          successful: true,
+          message: "Successfully Logged In",
+        });
+      }
+    } catch (err) {
+      return res.status(500).json({
+        successful: false,
+        message: err.message,
+      });
     }
-}
+  }
+};
 
 const viewAdmins = async (req, res, next) => {
+  try {
+    const rows = await knex("admin").select(
+      "id",
+      "first_name",
+      "last_name",
+      "email"
+    );
 
-    try{
-        const connection = await database.pool.getConnection()
-
-        try{
-              const selectQuery = `SELECT id, first_name, last_name, email FROM admin`
-
-              const rows = await connection.query(selectQuery)
-
-              return res.status(200).json({
-                successful : true,
-                message : "Successfully Retrieved Admins",
-                data : rows
-              })
-        }
-        finally{
-            connection.release()
-        }
-    }
-    catch(err){
-        return res.status(500).json({
-            successful : false, 
-            message : err.message
-        })
-    }
-}
-
-
+    return res.status(200).json({
+      successful: true,
+      message: "Successfully Retrieved Admins",
+      data: rows,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      successful: false,
+      message: err.message,
+    });
+  }
+};
 
 const viewUsers = async (req, res, next) => {
+  try {
+    const rows = await knex("user")
+      .join("disability", "user.disability_id", "=", "disability.id")
+      .select(
+        "user.id",
+        "disability.type AS type",
+        knex.raw(
+          "CONCAT(user.first_name, ' ', user.middle_initial, '. ', user.last_name) AS full_name"
+        ),
+        "email",
+        "address",
+        "city",
+        "gender",
+        "birth_date",
+        "contact_number",
+        "formal_picture"
+      )
+      .where("status", "VERIFIED");
 
-    try{
-        const connection = await database.pool.getConnection()
-
-        try{
-               const selectQuery = `
-               SELECT 
-                    user.id, 
-                    disability.type AS type,
-                    CONCAT(user.first_name, ' ', user.middle_initial,'. ', user.last_name) AS full_name,
-                    email, 
-                    address,
-                    city,
-                    gender,
-                    birth_date,
-                    contact_number,
-                    formal_picture 
-               FROM user 
-               JOIN disability ON user.disability_id = disability.id
-               where status = 'VERIFIED'`
-
-              const rows = await connection.query(selectQuery)
-
-              return res.status(200).json({
-                successful : true,
-                message : "Successfully Retrieved Users",
-                data : rows
-              })
-        }
-        finally{
-            connection.release()
-        }
-    }
-    catch(err){
-        return res.status(500).json({
-            successful : false, 
-            message : err.message
-        })
-    }
-}
-
+    return res.status(200).json({
+      successful: true,
+      message: "Successfully Retrieved Users",
+      data: rows,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      successful: false,
+      message: err.message,
+    });
+  }
+};
 
 const viewCompanies = async (req, res, next) => {
-    
-    try{
-        const connection = await database.pool.getConnection()
+  try {
+    const rows = await knex("company")
+      .select(
+        "id",
+        "name",
+        "description",
+        "address",
+        "city",
+        "contact_number",
+        "email",
+        "profile_picture"
+      )
+      .where("status", "VERIFIED");
 
-        try{
-              const selectQuery = `
-              SELECT id, name, description, address, city, contact_number, email, profile_picture FROM company where status = 'VERIFIED'`
+    return res.status(200).json({
+      successful: true,
+      message: "Successfully Retrieved Companies",
+      data: rows,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      successful: false,
+      message: err.message,
+    });
+  }
+};
 
-              const rows = await connection.query(selectQuery)
+const viewAllJobListingNewestToOldest = async (req, res, next) => {
+  try {
+    const rows = await knex("job_listing")
+      .join(
+        "position_type",
+        "job_listing.positiontype_id",
+        "=",
+        "position_type.id"
+      )
+      .join("company", "job_listing.company_id", "=", "company.id")
+      .join(
+        "disability_job_listing",
+        "job_listing.id",
+        "=",
+        "disability_job_listing.joblisting_id"
+      )
+      .join(
+        "disability",
+        "disability_job_listing.disability_id",
+        "=",
+        "disability.id"
+      )
+      .select(
+        "job_listing.id",
+        "job_listing.position_name",
+        "job_listing.description",
+        "job_listing.qualification",
+        "job_listing.minimum_salary",
+        "job_listing.maximum_salary",
+        "position_type.type AS position_type",
+        "company.name AS company_name",
+        knex.raw(
+          "GROUP_CONCAT(disability.type SEPARATOR ', ') AS disability_types"
+        )
+      )
+      .groupBy(
+        "job_listing.id",
+        "job_listing.position_name",
+        "job_listing.description",
+        "job_listing.qualification",
+        "job_listing.minimum_salary",
+        "job_listing.maximum_salary",
+        "position_type.type",
+        "company.name"
+      )
+      .orderBy("job_listing.date_created", "desc");
 
-              return res.status(200).json({
-                successful : true,
-                message : "Successfully Retrieved Companies",
-                data : rows
-              })
-        }
-        finally{
-            connection.release()
-        }
+    if (rows.length === 0) {
+      return res.status(404).json({
+        successful: false,
+        message: "Job Listing not found",
+      });
+    } else {
+      return res.status(200).json({
+        successful: true,
+        message: "Successfully Retrieved All Job Listings",
+        data: rows,
+      });
     }
-    catch(err){
-        return res.status(500).json({
-            successful : false, 
-            message : err.message
-        })
+  } catch (err) {
+    return res.status(500).json({
+      successful: false,
+      message: err.message,
+    });
+  }
+};
+
+const viewAllJobListingOldestToNewest = async (req, res, next) => {
+  try {
+    const rows = await knex("job_listing")
+      .join(
+        "position_type",
+        "job_listing.positiontype_id",
+        "=",
+        "position_type.id"
+      )
+      .join("company", "job_listing.company_id", "=", "company.id")
+      .join(
+        "disability_job_listing",
+        "job_listing.id",
+        "=",
+        "disability_job_listing.joblisting_id"
+      )
+      .join(
+        "disability",
+        "disability_job_listing.disability_id",
+        "=",
+        "disability.id"
+      )
+      .select(
+        "job_listing.id",
+        "job_listing.position_name",
+        "job_listing.description",
+        "job_listing.qualification",
+        "job_listing.minimum_salary",
+        "job_listing.maximum_salary",
+        "position_type.type AS position_type",
+        "company.name AS company_name",
+        knex.raw(
+          "GROUP_CONCAT(disability.type SEPARATOR ', ') AS disability_types"
+        )
+      )
+      .groupBy(
+        "job_listing.id",
+        "job_listing.position_name",
+        "job_listing.description",
+        "job_listing.qualification",
+        "job_listing.minimum_salary",
+        "job_listing.maximum_salary",
+        "position_type.type",
+        "company.name"
+      )
+      .orderBy("job_listing.date_created", "asc");
+
+    if (rows.length === 0) {
+      return res.status(404).json({
+        successful: false,
+        message: "Job Listing not found",
+      });
+    } else {
+      return res.status(200).json({
+        successful: true,
+        message: "Successfully Retrieved All Job Listings",
+        data: rows,
+      });
     }
-}
+  } catch (err) {
+    return res.status(500).json({
+      successful: false,
+      message: err.message,
+    });
+  }
+};
 
+const viewJobListing = async (req, res, next) => {
+  let id = req.params.id;
 
+  if (!id) {
+    return res.status(404).json({
+      successful: false,
+      message: "ID is missing",
+    });
+  } else {
+    try {
+      const rows = await knex("job_listing")
+        .join(
+          "position_type",
+          "job_listing.positiontype_id",
+          "=",
+          "position_type.id"
+        )
+        .join("company", "job_listing.company_id", "=", "company.id")
+        .join(
+          "disability_job_listing",
+          "job_listing.id",
+          "=",
+          "disability_job_listing.joblisting_id"
+        )
+        .join(
+          "disability",
+          "disability_job_listing.disability_id",
+          "=",
+          "disability.id"
+        )
+        .select(
+          "job_listing.id",
+          "job_listing.position_name",
+          "job_listing.description",
+          "job_listing.qualification",
+          "job_listing.minimum_salary",
+          "job_listing.maximum_salary",
+          "position_type.type AS position_type",
+          "company.name AS company_name",
+          knex.raw(
+            "GROUP_CONCAT(disability.type SEPARATOR ', ') AS disability_types"
+          )
+        )
+        .where("job_listing.id", id)
+        .groupBy(
+          "job_listing.id",
+          "job_listing.position_name",
+          "job_listing.description",
+          "job_listing.qualification",
+          "job_listing.minimum_salary",
+          "job_listing.maximum_salary",
+          "position_type.type",
+          "company.name"
+        );
 
-const viewAllJobListingNewestToOldest = async (req,res,next) =>{
-    try{
-        const connection = await database.pool.getConnection()
-
-        try{
-            const selectQuery = `
-            SELECT 
-                job_listing.id,
-                job_listing.position_name, 
-                job_listing.description, 
-                job_listing.qualification, 
-                job_listing.minimum_salary,
-                job_listing.maximum_salary, 
-                position_type.type AS position_type,
-                company.name AS company_name,
-                GROUP_CONCAT(disability.type SEPARATOR ', ') AS disability_types
-            FROM job_listing
-            JOIN position_type ON job_listing.positiontype_id = position_type.id 
-            JOIN company ON job_listing.company_id = company.id
-            JOIN disability_job_listing ON job_listing.id = disability_job_listing.joblisting_id
-            JOIN disability ON disability_job_listing.disability_id = disability.id 
-            GROUP BY 
-                job_listing.id,
-                job_listing.position_name, 
-                job_listing.description, 
-                job_listing.qualification, 
-                job_listing.minimum_salary,
-                job_listing.maximum_salary, 
-                position_type.type,
-                company.name
-            ORDER BY job_listing.date_created DESC
-                `
-
-
-
-            const rows = await connection.query(selectQuery)
-
-            if (rows.length === 0) {
-                return res.status(404).json({
-                    successful: false,
-                    message: "Job Listing not found"
-                })
-            }
-            else {
-                return res.status(200).json({
-                    successful : true,
-                    message : "Successfully Retrieved All Job Listing",
-                    data : rows
-                })
-                
-            }
-        }
-        finally{
-            connection.release()
-        }
-    }
-    catch(err){
-        return res.status(500).json({
-            successful : false, 
-            message : err.message
-        })
-    }
-}
-
-const viewAllJobListingOldestToNewest = async (req,res,next) =>{
-    try{
-        const connection = await database.pool.getConnection()
-
-        try{
-            const selectQuery = `
-            SELECT 
-                job_listing.id,
-                job_listing.position_name, 
-                job_listing.description, 
-                job_listing.qualification, 
-                job_listing.minimum_salary,
-                job_listing.maximum_salary, 
-                position_type.type AS position_type,
-                company.name AS company_name,
-                GROUP_CONCAT(disability.type SEPARATOR ', ') AS disability_types
-            FROM job_listing
-            JOIN position_type ON job_listing.positiontype_id = position_type.id 
-            JOIN company ON job_listing.company_id = company.id
-            JOIN disability_job_listing ON job_listing.id = disability_job_listing.joblisting_id
-            JOIN disability ON disability_job_listing.disability_id = disability.id 
-            GROUP BY 
-                job_listing.id,
-                job_listing.position_name, 
-                job_listing.description, 
-                job_listing.qualification, 
-                job_listing.minimum_salary,
-                job_listing.maximum_salary, 
-                position_type.type,
-                company.name
-            ORDER BY job_listing.date_created ASC
-                `
-
-
-
-            const rows = await connection.query(selectQuery)
-
-            if (rows.length === 0) {
-                return res.status(404).json({
-                    successful: false,
-                    message: "Job Listing not found"
-                })
-            }
-            else {
-                return res.status(200).json({
-                    successful : true,
-                    message : "Successfully Retrieved All Job Listing",
-                    data : rows
-                })
-                
-            }
-        }
-        finally{
-            connection.release()
-        }
-    }
-    catch(err){
-        return res.status(500).json({
-            successful : false, 
-            message : err.message
-        })
-    }
-}
-
-const viewJobListing = async (req,res,next) =>{
-
-
-    let id = req.params.id
-
-    if(id == null){
+      if (rows.length === 0) {
         return res.status(404).json({
-            successful : false, 
-            message : "id is missing"
-        })
+          successful: false,
+          message: "Job Listing not found",
+        });
+      } else {
+        return res.status(200).json({
+          successful: true,
+          message: "Successfully Retrieved Job Listing",
+          data: rows,
+        });
+      }
+    } catch (err) {
+      return res.status(500).json({
+        successful: false,
+        message: err.message,
+      });
     }
-    else{
+  }
+};
 
-        try{
-            const connection = await database.pool.getConnection()
+const adminChangePassword = async (req, res, next) => {
+  let id = req.params.id;
+  let password = req.body.password;
+  let newPassword = req.body.new_password;
+  let confirmPassword = req.body.confirm_password;
 
-            try{
-                const selectQuery = `
-                SELECT 
-                    job_listing.id,
-                    job_listing.position_name, 
-                    job_listing.description, 
-                    job_listing.qualification, 
-                    job_listing.minimum_salary,
-                    job_listing.maximum_salary, 
-                    position_type.type AS position_type,
-                    company.name AS company_name,
-                    GROUP_CONCAT(disability.type SEPARATOR ', ') AS disability_types
-                FROM job_listing
-                JOIN position_type ON job_listing.positiontype_id = position_type.id 
-                JOIN company ON job_listing.company_id = company.id
-                JOIN disability_job_listing ON job_listing.id = disability_job_listing.joblisting_id
-                JOIN disability ON disability_job_listing.disability_id = disability.id
-                WHERE job_listing.id = ?
-                GROUP BY 
-                    job_listing.id,
-                    job_listing.position_name, 
-                    job_listing.description, 
-                    job_listing.qualification, 
-                    job_listing.minimum_salary,
-                    job_listing.maximum_salary, 
-                    position_type.type,
-                    company.name
-                `
+  if (!id || !password || !newPassword || !confirmPassword) {
+    return res.status(404).json({
+      successful: false,
+      message: "One or more details are missing",
+    });
+  } else if (!util.checkPassword(newPassword)) {
+    return res.status(400).json({
+      successful: false,
+      message:
+        "Invalid Password Format. It should have at least one digit, one uppercase, one lowercase, one special character, and be at least 8 characters in length",
+    });
+  } else if (newPassword !== confirmPassword) {
+    return res.status(400).json({
+      successful: false,
+      message: "Password Does not match",
+    });
+  } else {
+    try {
+      const adminRow = await knex("admin")
+        .select("id", "password")
+        .where("id", id)
+        .first();
 
-                const rows = await connection.query(selectQuery, [id])
+      if (!adminRow) {
+        return res.status(400).json({
+          successful: false,
+          message: "Invalid admin ID",
+        });
+      } else {
+        const storedPassword = adminRow.password;
+        const passwordMatch = await bcrypt.compare(password, storedPassword);
 
-                if (rows.length === 0) {
-                    return res.status(404).json({
-                        successful: false,
-                        message: "Job Listing not found"
-                    })
-                }
-                else {
-                    return res.status(200).json({
-                        successful : true,
-                        message : "Successfully Retrieved Job Listing",
-                        data : rows
-                    })
-                    
-                }
-            }
-            finally{
-                connection.release()
-            }
+        if (!passwordMatch) {
+          return res.status(400).json({
+            successful: false,
+            message: "Invalid Credentials",
+          });
+        } else {
+          const newPasswordMatch = await bcrypt.compare(
+            newPassword,
+            storedPassword
+          );
+          if (newPasswordMatch) {
+            return res.status(400).json({
+              successful: false,
+              message: "Password must not be the same",
+            });
+          } else {
+            const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+            await knex("admin")
+              .where("id", id)
+              .update({ password: hashedPassword });
+
+            return res.status(200).json({
+              successful: true,
+              message: "Password updated successfully",
+            });
+          }
         }
-        catch(err){
-            return res.status(500).json({
-                successful : false, 
-                message : err.message
-            })
-        }
+      }
+    } catch (err) {
+      return res.status(500).json({
+        successful: false,
+        message: err.message,
+      });
     }
-} 
+  }
+};
 
+const deleteAdmin = async (req, res, next) => {
+  let id = req.params.id;
 
-const adminChangePassword = async (req,res,next) =>{
+  if (!id) {
+    return res.status(404).json({
+      successful: false,
+      message: "ID is missing",
+    });
+  } else {
+    try {
+      const adminRow = await knex("admin").where("id", id).first();
 
-    let id = req.params.id
-    let password = req.body.password
-    let newPassword = req.body.new_password
-    let confirmPassword = req.body.confirm_password
+      if (!adminRow) {
+        return res.status(400).json({
+          successful: false,
+          message: "Invalid admin ID",
+        });
+      } else {
+        await knex("admin").where("id", id).del();
 
-    if(!id || !password || !newPassword || !confirmPassword){
-        return res.status(404).json({
-            successful : false, 
-            message : "One or more details are missing"
-        })
+        return res.status(200).json({
+          successful: true,
+          message: "Successfully Deleted Admin",
+        });
+      }
+    } catch (err) {
+      return res.status(500).json({
+        successful: false,
+        message: err.message,
+      });
     }
-    else if(!util.checkPassword(newPassword)){
-        return res.status(404).json({
-            successful : false, 
-            message : "Invalid Password Format. It should have atleast one digit, one uppercase, one lowercase, one special character, and atleast 8 in length"
-        })
+  }
+};
+
+const deleteUser = async (req, res, next) => {
+  let id = req.params.id;
+
+  if (!id) {
+    return res.status(404).json({
+      successful: false,
+      message: "ID is missing",
+    });
+  } else {
+    try {
+      const userRow = await knex("user").where("id", id).first();
+
+      if (!userRow) {
+        return res.status(400).json({
+          successful: false,
+          message: "Invalid user ID",
+        });
+      } else {
+        await knex("user").where("id", id).del();
+
+        return res.status(200).json({
+          successful: true,
+          message: "Successfully Deleted User",
+        });
+      }
+    } catch (err) {
+      return res.status(500).json({
+        successful: false,
+        message: err.message,
+      });
     }
-    else if(newPassword != confirmPassword){
-        return res.status(404).json({
-            successful : false,
-            message : "Password Does not match"
-        })
+  }
+};
+
+const deleteCompany = async (req, res, next) => {
+  let id = req.params.id;
+
+  if (!id) {
+    return res.status(404).json({
+      successful: false,
+      message: "ID is missing",
+    });
+  } else {
+    try {
+      const companyRow = await knex("company").where("id", id).first();
+
+      if (!companyRow) {
+        return res.status(400).json({
+          successful: false,
+          message: "Invalid company ID",
+        });
+      } else {
+        await knex("company").where("id", id).del();
+
+        return res.status(200).json({
+          successful: true,
+          message: "Successfully Deleted Company",
+        });
+      }
+    } catch (err) {
+      return res.status(500).json({
+        successful: false,
+        message: err.message,
+      });
     }
-    else{
-        try{
-            const connection = await database.pool.getConnection()
+  }
+};
+const deleteJob = async (req, res, next) => {
+  const id = req.params.id;
 
-            try{
+  if (!id) {
+    return res.status(404).json({
+      successful: false,
+      message: "Id is missing",
+    });
+  }
 
-                const selectIdQuery = `SELECT id, password FROM admin WHERE id = ?`
-                const adminRows = await connection.query(selectIdQuery, [id])
+  try {
+    const job = await knex("job_listing").where({ id }).first();
 
-                if(adminRows.length === 0){
-                    return res.status(400).json({
-                        successful : false,
-                        message : "Invalid admin ID"
-                    })
-                }
-                else{
-                    const storedPassword = adminRows[0].password
-                    const passwordMatch = await bcrypt.compare(password, storedPassword)
-
-                    if (!passwordMatch) {
-                        return res.status(400).json({
-                            successful: false,
-                            message: "Invalid Credentials"
-                        })
-                    }
-                   else {
-                        const passwordMatch = await bcrypt.compare(newPassword, storedPassword)
-                        if (passwordMatch) {
-                            return res.status(400).json({
-                                successful: false,
-                                message: "Password must not be the same"
-                            })
-                        }
-                        else{
-                            const updateQuery = `UPDATE admin SET password = ? WHERE id = ?`
-                            const hashedPassword = await bcrypt.hash(newPassword, 10)
-                            const values = [hashedPassword, id]
-            
-                            await connection.query(updateQuery, values)
-                            return res.status(200).json({
-                                successful: true,
-                                message: "Password updated successfully"
-                            })
-                        }
-                  
-                
-                    }
-                }
-                
-            }
-            finally{
-                connection.release()
-            }
-        }
-        catch(err){
-            return res.status(500).json({
-                successful :false ,
-                message : err.message
-            })
-        }
-    }
-}
-
-const deleteUser = async (req,res,next) =>{
-
-    let id = req.params.id
-
-    if(id === null){
-        return res.status(404).json({
-            successful : false, 
-            message : "id is missing"
-        })
-    }
-    else{
-
-        try{
-
-            const connection = await database.pool.getConnection()
-    
-            try{
-    
-                const selectQuery = `SELECT first_name from user where id = ?`
-                const rows = await connection.query(selectQuery, [id])
-
-                if(rows.length === 0){
-                    return res.status(404).json({
-                        successful : false, 
-                        message : "User Not Found"
-                    })
-                }
-                else{
-                    const deleteQuery = `DELETE from user WHERE id = ?`
-                    await connection.query(deleteQuery, [id])
-
-                    return res.status(200).json({
-                        successful : true, 
-                        message : "Successfully Deleted User"
-                    })
-                }
-            }
-            
-            finally{
-                connection.release()
-            }
-        }
-        catch(err){
-            return res.status(500).json({
-                successful : false, 
-                message : err.message
-            })
-        }
+    if (!job) {
+      return res.status(404).json({
+        successful: false,
+        message: "Job listing not found",
+      });
     }
 
-}
+    await knex("job_listing").where({ id }).del();
 
-const deleteCompany = async (req,res,next) =>{
-
-    let id = req.params.id
-
-    if(id === null){
-        return res.status(404).json({
-            successful : false, 
-            message : "id is missing"
-        })
-    }
-    else{
-
-        try{
-
-            const connection = await database.pool.getConnection()
-    
-            try{
-    
-                const selectQuery = `SELECT name from company where id = ?`
-                const rows = await connection.query(selectQuery, [id])
-
-                if(rows.length === 0){
-                    return res.status(404).json({
-                        successful : false, 
-                        message : "Company Not Found"
-                    })
-                }
-                else{
-                    const deleteQuery = `DELETE from company WHERE id = ?`
-                    await connection.query(deleteQuery, [id])
-
-                    return res.status(200).json({
-                        successful : true, 
-                        message : "Successfully Deleted Company"
-                    })
-                }
-            }
-            
-            finally{
-                connection.release()
-            }
-        }
-        catch(err){
-            return res.status(500).json({
-                successful : false, 
-                message : err.message
-            })
-        }
-    }
-
-}
-
-const deleteJob = async(req,res,next) => {
-    let id = req.params.id
-
-    if(id === null){
-        return res.status(404).json({
-            successful : false,
-            message : "Id is missing"
-        })
-    }
-    else{
-        try{
-            const connection = await database.pool.getConnection()
-
-            try{
-
-                const selectQuery = `SELECT description FROM job_listing WHERE id = ?`
-                const rows = await connection.query(selectQuery, [id])
-
-                    if(rows.length === 0){
-                        return res.status(404).json({
-                            successful : false, 
-                            message : "Job listing not Found"
-                        })
-                    }  
-                    else{
-
-                        const deleteQuery = `DELETE FROM job_listing WHERE id = ?`
-                        await connection.query(deleteQuery, [id])
-
-                        return res.status(200).json({
-                            successful : true, 
-                            message : " Successfully Deleted Job Listing"
-                        })
-                    } 
-                
-            }
-            finally{
-                connection.release()
-            }
-        }
-        catch(err){
-            return res.status(500).json({
-                successful : false,
-                message : err.message
-            })
-        }
-    }
-}
+    return res.status(200).json({
+      successful: true,
+      message: "Successfully deleted job listing",
+    });
+  } catch (err) {
+    return res.status(500).json({
+      successful: false,
+      message: err.message,
+    });
+  }
+};
 
 const searchUser = async (req, res, next) => {
+  const firstName = req.params.first_name;
 
-    let first_name = req.params.first_name
+  if (!firstName) {
+    return res.status(400).json({
+      successful: false,
+      message: "Name is missing",
+    });
+  }
 
-    if(!first_name){
-        return res.status(400).json({
-            successful : false,
-            message : "Name is missing"
-        })
+  try {
+    const users = await knex("user")
+      .select(
+        "user.id",
+        "disability.type",
+        knex.raw(
+          "CONCAT(user.first_name, ' ', user.middle_initial, '. ', user.last_name) AS full_name"
+        ),
+        "email",
+        knex.raw("CONCAT(address, ' ', city) AS Location"),
+        "gender",
+        "birth_date",
+        "contact_number",
+        "formal_picture"
+      )
+      .join("disability", "user.disability_id", "disability.id")
+      .where({
+        status: "VERIFIED",
+        "user.first_name": firstName,
+      });
+
+    if (users.length === 0) {
+      return res.status(404).json({
+        successful: false,
+        message: "No users found",
+      });
     }
-   else{
-        try{
-            const connection = await database.pool.getConnection()
 
-            try{
-                const selectQuery = `
-                SELECT 
-                        user.id, 
-                        disability.type,
-                        CONCAT(user.first_name, ' ', user.middle_initial,'. ', user.last_name) AS full_name,
-                        email, 
-                        CONCAT(address, ' ', city) AS Location,
-                        gender,
-                        birth_date,
-                        contact_number,
-                        formal_picture 
-                FROM user 
-                JOIN disability ON user.disability_id = disability.id
-                where status = 'VERIFIED' AND first_name = ?`
-
-                const rows = await connection.query(selectQuery, [first_name])
-
-
-                if(rows.length == 0 ){
-                    return res.status(404).json({
-                        successful : false,
-                        message : "No User was Found"
-                    })
-                }
-                else{
-                    return res.status(200).json({
-                        successful : true,
-                        message : "Successfully Retrieved Users",
-                        data : rows
-                    })
-                }
-
-            }
-            finally{
-                connection.release()
-            }
-        }
-        catch(err){
-            return res.status(500).json({
-                successful : false, 
-                message : err.message
-            })
-        }
-    }
-}
-
+    return res.status(200).json({
+      successful: true,
+      message: "Successfully retrieved users",
+      data: users,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      successful: false,
+      message: err.message,
+    });
+  }
+};
 
 const viewAdminViaId = async (req, res, next) => {
+  const id = req.params.id;
 
-    let id = req.params.id 
+  if (!id) {
+    return res.status(404).json({
+      successful: false,
+      message: "ID is missing",
+    });
+  }
 
-    if(!id){
-        return res.status(404).json({
-            successful : false,
-            message : "ID Is Missing"
-        })
+  try {
+    const admin = await knex("admin").where({ id }).first();
+
+    if (!admin) {
+      return res.status(404).json({
+        successful: false,
+        message: "ID is invalid",
+      });
     }
-    else{
-        try{
-            const connection = await database.pool.getConnection()
-    
-            try{
-                   const selectQuery = `SELECT id, first_name, last_name, email FROM admin WHERE id = ?`
-    
-                  const rows = await connection.query(selectQuery, [id])
 
-                  if(rows.length == 0){
-                    return res.status(404).json({
-                        successful : false,
-                        message : "ID is Invalid"
-                    })
-                  }
-                  else{
-                    return res.status(200).json({
-                        successful : true,
-                        message : "Successfully Retrieved Admin",
-                        data : rows
-                    })
-                  }
-    
-                 
-            }
-            finally{
-                connection.release()
-            }
-        }
-        catch(err){
-            return res.status(500).json({
-                successful : false, 
-                message : err.message
-            })
-        }
+    return res.status(200).json({
+      successful: true,
+      message: "Successfully retrieved admin",
+      data: admin,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      successful: false,
+      message: err.message,
+    });
+  }
+};
+
+const updateJobListing = async (req, res, next) => {
+  const id = req.params.id;
+  const {
+    position_name,
+    description,
+    qualification,
+    minimum_salary,
+    maximum_salary,
+    positiontype_id,
+  } = req.body;
+
+  if (
+    !id ||
+    !position_name ||
+    !description ||
+    !qualification ||
+    !positiontype_id
+  ) {
+    return res.status(400).json({
+      successful: false,
+      message: "One or more details are missing",
+    });
+  }
+
+  if (util.checkSpecialChar(position_name)) {
+    return res.status(400).json({
+      successful: false,
+      message: "Position name must not contain special characters",
+    });
+  }
+
+  if (!util.checkNumbers(minimum_salary) || minimum_salary < 0) {
+    return res.status(400).json({
+      successful: false,
+      message:
+        "Minimum Salary must only contain numbers that are greater than or equal to 0",
+    });
+  }
+
+  if (!util.checkNumbers(maximum_salary) || maximum_salary <= minimum_salary) {
+    return res.status(400).json({
+      successful: false,
+      message:
+        "Maximum Salary must only contain numbers that are greater than minimum Salary",
+    });
+  }
+
+  try {
+    const positionType = await knex("position_type")
+      .where({ id: positiontype_id })
+      .first();
+
+    if (!positionType) {
+      return res.status(400).json({
+        successful: false,
+        message: "Position Type Id is invalid",
+      });
     }
-}
 
+    const result = await knex("job_listing").where({ id }).update({
+      position_name,
+      description,
+      qualification,
+      minimum_salary,
+      maximum_salary,
+    });
 
-const updateJobListing = async(req,res,next) =>{
-    let id = req.params.id
-    let position_name = req.body.position_name
-    let description = req.body.description
-    let qualification = req.body.qualification
-    let minimum_salary = req.body.minimum_salary
-    let maximum_salary = req.body.maximum_salary
-    let positiontype_id = req.body.positiontype_id
-
-    if(!id || !position_name || !description || !qualification || !positiontype_id){
-        return res.status(400).json({
-            successful : false,
-            message : "One or more details are missing"
-        })
+    if (result === 0) {
+      return res.status(404).json({
+        successful: false,
+        message: "Job Listing not found",
+      });
     }
-    else if(util.checkSpecialChar(position_name)){
-        return res.status(400).json({
-            successful : false,
-            message : "Postion name must not contain special characters"
-        })
-    }
-    else if(!util.checkNumbers(minimum_salary) || minimum_salary < 0){
-        return res.status(400).json({
-            successful : false,
-            message : "Minimum Salary must only contain numbers that are greater than or equal 0"
-        })
-    }
-    else if(!util.checkNumbers(maximum_salary) || maximum_salary <= minimum_salary){
-        return res.status(400).json({
-            successful : false,
-            message : "Maximum Salary must only contain numbers that are greater than minimum Salary"
-        })
-    }
-    else{
 
-        try{
-
-            const connection = await database.pool.getConnection()
-
-            try{
-
-                const selectPositionTypeId = `SELECT id FROM position_type WHERE id = ?`
-                const positionTypeRows = await connection.query(selectPositionTypeId, [positiontype_id])
-
-                if(positionTypeRows.length === 0) {
-                    return res.status(400).json({
-                        successful : false, 
-                        message : "Position Type Id is invalid"
-                    })
-                }
-                else{
-
-                    const updateQuery = `UPDATE job_listing SET position_name = ?, description = ?, qualification = ?, minimum_salary = ?, maximum_salary = ? WHERE id = ?`
-                    const values = [position_name, description,  qualification, minimum_salary, maximum_salary, id]
-    
-                    const result = await connection.query(updateQuery, values)
-    
-                    if (result.affectedRows === 0) {
-                        return res.status(404).json({
-                            successful: false,
-                            message: "Job Listing not found"
-                        })
-                    }
-                    else{
-                        return res.status(200).json({
-                            successful: true,
-                            message: "Job Listing updated successfully"
-                        })
-                    }
-
-                }
-            }
-            finally{
-                connection.release
-            }
-        }
-        catch(err){
-            return res.status(500).json({
-                successful : false, 
-                message : err.message
-            })
-        }
-    }
-}
-
-
+    return res.status(200).json({
+      successful: true,
+      message: "Job Listing updated successfully",
+    });
+  } catch (err) {
+    return res.status(500).json({
+      successful: false,
+      message: err.message,
+    });
+  }
+};
 
 module.exports = {
-    registerAdmin,
-    loginAdmin,
-    viewAdmins,
-    viewUsers,
-    viewCompanies,
-    viewAllJobListingNewestToOldest,
-    viewAllJobListingOldestToNewest,
-    viewJobListing,
-    adminChangePassword,
-    deleteUser,
-    deleteCompany,
-    deleteJob,
-    searchUser,
-    viewAdminViaId,
-    updateJobListing
-}
+  registerAdmin,
+  loginAdmin,
+  viewAdmins,
+  viewUsers,
+  viewCompanies,
+  viewAllJobListingNewestToOldest,
+  viewAllJobListingOldestToNewest,
+  viewJobListing,
+  adminChangePassword,
+  deleteUser,
+  deleteCompany,
+  deleteJob,
+  searchUser,
+  viewAdminViaId,
+  updateJobListing,
+};

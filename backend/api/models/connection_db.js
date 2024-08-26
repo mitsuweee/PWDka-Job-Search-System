@@ -1,22 +1,14 @@
-const mariadb = require('mariadb')
-
-const pool = mariadb.createPool({
+const knex = require("knex")({
+  client: "mysql2",
+  connection: {
     host: "localhost",
     user: "root",
     database: "pwdka_db",
-})
+  },
+  pool: { min: 0, max: 7 },
+});
 
-const connectDatabase = async () => {
-    try {
-        const connection = await pool.getConnection()
-        console.log("Successfully connected to database")
-        connection.release() 
-    } catch (error) {
-        console.error("Error connecting to database:", error)
-    }
-}
-
-module.exports = {
-    pool,
-    connectDatabase
-}
+knex.raw("SELECT VERSION()").then(() => {
+  console.log(`Connection To DB is Successful`);
+});
+module.exports = knex;

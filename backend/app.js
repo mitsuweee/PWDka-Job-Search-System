@@ -6,8 +6,8 @@ const path = require("path");
 app.use(express.json({ limit: "20mb" }));
 app.use(express.urlencoded({ limit: "20mb", extended: true }));
 
-const database = require("./api/models/connection_db");
-database.connectDatabase();
+// const database = require("./api/models/connection_db");
+// database.connectDatabase();
 
 app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
