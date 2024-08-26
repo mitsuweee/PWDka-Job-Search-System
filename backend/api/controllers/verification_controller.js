@@ -51,6 +51,41 @@ const viewPendingUsers = async (req, res, next) => {
   }
 };
 
+const viewPendingCompany = async (req, res, next) => {
+  try {
+    const rows = await knex("company")
+      .select(
+        "Company.id",
+        "Company.name",
+        "Company.description",
+        "Company.address",
+        "Company.city",
+        "Company.contact_number",
+        "Company.profile_picture"
+      )
+      .where("Company.status", "PENDING");
+
+    // Convert BLOB data to base64
+    const processedRows = rows.map((row) => ({
+      ...row,
+      profile_picture: row.profile_picture
+        ? row.profile_picture.toString("base64")
+        : null,
+    }));
+
+    return res.status(200).json({
+      successful: true,
+      message: "Successfully Retrieved Companies",
+      data: processedRows, // Use processedRows instead of users
+    });
+  } catch (err) {
+    return res.status(500).json({
+      successful: false,
+      message: err.message,
+    });
+  }
+};
+
 // Verify company
 const verifyCompany = async (req, res, next) => {
   const id = req.params.id;
@@ -265,4 +300,5 @@ module.exports = {
   declineCompany,
   declineUser,
   viewPendingUsers,
+  viewPendingCompany,
 };
