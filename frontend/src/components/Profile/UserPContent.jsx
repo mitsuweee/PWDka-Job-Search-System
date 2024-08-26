@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const UserProf = () => {
   const [user, setUser] = useState({
@@ -17,7 +18,7 @@ const UserProf = () => {
   });
 
   const [isEditing, setIsEditing] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const userId = sessionStorage.getItem("Id");
@@ -96,7 +97,6 @@ const UserProf = () => {
         console.log(JSON.stringify(response.data));
         alert(response.data.message);
       })
-
       .catch(function (error) {
         console.log(error);
         alert(error.response.data.message);
@@ -104,30 +104,44 @@ const UserProf = () => {
     window.location.reload();
   };
 
+  const handleGoBack = () => {
+    navigate(-1); // Navigate to the previous page
+  };
+
   return (
     <div className="max-w-4xl mx-auto mt-10 p-8 bg-white rounded-lg shadow-lg">
       {/* Header Section */}
-      <div className="flex items-center">
-        <img
-          src={user.profilePicture}
-          alt="Profile"
-          className="w-24 h-24 rounded-full border-4 border-blue-700 shadow-lg"
-        />
-        <div className="ml-6">
-          <h2 className="text-3xl font-bold text-gray-900">{user.fullName}</h2>
-          <div className="flex mt-2">
-            <p className="bg-blue-100 text-blue-700 text-sm font-semibold mr-2 px-2.5 py-0.5 rounded">
-              Disability:
-            </p>
-            <p className="text-gray-600">{user.disability}</p>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center">
+          <img
+            src={user.profilePicture}
+            alt="Profile"
+            className="w-24 h-24 rounded-full border-4 border-blue-700 shadow-lg"
+          />
+          <div className="ml-6">
+            <h2 className="text-3xl font-bold text-gray-900">
+              {user.fullName}
+            </h2>
+            <div className="flex mt-2">
+              <p className="bg-blue-100 text-blue-700 text-sm font-semibold mr-2 px-2.5 py-0.5 rounded">
+                Disability:
+              </p>
+              <p className="text-gray-600">{user.disability}</p>
+            </div>
+            <button
+              onClick={handleEdit}
+              className="mt-4 px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300"
+            >
+              Edit Profile
+            </button>
           </div>
-          <button
-            onClick={handleEdit}
-            className="mt-4 px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300"
-          >
-            Edit Profile
-          </button>
         </div>
+        <button
+          onClick={handleGoBack}
+          className="mt-4 px-4 py-2 bg-gray-200 text-blue-900 font-semibold rounded-lg shadow-md hover:bg-gray-300 transition duration-300"
+        >
+          Back
+        </button>
       </div>
 
       {/* User Details Section */}
@@ -135,31 +149,43 @@ const UserProf = () => {
         <div>
           <div className="mb-4">
             <p className="text-lg font-semibold text-gray-800">Address:</p>
-            <p className="text-gray-600 bg-gray-400 p-5 rounded-lg">{user.address}</p>
+            <p className="text-gray-600 bg-gray-400 p-5 rounded-lg">
+              {user.address}
+            </p>
           </div>
           <div className="mb-4">
             <p className="text-lg font-semibold text-gray-800">City:</p>
-            <p className="text-gray-600 bg-gray-400 p-5 rounded-lg">{user.city}</p>
+            <p className="text-gray-600 bg-gray-400 p-5 rounded-lg">
+              {user.city}
+            </p>
           </div>
           <div className="mb-4">
             <p className="text-lg font-semibold text-gray-800">
               Contact Number:
             </p>
-            <p className="text-gray-600 bg-gray-400 p-5 rounded-lg">{user.contactNumber}</p>
+            <p className="text-gray-600 bg-gray-400 p-5 rounded-lg">
+              {user.contactNumber}
+            </p>
           </div>
           <div className="mb-4">
             <p className="text-lg font-semibold text-gray-800">Gender:</p>
-            <p className="text-gray-600 bg-gray-400 p-5 rounded-lg">{user.gender}</p>
+            <p className="text-gray-600 bg-gray-400 p-5 rounded-lg">
+              {user.gender}
+            </p>
           </div>
         </div>
         <div>
           <div className="mb-4">
             <p className="text-lg font-semibold text-gray-800">Birthdate:</p>
-            <p className="text-gray-600 bg-gray-400 p-5 rounded-lg">{user.birthdate}</p>
+            <p className="text-gray-600 bg-gray-400 p-5 rounded-lg">
+              {user.birthdate}
+            </p>
           </div>
           <div className="mb-4">
             <p className="text-lg font-semibold text-gray-800">Email:</p>
-            <p className="text-gray-600 bg-gray-400 p-5 rounded-md">{user.email}</p>
+            <p className="text-gray-600 bg-gray-400 p-5 rounded-md">
+              {user.email}
+            </p>
           </div>
 
           <div className="flex justify-between mt-6">

@@ -11,7 +11,7 @@ const ViewJobs = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [jobsPerPage] = useState(5); // Number of jobs to display per page
+  const [jobsPerPage] = useState(4); // Number of jobs to display per page
 
   // Fetch job listings
   useEffect(() => {

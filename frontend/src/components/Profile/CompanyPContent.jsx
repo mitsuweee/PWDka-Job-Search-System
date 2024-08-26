@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const CompanyProf = () => {
   const [company, setCompany] = useState({
@@ -12,6 +13,8 @@ const CompanyProf = () => {
     contactNumber: "",
     password: "",
   });
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const userId = sessionStorage.getItem("Id");
@@ -46,7 +49,6 @@ const CompanyProf = () => {
   }, []);
 
   const [isEditing, setIsEditing] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     setCompany({ ...company, [e.target.name]: e.target.value });
@@ -58,10 +60,6 @@ const CompanyProf = () => {
 
   const handleEdit = () => {
     setIsEditing(!isEditing);
-  };
-
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
   };
 
   const handleUpdate = () => {
@@ -98,22 +96,36 @@ const CompanyProf = () => {
     window.location.reload();
   };
 
+  const handleGoBack = () => {
+    navigate(-1); // Navigates to the previous page
+  };
+
   return (
     <div className="max-w-4xl mx-auto mt-10 p-8 bg-white rounded-lg shadow-lg">
       {/* Header Section */}
-      <div className="flex items-center">
-        <img
-          src={company.logo}
-          alt="Company Logo"
-          className="w-24 h-24 rounded-full border-4 border-blue-700 shadow-lg"
-        />
-        <div className="ml-6">
-          <h2 className="text-3xl font-bold text-gray-900">{company.name}</h2>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center">
+          <img
+            src={company.logo}
+            alt="Company Logo"
+            className="w-24 h-24 rounded-full border-4 border-blue-700 shadow-lg"
+          />
+          <div className="ml-6">
+            <h2 className="text-3xl font-bold text-gray-900">{company.name}</h2>
+            <button
+              onClick={handleEdit}
+              className="mt-4 px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300"
+            >
+              Edit Profile
+            </button>
+          </div>
+        </div>
+        <div className="mt-4">
           <button
-            onClick={handleEdit}
-            className="mt-4 px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300"
+            onClick={handleGoBack}
+            className="px-4 py-2 bg-gray-200 text-blue-900 font-semibold rounded-lg shadow-md hover:bg-gray-300 transition duration-300"
           >
-            Edit Profile
+            Back
           </button>
         </div>
       </div>
@@ -129,23 +141,31 @@ const CompanyProf = () => {
         <div>
           <div className="mb-4">
             <p className="text-lg font-semibold text-gray-800">Email:</p>
-            <p className="text-gray-600 bg-gray-400 p-5 rounded-lg">{company.email}</p>
+            <p className="text-gray-600 bg-gray-400 p-5 rounded-lg">
+              {company.email}
+            </p>
           </div>
           <div className="mb-4">
             <p className="text-lg font-semibold text-gray-800">Address:</p>
-            <p className="text-gray-600 bg-gray-400 p-5 rounded-lg">{company.address}</p>
+            <p className="text-gray-600 bg-gray-400 p-5 rounded-lg">
+              {company.address}
+            </p>
           </div>
         </div>
         <div>
           <div className="mb-4">
             <p className="text-lg font-semibold text-gray-800">City:</p>
-            <p className="text-gray-600 bg-gray-400 p-5 rounded-lg">{company.city}</p>
+            <p className="text-gray-600 bg-gray-400 p-5 rounded-lg">
+              {company.city}
+            </p>
           </div>
           <div className="mb-4">
             <p className="text-lg font-semibold text-gray-800">
               Contact Number:
             </p>
-            <p className="text-gray-600 bg-gray-400 p-5 rounded-lg">{company.contactNumber}</p>
+            <p className="text-gray-600 bg-gray-400 p-5 rounded-lg">
+              {company.contactNumber}
+            </p>
           </div>
         </div>
       </div>
