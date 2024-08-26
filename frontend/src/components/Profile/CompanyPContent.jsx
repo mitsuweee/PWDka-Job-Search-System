@@ -31,7 +31,7 @@ const CompanyProf = () => {
         const companyData = response.data.data;
 
         setCompany({
-          logo: `data:image/png;base64,${companyData.logo}`, // Assuming the logo is returned as a base64 string
+          profile_picture: companyData.profile_picture, // Assuming the logo is returned as a base64 string
           name: companyData.name,
           email: companyData.email,
           description: companyData.description,
@@ -92,7 +92,7 @@ const CompanyProf = () => {
       city: company.city,
       description: company.description,
       contact_number: company.contactNumber,
-      logo: company.logo, // This now contains the base64 string
+      profile_picture: company.logo, // This now contains the base64 string
     });
 
     const companyId = sessionStorage.getItem("Id");
@@ -107,7 +107,7 @@ const CompanyProf = () => {
 
     axios(config)
       .then(function (response) {
-        console.log(JSON.stringify(response.data));
+        console.log(JSON.stringify());
         alert(response.data.message);
       })
       .catch(function (error) {
@@ -127,7 +127,7 @@ const CompanyProf = () => {
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <img
-            src={`data:image/png;base64,${company.logo}`}
+            src={`data:image/png;base64,${company.profile_picture}`}
             alt="Company Logo"
             className="w-24 h-24 rounded-full border-4 border-blue-700 shadow-lg"
           />
@@ -161,9 +161,9 @@ const CompanyProf = () => {
       <div className="mt-8 grid grid-cols-2 gap-8 text-left text-gray-800">
         <div>
           <div className="mb-4">
-            <p className="text-lg font-semibold text-gray-800">Email:</p>
+            <p className="text-lg font-semibold text-gray-800">Name:</p>
             <p className="text-gray-600 bg-gray-400 p-5 rounded-lg">
-              {company.email}
+              {company.name}
             </p>
           </div>
           <div className="mb-4">
@@ -202,9 +202,9 @@ const CompanyProf = () => {
                   Email:
                 </label>
                 <input
-                  type="email"
-                  name="email"
-                  value={company.email}
+                  type="text"
+                  name="name"
+                  value={company.name}
                   onChange={handleChange}
                   className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
                 />

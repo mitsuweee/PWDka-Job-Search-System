@@ -47,8 +47,6 @@ const Signup = () => {
         const reader = new FileReader();
         reader.onloadend = () => {
           const base64Data = reader.result.split(",")[1]; // Remove the prefix
-          console.log(base64Data);
-
           if (type === "userProfile") {
             userFormValues.profilePicture = base64Data;
           } else if (type === "selfieWithID") {
@@ -492,11 +490,10 @@ const Signup = () => {
             type="file"
             id="idPicture"
             name="idPicture"
-            value={userFormValues.idPicture} // Encode this image data to UTF 8
-            onChange={handleFileChange}
+            onChange={(e) => handleFileChange(e, "idPicture")}
             className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
             style={commonInputStyles}
-            accept="image/*"
+            accept="image/png, image/jpeg"
             required
           />
         </div>
@@ -512,11 +509,10 @@ const Signup = () => {
             type="file"
             id="profilePicture"
             name="profilePicture"
-            value={userFormValues.profilePicture} // Encode this image data to UTF 8
-            onChange={handleFileChange}
+            onChange={(e) => handleFileChange(e, "userProfile")}
             className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
             style={commonInputStyles}
-            accept="image/*"
+            accept="image/png, image/jpeg"
             required
           />
         </div>
@@ -532,8 +528,7 @@ const Signup = () => {
             type="file"
             id="selfieWithID"
             name="selfieWithID"
-            value={userFormValues.selfieWithID} // Encode this image data to UTF 8
-            onChange={handleFileChange}
+            onChange={(e) => handleFileChange(e, "selfieWithID")}
             className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
             style={commonInputStyles}
             accept="image/*"
@@ -747,8 +742,7 @@ const Signup = () => {
             type="file"
             id="companyLogo"
             name="companyLogo"
-            value={companyFormValues.companyLogo}
-            onChange={handleFileChange}
+            onChange={(e) => handleFileChange(e, "companyLogo")}
             className="mt-2 w-full rounded-md bg-white text-lg text-gray-700 focus:outline-none"
             style={commonInputStyles}
             accept="image/*"
