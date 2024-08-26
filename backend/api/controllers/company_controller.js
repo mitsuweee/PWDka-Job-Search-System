@@ -1,20 +1,26 @@
 const { json } = require("body-parser");
-const database = require("../models/connection_db");
+const knex = require("../models/connection_db");
 const { companyModel } = require("../models/company_model");
 const util = require("./util");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 
 const registerCompany = async (req, res, next) => {
-  let name = req.body.name;
-  let address = req.body.address.toLowerCase();
-  let city = req.body.city.toLowerCase();
-  let description = req.body.description;
-  let contact_number = req.body.contact_number;
-  let email = req.body.email.toLowerCase();
-  let password = req.body.password;
-  let confirmPassword = req.body.confirm_password;
-  let profile_picture = req.body.profile_picture;
+  let {
+    name,
+    address,
+    city,
+    description,
+    contact_number,
+    email,
+    password,
+    confirm_password,
+    profile_picture,
+  } = req.body;
+
+  address = address.toLowerCase();
+  city = city.toLowerCase();
+  email = email.toLowerCase();
 
   if (
     !name ||
@@ -26,220 +32,179 @@ const registerCompany = async (req, res, next) => {
     !password ||
     !profile_picture
   ) {
-    return res.status(404).json({
+    return res.status(400).json({
       successful: false,
       message: "One or more details are missing",
     });
-  } else if (util.checkSpecialChar(address)) {
+  }
+
+  if (util.checkSpecialChar(address)) {
     return res.status(400).json({
       successful: false,
       message: "Invalid Address Format",
     });
-  } else if (util.checkNumbersAndSpecialChar(city)) {
+  }
+
+  if (util.checkNumbersAndSpecialChar(city)) {
     return res.status(400).json({
       successful: false,
       message: "Invalid City Format",
     });
-  } else if (!util.checkContactNumber(contact_number)) {
+  }
+
+  if (!util.checkContactNumber(contact_number)) {
     return res.status(400).json({
       successful: false,
       message: "Invalid Contact Number Format",
     });
-  } else if (!util.checkEmail(email)) {
+  }
+
+  if (!util.checkEmail(email)) {
     return res.status(400).json({
       successful: false,
       message: "Invalid Email",
     });
-  } else if (!util.checkPassword(password)) {
+  }
+
+  if (!util.checkPassword(password)) {
     return res.status(400).json({
       successful: false,
-      message:
-        "Invalid Password Format. It should have atleast one digit, one uppercase, one lowercase, one special character, and atleast 8 in length",
+      message: "Invalid Password Format",
     });
-  } else if (password != confirmPassword) {
+  }
+
+  if (password !== confirm_password) {
     return res.status(400).json({
       successful: false,
-      message: "Passwords does not match",
+      message: "Passwords do not match",
     });
-  } else {
-    try {
-      const connection = await database.pool.getConnection();
+  }
 
-      try {
-        const selectQuery = `SELECT email from company where email = ?`;
-        const rows = await connection.query(selectQuery, [email]);
+  try {
+    const existingCompany = await knex("company").where({ email }).first();
+    const existingAdmin = await knex("admin").where({ email }).first();
+    const existingUser = await knex("user").where({ email }).first();
 
-        if (rows.length > 0) {
-          return res.status(400).json({
-            successful: false,
-            message: "Email already exist",
-          });
-        } else {
-          const selectEmailQuery = `SELECT email from admin WHERE email = ?`;
-          const emailRows = await connection.query(selectEmailQuery, [email]);
-
-          if (emailRows.length > 0) {
-            return res.status(400).json({
-              successful: false,
-              message: "Email already Exist",
-            });
-          } else {
-            const selectEmailQuery = `SELECT email from user WHERE email = ?`;
-            const emailRows = await connection.query(selectEmailQuery, [email]);
-
-            if (emailRows.length > 0) {
-              return res.status(400).json({
-                successful: false,
-                message: "Email already Exist",
-              });
-            } else {
-              const insertQuery = `INSERT into company (name, address, city, description, contact_number, email, password, profile_picture) Values (?, ?, ?, ?, ?, ?, ?, ?)`;
-              const hashedPassword = await bcrypt.hash(password, 10);
-              const values = companyModel(
-                name,
-                address,
-                city,
-                description,
-                contact_number,
-                email,
-                hashedPassword,
-                profile_picture
-              );
-              const companyObj = [
-                values.name,
-                values.address,
-                values.city,
-                values.description,
-                values.contact_number,
-                values.email,
-                values.password,
-                values.profile_picture,
-              ];
-
-              await connection.query(insertQuery, companyObj);
-
-              const transporter = nodemailer.createTransport({
-                service: "Gmail",
-                auth: {
-                  user: "livcenteno24@gmail.com",
-                  pass: "glwg czmw tmdb rzvn",
-                },
-              });
-
-              const mailOptions = {
-                from: "livcenteno24@gmail.com",
-                to: email,
-                subject: "Account Verification",
-                text: `Dear ${values.name},
-
-                                Thank you for registering. Your Company's account is under review and will be activated once verified. We will notify you once the verification process is complete.
-                                
-                                Here are the details you provided:
-                                
-                                - Company Name: ${values.name}
-                                - Address: ${values.address}, ${values.city}
-                                - Description: ${values.description}
-                                - Contact Number: ${values.contact_number}
-                                - Email: ${values.email}
-                                
-                                Best regards,
-                                PWDKA Team`,
-              };
-
-              // Send the email
-              await transporter.sendMail(mailOptions);
-
-              return res.status(200).json({
-                successful: true,
-                message:
-                  "Successfully Registered Company! We Will update you via email once the company is verified. Thank you!",
-              });
-            }
-          }
-        }
-      } finally {
-        connection.release();
-      }
-    } catch (err) {
-      return res.status(500).json({
+    if (existingCompany || existingAdmin || existingUser) {
+      return res.status(400).json({
         successful: false,
-        message: err.message,
+        message: "Email already exists",
       });
     }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await knex("company").insert({
+      name,
+      address,
+      city,
+      description,
+      contact_number,
+      email,
+      password: hashedPassword,
+      profile_picture,
+    });
+
+    const transporter = nodemailer.createTransport({
+      service: "Gmail",
+      auth: {
+        user: "your-email@gmail.com",
+        pass: "your-password",
+      },
+    });
+
+    const mailOptions = {
+      from: "your-email@gmail.com",
+      to: email,
+      subject: "Account Verification",
+      text: `Dear ${name},
+
+Thank you for registering. Your Company's account is under review and will be activated once verified. We will notify you once the verification process is complete.
+
+Here are the details you provided:
+
+- Company Name: ${name}
+- Address: ${address}, ${city}
+- Description: ${description}
+- Contact Number: ${contact_number}
+- Email: ${email}
+
+Best regards,
+Your Team`,
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    return res.status(200).json({
+      successful: true,
+      message:
+        "Successfully Registered Company! We will update you via email once the company is verified.",
+    });
+  } catch (err) {
+    return res.status(500).json({
+      successful: false,
+      message: err.message,
+    });
   }
 };
 
 const loginCompany = async (req, res, next) => {
-  let email = req.body.email.toLowerCase();
-  let password = req.body.password;
+  const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(404).json({
+    return res.status(400).json({
       successful: false,
       message: "Email or Password is missing",
     });
-  } else {
-    try {
-      const connection = await database.pool.getConnection();
+  }
 
-      try {
-        const selectCompanyQuery = `SELECT email, password, status FROM company WHERE email = ?`;
-        const companyRows = await connection.query(selectCompanyQuery, [email]);
+  try {
+    const company = await knex("company").where({ email }).first();
 
-        if (companyRows.length === 0) {
-          return res.status(400).json({
-            successful: false,
-            message: "Invalid Credentials",
-          });
-        }
-
-        const storedPassword = companyRows[0].password;
-        const passwordMatch = await bcrypt.compare(password, storedPassword);
-
-        if (!passwordMatch) {
-          return res.status(400).json({
-            successful: false,
-            message: "Invalid Credentials",
-          });
-        } else if (companyRows[0].status === "PENDING") {
-          return res.status(400).json({
-            successful: false,
-            message:
-              "The Company's Account is under Verification. Please wait for the email confirmation.",
-          });
-        } else if (companyRows[0].status === "VERIFIED") {
-          return res.status(200).json({
-            successful: true,
-            id: companyRows[0].id, // added role
-            role: companyRows[0].role,
-            message: "Successfully Logged In.",
-          });
-        } else {
-          return res.status(500).json({
-            successful: false,
-            message: err.message,
-          });
-        }
-      } finally {
-        connection.release();
-      }
-    } catch (err) {
-      return res.status(500).json({
+    if (!company) {
+      return res.status(400).json({
         successful: false,
-        message: err.message,
+        message: "Invalid Credentials",
       });
     }
+
+    const passwordMatch = await bcrypt.compare(password, company.password);
+
+    if (!passwordMatch) {
+      return res.status(400).json({
+        successful: false,
+        message: "Invalid Credentials",
+      });
+    }
+
+    if (company.status === "PENDING") {
+      return res.status(400).json({
+        successful: false,
+        message:
+          "The Company's Account is under Verification. Please wait for the email confirmation.",
+      });
+    }
+
+    if (company.status === "VERIFIED") {
+      return res.status(200).json({
+        successful: true,
+        id: company.id,
+        role: company.role,
+        message: "Successfully Logged In.",
+      });
+    }
+  } catch (err) {
+    return res.status(500).json({
+      successful: false,
+      message: err.message,
+    });
   }
 };
 
 const updateCompany = async (req, res, next) => {
-  let id = req.params.id;
-  let name = req.body.name;
-  let address = req.body.address;
-  let city = req.body.city;
-  let description = req.body.description;
-  let contactNumber = req.body.contact_number;
-  let profilePicture = req.body.profile_picture;
+  const { id } = req.params;
+  const { name, address, city, description, contact_number, profile_picture } =
+    req.body;
 
   if (
     !id ||
@@ -247,190 +212,179 @@ const updateCompany = async (req, res, next) => {
     !address ||
     !city ||
     !description ||
-    !contactNumber ||
-    !profilePicture
+    !contact_number ||
+    !profile_picture
   ) {
-    return res.status(404).json({
+    return res.status(400).json({
       successful: false,
       message: "One or more details are missing",
     });
-  } else if (util.checkSpecialChar(address)) {
+  }
+
+  if (util.checkSpecialChar(address)) {
     return res.status(400).json({
       successful: false,
       message: "Invalid Address Format",
     });
-  } else if (util.checkNumbersAndSpecialChar(city)) {
+  }
+
+  if (util.checkNumbersAndSpecialChar(city)) {
     return res.status(400).json({
       successful: false,
       message: "Invalid City Format",
     });
-  } else if (!util.checkContactNumber(contactNumber)) {
+  }
+
+  if (!util.checkContactNumber(contact_number)) {
     return res.status(400).json({
       successful: false,
       message: "Invalid Contact Number Format",
     });
-  } else {
-    try {
-      const connection = await database.pool.getConnection();
+  }
 
-      try {
-        const updateQuery = `UPDATE company SET name = ?,address = ?, city = ?, description = ?, contact_number = ?, profile_picture = ? WHERE id = ?`;
-        const values = [
-          name,
-          address,
-          city,
-          description,
-          contactNumber,
-          profilePicture,
-          id,
-        ];
+  try {
+    const result = await knex("company").where({ id }).update({
+      name,
+      address,
+      city,
+      description,
+      contact_number,
+      profile_picture,
+    });
 
-        const result = await connection.query(updateQuery, values);
-
-        if (result.affectedRows === 0) {
-          return res.status(404).json({
-            successful: false,
-            message: "Company not found",
-          });
-        } else {
-          return res.status(200).json({
-            successful: true,
-            message: "Company Details updated successfully",
-          });
-        }
-      } finally {
-        connection.release();
-      }
-    } catch (err) {
-      return res.status(500).json({
+    if (result === 0) {
+      return res.status(404).json({
         successful: false,
-        message: err.message,
+        message: "Company not found",
       });
     }
+
+    return res.status(200).json({
+      successful: true,
+      message: "Company Details updated successfully",
+    });
+  } catch (err) {
+    return res.status(500).json({
+      successful: false,
+      message: err.message,
+    });
   }
 };
 
 const companyChangePassword = async (req, res, next) => {
-  let id = req.params.id;
-  let password = req.body.password;
-  let newPassword = req.body.new_password;
-  let confirmPassword = req.body.confirm_password;
+  const { id } = req.params;
+  const { password, new_password, confirm_password } = req.body;
 
-  if (!id || !password || !newPassword || !confirmPassword) {
-    return res.status(404).json({
+  if (!id || !password || !new_password || !confirm_password) {
+    return res.status(400).json({
       successful: false,
       message: "One or more details are missing",
     });
-  } else if (!util.checkPassword(newPassword)) {
-    return res.status(404).json({
+  }
+
+  if (!util.checkPassword(new_password)) {
+    return res.status(400).json({
       successful: false,
-      message:
-        "Invalid Password Format. It should have atleast one digit, one uppercase, one lowercase, one special character, and atleast 8 in length",
+      message: "Invalid Password Format",
     });
-  } else if (newPassword != confirmPassword) {
-    return res.status(404).json({
+  }
+
+  if (new_password !== confirm_password) {
+    return res.status(400).json({
       successful: false,
       message: "Password Does not match",
     });
-  } else {
-    try {
-      const connection = await database.pool.getConnection();
+  }
 
-      try {
-        const selectIdQuery = `SELECT id, password FROM company WHERE id = ?`;
-        const companyRows = await connection.query(selectIdQuery, [id]);
+  try {
+    const company = await knex("company").where({ id }).first();
 
-        if (companyRows.length === 0) {
-          return res.status(400).json({
-            successful: false,
-            message: "Invalid company ID",
-          });
-        } else {
-          const storedPassword = companyRows[0].password;
-          const passwordMatch = await bcrypt.compare(password, storedPassword);
-
-          if (!passwordMatch) {
-            return res.status(400).json({
-              successful: false,
-              message: "Invalid Credentials",
-            });
-          } else {
-            const passwordMatch = await bcrypt.compare(
-              newPassword,
-              storedPassword
-            );
-            if (passwordMatch) {
-              return res.status(400).json({
-                successful: false,
-                message: "Password must not be the same",
-              });
-            } else {
-              const updateQuery = `UPDATE company SET password = ? WHERE id = ?`;
-              const hashedPassword = await bcrypt.hash(newPassword, 10);
-              const values = [hashedPassword, id];
-
-              await connection.query(updateQuery, values);
-              return res.status(200).json({
-                successful: true,
-                message: "Password updated successfully",
-              });
-            }
-          }
-        }
-      } finally {
-        connection.release();
-      }
-    } catch (err) {
-      return res.status(500).json({
+    if (!company) {
+      return res.status(400).json({
         successful: false,
-        message: err.message,
+        message: "Invalid company ID",
       });
     }
+
+    const passwordMatch = await bcrypt.compare(password, company.password);
+
+    if (!passwordMatch) {
+      return res.status(400).json({
+        successful: false,
+        message: "Invalid Credentials",
+      });
+    }
+
+    const newPasswordMatch = await bcrypt.compare(
+      new_password,
+      company.password
+    );
+
+    if (newPasswordMatch) {
+      return res.status(400).json({
+        successful: false,
+        message: "New password must not be the same as the old password",
+      });
+    }
+
+    const hashedNewPassword = await bcrypt.hash(new_password, 10);
+
+    await knex("company").where({ id }).update({ password: hashedNewPassword });
+
+    return res.status(200).json({
+      successful: true,
+      message: "Password updated successfully",
+    });
+  } catch (err) {
+    return res.status(500).json({
+      successful: false,
+      message: err.message,
+    });
   }
 };
 
 const viewCompanyViaId = async (req, res, next) => {
-  let id = req.params.id;
+  const { id } = req.params;
 
   if (!id) {
-    return res.status(404).json({
+    return res.status(400).json({
       successful: false,
-      message: "ID Is Missing",
+      message: "ID is Missing",
     });
-  } else {
-    try {
-      const connection = await database.pool.getConnection();
+  }
 
-      try {
-        const selectQuery = `
-                   SELECT id, name, description, address, city, contact_number, email, 
-                   profile_picture 
-                   FROM company 
-                   where id = ?`;
+  try {
+    const company = await knex("company")
+      .select(
+        "id",
+        "name",
+        "description",
+        "address",
+        "city",
+        "contact_number",
+        "email",
+        "profile_picture"
+      )
+      .where({ id })
+      .first();
 
-        const rows = await connection.query(selectQuery, [id]);
-
-        if (rows.length == 0) {
-          return res.status(404).json({
-            successful: false,
-            message: "ID is Invalid",
-          });
-        } else {
-          return res.status(200).json({
-            successful: true,
-            message: "Successfully Retrieved Company",
-            data: rows,
-          });
-        }
-      } finally {
-        connection.release();
-      }
-    } catch (err) {
-      return res.status(500).json({
+    if (!company) {
+      return res.status(404).json({
         successful: false,
-        message: err.message,
+        message: "ID is Invalid",
       });
     }
+
+    return res.status(200).json({
+      successful: true,
+      message: "Successfully Retrieved Company",
+      data: company,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      successful: false,
+      message: err.message,
+    });
   }
 };
 
