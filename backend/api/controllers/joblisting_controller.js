@@ -131,6 +131,7 @@ const viewJobListing = async (req, res, next) => {
           "job_listing.maximum_salary",
           "position_type.type AS position_type",
           "company.name AS company_name",
+          "company.profile_picture AS company_profile_picture",
           "company.email AS company_email",
           "company.address AS company_address",
           "company.contact_number AS company_contact_number",
@@ -173,10 +174,18 @@ const viewJobListing = async (req, res, next) => {
           message: "Job Listing not found",
         });
       } else {
+        // Convert company_profile_picture BLOB to Base64 string for each row
+        const processedRows = rows.map((row) => ({
+          ...row,
+          company_profile_picture: row.company_profile_picture
+            ? row.company_profile_picture.toString("base64")
+            : null,
+        }));
+
         return res.status(200).json({
           successful: true,
           message: "Successfully Retrieved Job Listing",
-          data: rows,
+          data: processedRows,
         });
       }
     } catch (err) {
@@ -208,6 +217,7 @@ const viewJobListingViaUserNewestToOldest = async (req, res, next) => {
           "job_listing.maximum_salary",
           "position_type.type AS position_type",
           "company.name AS company_name",
+          "company.profile_picture AS company_profile_picture",
           "company.email AS company_email",
           "company.address AS company_address",
           "company.contact_number AS company_contact_number",
@@ -239,10 +249,18 @@ const viewJobListingViaUserNewestToOldest = async (req, res, next) => {
           message: "Job Listing not found",
         });
       } else {
+        // Convert company_profile_picture BLOB to Base64 string for each row
+        const processedRows = rows.map((row) => ({
+          ...row,
+          company_profile_picture: row.company_profile_picture
+            ? row.company_profile_picture.toString("base64")
+            : null,
+        }));
+
         return res.status(200).json({
           successful: true,
           message: "Successfully Retrieved Job Listing",
-          data: rows,
+          data: processedRows,
         });
       }
     } catch (err) {
@@ -251,75 +269,6 @@ const viewJobListingViaUserNewestToOldest = async (req, res, next) => {
         message: err.message,
       });
     }
-  }
-};
-
-const viewJobListingViaUserOldestToNewest = async (req, res, next) => {
-  const id = req.params.id;
-
-  if (!id) {
-    return res.status(404).json({
-      successful: false,
-      message: "id is missing",
-    });
-  }
-
-  try {
-    const rows = await knex("job_listing")
-      .join(
-        "position_type",
-        "job_listing.positiontype_id",
-        "=",
-        "position_type.id"
-      )
-      .join("company", "job_listing.company_id", "=", "company.id")
-      .join(
-        "disability_job_listing",
-        "job_listing.id",
-        "=",
-        "disability_job_listing.joblisting_id"
-      )
-      .join(
-        "disability",
-        "disability_job_listing.disability_id",
-        "=",
-        "disability.id"
-      )
-      .join("user", "user.disability_id", "=", "disability.id")
-      .where("user.id", id)
-      .orderBy("job_listing.date_created", "asc")
-      .select(
-        "job_listing.id",
-        "job_listing.position_name",
-        "job_listing.description",
-        "job_listing.qualification",
-        "job_listing.minimum_salary",
-        "job_listing.maximum_salary",
-        "position_type.type as position_type",
-        "company.name as company_name",
-        "company.email as company_email",
-        "company.address as company_address",
-        "company.contact_number as company_contact_number",
-        "company.description as company_description"
-      );
-
-    if (rows.length === 0) {
-      return res.status(404).json({
-        successful: false,
-        message: "Job Listing not found",
-      });
-    }
-
-    return res.status(200).json({
-      successful: true,
-      message: "Successfully Retrieved Job Listing",
-      data: rows,
-    });
-  } catch (err) {
-    return res.status(500).json({
-      successful: false,
-      message: err.message,
-    });
   }
 };
 
@@ -376,6 +325,7 @@ const viewJobsCreatedByCompanyNewestToOldest = async (req, res, next) => {
         "job_listing.maximum_salary",
         "position_type.type as position_type",
         "company.name as company_name",
+        "company.profile_picture as company_profile_picture",
         "company.email as company_email",
         "company.address as company_address",
         "company.contact_number as company_contact_number",
@@ -393,93 +343,18 @@ const viewJobsCreatedByCompanyNewestToOldest = async (req, res, next) => {
       });
     }
 
-    return res.status(200).json({
-      successful: true,
-      message: "Successfully Retrieved Company's Job Listing",
-      data: rows,
-    });
-  } catch (err) {
-    return res.status(500).json({
-      successful: false,
-      message: err.message,
-    });
-  }
-};
-
-const viewJobsCreatedByCompanyOldestToNewest = async (req, res, next) => {
-  const id = req.params.id;
-
-  if (!id) {
-    return res.status(404).json({
-      successful: false,
-      message: "id is missing",
-    });
-  }
-
-  try {
-    const rows = await knex("job_listing")
-      .join(
-        "position_type",
-        "job_listing.positiontype_id",
-        "=",
-        "position_type.id"
-      )
-      .join("company", "job_listing.company_id", "=", "company.id")
-      .join(
-        "disability_job_listing",
-        "job_listing.id",
-        "=",
-        "disability_job_listing.joblisting_id"
-      )
-      .join(
-        "disability",
-        "disability_job_listing.disability_id",
-        "=",
-        "disability.id"
-      )
-      .where("company.id", id)
-      .groupBy(
-        "job_listing.id",
-        "job_listing.position_name",
-        "job_listing.description",
-        "job_listing.qualification",
-        "job_listing.minimum_salary",
-        "job_listing.maximum_salary",
-        "position_type.type",
-        "company.name",
-        "job_listing.date_created"
-      )
-      .orderBy("job_listing.date_created", "asc")
-      .select(
-        "job_listing.id",
-        "job_listing.position_name",
-        "job_listing.description",
-        "job_listing.qualification",
-        "job_listing.minimum_salary",
-        "job_listing.maximum_salary",
-        "position_type.type as position_type",
-        "company.name as company_name",
-        "company.email as company_email",
-        "company.address as company_address",
-        "company.contact_number as company_contact_number",
-        "company.description as company_description",
-        knex.raw(
-          'GROUP_CONCAT(disability.type SEPARATOR ", ") as disability_types'
-        ),
-        "job_listing.date_created"
-      );
-
-    if (rows.length === 0) {
-      return res.status(404).json({
-        successful: false,
-        message: "Company's Job Listings not found",
-      });
-    }
+    // Convert company_profile_picture BLOB to Base64 string for each row
+    const processedRows = rows.map((row) => ({
+      ...row,
+      company_profile_picture: row.company_profile_picture
+        ? row.company_profile_picture.toString("base64")
+        : null,
+    }));
 
     return res.status(200).json({
       successful: true,
-      message: "Successfully Retrieved Company's Job Listing",
-      data: rows,
+      message: "Successfully Retrieved Company's Job Listings",
+      data: processedRows,
     });
   } catch (err) {
     return res.status(500).json({
@@ -610,9 +485,7 @@ module.exports = {
   postJobs,
   viewJobListing,
   viewJobListingViaUserNewestToOldest,
-  viewJobListingViaUserOldestToNewest,
   viewJobsCreatedByCompanyNewestToOldest,
-  viewJobsCreatedByCompanyOldestToNewest,
   updateJobListing,
   deleteJob,
 };

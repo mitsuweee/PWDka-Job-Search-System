@@ -2,7 +2,6 @@ const { json } = require("body-parser");
 const knex = require("../models/connection_db");
 const nodemailer = require("nodemailer");
 
-// View pending users
 const viewPendingUsers = async (req, res, next) => {
   try {
     const rows = await knex("user")
@@ -18,14 +17,30 @@ const viewPendingUsers = async (req, res, next) => {
         "user.gender",
         "user.birth_date",
         "user.contact_number",
-        "user.formal_picture"
+        "user.formal_picture",
+        "user.picture_with_id",
+        "user.picture_of_pwd_id"
       )
       .where("user.status", "PENDING");
+
+    // Convert BLOBs to Base64 strings
+    const users = rows.map((user) => ({
+      ...user,
+      formal_picture: user.formal_picture
+        ? user.formal_picture.toString("base64")
+        : null,
+      picture_with_id: user.picture_with_id
+        ? user.picture_with_id.toString("base64")
+        : null,
+      picture_of_pwd_id: user.picture_of_pwd_id
+        ? user.picture_of_pwd_id.toString("base64")
+        : null,
+    }));
 
     return res.status(200).json({
       successful: true,
       message: "Successfully Retrieved Users",
-      data: rows,
+      data: users,
     });
   } catch (err) {
     return res.status(500).json({

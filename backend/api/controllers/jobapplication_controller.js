@@ -76,9 +76,9 @@ const viewAllUsersApplicationsViaJobListingId = async (req, res, next) => {
   }
 
   try {
-    // Check if the company ID is valid
-    const companyExists = await knex("company").where({ id }).first();
-    if (!companyExists) {
+    // Check if the Job Listing ID is valid
+    const jobListingExists = await knex("job_listing").where({ id }).first();
+    if (!jobListingExists) {
       return res.status(400).json({
         successful: false,
         message: "Invalid Company ID",

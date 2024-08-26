@@ -441,10 +441,18 @@ const viewUserViaId = async (req, res, next) => {
           message: "ID is Invalid",
         });
       } else {
+        // Convert formal_picture BLOB to Base64 string
+        const user = {
+          ...rows[0],
+          formal_picture: rows[0].formal_picture
+            ? rows[0].formal_picture.toString("base64")
+            : null,
+        };
+
         return res.status(200).json({
           successful: true,
           message: "Successfully Retrieved User",
-          data: rows[0],
+          data: user,
         });
       }
     } catch (err) {
@@ -455,7 +463,6 @@ const viewUserViaId = async (req, res, next) => {
     }
   }
 };
-
 module.exports = {
   registerUser,
   loginUser,

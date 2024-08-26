@@ -375,10 +375,18 @@ const viewCompanyViaId = async (req, res, next) => {
       });
     }
 
+    // Convert profile_picture BLOB to Base64 string
+    const processedCompany = {
+      ...company,
+      profile_picture: company.profile_picture
+        ? company.profile_picture.toString("base64")
+        : null,
+    };
+
     return res.status(200).json({
       successful: true,
       message: "Successfully Retrieved Company",
-      data: company,
+      data: processedCompany,
     });
   } catch (err) {
     return res.status(500).json({
