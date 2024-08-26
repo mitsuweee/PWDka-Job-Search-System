@@ -206,7 +206,7 @@ const viewCompanies = async (req, res, next) => {
     const processedCompanies = companies.map((company) => ({
       ...company,
       profile_picture: company.profile_picture
-        ? company.profile_picture.toString("base64")
+        ? company.profile_picture.toString()
         : null,
     }));
 
@@ -282,7 +282,7 @@ const viewAllJobListingNewestToOldest = async (req, res, next) => {
       const processedRows = rows.map((row) => ({
         ...row,
         profile_picture: row.profile_picture
-          ? row.profile_picture.toString("base64")
+          ? row.profile_picture.toString()
           : null,
       }));
 
@@ -367,7 +367,7 @@ const viewJobListing = async (req, res, next) => {
         const processedRows = rows.map((row) => ({
           ...row,
           company_profile_picture: row.company_profile_picture
-            ? row.company_profile_picture.toString("base64")
+            ? row.company_profile_picture.toString()
             : null,
         }));
 

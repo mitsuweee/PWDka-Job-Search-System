@@ -27,13 +27,13 @@ const viewPendingUsers = async (req, res, next) => {
     const users = rows.map((user) => ({
       ...user,
       formal_picture: user.formal_picture
-        ? user.formal_picture.toString("base64")
+        ? user.formal_picture.toString()
         : null,
       picture_with_id: user.picture_with_id
-        ? user.picture_with_id.toString("base64")
+        ? user.picture_with_id.toString()
         : null,
       picture_of_pwd_id: user.picture_of_pwd_id
-        ? user.picture_of_pwd_id.toString("base64")
+        ? user.picture_of_pwd_id.toString()
         : null,
     }));
 

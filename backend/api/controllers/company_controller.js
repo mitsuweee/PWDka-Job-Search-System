@@ -379,7 +379,7 @@ const viewCompanyViaId = async (req, res, next) => {
     const processedCompany = {
       ...company,
       profile_picture: company.profile_picture
-        ? company.profile_picture.toString("base64")
+        ? company.profile_picture.toString()
         : null,
     };
 
