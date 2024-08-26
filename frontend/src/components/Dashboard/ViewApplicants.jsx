@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 // TO DO: RENDER ALL POSTED JOBS
 // CHANGE BACKEND TO RETURN THE BLOB DATA
@@ -11,6 +12,16 @@ const ViewApplicants = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [applicants, setApplicants] = useState([]);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    const confirmed = window.confirm("Are you sure you want to logout?");
+    if (confirmed) {
+      sessionStorage.removeItem("Id");
+      sessionStorage.removeItem("Role");
+      navigate("/login");
+    }
+  };
 
   // Fetch job listings
   useEffect(() => {
@@ -43,23 +54,6 @@ const ViewApplicants = () => {
       });
   }, []);
 
-  // const applicants = [
-  //     {
-  //         id: 1,
-  //         fullName: "Bruce Wayne",
-  //         email: "bruce@wayneenterprises.com",
-  //         resumeLink: "https://example.com/bruce_resume.pdf",
-  //         jobAppliedFor: "Product Manager",
-  //     },
-  //     {
-  //         id: 2,
-  //         fullName: "Clark Kent",
-  //         email: "clark@dailyplanet.com",
-  //         resumeLink: "https://example.com/clark_resume.pdf",
-  //         jobAppliedFor: "Reporter",
-  //     },
-  // ];
-
   const toggleFilterMenu = () => {
     setIsFilterOpen(!isFilterOpen);
   };
@@ -73,16 +67,6 @@ const ViewApplicants = () => {
     // Logic to delete an applicant
     console.log(`Applicant with id ${id} deleted`);
   };
-
-  const handleLogout = () => {
-    const confirmed = window.confirm("Are you sure you want to logout?");
-    if (confirmed) {
-        sessionStorage.removeItem("Id");
-        sessionStorage.removeItem("Role");
-        window.location.href = "/login";
-    }
-};
-
 
   // Sort the applicants based on the selected sort option
   const sortedApplicants = applicants.sort((a, b) => {
@@ -138,8 +122,8 @@ const ViewApplicants = () => {
         </a>
 
         <button
-          className="bg-red-400 text-white rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-red-500 transition-all duration-200 ease-in-out mt-6"
           onClick={handleLogout}
+          className="ml-4 px-4 py-2 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 transition"
         >
           Logout
         </button>

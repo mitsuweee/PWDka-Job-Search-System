@@ -29,7 +29,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between">
           <a
             className="flex-none text-xl font-semibold focus:outline-none focus:opacity-80"
-            // onClick={() => handleNavigation("/")}
+            onClick={() => handleNavigation("/")}
             aria-label="Brand"
           >
             <img className="w-26 h-14" src="/imgs/LOGO PWDKA.png" alt="Logo" />

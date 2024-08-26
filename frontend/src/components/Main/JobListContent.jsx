@@ -15,7 +15,6 @@ const JobListing = () => {
 
   useEffect(() => {
     const userId = sessionStorage.getItem("Id");
-
     const config = {
       method: "get",
       url: `/joblisting/view/newesttooldest/${userId}`,
