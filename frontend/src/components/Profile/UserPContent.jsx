@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 
 const UserProf = () => {
   const [user, setUser] = useState({
-    profilePicture: "",
     fullName: "",
     disability: "",
     city: "",
@@ -15,6 +14,7 @@ const UserProf = () => {
     email: "",
     pictureWithId: "",
     pictureOfId: "",
+    profilePicture: "",
   });
 
   const [isEditing, setIsEditing] = useState(false);
@@ -32,23 +32,22 @@ const UserProf = () => {
 
     axios(config)
       .then(function (response) {
-        console.log(response.data.data);
+        const userData = response.data.data;
+        console.log(userData);
+
         setUser({
-          fullName: response.data.data.full_name,
-          disability: response.data.data.type,
-          city: response.data.data.city,
-          address: response.data.data.address,
-          contactNumber: response.data.data.contact_number,
-          gender: response.data.data.gender,
-          birthdate: new Date(response.data.data.birth_date).toLocaleDateString(
-            "en-US"
-          ),
-          email: response.data.data.email,
+          fullName: userData.full_name,
+          disability: userData.type,
+          city: userData.city,
+          address: userData.address,
+          contactNumber: userData.contact_number,
+          gender: userData.gender,
+          birthdate: new Date(userData.birth_date).toLocaleDateString("en-US"),
+          email: userData.email,
           pictureWithId: "https://via.placeholder.com/150",
           pictureOfId: "https://via.placeholder.com/150",
-          profilePicture: "https://via.placeholder.com/150",
+          profilePicture: userData.formal_picture || "", // Ensure it's a valid base64 string or set to an empty string
         });
-        console.log(user);
       })
       .catch(function (error) {
         const errorMessage =
@@ -59,15 +58,39 @@ const UserProf = () => {
     console.log("Component is ready");
   }, []);
 
-  const handleChange = (e) => {
-    setUser({ ...user, [e.target.name]: e.target.value });
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+
+    if (file && (file.type === "image/png" || file.type === "image/jpeg")) {
+      if (file.size <= 16777215) {
+        // 16MB
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          // Convert file to base64 string and update the user state
+          setUser({
+            ...user,
+            [e.target.name]: reader.result.split(",")[1], // Store the base64 string without the prefix
+          });
+        };
+        reader.readAsDataURL(file); // Read file as base64 string
+      } else {
+        alert("File size exceeds 16MB. Please upload a smaller image.");
+        setUser({
+          ...user,
+          [e.target.name]: null,
+        });
+      }
+    } else {
+      alert("Please upload a PNG or JPEG image file.");
+      setUser({
+        ...user,
+        [e.target.name]: null,
+      });
+    }
   };
 
-  const handleFileChange = (e) => {
-    setUser({
-      ...user,
-      [e.target.name]: URL.createObjectURL(e.target.files[0]),
-    });
+  const handleChange = (e) => {
+    setUser({ ...user, [e.target.name]: e.target.value });
   };
 
   const handleEdit = () => {
@@ -81,10 +104,11 @@ const UserProf = () => {
       address: user.address,
       city: user.city,
       contact_number: user.contactNumber,
-      formal_picture: user.profilePicture,
+      formal_picture: user.profilePicture, // This now contains the base64 string
     });
+
     const userId = sessionStorage.getItem("Id");
-    var config = {
+    const config = {
       method: "put",
       url: `/user/update/${userId}`,
       headers: {
@@ -115,7 +139,11 @@ const UserProf = () => {
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <img
-            src={user.profilePicture}
+            src={
+              user.profilePicture
+                ? `data:image/png;base64,${user.profilePicture}`
+                : "https://via.placeholder.com/150"
+            }
             alt="Profile"
             className="w-24 h-24 rounded-full border-4 border-blue-700 shadow-lg"
           />
