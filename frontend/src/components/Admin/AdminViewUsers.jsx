@@ -39,11 +39,11 @@ const AdminViewUsers = () => {
         const fetchedUsers = response.data.data.map((user) => ({
           id: user.id,
           fullName: user.full_name, // Assuming 'full_name' is the correct key
-          pwdId: user.pwd_id, // Assuming 'pwd_id' is the correct key
-          disability: user.disability,
+          pwdId: user.id, // Assuming 'pwd_id' is the correct key
+          disability: user.type,
           address: user.address,
           city: user.city,
-          birthdate: user.birthdate,
+          birthdate: user.birth_date,
           contactNumber: user.contact_number,
           email: user.email,
         }));

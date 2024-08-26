@@ -1,14 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const AdminVerifyComp = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [company, setCompany] = useState(null);
   const navigate = useNavigate();
 
   const handleLogout = () => {
     const confirmed = window.confirm("Are you sure you want to logout?");
     if (confirmed) {
-      // Clear session storage and redirect to the login route
       sessionStorage.removeItem("Id");
       sessionStorage.removeItem("Role");
       navigate("/login");
@@ -19,110 +20,56 @@ const AdminVerifyComp = () => {
     navigate(-1); // This navigates back to the previous page
   };
 
-  const renderVerifyCompany = () => {
-    const company = {
-      id: 1,
-      companyName: "Acme Corporation",
-      address: "456 Business Ave",
-      city: "Metropolis",
-      companyDescription: "Leading provider of innovative solutions",
-      contactNumber: "555-5678",
-      companyEmail: "contact@acmecorp.com",
+  useEffect(() => {
+    const config = {
+      method: "get",
+      url: "http://localhost:8080/verification/view/companies",
+      headers: {
+        "Content-Type": "application/json",
+      },
     };
 
-    return (
-      <div className="flex justify-center items-center h-full w-full bg-blue-500 p-4 rounded-2xl">
-        <div className="w-full max-w-4xl h-full bg-white p-8 rounded-lg shadow-xl flex flex-col justify-center items-center">
-          <h2 className="text-3xl font-bold mb-4 text-gray-800 text-center">
-            Verify Company
-          </h2>
-          <p className="text-xl mb-8 text-gray-600 text-center">
-            Company Details
-          </p>
-          <div className="grid grid-cols-2 gap-6 text-left text-gray-800 w-full">
-            <div>
-              <p className="font-semibold text-lg">Company Name:</p>
-              <p className="text-xl bg-gray-100 rounded-md p-2">
-                {company.companyName}
-              </p>
-            </div>
-            <div>
-              <p className="font-semibold text-lg">Address:</p>
-              <p className="text-xl bg-gray-100 rounded-md p-2">
-                {company.address}
-              </p>
-            </div>
-            <div>
-              <p className="font-semibold text-lg">City:</p>
-              <p className="text-xl bg-gray-100 rounded-md p-2">
-                {company.city}
-              </p>
-            </div>
-            <div>
-              <p className="font-semibold text-lg">Company Description:</p>
-              <p className="text-xl bg-gray-100 rounded-md p-2">
-                {company.companyDescription}
-              </p>
-            </div>
-            <div>
-              <p className="font-semibold text-lg">Contact Number:</p>
-              <p className="text-xl bg-gray-100 rounded-md p-2">
-                {company.contactNumber}
-              </p>
-            </div>
-            <div>
-              <p className="font-semibold text-lg">Company Email:</p>
-              <p className="text-xl bg-gray-100 rounded-md p-2">
-                {company.companyEmail}
-              </p>
-            </div>
-          </div>
-          <div className="flex justify-center mt-8 space-x-4">
-            <button className="transition-all bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 shadow flex items-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 mr-2"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 19l-7-7 7-7"
-                />
-              </svg>
-              Previous
-            </button>
-            <button className="transition-all bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 shadow">
-              Approve
-            </button>
-            <button className="transition-all bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 shadow">
-              Decline
-            </button>
-            <button className="transition-all bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 shadow flex items-center">
-              Next
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 ml-2"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
-      </div>
-    );
+    axios(config)
+      .then(function (response) {
+        const companyData = response.data.data[0]; // Assuming you get an array of companies
+        setCompany({
+          id: companyData.id,
+          companyName: companyData.name,
+          address: companyData.address,
+          city: companyData.city,
+          companyDescription: companyData.description,
+          contactNumber: companyData.contact_number,
+          companyEmail: companyData.email,
+          companyLogo: `data:image/png;base64,${companyData.logo}`, // Assuming logo is in base64 format
+        });
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, []);
+
+  const handleApprove = () => {
+    const config = {
+      method: "put",
+      url: `http://localhost:8080/verification/company/${company.id}`,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+        alert("Company approved successfully!");
+        // You can add further logic here, like navigating to the next company or updating the UI
+      })
+      .catch(function (error) {
+        console.log(error);
+        alert("An error occurred while approving the company.");
+      });
   };
+
+  if (!company) return <div>Loading...</div>;
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-blue-100">
@@ -247,7 +194,108 @@ const AdminVerifyComp = () => {
             Back
           </button>
         </div>
-        <div className="mt-4">{renderVerifyCompany()}</div>
+        <div className="mt-4">
+          {company && (
+            <div className="flex justify-center items-center h-full w-full bg-blue-500 p-4 rounded-2xl">
+              <div className="w-full max-w-4xl h-full bg-white p-8 rounded-lg shadow-xl flex flex-col justify-center items-center">
+                <h2 className="text-3xl font-bold mb-4 text-gray-800 text-center">
+                  Verify Company
+                </h2>
+                <p className="text-xl mb-8 text-gray-600 text-center">
+                  Company Details
+                </p>
+                <div className="grid grid-cols-2 gap-6 text-left text-gray-800 w-full">
+                  <div>
+                    <p className="font-semibold text-lg">Company Name:</p>
+                    <p className="text-xl bg-gray-100 rounded-md p-2">
+                      {company.companyName}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-lg">Address:</p>
+                    <p className="text-xl bg-gray-100 rounded-md p-2">
+                      {company.address}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-lg">City:</p>
+                    <p className="text-xl bg-gray-100 rounded-md p-2">
+                      {company.city}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-lg">
+                      Company Description:
+                    </p>
+                    <p className="text-xl bg-gray-100 rounded-md p-2">
+                      {company.companyDescription}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-lg">Contact Number:</p>
+                    <p className="text-xl bg-gray-100 rounded-md p-2">
+                      {company.contactNumber}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-lg">Company Email:</p>
+                    <p className="text-xl bg-gray-100 rounded-md p-2">
+                      {company.companyEmail}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex justify-center mt-8 space-x-4">
+                  <button
+                    className="transition-all bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 shadow flex items-center"
+                    onClick={handleGoBack}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5 mr-2"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15 19l-7-7 7-7"
+                      />
+                    </svg>
+                    Previous
+                  </button>
+                  <button
+                    className="transition-all bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 shadow"
+                    onClick={handleApprove}
+                  >
+                    Approve
+                  </button>
+                  <button className="transition-all bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 shadow">
+                    Decline
+                  </button>
+                  <button className="transition-all bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 shadow flex items-center">
+                    Next
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5 ml-2"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
       </main>
     </div>
   );
