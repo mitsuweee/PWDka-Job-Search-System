@@ -108,13 +108,13 @@ const registerCompany = async (req, res, next) => {
     const transporter = nodemailer.createTransport({
       service: "Gmail",
       auth: {
-        user: "your-email@gmail.com",
-        pass: "your-password",
+        user: "livcenteno24@gmail.com",
+        pass: "glwg czmw tmdb rzvn",
       },
     });
 
     const mailOptions = {
-      from: "your-email@gmail.com",
+      from: "livcenteno24@gmail.com",
       to: email,
       subject: "Account Verification",
       text: `Dear ${name},

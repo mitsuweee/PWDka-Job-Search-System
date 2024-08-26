@@ -77,7 +77,7 @@ const verifyCompany = async (req, res, next) => {
       service: "Gmail",
       auth: {
         user: "livcenteno24@gmail.com",
-        pass: "your_password",
+        pass: "glwg czmw tmdb rzvn",
       },
     });
 
@@ -129,7 +129,7 @@ const declineCompany = async (req, res, next) => {
       service: "Gmail",
       auth: {
         user: "livcenteno24@gmail.com",
-        pass: "your_password",
+        pass: "glwg czmw tmdb rzvn",
       },
     });
 
@@ -181,7 +181,7 @@ const verifyUser = async (req, res, next) => {
       service: "Gmail",
       auth: {
         user: "livcenteno24@gmail.com",
-        pass: "your_password",
+        pass: "glwg czmw tmdb rzvn",
       },
     });
 
@@ -233,7 +233,7 @@ const declineUser = async (req, res, next) => {
       service: "Gmail",
       auth: {
         user: "livcenteno24@gmail.com",
-        pass: "your_password",
+        pass: "glwg czmw tmdb rzvn",
       },
     });
 

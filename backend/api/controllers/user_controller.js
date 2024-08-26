@@ -176,7 +176,7 @@ const registerUser = async (req, res, next) => {
         service: "Gmail",
         auth: {
           user: "livcenteno24@gmail.com",
-          pass: "your_email_password_here", // Use environment variables for security
+          pass: "glwg czmw tmdb rzvn",
         },
       });
 
