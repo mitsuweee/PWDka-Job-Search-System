@@ -73,6 +73,35 @@ const AdminViewUsers = () => {
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
   const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
 
+  const handleDeleteUser = (id) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this user?"
+    );
+    if (confirmed) {
+      const config = {
+        method: "delete",
+        url: `http://localhost:8080/admin/delete/user/${id}`,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      axios(config)
+        .then((response) => {
+          alert("User deleted successfully!");
+          // Remove the deleted user from the state to update the UI
+          setUsers((prevUsers) => prevUsers.filter((user) => user.id !== id));
+          setFilteredUsers((prevUsers) =>
+            prevUsers.filter((user) => user.id !== id)
+          );
+        })
+        .catch((error) => {
+          console.log(error);
+          alert("An error occurred while deleting the user.");
+        });
+    }
+  };
+
   const renderViewAllUsers = () => {
     return (
       <div>
@@ -142,6 +171,12 @@ const AdminViewUsers = () => {
                   <p className="text-xl bg-custom-bg rounded-md text-custom-blue">
                     {user.email}
                   </p>
+                  <button
+                    onClick={() => handleDeleteUser(user.id)}
+                    className="mt-4 py-2 px-4 rounded-lg bg-red-600 text-white hover:bg-red-700 transition duration-200"
+                  >
+                    Delete
+                  </button>
                 </div>
               </div>
             ))
@@ -240,33 +275,6 @@ const AdminViewUsers = () => {
           }}
         >
           View All Job Listings
-        </a>
-        <a
-          href="/admin/dashboard/DeleteUser"
-          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
-          }}
-        >
-          Delete Users
-        </a>
-        <a
-          href="/admin/dashboard/DeleteJob"
-          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
-          }}
-        >
-          Delete Job Listings
-        </a>
-        <a
-          href="/admin/dashboard/DeleteCompany"
-          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
-          }}
-        >
-          Delete Company
         </a>
         <button
           className="bg-red-600 text-white rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-red-500 transition-all duration-200 ease-in-out mt-6"

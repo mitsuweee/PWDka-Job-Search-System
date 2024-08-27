@@ -77,6 +77,37 @@ const AdminViewComp = () => {
     navigate(-1); // This navigates back to the previous page
   };
 
+  const handleDeleteCompany = (id) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this company?"
+    );
+    if (confirmed) {
+      const config = {
+        method: "delete",
+        url: `http://localhost:8080/admin/delete/company/${id}`,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      axios(config)
+        .then((response) => {
+          alert("Company deleted successfully!");
+          // Remove the deleted company from the state to update the UI
+          setCompanies((prevCompanies) =>
+            prevCompanies.filter((company) => company.id !== id)
+          );
+          setFilteredCompanies((prevCompanies) =>
+            prevCompanies.filter((company) => company.id !== id)
+          );
+        })
+        .catch((error) => {
+          console.log(error);
+          alert("An error occurred while deleting the company.");
+        });
+    }
+  };
+
   const renderViewAllCompanies = () => {
     return (
       <div>
@@ -129,6 +160,13 @@ const AdminViewComp = () => {
                   <p className="text-xl bg-custom-bg rounded-md text-custom-blue">
                     {company.companyEmail}
                   </p>
+
+                  <button
+                    onClick={() => handleDeleteCompany(company.id)}
+                    className="mt-4 py-2 px-4 rounded-lg bg-red-600 text-white hover:bg-red-700 transition duration-200"
+                  >
+                    Delete
+                  </button>
                 </div>
               </div>
             ))
@@ -227,33 +265,6 @@ const AdminViewComp = () => {
           }}
         >
           View All Job Listings
-        </a>
-        <a
-          href="/admin/dashboard/DeleteUser"
-          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
-          }}
-        >
-          Delete Users
-        </a>
-        <a
-          href="/admin/dashboard/DeleteJob"
-          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
-          }}
-        >
-          Delete Job Listings
-        </a>
-        <a
-          href="/admin/dashboard/DeleteCompany"
-          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
-          }}
-        >
-          Delete Company
         </a>
         <button
           className="bg-red-600 text-white rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-red-500 transition-all duration-200 ease-in-out mt-6"

@@ -28,9 +28,16 @@ const AdminViewJobs = () => {
             companyName: job.company_name,
             jobName: job.position_name,
             description: job.description,
-            address: job.address,
-            city: job.city,
+            qualification: job.qualification,
+            minimumSalary: job.minimum_salary,
+            maximumSalary: job.maximum_salary,
+            positionType: job.position_type,
+            companyProfilePicture: job.company_profile_picture
+              ? `data:image/png;base64,${job.company_profile_picture}`
+              : null,
+            disabilityTypes: job.disability_types,
           }));
+
           setJobListings(fetchedJobListings);
           setFilteredJobListings(fetchedJobListings); // Initialize filtered jobs
         })
@@ -43,6 +50,37 @@ const AdminViewJobs = () => {
 
     fetchJobListings();
   }, []);
+
+  const handleDeleteJobListing = (id) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this job listing?"
+    );
+    if (confirmed) {
+      const config = {
+        method: "delete",
+        url: `http://localhost:8080/admin/delete/joblisting/${id}`,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      axios(config)
+        .then((response) => {
+          alert("Job listing deleted successfully!");
+          // Optionally, refresh the job listings after deletion
+          setJobListings((prevListings) =>
+            prevListings.filter((job) => job.id !== id)
+          );
+          setFilteredJobListings((prevListings) =>
+            prevListings.filter((job) => job.id !== id)
+          );
+        })
+        .catch((error) => {
+          console.log(error);
+          alert("An error occurred while deleting the job listing.");
+        });
+    }
+  };
 
   const handleLogout = () => {
     const confirmed = window.confirm("Are you sure you want to logout?");
@@ -120,15 +158,32 @@ const AdminViewJobs = () => {
                     {listing.description}
                   </p>
 
-                  <p className="font-semibold text-lg">Address:</p>
+                  <p className="font-semibold text-lg">Qualification:</p>
                   <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">
-                    {listing.address}
+                    {listing.qualification}
                   </p>
 
-                  <p className="font-semibold text-lg">City:</p>
-                  <p className="text-xl bg-custom-bg rounded-md text-custom-blue">
-                    {listing.city}
+                  <p className="font-semibold text-lg">Salary:</p>
+                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">
+                    {listing.minimumSalary} - {listing.maximumSalary}
                   </p>
+
+                  <p className="font-semibold text-lg">Position Type:</p>
+                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">
+                    {listing.positionType}
+                  </p>
+
+                  <p className="font-semibold text-lg">Disabilities:</p>
+                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">
+                    {listing.disabilityTypes}
+                  </p>
+
+                  <button
+                    onClick={() => handleDeleteJobListing(listing.id)}
+                    className="mt-4 py-2 px-4 rounded-lg bg-red-600 text-white hover:bg-red-700 transition duration-200"
+                  >
+                    Delete
+                  </button>
                 </div>
               </div>
             ))
@@ -226,33 +281,6 @@ const AdminViewJobs = () => {
           }}
         >
           View All Job Listings
-        </a>
-        <a
-          href="/admin/dashboard/DeleteUser"
-          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
-          }}
-        >
-          Delete Users
-        </a>
-        <a
-          href="/admin/dashboard/DeleteJob"
-          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
-          }}
-        >
-          Delete Job Listings
-        </a>
-        <a
-          href="/admin/dashboard/DeleteCompany"
-          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
-          }}
-        >
-          Delete Company
         </a>
         <button
           className="bg-red-600 text-white rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-red-500 transition-all duration-200 ease-in-out mt-6"
