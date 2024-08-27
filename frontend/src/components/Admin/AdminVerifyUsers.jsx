@@ -38,7 +38,7 @@ const AdminVerifyUsers = () => {
           fullName: userData.full_name,
           pwdId: userData.id,
           disability: userData.type,
-          address: userData.Location,
+          address: userData.address,
           city: userData.city,
           birthdate: new Date(userData.birth_date).toLocaleDateString("en-US"),
           contactNumber: userData.contact_number,
@@ -71,6 +71,27 @@ const AdminVerifyUsers = () => {
       .catch(function (error) {
         console.log(error);
         alert("An error occurred while approving the user.");
+      });
+  };
+
+  const handleDecline = () => {
+    const config = {
+      method: "delete",
+      url: `http://localhost:8080/verification/user/${user.id}`,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+        alert("User Declined successfully!");
+        // Here you can add further logic, such as navigating to the next user or updating the UI
+      })
+      .catch(function (error) {
+        console.log(error);
+        alert("An error occurred while Declining the user.");
       });
   };
 
@@ -317,11 +338,22 @@ const AdminVerifyUsers = () => {
                 </button>
                 <button
                   className="transition-all bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 shadow"
-                  onClick={handleApprove}
+                  onClick={() => {
+                    handleApprove();
+                    alert("User has been Approved.");
+                    window.location.reload(); // This will refresh the page after HandleApprove is called
+                  }}
                 >
                   Approve
                 </button>
-                <button className="transition-all bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 shadow">
+                <button
+                  className="transition-all bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 shadow"
+                  onClick={() => {
+                    handleDecline();
+                    alert("User has been declined.");
+                    window.location.reload(); // This will refresh the page after handleDecline is called
+                  }}
+                >
                   Decline
                 </button>
                 <button className="transition-all bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 shadow flex items-center justify-center">

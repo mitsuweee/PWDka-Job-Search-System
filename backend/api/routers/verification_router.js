@@ -6,7 +6,7 @@ verificationRouter.get("/view/users", verificationController.viewPendingUsers); 
 verificationRouter.get(
   "/view/companies",
   verificationController.viewPendingCompany
-); //VIEW ALL PENDING USERS
+); //VIEW ALL PENDING Company
 
 verificationRouter.put("/company/:id", verificationController.verifyCompany); // Verify Company
 verificationRouter.delete(
