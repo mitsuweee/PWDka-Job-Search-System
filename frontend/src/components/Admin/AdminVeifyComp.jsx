@@ -69,6 +69,27 @@ const AdminVerifyComp = () => {
       });
   };
 
+  const handleDecline = () => {
+    const config = {
+      method: "delete",
+      url: `http://localhost:8080/verification/company/${company.id}`,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+        alert("Company Declined successfully!");
+        // You can add further logic here, like navigating to the next company or updating the UI
+      })
+      .catch(function (error) {
+        console.log(error);
+        alert("An error occurred while Declining the company.");
+      });
+  };
+
   if (!company) return <div>Loading...</div>;
 
   return (
@@ -267,11 +288,22 @@ const AdminVerifyComp = () => {
                   </button>
                   <button
                     className="transition-all bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 shadow"
-                    onClick={handleApprove}
+                    onClick={() => {
+                      handleApprove();
+                      alert("Company has been Approved.");
+                      window.location.reload(); // This will refresh the page after HandleApprove is called
+                    }}
                   >
                     Approve
                   </button>
-                  <button className="transition-all bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 shadow">
+                  <button
+                    className="transition-all bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 shadow"
+                    onClick={() => {
+                      handleDecline();
+                      alert("Company has been Declined.");
+                      window.location.reload(); // This will refresh the page after HandleDecline is called
+                    }}
+                  >
                     Decline
                   </button>
                   <button className="transition-all bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 shadow flex items-center">

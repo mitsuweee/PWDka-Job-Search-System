@@ -61,7 +61,8 @@ const viewPendingCompany = async (req, res, next) => {
         "Company.address",
         "Company.city",
         "Company.contact_number",
-        "Company.profile_picture"
+        "Company.profile_picture",
+        "Company.email"
       )
       .where("Company.status", "PENDING");
 
