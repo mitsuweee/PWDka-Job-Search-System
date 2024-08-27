@@ -24,7 +24,7 @@ const AdminLogin = () => {
 
     const config = {
       method: "post",
-      url: "/login/auth",
+      url: "/admin/login",
       headers: {
         "Content-Type": "application/json",
       },

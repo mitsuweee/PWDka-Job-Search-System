@@ -4,7 +4,6 @@ const { adminModel } = require("../models/admin_model");
 const util = require("./util");
 const bcrypt = require("bcrypt");
 
-//stststs
 const registerAdmin = async (req, res, next) => {
   let firstName = req.body.firstName.toLowerCase();
   let lastName = req.body.lastName.toLowerCase();
@@ -90,46 +89,54 @@ const registerAdmin = async (req, res, next) => {
 };
 
 const loginAdmin = async (req, res, next) => {
-  let email = req.body.email.toLowerCase();
-  let password = req.body.password;
+  const email = req.body.email.toLowerCase();
+  const password = req.body.password;
 
   if (!email || !password) {
     return res.status(400).json({
       successful: false,
       message: "Email or Password is missing",
     });
-  } else {
-    try {
-      // Query the admin table using Knex
-      const adminRow = await knex("admin").where({ email }).first();
+  }
 
-      if (!adminRow) {
-        return res.status(400).json({
-          successful: false,
-          message: "Invalid Credentials",
-        });
-      }
+  try {
+    // Query only the admin table
+    const admin = await knex("admin")
+      .select("id", "email", "password", "role")
+      .where({ email })
+      .first();
 
-      const storedPassword = adminRow.password;
-      const passwordMatch = await bcrypt.compare(password, storedPassword);
-
-      if (!passwordMatch) {
-        return res.status(400).json({
-          successful: false,
-          message: "Invalid Credentials",
-        });
-      } else {
-        return res.status(200).json({
-          successful: true,
-          message: "Successfully Logged In",
-        });
-      }
-    } catch (err) {
-      return res.status(500).json({
+    if (!admin) {
+      return res.status(400).json({
         successful: false,
-        message: err.message,
+        message: "Invalid Credentials",
       });
     }
+
+    const { id, password: storedPassword, role } = admin;
+
+    // Verify the password
+    const passwordMatch = await bcrypt.compare(password, storedPassword);
+
+    if (!passwordMatch) {
+      return res.status(400).json({
+        successful: false,
+        message: "Invalid Credentials",
+      });
+    }
+
+    // Successful login response
+    return res.status(200).json({
+      successful: true,
+      role: role,
+      id: id,
+      message: `Successfully Logged In as Admin.`,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      successful: false,
+      message: err.message,
+    });
   }
 };
 

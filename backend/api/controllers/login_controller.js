@@ -14,8 +14,8 @@ const login = async (req, res, next) => {
   }
 
   try {
-    // Query each table until a match is found
-    const tables = ["user", "company", "admin"];
+    // Query only the user and company tables
+    const tables = ["user", "company"];
     let storedPassword, role, status, id;
 
     for (let table of tables) {
@@ -51,7 +51,7 @@ const login = async (req, res, next) => {
     }
 
     // Check status for user and company roles
-    if (role !== "admin" && status === "PENDING") {
+    if (status === "PENDING") {
       return res.status(400).json({
         successful: false,
         message: `${
