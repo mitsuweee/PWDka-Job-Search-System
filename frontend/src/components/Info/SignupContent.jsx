@@ -12,7 +12,7 @@ const Signup = () => {
     firstName: "",
     middleInitial: "",
     lastName: "",
-    gender: "",
+    gender: "", // Ensure gender starts with an empty string
     address: "",
     city: "",
     birthdate: "",
@@ -48,13 +48,25 @@ const Signup = () => {
         reader.onloadend = () => {
           const base64Data = reader.result.split(",")[1]; // Remove the prefix
           if (type === "userProfile") {
-            userFormValues.profilePicture = base64Data;
+            setUserFormValues((prevState) => ({
+              ...prevState,
+              profilePicture: base64Data,
+            }));
           } else if (type === "selfieWithID") {
-            userFormValues.selfieWithID = base64Data;
+            setUserFormValues((prevState) => ({
+              ...prevState,
+              selfieWithID: base64Data,
+            }));
           } else if (type === "idPicture") {
-            userFormValues.idPicture = base64Data;
+            setUserFormValues((prevState) => ({
+              ...prevState,
+              idPicture: base64Data,
+            }));
           } else if (type === "companyLogo") {
-            companyFormValues.companyLogo = base64Data;
+            setCompanyFormValues((prevState) => ({
+              ...prevState,
+              companyLogo: base64Data,
+            }));
           }
         };
         reader.readAsDataURL(file);
@@ -70,9 +82,15 @@ const Signup = () => {
     const { name, value } = e.target;
 
     if (formType === "user") {
-      setUserFormValues({ ...userFormValues, [name]: value });
+      setUserFormValues((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
     } else {
-      setCompanyFormValues({ ...companyFormValues, [name]: value });
+      setCompanyFormValues((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
     }
   };
 
@@ -177,6 +195,10 @@ const Signup = () => {
 
   const renderUserForm = () => (
     <form className="mt-8 grid grid-cols-12 gap-6" onSubmit={handleSubmit}>
+      <div className="col-span-12">
+        <h2 className="text-3xl font-bold text-custom-blue">Join us Now!</h2>
+      </div>
+
       <div className="col-span-12 md:col-span-8">
         <div className="grid grid-cols-2 gap-6">
           <div>
@@ -192,8 +214,7 @@ const Signup = () => {
               name="firstName"
               value={userFormValues.firstName}
               onChange={handleInputChange}
-              className="mt-2 w-full h-10 rounded-md bg-white text-lg text-gray-700 focus:outline-none"
-              style={commonInputStyles}
+              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
               required
             />
           </div>
@@ -212,8 +233,7 @@ const Signup = () => {
               name="middleInitial"
               value={userFormValues.middleInitial}
               onChange={handleInputChange}
-              className="mt-2 w-full h-10 rounded-md bg-white text-lg text-gray-700 focus:outline-none"
-              style={commonInputStyles}
+              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
               required
             />
           </div>
@@ -231,8 +251,7 @@ const Signup = () => {
               name="lastName"
               value={userFormValues.lastName}
               onChange={handleInputChange}
-              className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
-              style={commonInputStyles}
+              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
               required
             />
           </div>
@@ -247,10 +266,9 @@ const Signup = () => {
             <select
               id="gender"
               name="gender"
-              value={userFormValues.gender}
-              onChange={handleInputChange}
-              className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
-              style={commonInputStyles}
+              value={userFormValues.gender} // Ensure value is bound to state
+              onChange={handleInputChange} // Ensure onChange updates state
+              className="mt-2 w-full h-10 p-2 bg-white text-gray-600 rounded-lg focus:outline-none "
               required
             >
               <option value="" disabled>
@@ -274,8 +292,7 @@ const Signup = () => {
               name="birthdate"
               value={userFormValues.birthdate}
               onChange={handleInputChange}
-              className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
-              style={commonInputStyles}
+              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl "
               required
             />
           </div>
@@ -293,8 +310,7 @@ const Signup = () => {
               name="address"
               value={userFormValues.address}
               onChange={handleInputChange}
-              className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
-              style={commonInputStyles}
+              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl  "
               required
             />
           </div>
@@ -312,8 +328,7 @@ const Signup = () => {
               name="city"
               value={userFormValues.city}
               onChange={handleInputChange}
-              className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
-              style={commonInputStyles}
+              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl "
               required
             />
           </div>
@@ -332,8 +347,7 @@ const Signup = () => {
               name="contactNumber"
               value={userFormValues.contactNumber}
               onChange={handleInputChange}
-              className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
-              style={commonInputStyles}
+              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl "
               required
             />
           </div>
@@ -350,8 +364,7 @@ const Signup = () => {
               name="disability"
               value={userFormValues.disability}
               onChange={handleInputChange}
-              className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
-              style={commonInputStyles}
+              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl  "
               required
             >
               <option value="" disabled>
@@ -395,8 +408,7 @@ const Signup = () => {
               name="email"
               value={userFormValues.email}
               onChange={handleInputChange}
-              className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
-              style={commonInputStyles}
+              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl "
               required
             />
           </div>
@@ -415,14 +427,13 @@ const Signup = () => {
                 name="password"
                 value={userFormValues.password}
                 onChange={handleInputChange}
-                className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none pr-10"
-                style={commonInputStyles}
+                className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl  "
                 required
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-600 hover:text-blue-500"
+                className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-600 hover:text-blue-500 p-5 "
               >
                 {showPassword ? "Hide" : "Show"}
               </button>
@@ -443,14 +454,13 @@ const Signup = () => {
                 name="reEnterPassword"
                 value={userFormValues.reEnterPassword}
                 onChange={handleInputChange}
-                className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none pr-10"
-                style={commonInputStyles}
+                className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl "
                 required
               />
               <button
                 type="button"
                 onClick={() => setShowReEnterPassword(!showReEnterPassword)}
-                className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-600 hover:text-blue-500"
+                className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-600 hover:text-blue-500 p-5 "
               >
                 {showReEnterPassword ? "Hide" : "Show"}
               </button>
@@ -473,8 +483,7 @@ const Signup = () => {
             name="pwdID"
             value={userFormValues.pwdID}
             onChange={handleInputChange}
-            className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
-            style={commonInputStyles}
+            className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl "
             required
           />
         </div>
@@ -491,8 +500,7 @@ const Signup = () => {
             id="idPicture"
             name="idPicture"
             onChange={(e) => handleFileChange(e, "idPicture")}
-            className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
-            style={commonInputStyles}
+            className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-1 rounded-lg focus:outline-none shadow-2xl "
             accept="image/png, image/jpeg"
             required
           />
@@ -510,8 +518,7 @@ const Signup = () => {
             id="profilePicture"
             name="profilePicture"
             onChange={(e) => handleFileChange(e, "userProfile")}
-            className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
-            style={commonInputStyles}
+            className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-1 rounded-lg focus:outline-none shadow-2xl "
             accept="image/png, image/jpeg"
             required
           />
@@ -529,8 +536,7 @@ const Signup = () => {
             id="selfieWithID"
             name="selfieWithID"
             onChange={(e) => handleFileChange(e, "selfieWithID")}
-            className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
-            style={commonInputStyles}
+            className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-1 rounded-lg focus:outline-none shadow-2xl "
             accept="image/*"
           />
         </div>
@@ -546,7 +552,7 @@ const Signup = () => {
         </button>
         <button
           type="submit"
-          className="px-6 py-2 text-lg  shadow-xl font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="px-6 py-2 text-lg shadow-xl font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           Sign Up
         </button>
@@ -556,9 +562,15 @@ const Signup = () => {
 
   const renderCompanyForm = () => (
     <form className="mt-8 grid grid-cols-12 gap-6" onSubmit={handleSubmit}>
+      <div className="col-span-12">
+        <h2 className="text-3xl font-bold text-custom-blue">
+          Hire People Now!
+        </h2>
+      </div>
+
       <div className="col-span-12 md:col-span-8">
         <div className="grid grid-cols-2 gap-6">
-          <div>
+          <div className="col-span-2">
             <label
               htmlFor="companyName"
               className="block text-lg font-medium text-gray-700"
@@ -571,13 +583,12 @@ const Signup = () => {
               name="companyName"
               value={companyFormValues.companyName}
               onChange={handleInputChange}
-              className="mt-2 w-full h-10 rounded-md bg-white text-lg text-gray-700 focus:outline-none"
-              style={commonInputStyles}
+              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
               required
             />
           </div>
 
-          <div>
+          <div className="col-span-2">
             <label
               htmlFor="companyDescription"
               className="block text-lg font-medium text-gray-700"
@@ -590,8 +601,7 @@ const Signup = () => {
               name="companyDescription"
               value={companyFormValues.companyDescription}
               onChange={handleInputChange}
-              className="mt-2 w-full h-10 rounded-md bg-white text-lg text-gray-700 focus:outline-none"
-              style={commonInputStyles}
+              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
               required
             />
           </div>
@@ -609,8 +619,7 @@ const Signup = () => {
               name="companyAddress"
               value={companyFormValues.companyAddress}
               onChange={handleInputChange}
-              className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
-              style={commonInputStyles}
+              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
               required
             />
           </div>
@@ -628,8 +637,7 @@ const Signup = () => {
               name="companyCity"
               value={companyFormValues.companyCity}
               onChange={handleInputChange}
-              className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
-              style={commonInputStyles}
+              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
               required
             />
           </div>
@@ -647,8 +655,7 @@ const Signup = () => {
               name="companyContactNumber"
               value={companyFormValues.companyContactNumber}
               onChange={handleInputChange}
-              className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
-              style={commonInputStyles}
+              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
               required
             />
           </div>
@@ -666,8 +673,7 @@ const Signup = () => {
               name="companyEmail"
               value={companyFormValues.companyEmail}
               onChange={handleInputChange}
-              className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none"
-              style={commonInputStyles}
+              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
               required
             />
           </div>
@@ -686,8 +692,7 @@ const Signup = () => {
                 name="companyPassword"
                 value={companyFormValues.companyPassword}
                 onChange={handleInputChange}
-                className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none pr-10"
-                style={commonInputStyles}
+                className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
                 required
               />
               <button
@@ -714,8 +719,7 @@ const Signup = () => {
                 name="companyReEnterPassword"
                 value={companyFormValues.companyReEnterPassword}
                 onChange={handleInputChange}
-                className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none pr-10"
-                style={commonInputStyles}
+                className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
                 required
               />
               <button
@@ -743,8 +747,7 @@ const Signup = () => {
             id="companyLogo"
             name="companyLogo"
             onChange={(e) => handleFileChange(e, "companyLogo")}
-            className="mt-2 w-full rounded-md bg-white text-lg text-gray-700 focus:outline-none"
-            style={commonInputStyles}
+            className="mt-2 w-full h-10 p-1 text-gray-600 bg-gray-100  rounded-lg focus:outline-none shadow-2xl"
             accept="image/*"
           />
         </div>

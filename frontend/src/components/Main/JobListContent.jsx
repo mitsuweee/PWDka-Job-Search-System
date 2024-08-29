@@ -291,7 +291,9 @@ const JobListing = () => {
               </div>
             ))
           ) : (
-            <p className="text-gray-600">No jobs found.</p>
+            <div className="flex justify-center items-center h-64">
+              <p className="text-gray-600">No jobs found.</p>
+            </div>
           )}
         </div>
 

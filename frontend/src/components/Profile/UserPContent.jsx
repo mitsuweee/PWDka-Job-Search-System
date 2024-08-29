@@ -189,13 +189,13 @@ const UserProf = () => {
         <div>
           <div className="mb-4">
             <p className="text-lg font-semibold text-gray-800">Address:</p>
-            <p className="text-gray-600 bg-gray-400 p-5 rounded-lg">
+            <p className="text-gray-600 bg-gray-200 p-5 rounded-lg">
               {user.address}
             </p>
           </div>
           <div className="mb-4">
             <p className="text-lg font-semibold text-gray-800">City:</p>
-            <p className="text-gray-600 bg-gray-400 p-5 rounded-lg">
+            <p className="text-gray-600 bg-gray-200 p-5 rounded-lg">
               {user.city}
             </p>
           </div>
@@ -203,13 +203,13 @@ const UserProf = () => {
             <p className="text-lg font-semibold text-gray-800">
               Contact Number:
             </p>
-            <p className="text-gray-600 bg-gray-400 p-5 rounded-lg">
+            <p className="text-gray-600 bg-gray-200 p-5 rounded-lg">
               {user.contactNumber}
             </p>
           </div>
           <div className="mb-4">
             <p className="text-lg font-semibold text-gray-800">Gender:</p>
-            <p className="text-gray-600 bg-gray-400 p-5 rounded-lg">
+            <p className="text-gray-600 bg-gray-200 p-5 rounded-lg">
               {user.gender}
             </p>
           </div>
@@ -217,13 +217,13 @@ const UserProf = () => {
         <div>
           <div className="mb-4">
             <p className="text-lg font-semibold text-gray-800">Birthdate:</p>
-            <p className="text-gray-600 bg-gray-400 p-5 rounded-lg">
+            <p className="text-gray-600 bg-gray-200 p-5 rounded-lg">
               {user.birthdate}
             </p>
           </div>
           <div className="mb-4">
             <p className="text-lg font-semibold text-gray-800">Email:</p>
-            <p className="text-gray-600 bg-gray-400 p-5 rounded-md">
+            <p className="text-gray-600 bg-gray-200 p-5 rounded-md">
               {user.email}
             </p>
           </div>
