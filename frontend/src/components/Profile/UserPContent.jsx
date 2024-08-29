@@ -73,10 +73,10 @@ const UserProf = () => {
         };
         reader.readAsDataURL(file);
       } else {
-        alert("File size exceeds 16MB. Please upload a smaller file.");
+        setError("File size exceeds 16MB. Please upload a smaller file.");
       }
     } else {
-      alert("Please upload a jpeg/png file.");
+      setError("Please upload a jpeg/png file.");
     }
   };
 

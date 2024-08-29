@@ -43,7 +43,7 @@ const JobListing = () => {
           companyContact: job.company_contact_number,
           companyLocation: job.company_address,
           companyDescription: job.company_description,
-          companyImage: job.profile_picture, // Placeholder for company logo
+          companyImage: `data:image/png;base64,${job.company_profile_picture}`, // Placeholder for company logo
         }));
 
         setJobs(fetchedJobs); // Setting the jobs state
@@ -173,7 +173,7 @@ const JobListing = () => {
                 >
                   {/* Company Logo */}
                   <img
-                    src={`data:image/png;base64,${job.companyImage}`}
+                    src={job.companyImage}
                     alt="Company Logo"
                     className="w-24 h-24 object-cover rounded-xl mr-4 shadow-xl"
                   />

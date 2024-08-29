@@ -4,13 +4,19 @@ import { useNavigate } from "react-router-dom";
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false); // State to track if a user or company is registered
+  const [role, setRole] = useState(""); // State to track the role of the user
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if userType is set in localStorage
-    const userType = sessionStorage.getItem("Id");
-    if (userType) {
+    // Check if userType is set in sessionStorage
+    const userId = sessionStorage.getItem("Id");
+    const userRole = sessionStorage.getItem("Role");
+
+    if (userId) {
       setIsRegistered(true);
+    }
+    if (userRole) {
+      setRole(userRole);
     }
   }, []);
 
@@ -103,21 +109,22 @@ const Navbar = () => {
               Contact
             </button>
 
-            {isRegistered && ( //Automatically hide the browse job and profile button if the user is not yet registered
-              <>
+            {isRegistered &&
+              role !== "company" && ( // Hide the browse job button if the role is company
                 <button
                   onClick={() => handleNavigation("/joblist")}
                   className="nav-link mx-2 font-roboto text-[#e3edf7] text-lg font-bold py-2 px-4 rounded-lg bg-[#007bff] shadow-lg transition duration-300 hover:bg-white hover:text-[#007bff]"
                 >
                   Browse Jobs
                 </button>
-                <button
-                  onClick={() => handleNavigation("/profile")}
-                  className="nav-link mx-2 font-roboto text-[#007bff] text-lg font-bold py-2 px-4 rounded-lg bg-[#e3edf7] shadow-lg transition duration-300 hover:bg-[#007bff] hover:text-white"
-                >
-                  <span className="material-symbols-outlined">person</span>
-                </button>
-              </>
+              )}
+            {isRegistered && (
+              <button
+                onClick={() => handleNavigation("/profile")}
+                className="nav-link mx-2 font-roboto text-[#007bff] text-lg font-bold py-2 px-4 rounded-lg bg-[#e3edf7] shadow-lg transition duration-300 hover:bg-[#007bff] hover:text-white"
+              >
+                <span className="material-symbols-outlined">person</span>
+              </button>
             )}
           </div>
         </div>

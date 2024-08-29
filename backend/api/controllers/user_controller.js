@@ -176,7 +176,7 @@ const registerUser = async (req, res, next) => {
         service: "Gmail",
         auth: {
           user: "livcenteno24@gmail.com",
-          pass: "glwg czmw tmdb rzvn",
+          pass: "your_email_password_here", // Use environment variables for security
         },
       });
 
@@ -445,7 +445,7 @@ const viewUserViaId = async (req, res, next) => {
         const user = {
           ...rows[0],
           formal_picture: rows[0].formal_picture
-            ? rows[0].formal_picture.toString("base64")
+            ? rows[0].formal_picture.toString()
             : null,
         };
 

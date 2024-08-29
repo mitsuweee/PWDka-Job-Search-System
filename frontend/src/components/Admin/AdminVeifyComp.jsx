@@ -31,17 +31,20 @@ const AdminVerifyComp = () => {
 
     axios(config)
       .then(function (response) {
-        const companyData = response.data.data[0]; // Assuming you get an array of companies
-        setCompany({
-          id: companyData.id,
-          companyName: companyData.name,
-          address: companyData.address,
-          city: companyData.city,
-          companyDescription: companyData.description,
-          contactNumber: companyData.contact_number,
-          companyEmail: companyData.email,
-          companyLogo: `data:image/png;base64,${companyData.logo}`, // Assuming logo is in base64 format
-        });
+        console.log(response.data.data);
+        if (response.data.data.length > 0) {
+          const companyData = response.data.data[0];
+          setCompany({
+            id: companyData.id,
+            companyName: companyData.name,
+            address: companyData.address,
+            city: companyData.city,
+            companyDescription: companyData.description,
+            contactNumber: companyData.contact_number,
+            companyEmail: companyData.email,
+            companyLogo: `data:image/png;base64,${companyData.logo}`, // Assuming logo is in base64 format
+          });
+        }
       })
       .catch(function (error) {
         console.log(error);
@@ -90,7 +93,7 @@ const AdminVerifyComp = () => {
       });
   };
 
-  if (!company) return <div>Loading...</div>;
+  if (!company) return <div>No pending company</div>; //paayos neto igitna siya
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-blue-100">
