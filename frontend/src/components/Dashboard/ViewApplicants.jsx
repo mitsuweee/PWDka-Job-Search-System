@@ -25,24 +25,29 @@ const ViewApplicants = () => {
 
   // Fetch job listings
   useEffect(() => {
-    const companyId = sessionStorage.getItem("Id");
+    const params = new URLSearchParams(window.location.search); // Get the value of a specific parameter by name
+    const joblistingId = params.get("id"); // Replace 'paramName' with the actual parameter name
     const config = {
       method: "get",
-      url: `/jobapplication/applications/8`,
+      url: `/jobapplication/applications/${joblistingId}`,
       headers: {
         "Content-Type": "application/json",
       },
     };
     axios(config)
-      .then((response) => {
-        console.log(response.data);
-        const fetchedJobApplicants = response.data.data.map((applicant) => ({
-          id: applicant.id,
-          fullName: applicant.full_name,
-          email: applicant.email,
-          resumeLink: "https://example.com/bruce_resume.pdf",
-          jobAppliedFor: applicant.position_name,
-        }));
+      .then(async (response) => {
+        console.log(response.data.data);
+        const fetchedJobApplicants = await Promise.all(
+          response.data.data.map(async (applicant) => {
+            return {
+              id: applicant.id,
+              fullName: applicant.full_name,
+              email: applicant.email,
+              resume: applicant.resume, // URL for PDF preview
+              jobAppliedFor: applicant.position_name,
+            };
+          })
+        );
 
         setApplicants(fetchedJobApplicants);
       })
@@ -205,14 +210,14 @@ const ViewApplicants = () => {
                   </p>
 
                   <p className="font-semibold text-lg text-white">Resume:</p>
-                  <a
-                    href={applicant.resumeLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-xl bg-custom-bg rounded-md text-custom-blue underline"
-                  >
-                    View Resume
-                  </a>
+                  <embed
+                    src={`data:application/pdf;base64,${applicant.resume}`}
+                    type="application/pdf"
+                    width="100%"
+                    height="500px"
+                    className="w-full h-64 border rounded-lg shadow-sm"
+                    aria-label="PDF Preview"
+                  />
                 </div>
                 <button
                   onClick={() => deleteApplicant(applicant.id)}

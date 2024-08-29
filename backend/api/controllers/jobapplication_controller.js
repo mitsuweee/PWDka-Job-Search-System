@@ -116,10 +116,8 @@ const viewAllUsersApplicationsViaJobListingId = async (req, res, next) => {
     // Convert BLOB data to base64
     const processedApplications = applications.map((app) => ({
       ...app,
-      formal_picture: app.formal_picture
-        ? app.formal_picture.toString("base64")
-        : null,
-      resume: app.resume ? app.resume.toString("base64") : null,
+      formal_picture: app.formal_picture ? app.formal_picture.toString() : null,
+      resume: app.resume ? app.resume.toString() : null,
     }));
 
     return res.status(200).json({

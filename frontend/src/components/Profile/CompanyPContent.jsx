@@ -14,6 +14,13 @@ const CompanyProf = () => {
   });
 
   const [isEditing, setIsEditing] = useState(false);
+  const [isChangingPassword, setIsChangingPassword] = useState(false); // State for changing password
+  const [passwords, setPasswords] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmNewPassword: "",
+  });
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -79,8 +86,16 @@ const CompanyProf = () => {
     setCompany({ ...company, [e.target.name]: e.target.value });
   };
 
+  const handlePasswordChange = (e) => {
+    setPasswords({ ...passwords, [e.target.name]: e.target.value });
+  };
+
   const handleEdit = () => {
     setIsEditing(!isEditing);
+  };
+
+  const handlePasswordToggle = () => {
+    setIsChangingPassword(!isChangingPassword);
   };
 
   const handleUpdate = () => {
@@ -138,6 +153,12 @@ const CompanyProf = () => {
               className="mt-4 px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300"
             >
               Edit Profile
+            </button>
+            <button
+              onClick={handlePasswordToggle}
+              className="mt-4 ml-4 px-4 py-2 bg-yellow-500 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 transition duration-300"
+            >
+              Change Password
             </button>
           </div>
         </div>
@@ -278,6 +299,54 @@ const CompanyProf = () => {
             className="w-full py-3 mt-6 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition duration-300"
           >
             Update Profile
+          </button>
+        </div>
+      )}
+
+      {/* Change Password Section */}
+      {isChangingPassword && (
+        <div className="mt-8">
+          <h3 className="text-xl font-bold text-gray-900 mb-4">
+            Change Password
+          </h3>
+          <div className="mb-6">
+            <label className="block text-gray-600 font-semibold">
+              Current Password:
+            </label>
+            <input
+              type="password"
+              name="currentPassword"
+              value={passwords.currentPassword}
+              onChange={handlePasswordChange}
+              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+            />
+          </div>
+          <div className="mb-6">
+            <label className="block text-gray-600 font-semibold">
+              New Password:
+            </label>
+            <input
+              type="password"
+              name="newPassword"
+              value={passwords.newPassword}
+              onChange={handlePasswordChange}
+              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+            />
+          </div>
+          <div className="mb-6">
+            <label className="block text-gray-600 font-semibold">
+              Confirm New Password:
+            </label>
+            <input
+              type="password"
+              name="confirmNewPassword"
+              value={passwords.confirmNewPassword}
+              onChange={handlePasswordChange}
+              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+            />
+          </div>
+          <button className="w-full py-3 mt-6 bg-yellow-500 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 transition duration-300">
+            Save New Password
           </button>
         </div>
       )}
