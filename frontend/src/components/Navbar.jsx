@@ -92,38 +92,53 @@ const Navbar = () => {
           >
             <button
               onClick={() => handleNavigation("/")}
-              className="nav-link mx-2 font-roboto text-[#007bff] text-lg font-bold py-2 px-4 rounded-lg bg-[#e3edf7] shadow-lg transition duration-300 hover:bg-[#007bff] hover:text-white"
+              className="nav-link mx-2 font-roboto text-[#007bff] text-lg font-bold py-2 px-4 rounded-lg bg-[#e3edf7] shadow-lg transition duration-300 hover:bg-[#007bff] hover:text-white flex items-center"
             >
-              Home
+              <span className="material-symbols-outlined text-2xl mr-2">
+                home
+              </span>
+              <span>Home</span>
             </button>
             <button
               onClick={() => handleNavigation("/about")}
-              className="nav-link mx-2 font-roboto text-[#007bff] text-lg font-bold py-2 px-4 rounded-lg bg-[#e3edf7] shadow-lg transition duration-300 hover:bg-[#007bff] hover:text-white"
+              className="nav-link mx-2 font-sfprobold text-[#007bff] text-lg font-bold py-2 px-4 rounded-lg bg-[#e3edf7] shadow-2xl transition duration-300 hover:bg-[#007bff] hover:text-white flex items-center"
             >
-              About
+              <span className="material-symbols-outlined text-2xl mr-2">
+                info
+              </span>
+              <span>About</span>
             </button>
             <button
               onClick={() => handleNavigation("/contactpage")}
-              className="nav-link mx-2 font-roboto text-[#007bff] text-lg font-bold py-2 px-4 rounded-lg bg-[#e3edf7] shadow-lg transition duration-300 hover:bg-[#007bff] hover:text-white"
+              className="nav-link mx-2 font-sfprobold text-[#007bff] text-lg font-bold py-2 px-4 rounded-lg bg-[#e3edf7] shadow-2xl transition duration-300 hover:bg-[#007bff] hover:text-white flex items-center"
             >
-              Contact
+              <span className="material-symbols-outlined text-2xl mr-2">
+                phone_in_talk
+              </span>
+              <span>Contact</span>
             </button>
 
             {isRegistered &&
               role !== "company" && ( // Hide the browse job button if the role is company
                 <button
                   onClick={() => handleNavigation("/joblist")}
-                  className="nav-link mx-2 font-roboto text-[#e3edf7] text-lg font-bold py-2 px-4 rounded-lg bg-[#007bff] shadow-lg transition duration-300 hover:bg-white hover:text-[#007bff]"
+                  className="nav-link mx-2 font-sfprobold text-[#e3edf7] text-lg font-bold py-2 px-4 rounded-lg bg-[#007bff] shadow-2xl transition duration-300 hover:bg-white hover:text-[#007bff] flex items-center"
                 >
-                  Browse Jobs
+                  <span className="material-symbols-outlined text-2xl mr-2">
+                    work
+                  </span>
+                  <span>Browse Jobs</span>
                 </button>
               )}
             {isRegistered && (
               <button
                 onClick={() => handleNavigation("/profile")}
-                className="nav-link mx-2 font-roboto text-[#007bff] text-lg font-bold py-2 px-4 rounded-lg bg-[#e3edf7] shadow-lg transition duration-300 hover:bg-[#007bff] hover:text-white"
+                className="nav-link mx-2 font-roboto text-[#007bff] text-lg font-bold py-2 px-4 rounded-lg bg-[#e3edf7] shadow-2xl transition duration-300 hover:bg-[#007bff] hover:text-white flex items-center"
               >
-                <span className="material-symbols-outlined">person</span>
+                <span className="material-symbols-outlined text-2xl">
+                  person
+                </span>
+                <span className="ml-2">Profile</span>
               </button>
             )}
           </div>

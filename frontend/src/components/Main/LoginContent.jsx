@@ -96,13 +96,16 @@ const LoginComp = () => {
               Welcome Back!
             </p>
             <div className="bg-custom-bg p-8 shadow-2xl rounded-2xl">
+              <h2 className="text-3xl font-bold mt-2 text-custom-blue">
+                <span className="material-symbols-outlined text-2xl mr-4">
+                  login
+                </span>
+                Login
+              </h2>
               <form
                 className="mt-8 grid grid-cols-12 gap-6"
                 onSubmit={handleSubmit}
               >
-                <h2 className="text-3xl font-bold mt-2 text-custom-blue">
-                  Login
-                </h2>
                 <div className="col-span-12">
                   <label
                     htmlFor="email"

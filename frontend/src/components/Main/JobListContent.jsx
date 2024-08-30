@@ -105,10 +105,13 @@ const JobListing = () => {
           />
           <div className="relative">
             <button
-              className="ml-4 px-8 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition"
+              className="ml-4 px-8 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition flex items-center"
               onClick={() => setIsFilterOpen(!isFilterOpen)}
             >
-              Filter
+              <span className="material-symbols-outlined text-xl mr-2">
+                filter_alt
+              </span>
+              <span>Filter</span>
             </button>
             {isFilterOpen && (
               <div
@@ -149,14 +152,21 @@ const JobListing = () => {
               </div>
             )}
           </div>
+
           <button
             onClick={handleLogout}
-            className="ml-4 px-4 py-2 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 transition"
+            className="ml-4 px-4 py-2 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 transition flex items-center"
           >
-            Logout
+            <span className="material-symbols-outlined text-xl mr-2">
+              logout
+            </span>
+            <span>Logout</span>
           </button>
         </div>
         <h1 className="text-3xl font-bold mb-6 text-blue-600 text-'sfprobold">
+          <span className="material-symbols-outlined text-2xl mr-2">
+            work_update
+          </span>
           Jobs for You
         </h1>
         <div className="space-y-4">
