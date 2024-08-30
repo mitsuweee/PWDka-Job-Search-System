@@ -55,8 +55,7 @@ const LoginComp = () => {
   };
 
   const commonInputStyles = {
-    boxShadow:
-      "inset 13px 13px 27px #d1dae3, inset -13px -13px 27px #f5ffff",
+    boxShadow: "inset 13px 13px 27px #d1dae3, inset -13px -13px 27px #f5ffff",
   };
 
   return (
@@ -93,14 +92,17 @@ const LoginComp = () => {
 
         <main className="flex items-start justify-start px-8 py-8 sm:px-12 lg:col-span-7 lg:px-16 lg:py-12 xl:col-span-6 bg-custom-bg">
           <div className="w-full">
-            <p className="text-[#007bff] text-left tetx-sfprobold font-extrabold leading-snug tracking-tight mb-4 md:text-4xl">
-              LOGIN
+            <p className="text-[#007bff] text-left text-sfprobold font-extrabold leading-snug tracking-tight mb-4 md:text-4xl">
+              Welcome Back!
             </p>
             <div className="bg-custom-bg p-8 shadow-2xl rounded-2xl">
               <form
                 className="mt-8 grid grid-cols-12 gap-6"
                 onSubmit={handleSubmit}
               >
+                <h2 className="text-3xl font-bold mt-2 text-custom-blue">
+                  Login
+                </h2>
                 <div className="col-span-12">
                   <label
                     htmlFor="email"
@@ -115,9 +117,9 @@ const LoginComp = () => {
                       name="email"
                       value={formValues.email}
                       onChange={handleInputChange}
-                      className="mt-2 w-full h-10 rounded-md bg-white text-lg text-gray-700 focus:outline-none p-7"
-                      style={commonInputStyles}
-                      placeholder="Ex: mitsui@gmail.com"
+                      className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-7 rounded-lg focus:outline-none shadow-2xl"
+                      // style={commonInputStyles}
+                      placeholder="Ex: user@gmail.com"
                       required
                     />
                   </div>
@@ -137,8 +139,8 @@ const LoginComp = () => {
                       name="password"
                       value={formValues.password}
                       onChange={handleInputChange}
-                      className="mt-2 w-full rounded-md h-10 bg-white text-lg text-gray-700 focus:outline-none pr-10 p-7"
-                      style={commonInputStyles}
+                      className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-7 rounded-lg focus:outline-none shadow-2xl"
+                      // style={commonInputStyles}
                       placeholder="******"
                       required
                     />
@@ -147,7 +149,9 @@ const LoginComp = () => {
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-600 hover:text-blue-500"
                     >
-                      {showPassword ? "Hide" : "Show"}
+                      <span className="material-symbols-outlined">
+                        {showPassword ? "visibility_off" : "visibility"}
+                      </span>
                     </button>
                   </div>
                 </div>
@@ -162,7 +166,7 @@ const LoginComp = () => {
                 </div>
               </form>
 
-              <div className="flex items-center justify-start border-t-2 border-[#1f2937] mt-6 pt-6">
+              <div className="flex items-center justify-start border-t-2 border-white mt-6 pt-6">
                 <p className="text-sm text-gray-800">Not a member?</p>
                 <a href="/signup" className="text-sm text-[#007bff] ml-2">
                   Sign Up

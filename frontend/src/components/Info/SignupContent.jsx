@@ -433,9 +433,11 @@ const Signup = () => {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-600 hover:text-blue-500 p-5 "
+                className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-600 hover:text-blue-500"
               >
-                {showPassword ? "Hide" : "Show"}
+                <span className="material-symbols-outlined">
+                  {showPassword ? "visibility_off" : "visibility"}
+                </span>
               </button>
             </div>
           </div>
@@ -459,10 +461,12 @@ const Signup = () => {
               />
               <button
                 type="button"
-                onClick={() => setShowReEnterPassword(!showReEnterPassword)}
-                className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-600 hover:text-blue-500 p-5 "
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-600 hover:text-blue-500"
               >
-                {showReEnterPassword ? "Hide" : "Show"}
+                <span className="material-symbols-outlined">
+                  {showPassword ? "visibility_off" : "visibility"}
+                </span>
               </button>
             </div>
           </div>
