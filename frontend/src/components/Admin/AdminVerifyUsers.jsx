@@ -118,6 +118,7 @@ const AdminVerifyUsers = () => {
             boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
           }}
         >
+          <span className="material-symbols-outlined mr-2">home</span>
           Home
         </a>
         <a
