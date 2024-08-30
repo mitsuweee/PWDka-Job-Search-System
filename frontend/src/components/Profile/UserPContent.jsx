@@ -142,6 +142,15 @@ const UserProf = () => {
     navigate(-1); // Navigate to the previous page
   };
 
+  const handleLogout = () => {
+    const confirmed = window.confirm("Are you sure you want to logout?");
+    if (confirmed) {
+      sessionStorage.removeItem("Id");
+      sessionStorage.removeItem("Role");
+      navigate("/login");
+    }
+  };
+
   return (
     <div className="max-w-4xl mx-auto mt-10 p-8 bg-white rounded-lg shadow-lg">
       {/* Header Section */}
@@ -162,53 +171,91 @@ const UserProf = () => {
               </p>
               <p className="text-gray-600">{user.disability}</p>
             </div>
-            <button
-              onClick={handleEdit}
-              className="mt-4 px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300"
-            >
-              Edit Profile
-            </button>
-            <button
-              onClick={handlePasswordToggle}
-              className="mt-4 ml-4 px-4 py-2 bg-yellow-500 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 transition duration-300"
-            >
-              Change Password
-            </button>
+            <div className="flex mt-4">
+              <button
+                onClick={handleEdit}
+                className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300 flex items-center justify-center"
+              >
+                <span className="material-symbols-outlined text-xl mr-2 flex-shrink-0">
+                  edit
+                </span>
+                <span className="inline-block">Edit Profile</span>
+              </button>
+
+              <button
+                onClick={handlePasswordToggle}
+                className="ml-4 px-4 py-2 bg-yellow-500 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 transition duration-300 flex items-center justify-center"
+              >
+                <span className="material-symbols-outlined text-xl mr-2">
+                  lock
+                </span>
+                <span>Change Password</span>
+              </button>
+            </div>
           </div>
         </div>
-        <button
-          onClick={handleGoBack}
-          className="mt-4 px-4 py-2 bg-gray-200 text-blue-900 font-semibold rounded-lg shadow-md hover:bg-gray-300 transition duration-300"
-        >
-          Back
-        </button>
+        <div className="flex mt-4">
+          <button
+            onClick={handleGoBack}
+            className="px-4 py-2 bg-gray-200 text-blue-900 font-semibold rounded-lg shadow-md hover:bg-gray-300 transition duration-300 mr-4"
+          >
+            Back
+          </button>
+          <button
+            onClick={handleLogout}
+            className="px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition duration-300 flex items-center"
+          >
+            <span className="material-symbols-outlined text-xl mr-2">
+              logout
+            </span>
+            <span>Logout</span>
+          </button>
+        </div>
       </div>
 
       {/* User Details Section */}
       <div className="mt-8 grid grid-cols-2 gap-8 text-left text-gray-800">
         <div>
           <div className="mb-4">
-            <p className="text-lg font-semibold text-gray-800">Address:</p>
+            <p className="text-lg font-semibold text-gray-800 flex items-center">
+              <span className="material-symbols-outlined text-2xl mr-2">
+                home
+              </span>
+              <span>Address:</span>
+            </p>
             <p className="text-gray-600 bg-gray-200 p-5 rounded-lg">
               {user.address}
             </p>
           </div>
           <div className="mb-4">
-            <p className="text-lg font-semibold text-gray-800">City:</p>
+            <p className="text-lg font-semibold text-gray-800 flex items-center">
+              <span className="material-symbols-outlined text-2xl mr-2">
+                location_city
+              </span>
+              <span>City:</span>
+            </p>
             <p className="text-gray-600 bg-gray-200 p-5 rounded-lg">
               {user.city}
             </p>
           </div>
           <div className="mb-4">
-            <p className="text-lg font-semibold text-gray-800">
-              Contact Number:
+            <p className="text-lg font-semibold text-gray-800 flex items-center">
+              <span className="material-symbols-outlined text-2xl mr-2">
+                phone
+              </span>
+              <span>Contact Number:</span>
             </p>
             <p className="text-gray-600 bg-gray-200 p-5 rounded-lg">
               {user.contactNumber}
             </p>
           </div>
           <div className="mb-4">
-            <p className="text-lg font-semibold text-gray-800">Gender:</p>
+            <p className="text-lg font-semibold text-gray-800 flex items-center">
+              <span className="material-symbols-outlined text-2xl mr-2">
+                person
+              </span>
+              <span>Gender:</span>
+            </p>
             <p className="text-gray-600 bg-gray-200 p-5 rounded-lg">
               {user.gender}
             </p>
@@ -216,13 +263,23 @@ const UserProf = () => {
         </div>
         <div>
           <div className="mb-4">
-            <p className="text-lg font-semibold text-gray-800">Birthdate:</p>
+            <p className="text-lg font-semibold text-gray-800 flex items-center">
+              <span className="material-symbols-outlined text-2xl mr-2">
+                calendar_today
+              </span>
+              <span>Birthdate:</span>
+            </p>
             <p className="text-gray-600 bg-gray-200 p-5 rounded-lg">
               {user.birthdate}
             </p>
           </div>
           <div className="mb-4">
-            <p className="text-lg font-semibold text-gray-800">Email:</p>
+            <p className="text-lg font-semibold text-gray-800 flex items-center">
+              <span className="material-symbols-outlined text-2xl mr-2">
+                email
+              </span>
+              <span>Email:</span>
+            </p>
             <p className="text-gray-600 bg-gray-200 p-5 rounded-md">
               {user.email}
             </p>
