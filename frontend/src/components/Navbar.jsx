@@ -33,13 +33,28 @@ const Navbar = () => {
     <header className="relative flex flex-wrap sm:justify-start sm:flex-nowrap w-full bg-[#e3edf7] text-sm py-3 shadow-lg rounded-lg">
       <nav className="max-w-[85rem] w-full mx-auto px-4 sm:flex sm:items-center sm:justify-between">
         <div className="flex items-center justify-between">
-          <a
-            className="flex-none text-xl font-semibold focus:outline-none focus:opacity-80"
-            onClick={() => handleNavigation("/")}
-            aria-label="Brand"
-          >
-            <img className="w-26 h-14" src="/imgs/LOGO PWDKA.png" alt="Logo" />
-          </a>
+          {/* Conditionally render the logo as clickable or not */}
+          {role === "admin" ? (
+            <div
+              className="flex-none text-xl font-semibold focus:outline-none focus:opacity-80 cursor-pointer"
+              onClick={() => handleNavigation("/")}
+              aria-label="Brand"
+            >
+              <img
+                className="w-26 h-14"
+                src="/imgs/LOGO PWDKA.png"
+                alt="Logo"
+              />
+            </div>
+          ) : (
+            <div className="flex-none text-xl font-semibold focus:outline-none focus:opacity-80">
+              <img
+                className="w-26 h-14"
+                src="/imgs/LOGO PWDKA.png"
+                alt="Logo"
+              />
+            </div>
+          )}
           <div className="sm:hidden">
             <button
               type="button"
@@ -90,15 +105,18 @@ const Navbar = () => {
               isMenuOpen ? "block" : "hidden"
             } sm:flex sm:items-center sm:justify-end sm:ps-5`}
           >
-            <button
-              onClick={() => handleNavigation("/")}
-              className="nav-link mx-2 font-roboto text-[#007bff] text-lg font-bold py-2 px-4 rounded-lg bg-[#e3edf7] shadow-lg transition duration-300 hover:bg-[#007bff] hover:text-white flex items-center"
-            >
-              <span className="material-symbols-outlined text-2xl mr-2">
-                home
-              </span>
-              <span>Home</span>
-            </button>
+            {/* Conditionally render the Home button */}
+            {role === "admin" && (
+              <button
+                onClick={() => handleNavigation("/")}
+                className="nav-link mx-2 font-roboto text-[#007bff] text-lg font-bold py-2 px-4 rounded-lg bg-[#e3edf7] shadow-lg transition duration-300 hover:bg-[#007bff] hover:text-white flex items-center"
+              >
+                <span className="material-symbols-outlined text-2xl mr-2">
+                  home
+                </span>
+                <span>Home</span>
+              </button>
+            )}
             <button
               onClick={() => handleNavigation("/about")}
               className="nav-link mx-2 font-sfprobold text-[#007bff] text-lg font-bold py-2 px-4 rounded-lg bg-[#e3edf7] shadow-2xl transition duration-300 hover:bg-[#007bff] hover:text-white flex items-center"

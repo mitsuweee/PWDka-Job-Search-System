@@ -14,7 +14,7 @@ const CompanyProf = () => {
   });
 
   const [isEditing, setIsEditing] = useState(false);
-  const [isChangingPassword, setIsChangingPassword] = useState(false); // State for changing password
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [passwords, setPasswords] = useState({
     currentPassword: "",
     newPassword: "",
@@ -46,18 +46,15 @@ const CompanyProf = () => {
           city: companyData.city,
           contactNumber: companyData.contact_number,
         });
-        console.log(companyData);
       })
       .catch(function (error) {
         const errorMessage =
           error.response?.data?.message || "An error occurred";
-        console.log(error.response?.data);
         alert(errorMessage);
       });
-    console.log("Component is ready");
   }, []);
 
-  const MAX_FILE_SIZE = 16777215; // 16,777,215 bytes (16MB)
+  const MAX_FILE_SIZE = 16777215; // 16MB
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -66,8 +63,7 @@ const CompanyProf = () => {
       if (file.size <= MAX_FILE_SIZE) {
         const reader = new FileReader();
         reader.onloadend = () => {
-          const base64Data = reader.result.split(",")[1]; // Remove the prefix
-          console.log(base64Data);
+          const base64Data = reader.result.split(",")[1];
           setCompany((prevCompany) => ({
             ...prevCompany,
             logo: base64Data,
@@ -107,7 +103,7 @@ const CompanyProf = () => {
       city: company.city,
       description: company.description,
       contact_number: company.contactNumber,
-      profile_picture: company.logo, // This now contains the base64 string
+      profile_picture: company.logo,
     });
 
     const companyId = sessionStorage.getItem("Id");
@@ -122,14 +118,45 @@ const CompanyProf = () => {
 
     axios(config)
       .then(function (response) {
-        console.log(JSON.stringify());
         alert(response.data.message);
       })
       .catch(function (error) {
-        console.log(error);
         alert(error.response.data.message);
       });
     window.location.reload();
+  };
+
+  const handlePasswordUpdate = () => {
+    const companyId = sessionStorage.getItem("Id");
+
+    if (passwords.newPassword !== passwords.confirmNewPassword) {
+      alert("New password and confirm new password do not match.");
+      return;
+    }
+
+    const data = JSON.stringify({
+      password: passwords.currentPassword,
+      new_password: passwords.newPassword,
+      confirm_password: passwords.confirmNewPassword,
+    });
+
+    const config = {
+      method: "put",
+      url: `/company/update/password/${companyId}`,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
+
+    axios(config)
+      .then(function (response) {
+        alert("Password updated successfully.");
+        setIsChangingPassword(false);
+      })
+      .catch(function (error) {
+        alert("Failed to update password. Please check your current password.");
+      });
   };
 
   const handleGoBack = () => {
@@ -390,7 +417,10 @@ const CompanyProf = () => {
               className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
             />
           </div>
-          <button className="w-full py-3 mt-6 bg-yellow-500 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 transition duration-300">
+          <button
+            onClick={handlePasswordUpdate}
+            className="w-full py-3 mt-6 bg-yellow-500 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 transition duration-300"
+          >
             Save New Password
           </button>
         </div>
