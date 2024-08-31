@@ -12,7 +12,7 @@ const Signup = () => {
     firstName: "",
     middleInitial: "",
     lastName: "",
-    gender: "", // Ensure gender starts with an empty string
+    gender: "",
     address: "",
     city: "",
     birthdate: "",
@@ -145,7 +145,7 @@ const Signup = () => {
             email: companyFormValues.companyEmail.toLowerCase(),
             password: companyFormValues.companyPassword,
             confirm_password: companyFormValues.companyReEnterPassword,
-            profile_picture: companyFormValues.companyLogo, // Assuming companyLogo contains the image file data as a string or base64 encoded.
+            profile_picture: companyFormValues.companyLogo,
           }
         : {
             id: userFormValues.pwdID,
@@ -161,9 +161,9 @@ const Signup = () => {
             confirm_password: userFormValues.reEnterPassword,
             contact_number: userFormValues.contactNumber,
             disability_id: userFormValues.disability,
-            formal_picture: userFormValues.profilePicture, // Assuming profilePicture contains the image file data as a string or base64 encoded.
-            picture_with_id: userFormValues.selfieWithID, // Assuming selfieWithID contains the image file data as a string or base64 encoded.
-            picture_of_pwd_id: userFormValues.idPicture, // Assuming idPicture contains the image file data as a string or base64 encoded.
+            formal_picture: userFormValues.profilePicture,
+            picture_with_id: userFormValues.selfieWithID,
+            picture_of_pwd_id: userFormValues.idPicture,
           }
     );
 
@@ -187,10 +187,6 @@ const Signup = () => {
         console.log(error.response?.data);
         alert(errorMessage);
       });
-  };
-
-  const commonInputStyles = {
-    boxShadow: "inset 13px 13px 27px #d1dae3, inset -13px -13px 27px #f5ffff",
   };
 
   const renderUserForm = () => (
@@ -266,9 +262,9 @@ const Signup = () => {
             <select
               id="gender"
               name="gender"
-              value={userFormValues.gender} // Ensure value is bound to state
-              onChange={handleInputChange} // Ensure onChange updates state
-              className="mt-2 w-full h-10 p-2 bg-white text-gray-600 rounded-lg focus:outline-none "
+              value={userFormValues.gender}
+              onChange={handleInputChange}
+              className="mt-2 w-full h-10 p-2 bg-white text-gray-600 rounded-lg focus:outline-none"
               required
             >
               <option value="" disabled>
@@ -284,7 +280,7 @@ const Signup = () => {
               htmlFor="birthdate"
               className="block text-lg font-medium text-gray-700"
             >
-              Birthdate{" "}
+              Birthdate
             </label>
             <input
               type="date"
@@ -292,7 +288,7 @@ const Signup = () => {
               name="birthdate"
               value={userFormValues.birthdate}
               onChange={handleInputChange}
-              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl "
+              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
               required
             />
           </div>
@@ -310,7 +306,7 @@ const Signup = () => {
               name="address"
               value={userFormValues.address}
               onChange={handleInputChange}
-              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl  "
+              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
               required
             />
           </div>
@@ -328,7 +324,7 @@ const Signup = () => {
               name="city"
               value={userFormValues.city}
               onChange={handleInputChange}
-              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl "
+              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
               required
             />
           </div>
@@ -347,7 +343,7 @@ const Signup = () => {
               name="contactNumber"
               value={userFormValues.contactNumber}
               onChange={handleInputChange}
-              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl "
+              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
               required
             />
           </div>
@@ -364,7 +360,7 @@ const Signup = () => {
               name="disability"
               value={userFormValues.disability}
               onChange={handleInputChange}
-              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl  "
+              className="mt-2 w-full h-10 p-2 bg-white text-gray-600 rounded-lg focus:outline-none"
               required
             >
               <option value="" disabled>
@@ -408,7 +404,7 @@ const Signup = () => {
               name="email"
               value={userFormValues.email}
               onChange={handleInputChange}
-              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl "
+              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
               required
             />
           </div>
@@ -427,7 +423,7 @@ const Signup = () => {
                 name="password"
                 value={userFormValues.password}
                 onChange={handleInputChange}
-                className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl  "
+                className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
                 required
               />
               <button
@@ -456,16 +452,16 @@ const Signup = () => {
                 name="reEnterPassword"
                 value={userFormValues.reEnterPassword}
                 onChange={handleInputChange}
-                className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl "
+                className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
                 required
               />
               <button
                 type="button"
-                onClick={() => setShowPassword(!showPassword)}
+                onClick={() => setShowReEnterPassword(!showReEnterPassword)}
                 className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-600 hover:text-blue-500"
               >
                 <span className="material-symbols-outlined">
-                  {showPassword ? "visibility_off" : "visibility"}
+                  {showReEnterPassword ? "visibility_off" : "visibility"}
                 </span>
               </button>
             </div>
@@ -487,7 +483,7 @@ const Signup = () => {
             name="pwdID"
             value={userFormValues.pwdID}
             onChange={handleInputChange}
-            className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl "
+            className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
             required
           />
         </div>
@@ -504,7 +500,7 @@ const Signup = () => {
             id="idPicture"
             name="idPicture"
             onChange={(e) => handleFileChange(e, "idPicture")}
-            className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-1 rounded-lg focus:outline-none shadow-2xl "
+            className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-1 rounded-lg focus:outline-none shadow-2xl"
             accept="image/png, image/jpeg"
             required
           />
@@ -522,7 +518,7 @@ const Signup = () => {
             id="profilePicture"
             name="profilePicture"
             onChange={(e) => handleFileChange(e, "userProfile")}
-            className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-1 rounded-lg focus:outline-none shadow-2xl "
+            className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-1 rounded-lg focus:outline-none shadow-2xl"
             accept="image/png, image/jpeg"
             required
           />
@@ -540,7 +536,7 @@ const Signup = () => {
             id="selfieWithID"
             name="selfieWithID"
             onChange={(e) => handleFileChange(e, "selfieWithID")}
-            className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-1 rounded-lg focus:outline-none shadow-2xl "
+            className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-1 rounded-lg focus:outline-none shadow-2xl"
             accept="image/*"
           />
         </div>
@@ -730,11 +726,11 @@ const Signup = () => {
               />
               <button
                 type="button"
-                onClick={() => setShowPassword(!showPassword)}
+                onClick={() => setShowReEnterPassword(!showReEnterPassword)}
                 className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-600 hover:text-blue-500"
               >
                 <span className="material-symbols-outlined">
-                  {showPassword ? "visibility_off" : "visibility"}
+                  {showReEnterPassword ? "visibility_off" : "visibility"}
                 </span>
               </button>
             </div>
@@ -755,7 +751,7 @@ const Signup = () => {
             id="companyLogo"
             name="companyLogo"
             onChange={(e) => handleFileChange(e, "companyLogo")}
-            className="mt-2 w-full h-10 p-1 text-gray-600 bg-gray-100  rounded-lg focus:outline-none shadow-2xl"
+            className="mt-2 w-full h-10 p-1 text-gray-600 bg-gray-100 rounded-lg focus:outline-none shadow-2xl"
             accept="image/*"
           />
         </div>
