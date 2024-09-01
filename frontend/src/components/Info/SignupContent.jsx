@@ -7,6 +7,7 @@ const Signup = () => {
   const [formType, setFormType] = useState("user");
   const [showPassword, setShowPassword] = useState(false);
   const [showReEnterPassword, setShowReEnterPassword] = useState(false);
+  const [fade, setFade] = useState(true);
 
   const [userFormValues, setUserFormValues] = useState({
     firstName: "",
@@ -775,6 +776,13 @@ const Signup = () => {
           Reset
         </button>
         <button
+          type="button"
+          onClick={() => (window.location.href = "/login")}
+          className="px-6 py-2 text-lg font-medium text-white bg-green-500 rounded-md shadow-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        >
+          Login
+        </button>
+        <button
           type="submit"
           className="px-6 py-2 text-lg font-medium text-white bg-blue-600 rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
@@ -784,13 +792,18 @@ const Signup = () => {
     </form>
   );
 
+  const backgroundImageUrl =
+    formType === "user"
+      ? "/imgs/group-adult-workers-office-together.jpg"
+      : "/imgs/pwd3.jpg";
+
   return (
     <section className="bg-white">
       <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
         <section className="relative flex h-32 items-end bg-gray-900 lg:col-span-5 lg:h-full xl:col-span-6">
           <img
             alt=""
-            src="\imgs\group-adult-workers-office-together.jpg"
+            src={backgroundImageUrl}
             className="absolute inset-0 h-full w-full object-cover opacity-80"
           />
 
