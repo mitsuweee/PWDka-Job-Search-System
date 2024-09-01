@@ -54,10 +54,6 @@ const LoginComp = () => {
       });
   };
 
-  const commonInputStyles = {
-    boxShadow: "inset 13px 13px 27px #d1dae3, inset -13px -13px 27px #f5ffff",
-  };
-
   return (
     <section className="bg-white">
       <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
@@ -102,6 +98,11 @@ const LoginComp = () => {
                 </span>
                 Login
               </h2>
+              <p className="text-gray-600 mt-5">
+                Use your credentials to log in either as a User or a Company.
+                You'll be directed to the appropriate dashboard based on your
+                role.
+              </p>
               <form
                 className="mt-8 grid grid-cols-12 gap-6"
                 onSubmit={handleSubmit}
@@ -121,7 +122,6 @@ const LoginComp = () => {
                       value={formValues.email}
                       onChange={handleInputChange}
                       className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-7 rounded-lg focus:outline-none shadow-2xl"
-                      // style={commonInputStyles}
                       placeholder="Ex: user@gmail.com"
                       required
                     />
@@ -143,7 +143,6 @@ const LoginComp = () => {
                       value={formValues.password}
                       onChange={handleInputChange}
                       className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-7 rounded-lg focus:outline-none shadow-2xl"
-                      // style={commonInputStyles}
                       placeholder="******"
                       required
                     />

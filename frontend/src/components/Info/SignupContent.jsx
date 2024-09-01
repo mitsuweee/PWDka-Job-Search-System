@@ -837,17 +837,17 @@ const Signup = () => {
 
         <main className="flex items-start justify-start px-8 py-8 sm:px-12 lg:col-span-7 lg:px-16 lg:py-12 xl:col-span-6 bg-custom-bg">
           <div className="w-full">
-            <div className="switchContainer flex justify-start items-center gap-10 mb-6">
+            <div className="switchContainer max-w-md mx-auto shadow-xl rounded-lg p-4 bg-custom-bg flex justify-start items-center gap-12 mb-6">
               <span className="switchLabel font-bold text-lg text-custom-blue">
                 Sign up as:
               </span>
-              <div className="switchButtons flex gap-4">
+              <div className="switchButtons flex gap-2 ml-2">
                 <button
                   className={`switchButton ${
                     formType === "user"
                       ? "bg-blue-700 text-white"
                       : "bg-blue-500 text-white"
-                  } px-4 py-2 rounded-md  shadow-xl`}
+                  } px-4 py-2 rounded-md shadow-md transition-colors duration-200`}
                   onClick={() => setFormType("user")}
                 >
                   User
@@ -857,7 +857,7 @@ const Signup = () => {
                     formType === "company"
                       ? "bg-blue-700 text-white"
                       : "bg-blue-500 text-white"
-                  } px-4 py-2 rounded-md  shadow-xl`}
+                  } px-4 py-2 rounded-md shadow-md transition-colors duration-200`}
                   onClick={() => setFormType("company")}
                 >
                   Company
