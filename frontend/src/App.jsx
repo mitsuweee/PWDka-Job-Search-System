@@ -25,6 +25,8 @@ import AdminDelUserss from "./pages/AdminDelUserss.jsx";
 import AdminDelJobss from "./pages/AdminDelJobss.jsx";
 import AdminDelCompss from "./pages/AdminDelCompss.jsx";
 import CompanyViewAppl from "./pages/CompanyViewAppl.jsx";
+import ForgotP from "./pages/ForgotP.jsx";
+import ForgotPassword from "./components/Profile/ForgotPassword.jsx";
 
 function App() {
   return (
@@ -75,6 +77,7 @@ function App() {
         <Route path="/dashboard/postjob" element={<PostJobPage />} />
         {/* <Route path="" */}
         <Route path="/company/viewapplicants" element={<CompanyViewAppl />} />
+        <Route path="/forgotpassword" element={<ForgotPassword />} />
       </Routes>
     </Router>
   );

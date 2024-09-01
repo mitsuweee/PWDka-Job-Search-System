@@ -177,7 +177,7 @@ const LoginComp = () => {
                   </a>
                 </div>
                 <div className="flex items-center justify-end">
-                  <a href="/forgot-password" className="text-sm text-[#007bff]">
+                  <a href="/forgotpassword" className="text-sm text-[#007bff]">
                     Forgot Password?
                   </a>
                 </div>
