@@ -14,8 +14,17 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-8 bg-white rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold text-gray-900 mb-6">Forgot Password</h2>
+    <div className="max-w-lg mb-10 mx-auto mt-10 p-12 bg-white rounded-2xl shadow-xl">
+      <div className="flex justify-center mb-6">
+        <img src="imgs\LOGO PWDKA.png" alt="Logo" className="h-14 w-22" />
+      </div>
+      <h2 className="text-3xl font-bold text-custom-blue mb-4 text-center ">
+        Forgot Password?
+      </h2>
+      <p className="text-center text-gray-700 mb-6">
+        Enter the email address associated with your account and we'll send you
+        a link to reset your password.
+      </p>
 
       <form onSubmit={handleSubmit}>
         <div className="mb-6">
@@ -32,8 +41,8 @@ const ForgotPassword = () => {
             value={email}
             onChange={handleEmailChange}
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm"
-            placeholder="Enter your email"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-xl"
+            placeholder="user@gmail.com"
           />
         </div>
         <button
@@ -43,6 +52,12 @@ const ForgotPassword = () => {
           Send Reset Link
         </button>
       </form>
+      <p className="mt-6 text-center text-gray-700">
+        Don’t have an account?{" "}
+        <a href="/signup" className="text-blue-500 hover:underline">
+          Sign up
+        </a>
+      </p>
     </div>
   );
 };
