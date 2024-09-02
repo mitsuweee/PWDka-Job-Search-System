@@ -1,7 +1,8 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 const AboutContent = () => {
   const sections = useRef([]);
+  const [isVoiceEnabled, setIsVoiceEnabled] = useState(false);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -25,6 +26,25 @@ const AboutContent = () => {
       });
     };
   }, []);
+
+  // Function to play the About Us message
+  const playAboutMessage = () => {
+    const message = new SpeechSynthesisUtterance(
+      "This is the About Us page where you’ll discover the heart and soul of PWDKa. Join us as we turn possibilities into realities, one opportunity at a time."
+    );
+    message.lang = "en-US"; // Set the language to English (US)
+    speechSynthesis.speak(message);
+  };
+
+  // Toggle voice message
+  const handleToggleVoice = () => {
+    setIsVoiceEnabled(!isVoiceEnabled);
+    if (!isVoiceEnabled) {
+      playAboutMessage();
+    } else {
+      speechSynthesis.cancel(); // Stop any ongoing speech
+    }
+  };
 
   return (
     <div>
@@ -72,12 +92,23 @@ const AboutContent = () => {
         `}</style>
 
       <div className="mx-auto max-w-screen-2xl px-4 py-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold  text-center font-sfprobold text-[#007bff]">
-          About Us
-        </h1>
-        <h2 className="text-1xl lg:text-1xl xl:text-1xl font-bold  text-center font-sfprobold text-[#007bff]">
-          Everything you need to know.
-        </h2>
+        <div className="flex justify-between items-center">
+          <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold  text-center font-sfprobold text-[#007bff]">
+            About Us
+          </h1>
+          <button
+            onClick={handleToggleVoice}
+            className={`ml-6 p-2 rounded-full transition-colors duration-200 ${
+              isVoiceEnabled
+                ? "bg-blue-500 text-white"
+                : "bg-gray-300 text-black"
+            } hover:bg-blue-600`}
+          >
+            <span className="material-symbols-outlined text-2xl">
+              {isVoiceEnabled ? "volume_up" : "volume_off"}
+            </span>
+          </button>
+        </div>
       </div>
 
       {/* Section 1 */}
