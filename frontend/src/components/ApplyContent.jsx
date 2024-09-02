@@ -6,9 +6,35 @@ const ApplyPage = () => {
   const [resume, setResume] = useState(null);
   const [pdfPreviewUrl, setPdfPreviewUrl] = useState(null);
   const [error, setError] = useState("");
+  const [isVoiceEnabled, setIsVoiceEnabled] = useState(false);
   const navigate = useNavigate();
 
   const MAX_FILE_SIZE = 16777215; // 16,777,215 bytes (16MB)
+
+  const playIntroMessage = () => {
+    const introMessage =
+      "This is the Apply page where your journey begins. Upload your resume below to take the next step toward your desired job. Please note that if you have already applied for a job with this company, you cannot apply again for the same position.";
+    const message = new SpeechSynthesisUtterance(introMessage);
+    message.lang = "en-US";
+    speechSynthesis.speak(message);
+  };
+
+  const playSuccessMessage = () => {
+    const successMessage =
+      "You have successfully applied for the job! We’ve received your application, and the company will review it soon. Keep an eye on your email for further updates.";
+    const message = new SpeechSynthesisUtterance(successMessage);
+    message.lang = "en-US";
+    speechSynthesis.speak(message);
+  };
+
+  const handleToggleVoice = () => {
+    setIsVoiceEnabled(!isVoiceEnabled);
+    if (!isVoiceEnabled) {
+      playIntroMessage();
+    } else {
+      speechSynthesis.cancel(); // Stop any ongoing speech
+    }
+  };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -38,7 +64,6 @@ const ApplyPage = () => {
       reader.onload = () => {
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
-        // Get a specific parameter by name
         const jobId = urlParams.get("id");
 
         const resume = reader.result.split(",")[1];
@@ -63,6 +88,7 @@ const ApplyPage = () => {
           .then((response) => {
             console.log(JSON.stringify(response.data));
             alert("Resume submitted successfully!");
+            playSuccessMessage(); // Play the success message
           })
           .catch((error) => {
             console.log(error);
@@ -93,6 +119,16 @@ const ApplyPage = () => {
           className="ml-4 px-4 py-2 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 transition"
         >
           Logout
+        </button>
+        <button
+          onClick={handleToggleVoice}
+          className={`ml-4 px-4 py-2 rounded-full transition-colors duration-200 ${
+            isVoiceEnabled ? "bg-blue-500 text-white" : "bg-gray-300 text-black"
+          } hover:bg-blue-600`}
+        >
+          <span className="material-symbols-outlined text-2xl">
+            {isVoiceEnabled ? "volume_up" : "volume_off"}
+          </span>
         </button>
       </div>
       <form onSubmit={handleSubmit}>
