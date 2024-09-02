@@ -1,11 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const LandingContent = () => {
   const navigate = useNavigate();
+  const [isVoiceEnabled, setIsVoiceEnabled] = useState(false);
 
   const handleGetStarted = () => {
     navigate("/signup");
+  };
+
+  // Function to play the welcome message
+  const playWelcomeMessage = () => {
+    const message = new SpeechSynthesisUtterance(
+      "Welcome to pwe de ka, Empowering You to Find the Job You Deserve! - A web-based job search system for Persons with disabilities, if you already have an account click login, if not click get started."
+    );
+    message.lang = "en-US"; // Set the language to English (US)
+    speechSynthesis.speak(message);
+  };
+
+  // Toggle voice message
+  const handleToggleVoice = () => {
+    setIsVoiceEnabled(!isVoiceEnabled);
+    if (!isVoiceEnabled) {
+      playWelcomeMessage();
+    } else {
+      speechSynthesis.cancel(); // Stop any ongoing speech
+    }
   };
 
   return (
@@ -31,7 +51,7 @@ const LandingContent = () => {
                   Using
                 </p>
                 <p className="inline-block text-blue-500 text-3xl font-bold tracking-tight sm:text-4xl sm:leading-none">
-                  PwdKa!
+                  PWDKa!
                 </p>
               </div>
               <p className="text-gray-700 text-base md:text-lg">
@@ -64,6 +84,18 @@ const LandingContent = () => {
                 </span>
                 <p>Login</p>
               </a>
+              <button
+                onClick={handleToggleVoice}
+                className={`ml-6 p-2 rounded-full transition-colors duration-200 ${
+                  isVoiceEnabled
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-300 text-black"
+                } hover:bg-blue-600`}
+              >
+                <span className="material-symbols-outlined text-2xl">
+                  {isVoiceEnabled ? "volume_up" : "volume_off"}
+                </span>
+              </button>
             </div>
           </div>
         </div>
