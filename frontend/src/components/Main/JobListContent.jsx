@@ -11,6 +11,7 @@ const JobListing = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [sortOption, setSortOption] = useState("newest");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isVoiceEnabled, setIsVoiceEnabled] = useState(false);
 
   const jobsPerPage = 4; // Number of jobs to display per page
   const navigate = useNavigate();
@@ -55,6 +56,24 @@ const JobListing = () => {
         alert(errorMessage);
       });
   }, []);
+
+  const playJobListingMessage = () => {
+    const messageText =
+      "This is the Job Listings page where opportunities await. Explore a wide range of job openings tailored for persons with disabilities, and find the role that matches your skills and aspirations. Simply click on the job you’re interested in, then click Apply to take the next step toward your new career.";
+
+    const message = new SpeechSynthesisUtterance(messageText);
+    message.lang = "en-US"; // Set language and accent
+    speechSynthesis.speak(message);
+  };
+
+  const handleToggleVoice = () => {
+    setIsVoiceEnabled(!isVoiceEnabled);
+    if (!isVoiceEnabled) {
+      playJobListingMessage();
+    } else {
+      speechSynthesis.cancel(); // Stop any ongoing speech
+    }
+  };
 
   const filteredJobs = jobs
     .filter((job) =>
@@ -161,6 +180,18 @@ const JobListing = () => {
               logout
             </span>
             <span>Logout</span>
+          </button>
+          <button
+            onClick={handleToggleVoice}
+            className={`ml-4 px-4 py-2 rounded-full transition-colors duration-200 ${
+              isVoiceEnabled
+                ? "bg-blue-500 text-white"
+                : "bg-gray-300 text-black"
+            } hover:bg-blue-600`}
+          >
+            <span className="material-symbols-outlined text-2xl">
+              {isVoiceEnabled ? "volume_up" : "volume_off"}
+            </span>
           </button>
         </div>
         <h1 className="text-3xl font-bold mb-6 text-blue-600 text-'sfprobold">
