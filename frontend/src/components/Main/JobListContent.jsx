@@ -244,9 +244,6 @@ const JobListing = () => {
                     <p className="text-md text-gray-700 mb-2">
                       {job.description}
                     </p>
-                    <p className="mt-2 text-md font-semibold text-gray-800">
-                      Qualifications:
-                    </p>
                     <p className="text-md text-gray-700">
                       {job.qualifications}
                     </p>
@@ -404,15 +401,18 @@ const JobListing = () => {
                 <span className="material-symbols-outlined mr-2">payments</span>
                 {selectedJob.salary}
               </p>
-              <p className="text-lg text-gray-700 mb-4">
-                {selectedJob.description}
-              </p>
+
+              {/* Job qualification in li */}
               <p className="mt-4 text-lg font-semibold text-gray-800">
                 Qualifications:
               </p>
-              <p className="text-lg text-gray-700">
-                {selectedJob.qualifications}
-              </p>
+              <ul className="text-gray-700 list-disc pl-4">
+                {selectedJob.qualifications
+                  .split(",")
+                  .map((qualification, index) => (
+                    <li key={index}>{qualification.trim()}</li>
+                  ))}
+              </ul>
               <div className="mt-6 flex space-x-4">
                 <a href={"/apply?id=" + selectedJob.id}>
                   <button className="bg-blue-500 text-white py-3 px-6 rounded-full shadow-lg hover:bg-blue-600 hover:shadow-2xl transition transform hover:scale-105">
