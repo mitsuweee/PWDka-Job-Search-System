@@ -2,11 +2,6 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-// TO DO: RENDER ALL POSTED JOBS
-// CHANGE BACKEND TO RETURN THE BLOB DATA
-// ADD ON CLICK LISTENER TO EACH JOBS
-// SHOW APPLICANT INFORMATION ON CLICK
-
 const ViewApplicants = () => {
   const [sortOption, setSortOption] = useState("newest");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -25,8 +20,16 @@ const ViewApplicants = () => {
 
   // Fetch job listings
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search); // Get the value of a specific parameter by name
-    const joblistingId = params.get("id"); // Replace 'paramName' with the actual parameter name
+    const params = new URLSearchParams(window.location.search);
+    const joblistingId = params.get("id");
+
+    console.log("Job Listing ID:", joblistingId); // Debug log
+
+    if (!joblistingId) {
+      alert("Job listing ID is missing.");
+      return;
+    }
+
     const config = {
       method: "get",
       url: `/jobapplication/applications/${joblistingId}`,
@@ -118,8 +121,7 @@ const ViewApplicants = () => {
           <span className="material-symbols-outlined text-xl mr-4">list</span>
           <span className="flex-grow text-center">View All Job Listings</span>
         </a>
-        <a
-          href="/company/viewapplicants"
+        {/* <div
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
           style={{
             boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
@@ -127,7 +129,7 @@ const ViewApplicants = () => {
         >
           <span className="material-symbols-outlined text-xl mr-4">people</span>
           <span className="flex-grow text-center">View Applicants</span>
-        </a>
+        </div> */}
 
         <button
           className="bg-red-600 text-white rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-red-500 transition-all duration-200 ease-in-out mt-6 flex items-center justify-center"
