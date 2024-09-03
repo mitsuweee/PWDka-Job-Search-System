@@ -862,6 +862,12 @@ const Signup = () => {
                 >
                   Company
                 </button>
+                <button
+                  className="switchButton bg-gray-500 text-white px-4 py-2 rounded-md shadow-md transition-colors duration-200"
+                  onClick={() => window.history.back()}
+                >
+                  Back
+                </button>
               </div>
             </div>
 
