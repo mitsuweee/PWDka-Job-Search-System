@@ -26,6 +26,7 @@ import AdminDelJobss from "./pages/AdminDelJobss.jsx";
 import AdminDelCompss from "./pages/AdminDelCompss.jsx";
 import CompanyViewAppl from "./pages/CompanyViewAppl.jsx";
 import ForgotP from "./pages/ForgotP.jsx";
+import ConfirmP from "./pages/ConfirmP.jsx";
 
 function App() {
   return (
@@ -77,6 +78,7 @@ function App() {
         {/* <Route path="" */}
         <Route path="/company/viewapplicants" element={<CompanyViewAppl />} />
         <Route path="/forgotpassword" element={<ForgotP />} />
+        <Route path="/passwordconfirmed" element={<ConfirmP />} />
       </Routes>
     </Router>
   );
