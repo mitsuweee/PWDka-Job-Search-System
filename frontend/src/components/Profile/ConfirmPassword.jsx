@@ -1,10 +1,17 @@
 import React, { useState } from "react";
+import { useLocation } from "react-router-dom"; // Import useLocation to extract query params
+import axios from "axios";
 
 const ConfirmPassword = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false); // Track submission state
+
+  // Extract the reset token from the URL query parameters
+  const query = new URLSearchParams(useLocation().search);
+  const resetToken = query.get("token"); // This gets the ?token=abc123 part of the URL
 
   const handleNewPasswordChange = (e) => {
     setNewPassword(e.target.value);
@@ -14,20 +21,48 @@ const ConfirmPassword = () => {
     setConfirmPassword(e.target.value);
   };
 
-  const handleSubmit = (e) => {
-    // Integrate here
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Check if passwords match
     if (newPassword !== confirmPassword) {
       setError("Passwords do not match!");
       setSuccess("");
-    } else {
-      setError("");
-      // Here you can add the logic for changing the password using an API or Firebase.
+      return;
+    }
+
+    setIsSubmitting(true); // Disable the form while processing the request
+
+    // Axios configuration for the password reset request
+    const config = {
+      method: "put",
+      url: "http://localhost:8080/password/resetpassword", // Your backend API endpoint
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: JSON.stringify({
+        token: resetToken, // The reset token passed to the component (from URL)
+        new_password: newPassword,
+        confirm_password: confirmPassword,
+      }),
+    };
+
+    try {
+      // Send PUT request to backend to change password
+      const response = await axios(config);
+      console.log(response.data);
+
+      // If successful, show success message
       setSuccess("Your password has been changed successfully!");
+      setError("");
       setNewPassword("");
       setConfirmPassword("");
+    } catch (error) {
+      console.error("Error resetting password:", error);
+      setError("Failed to reset password. Please try again.");
+      setSuccess("");
+    } finally {
+      setIsSubmitting(false); // Re-enable form
     }
   };
 
@@ -85,9 +120,12 @@ const ConfirmPassword = () => {
         </div>
         <button
           type="submit"
-          className="w-full py-3 mt-6 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition duration-300"
+          className={`w-full py-3 mt-6 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition duration-300 ${
+            isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+          }`}
+          disabled={isSubmitting} // Disable button while submitting
         >
-          Change Password
+          {isSubmitting ? "Changing Password..." : "Change Password"}
         </button>
       </form>
     </div>
