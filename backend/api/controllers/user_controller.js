@@ -4,6 +4,7 @@ const { userModel } = require("../models/user_model");
 const util = require("./util");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
+require("dotenv").config();
 
 const registerUser = async (req, res, next) => {
   let id = req.body.id;
@@ -175,13 +176,13 @@ const registerUser = async (req, res, next) => {
       const transporter = nodemailer.createTransport({
         service: "Gmail",
         auth: {
-          user: "livcenteno24@gmail.com",
-          pass: "your_email_password_here", // Use environment variables for security
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASSWORD,
         },
       });
 
       const mailOptions = {
-        from: "livcenteno24@gmail.com",
+        from: process.env.EMAIL_USER,
         to: email,
         subject: "Account Verification",
         text: `

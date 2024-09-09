@@ -1,6 +1,7 @@
 const { json } = require("body-parser");
 const knex = require("../models/connection_db");
 const nodemailer = require("nodemailer");
+require("dotenv").config();
 
 const viewPendingUsers = async (req, res, next) => {
   try {
@@ -113,13 +114,13 @@ const verifyCompany = async (req, res, next) => {
     const transporter = nodemailer.createTransport({
       service: "Gmail",
       auth: {
-        user: "livcenteno24@gmail.com",
-        pass: "glwg czmw tmdb rzvn",
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD,
       },
     });
 
     const mailOptions = {
-      from: "livcenteno24@gmail.com",
+      from: process.env.EMAIL_USER,
       to: company.email,
       subject: "ACCOUNT VERIFIED!",
       text: `Dear User,\n\nCongratulations! Your company has been successfully verified. You can now access our platform.\n\nBest regards,\nPWDKA TEAM`,
@@ -165,13 +166,13 @@ const declineCompany = async (req, res, next) => {
     const transporter = nodemailer.createTransport({
       service: "Gmail",
       auth: {
-        user: "livcenteno24@gmail.com",
-        pass: "glwg czmw tmdb rzvn",
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD,
       },
     });
 
     const mailOptions = {
-      from: "livcenteno24@gmail.com",
+      from: process.env.EMAIL_USER,
       to: company.email,
       subject: "UNABLE TO VERIFY COMPANY",
       text: `Dear User,\n\nYour request to verify your company has been declined. Ensure the company is legitimate and all data entered is correct. The company can request verification again by re-registering.\n\nSincerely Yours,\nPWDKA TEAM`,
@@ -217,13 +218,13 @@ const verifyUser = async (req, res, next) => {
     const transporter = nodemailer.createTransport({
       service: "Gmail",
       auth: {
-        user: "livcenteno24@gmail.com",
-        pass: "glwg czmw tmdb rzvn",
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD,
       },
     });
 
     const mailOptions = {
-      from: "livcenteno24@gmail.com",
+      from: process.env.EMAIL_USER,
       to: user.email,
       subject: "ACCOUNT VERIFIED!",
       text: `Dear User,\n\nCongratulations! Your account has been successfully verified. You can now access our platform.\n\nBest regards,\nPWDKA TEAM`,
@@ -269,13 +270,13 @@ const declineUser = async (req, res, next) => {
     const transporter = nodemailer.createTransport({
       service: "Gmail",
       auth: {
-        user: "livcenteno24@gmail.com",
-        pass: "glwg czmw tmdb rzvn",
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD,
       },
     });
 
     const mailOptions = {
-      from: "livcenteno24@gmail.com",
+      from: process.env.EMAIL_USER,
       to: user.email,
       subject: "UNABLE TO VERIFY USER",
       text: `Dear User,\n\nYour request to verify your account has been declined. Ensure all data entered is correct. You can request verification again by re-registering.\n\nSincerely Yours,\nPWDKA TEAM`,
