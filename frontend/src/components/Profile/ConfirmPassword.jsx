@@ -15,7 +15,7 @@ const ConfirmPassword = () => {
   };
 
   const handleSubmit = (e) => {
-    // api dito mits
+    // Integrate here
     e.preventDefault();
 
     // Check if passwords match
