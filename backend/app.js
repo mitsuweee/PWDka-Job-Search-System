@@ -18,6 +18,7 @@ const userRouter = require("./api/routers/user_router");
 const jobListingRouter = require("./api/routers/joblisting_router");
 const jobApplicationRouter = require("./api/routers/jobapplication_router");
 const loginRouter = require("./api/routers/login_router");
+const passwordRouter = require("./api/routers/password_router");
 
 app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -46,6 +47,7 @@ app.use("/verification", verificationRouter);
 app.use("/user", userRouter);
 app.use("/joblisting", jobListingRouter);
 app.use("/jobapplication", jobApplicationRouter);
+app.use("/password", passwordRouter);
 
 // Fallback route for React Router
 app.get("*", (req, res) => {
