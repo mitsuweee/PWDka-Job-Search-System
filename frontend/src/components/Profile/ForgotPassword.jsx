@@ -9,7 +9,7 @@ const ForgotPassword = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission logic here, for now just reset the email field
+    // integrate here
     setEmail("");
   };
 
