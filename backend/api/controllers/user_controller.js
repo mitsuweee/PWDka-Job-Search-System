@@ -121,7 +121,7 @@ const registerUser = async (req, res, next) => {
       if (existingEmail) {
         return res.status(400).json({
           successful: false,
-          message: "Email already exists in user",
+          message: "Email already exists",
         });
       }
 
@@ -129,7 +129,7 @@ const registerUser = async (req, res, next) => {
       if (emailInAdmin) {
         return res.status(400).json({
           successful: false,
-          message: "Email already exists in admin",
+          message: "Email already exists",
         });
       }
 
@@ -137,7 +137,7 @@ const registerUser = async (req, res, next) => {
       if (emailInCompany) {
         return res.status(400).json({
           successful: false,
-          message: "Email already exists in company",
+          message: "Email already exists",
         });
       }
 
