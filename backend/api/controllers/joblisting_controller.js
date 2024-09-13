@@ -199,6 +199,9 @@ const viewJobListing = async (req, res, next) => {
 
 const viewJobListingViaUserNewestToOldest = async (req, res, next) => {
   const { id } = req.params;
+  const page = 1; // Default to page 1 if not provided
+  const limit = 5; // Default to 5 listings per page if not provided
+  const offset = (page - 1) * limit; // Calculate offset for pagination
 
   if (!id) {
     return res.status(404).json({
@@ -207,6 +210,31 @@ const viewJobListingViaUserNewestToOldest = async (req, res, next) => {
     });
   } else {
     try {
+      // Get the total count of job listings for the user
+      const totalJobListings = await knex("job_listing")
+        .join(
+          "position_type",
+          "job_listing.positiontype_id",
+          "position_type.id"
+        )
+        .join("company", "job_listing.company_id", "company.id")
+        .join(
+          "disability_job_listing",
+          "job_listing.id",
+          "disability_job_listing.joblisting_id"
+        )
+        .join(
+          "disability",
+          "disability_job_listing.disability_id",
+          "disability.id"
+        )
+        .join("user", "user.disability_id", "disability.id")
+        .where("user.id", id)
+        .count({ count: "*" });
+
+      const totalCount = totalJobListings[0].count;
+
+      // Retrieve paginated job listings
       const rows = await knex("job_listing")
         .select(
           "job_listing.id",
@@ -241,7 +269,9 @@ const viewJobListingViaUserNewestToOldest = async (req, res, next) => {
         )
         .join("user", "user.disability_id", "disability.id")
         .where("user.id", id)
-        .orderBy("job_listing.date_created", "desc");
+        .orderBy("job_listing.date_created", "desc")
+        .limit(limit)
+        .offset(offset);
 
       if (rows.length === 0) {
         return res.status(404).json({
@@ -261,6 +291,12 @@ const viewJobListingViaUserNewestToOldest = async (req, res, next) => {
           successful: true,
           message: "Successfully Retrieved Job Listing",
           data: processedRows,
+          pagination: {
+            totalCount,
+            totalPages: Math.ceil(totalCount / limit),
+            currentPage: page,
+            perPage: limit,
+          },
         });
       }
     } catch (err) {
