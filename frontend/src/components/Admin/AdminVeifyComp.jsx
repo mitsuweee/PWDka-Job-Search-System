@@ -4,7 +4,9 @@ import { useNavigate } from "react-router-dom";
 
 const AdminVerifyComp = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [company, setCompany] = useState(null);
+  const [companies, setCompanies] = useState([]); // Store all companies
+  const [currentIndex, setCurrentIndex] = useState(0); // Index of current company
+  const [company, setCompany] = useState(null); // Store single company for display
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -31,25 +33,30 @@ const AdminVerifyComp = () => {
 
     axios(config)
       .then(function (response) {
-        console.log(response.data.data);
-        if (response.data.data.length > 0) {
-          const companyData = response.data.data[0];
-          setCompany({
-            id: companyData.id,
-            companyName: companyData.name,
-            address: companyData.address,
-            city: companyData.city,
-            companyDescription: companyData.description,
-            contactNumber: companyData.contact_number,
-            companyEmail: companyData.email,
-            companyLogo: `data:image/png;base64,${companyData.logo}`, // Assuming logo is in base64 format
-          });
+        const companyDataArray = response.data.data;
+        setCompanies(companyDataArray);
+        if (companyDataArray.length > 0) {
+          setCompany(formatCompanyData(companyDataArray[0])); // Display the first company by default
         }
       })
       .catch(function (error) {
         console.log(error);
       });
   }, []);
+
+  // Helper function to format company data
+  const formatCompanyData = (companyData) => {
+    return {
+      id: companyData.id,
+      companyName: companyData.name,
+      address: companyData.address,
+      city: companyData.city,
+      companyDescription: companyData.description,
+      contactNumber: companyData.contact_number,
+      companyEmail: companyData.email,
+      companyLogo: `data:image/png;base64,${companyData.logo}`, // Assuming logo is in base64 format
+    };
+  };
 
   const handleApprove = () => {
     const config = {
@@ -64,7 +71,7 @@ const AdminVerifyComp = () => {
       .then(function (response) {
         console.log(JSON.stringify(response.data));
         alert("Company approved successfully!");
-        // You can add further logic here, like navigating to the next company or updating the UI
+        handleNextCompany();
       })
       .catch(function (error) {
         console.log(error);
@@ -84,16 +91,49 @@ const AdminVerifyComp = () => {
     axios(config)
       .then(function (response) {
         console.log(JSON.stringify(response.data));
-        alert("Company Declined successfully!");
-        // You can add further logic here, like navigating to the next company or updating the UI
+        alert("Company declined successfully!");
+        handleNextCompany();
       })
       .catch(function (error) {
         console.log(error);
-        alert("An error occurred while Declining the company.");
+        alert("An error occurred while declining the company.");
       });
   };
 
-  if (!company) return <div>No pending company</div>; //paayos neto igitna siya
+  const handleNextCompany = () => {
+    if (companies.length > 1) {
+      const updatedCompanies = companies.filter(
+        (_, index) => index !== currentIndex
+      );
+      setCompanies(updatedCompanies);
+      if (updatedCompanies.length > 0) {
+        setCompany(formatCompanyData(updatedCompanies[0]));
+        setCurrentIndex(0);
+      } else {
+        setCompany(null); // No companies left
+      }
+    } else {
+      setCompanies([]); // No more companies
+      setCompany(null);
+    }
+  };
+
+  // Handlers for navigating between companies
+  const handlePrevious = () => {
+    if (currentIndex > 0) {
+      const newIndex = currentIndex - 1;
+      setCurrentIndex(newIndex);
+      setCompany(formatCompanyData(companies[newIndex]));
+    }
+  };
+
+  const handleNext = () => {
+    if (currentIndex < companies.length - 1) {
+      const newIndex = currentIndex + 1;
+      setCurrentIndex(newIndex);
+      setCompany(formatCompanyData(companies[newIndex]));
+    }
+  };
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-blue-100">
@@ -211,7 +251,7 @@ const AdminVerifyComp = () => {
           </button>
         </div>
         <div className="mt-4">
-          {company && (
+          {company ? (
             <div className="flex justify-center items-center h-full w-full bg-blue-500 p-4 rounded-2xl">
               <div className="w-full max-w-4xl h-full bg-white p-8 rounded-lg shadow-xl flex flex-col justify-center items-center">
                 <h2 className="text-3xl font-bold mb-4 text-gray-800 text-center">
@@ -260,10 +300,12 @@ const AdminVerifyComp = () => {
                     </p>
                   </div>
                 </div>
+
                 <div className="flex justify-center mt-8 space-x-4">
                   <button
                     className="transition-all bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 shadow flex items-center"
-                    onClick={handleGoBack}
+                    onClick={handlePrevious}
+                    disabled={currentIndex === 0} // Disable when at the first company
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -281,27 +323,26 @@ const AdminVerifyComp = () => {
                     </svg>
                     Previous
                   </button>
+
                   <button
                     className="transition-all bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 shadow"
-                    onClick={() => {
-                      handleApprove();
-                      alert("Company has been Approved.");
-                      window.location.reload(); // This will refresh the page after HandleApprove is called
-                    }}
+                    onClick={handleApprove}
                   >
                     Approve
                   </button>
+
                   <button
                     className="transition-all bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 shadow"
-                    onClick={() => {
-                      handleDecline();
-                      alert("Company has been Declined.");
-                      window.location.reload(); // This will refresh the page after HandleDecline is called
-                    }}
+                    onClick={handleDecline}
                   >
                     Decline
                   </button>
-                  <button className="transition-all bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 shadow flex items-center">
+
+                  <button
+                    className="transition-all bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 shadow flex items-center"
+                    onClick={handleNext}
+                    disabled={currentIndex === companies.length - 1} // Disable when at the last company
+                  >
                     Next
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -319,6 +360,14 @@ const AdminVerifyComp = () => {
                     </svg>
                   </button>
                 </div>
+              </div>
+            </div>
+          ) : (
+            <div className="flex justify-center items-center h-full w-full bg-blue-500 p-4 rounded-2xl">
+              <div className="w-full max-w-4xl h-full bg-white p-8 rounded-lg shadow-xl flex justify-center items-center">
+                <h2 className="text-2xl font-bold text-gray-800">
+                  There's no company to verify yet.
+                </h2>
               </div>
             </div>
           )}
