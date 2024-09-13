@@ -200,7 +200,7 @@ const viewJobListing = async (req, res, next) => {
 const viewJobListingViaUserNewestToOldest = async (req, res, next) => {
   const { id } = req.params;
   const page = 1; // Default to page 1 if not provided
-  const limit = 5; // Default to 5 listings per page if not provided
+  const limit = 1000; // Default to 5 listings per page if not provided
   const offset = (page - 1) * limit; // Calculate offset for pagination
 
   if (!id) {
