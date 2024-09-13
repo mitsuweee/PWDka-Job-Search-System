@@ -4,7 +4,9 @@ import { useNavigate } from "react-router-dom";
 
 const AdminVerifyUsers = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null); // Keep this as 'user' since it's used for fetching
+  const [users, setUsers] = useState([]); // Add users array to handle multiple users
+  const [currentUserIndex, setCurrentUserIndex] = useState(0); // State to track the current user index
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -32,21 +34,7 @@ const AdminVerifyUsers = () => {
 
     axios(config)
       .then(function (response) {
-        const userData = response.data.data[0]; // Assuming you get an array of users
-        setUser({
-          id: userData.id,
-          fullName: userData.full_name,
-          pwdId: userData.id,
-          disability: userData.type,
-          address: userData.address,
-          city: userData.city,
-          birthdate: new Date(userData.birth_date).toLocaleDateString("en-US"),
-          contactNumber: userData.contact_number,
-          email: userData.email,
-          profilePicture: `data:image/png;base64,${userData.formal_picture}`,
-          pictureWithId: `data:image/png;base64,${userData.picture_with_id}`,
-          pictureOfPwdId: `data:image/png;base64,${userData.picture_of_pwd_id}`,
-        });
+        setUsers(response.data.data); // Store all users in the state
       })
       .catch(function (error) {
         console.log(error);
@@ -54,9 +42,10 @@ const AdminVerifyUsers = () => {
   }, []);
 
   const handleApprove = () => {
+    const currentUser = users[currentUserIndex]; // Get current user based on index
     const config = {
       method: "put",
-      url: `http://localhost:8080/verification/user/${user.id}`,
+      url: `http://localhost:8080/verification/user/${currentUser.id}`,
       headers: {
         "Content-Type": "application/json",
       },
@@ -66,7 +55,6 @@ const AdminVerifyUsers = () => {
       .then(function (response) {
         console.log(JSON.stringify(response.data));
         alert("User approved successfully!");
-        // Here you can add further logic, such as navigating to the next user or updating the UI
       })
       .catch(function (error) {
         console.log(error);
@@ -75,9 +63,10 @@ const AdminVerifyUsers = () => {
   };
 
   const handleDecline = () => {
+    const currentUser = users[currentUserIndex]; // Get current user based on index
     const config = {
       method: "delete",
-      url: `http://localhost:8080/verification/user/${user.id}`,
+      url: `http://localhost:8080/verification/user/${currentUser.id}`,
       headers: {
         "Content-Type": "application/json",
       },
@@ -87,15 +76,29 @@ const AdminVerifyUsers = () => {
       .then(function (response) {
         console.log(JSON.stringify(response.data));
         alert("User Declined successfully!");
-        // Here you can add further logic, such as navigating to the next user or updating the UI
       })
       .catch(function (error) {
         console.log(error);
-        alert("An error occurred while Declining the user.");
+        alert("An error occurred while declining the user.");
       });
   };
 
-  if (!user) return <div>Loading...</div>;
+  const handleNext = () => {
+    if (currentUserIndex < users.length - 1) {
+      setCurrentUserIndex(currentUserIndex + 1);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentUserIndex > 0) {
+      setCurrentUserIndex(currentUserIndex - 1);
+    }
+  };
+
+  // Ensure the user data is available before rendering
+  if (users.length === 0) return <div>Loading...</div>;
+
+  const currentUser = users[currentUserIndex]; // Rename this to currentUser to avoid redeclaration
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-blue-100">
@@ -205,8 +208,8 @@ const AdminVerifyUsers = () => {
               </p>
               <div className="flex justify-center mb-4 sm:mb-6">
                 <img
-                  src={user.profilePicture}
-                  alt={user.fullName}
+                  src={currentUser.profilePicture}
+                  alt={currentUser.fullName}
                   className="w-16 h-16 sm:w-24 sm:h-24 rounded-full border-2 border-gray-300"
                 />
               </div>
@@ -216,13 +219,13 @@ const AdminVerifyUsers = () => {
                     Full Name:
                   </p>
                   <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                    {user.fullName}
+                    {currentUser.fullName}
                   </p>
                 </div>
                 <div>
                   <p className="font-semibold text-base sm:text-lg">PWD ID:</p>
                   <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                    {user.pwdId}
+                    {currentUser.pwdId}
                   </p>
                 </div>
                 <div>
@@ -230,19 +233,19 @@ const AdminVerifyUsers = () => {
                     Disability:
                   </p>
                   <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                    {user.disability}
+                    {currentUser.disability}
                   </p>
                 </div>
                 <div>
                   <p className="font-semibold text-base sm:text-lg">Address:</p>
                   <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                    {user.address}
+                    {currentUser.address}
                   </p>
                 </div>
                 <div>
                   <p className="font-semibold text-base sm:text-lg">City:</p>
                   <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                    {user.city}
+                    {currentUser.city}
                   </p>
                 </div>
                 <div>
@@ -250,7 +253,7 @@ const AdminVerifyUsers = () => {
                     Birthdate:
                   </p>
                   <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                    {user.birthdate}
+                    {currentUser.birthdate}
                   </p>
                 </div>
                 <div>
@@ -258,13 +261,13 @@ const AdminVerifyUsers = () => {
                     Contact Number:
                   </p>
                   <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                    {user.contactNumber}
+                    {currentUser.contactNumber}
                   </p>
                 </div>
                 <div>
                   <p className="font-semibold text-base sm:text-lg">Email:</p>
                   <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                    {user.email}
+                    {currentUser.email}
                   </p>
                 </div>
               </div>
@@ -275,7 +278,7 @@ const AdminVerifyUsers = () => {
                     Picture with ID:
                   </p>
                   <img
-                    src={user.pictureWithId}
+                    src={currentUser.pictureWithId}
                     alt="Picture with ID"
                     className="w-full h-auto rounded-lg shadow-lg"
                   />
@@ -285,7 +288,7 @@ const AdminVerifyUsers = () => {
                     Picture of PWD ID:
                   </p>
                   <img
-                    src={user.pictureOfPwdId}
+                    src={currentUser.pictureOfPwdId}
                     alt="Picture of PWD ID"
                     className="w-full h-auto rounded-lg shadow-lg"
                   />
@@ -293,7 +296,15 @@ const AdminVerifyUsers = () => {
               </div>
 
               <div className="flex flex-col sm:flex-row justify-center mt-4 sm:mt-8 space-y-2 sm:space-y-0 sm:space-x-4">
-                <button className="transition-all bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 shadow flex items-center justify-center">
+                <button
+                  className={`transition-all bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 shadow flex items-center justify-center ${
+                    currentUserIndex === 0
+                      ? "opacity-50 cursor-not-allowed"
+                      : ""
+                  }`}
+                  onClick={handlePrevious}
+                  disabled={currentUserIndex === 0} // Disable if on the first user
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-5 w-5 mr-2"
@@ -310,27 +321,30 @@ const AdminVerifyUsers = () => {
                   </svg>
                   Previous
                 </button>
+
                 <button
                   className="transition-all bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 shadow"
-                  onClick={() => {
-                    handleApprove();
-                    alert("User has been Approved.");
-                    window.location.reload(); // This will refresh the page after HandleApprove is called
-                  }}
+                  onClick={handleApprove}
                 >
                   Approve
                 </button>
+
                 <button
                   className="transition-all bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 shadow"
-                  onClick={() => {
-                    handleDecline();
-                    alert("User has been declined.");
-                    window.location.reload(); // This will refresh the page after handleDecline is called
-                  }}
+                  onClick={handleDecline}
                 >
                   Decline
                 </button>
-                <button className="transition-all bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 shadow flex items-center justify-center">
+
+                <button
+                  className={`transition-all bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 shadow flex items-center justify-center ${
+                    currentUserIndex === users.length - 1
+                      ? "opacity-50 cursor-not-allowed"
+                      : ""
+                  }`}
+                  onClick={handleNext}
+                  disabled={currentUserIndex === users.length - 1} // Disable if on the last user
+                >
                   Next
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
