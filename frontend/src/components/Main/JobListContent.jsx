@@ -101,6 +101,10 @@ const JobListing = () => {
 
   const selectedJob = jobs.find((job) => job.id === selectedJobId);
 
+  const handleSearch = () => {
+    console.log("Search button clicked with term:", searchTerm);
+  };
+
   const handleLogout = () => {
     const confirmed = window.confirm("Are you sure you want to logout?");
     if (confirmed) {
@@ -112,24 +116,34 @@ const JobListing = () => {
 
   return (
     <div className="flex flex-col w-full h-full">
-      {/* New Div Container for Search, Filter, Logout, and Voice */}
-      <div className="w-full bg-blue-500 py-4 lg:h-40 flex flex-col sm:flex-row justify-center items-center px-4 shadow-2xl">
-        {/* Search Bar - Centered and Bigger */}
+      <div
+        className="w-full bg-cover bg-center py-4 lg:h-40 flex flex-col sm:flex-row justify-center items-center px-4"
+        style={{ backgroundImage: `url('/imgs/bg search.png')` }}
+      >
+        {/* Search Bar and Search Button - Centered and Bigger */}
         <div className="w-full lg:w-2/3 mb-4 sm:mb-0 flex justify-center">
-          <input
-            type="text"
-            placeholder="Search Job Name"
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-xl focus:outline-none focus:border-blue-500 transition duration-200 text-lg"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+          <div className="flex w-full">
+            <input
+              type="text"
+              placeholder="Search Job Name"
+              className="w-full p-3 border border-gray-300 rounded-l-lg focus:outline-none focus:border-blue-500 transition duration-200 text-lg"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <button
+              className="p-3 bg-blue-600 text-white rounded-r-lg shadow-md hover:bg-blue-700 transition flex items-center justify-center"
+              onClick={handleSearch}
+            >
+              <span className="material-symbols-outlined text-2xl">search</span>
+            </button>
+          </div>
         </div>
 
         {/* Buttons - Centered with Small Space between Search and Filter */}
         <div className="flex justify-center items-center space-x-2 ml-4">
           <div className="relative">
             <button
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg shadow-xl hover:bg-blue-700 transition flex items-center"
+              className="px-6 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition flex items-center"
               onClick={() => setIsFilterOpen(!isFilterOpen)}
             >
               <span className="material-symbols-outlined text-xl mr-2">
