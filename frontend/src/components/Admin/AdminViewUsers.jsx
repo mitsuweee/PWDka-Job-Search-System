@@ -7,7 +7,7 @@ const AdminViewUsers = () => {
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const usersPerPage = 4;
+  const usersPerPage = 3;
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -35,11 +35,10 @@ const AdminViewUsers = () => {
 
     axios(config)
       .then((response) => {
-        console.log("Full response data:", response.data.data); // Logs the entire response data
         const fetchedUsers = response.data.data.map((user) => ({
           id: user.id,
-          fullName: user.full_name, // Assuming 'full_name' is the correct key
-          pwdId: user.id, // Assuming 'pwd_id' is the correct key
+          fullName: user.full_name,
+          pwdId: user.id,
           disability: user.type,
           address: user.address,
           city: user.city,
@@ -87,16 +86,14 @@ const AdminViewUsers = () => {
       };
 
       axios(config)
-        .then((response) => {
+        .then(() => {
           alert("User deleted successfully!");
-          // Remove the deleted user from the state to update the UI
           setUsers((prevUsers) => prevUsers.filter((user) => user.id !== id));
           setFilteredUsers((prevUsers) =>
             prevUsers.filter((user) => user.id !== id)
           );
         })
-        .catch((error) => {
-          console.log(error);
+        .catch(() => {
           alert("An error occurred while deleting the user.");
         });
     }
@@ -112,7 +109,7 @@ const AdminViewUsers = () => {
           <input
             type="text"
             placeholder="Search by user name..."
-            className="p-2 border border-gray-300 rounded-lg w-full md:w-1/2"
+            className="p-2 border-2 border-blue-300 rounded-lg w-full md:w-1/2"
             value={searchTerm}
             onChange={handleSearch}
           />
@@ -122,9 +119,9 @@ const AdminViewUsers = () => {
             currentUsers.map((user) => (
               <div
                 key={user.id}
-                className="flex-1 min-w-[300px] p-4 bg-blue-500 rounded-xl shadow-xl"
+                className="flex-1 min-w-[300px] p-4 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow flex flex-col justify-between"
               >
-                <div className="flex flex-col text-left text-white">
+                <div className="flex flex-col text-left flex-grow">
                   <img
                     src={
                       user.profilePicture || "https://via.placeholder.com/150"
@@ -133,51 +130,52 @@ const AdminViewUsers = () => {
                     className="w-24 h-24 rounded-full mb-4"
                   />
                   <p className="font-semibold text-lg">Full Name:</p>
-                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">
+                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue border-2 border-blue-300 p-2">
                     {user.fullName}
                   </p>
 
                   <p className="font-semibold text-lg">PWD ID:</p>
-                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">
+                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue border-2 border-blue-300 p-2">
                     {user.pwdId}
                   </p>
 
                   <p className="font-semibold text-lg">Disability:</p>
-                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">
+                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue border-2 border-blue-300 p-2">
                     {user.disability}
                   </p>
 
                   <p className="font-semibold text-lg">Address:</p>
-                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">
+                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue border-2 border-blue-300 p-2">
                     {user.address}
                   </p>
 
                   <p className="font-semibold text-lg">City:</p>
-                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">
+                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue border-2 border-blue-300 p-2">
                     {user.city}
                   </p>
 
                   <p className="font-semibold text-lg">Birthdate:</p>
-                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">
+                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue border-2 border-blue-300 p-2">
                     {user.birthdate}
                   </p>
 
                   <p className="font-semibold text-lg">Contact Number:</p>
-                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">
+                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue border-2 border-blue-300 p-2">
                     {user.contactNumber}
                   </p>
 
                   <p className="font-semibold text-lg">Email:</p>
-                  <p className="text-xl bg-custom-bg rounded-md text-custom-blue">
+                  <p className="text-xl bg-custom-bg rounded-md text-custom-blue border-2 border-blue-300 p-2">
                     {user.email}
                   </p>
-                  <button
-                    onClick={() => handleDeleteUser(user.id)}
-                    className="mt-4 py-2 px-4 rounded-lg bg-red-600 text-white hover:bg-red-700 transition duration-200"
-                  >
-                    Delete
-                  </button>
                 </div>
+
+                <button
+                  onClick={() => handleDeleteUser(user.id)}
+                  className="mt-auto py-2 px-4 rounded-lg bg-red-600 text-white hover:bg-red-700 transition duration-200"
+                >
+                  Delete
+                </button>
               </div>
             ))
           ) : (
@@ -209,12 +207,22 @@ const AdminViewUsers = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen bg-blue-100">
+    <div className="flex min-h-screen bg-blue-100">
+      {/* Mobile Toggle Button */}
+      <button
+        className={`md:hidden bg-custom-blue text-white p-4 fixed top-4 left-4 z-50 rounded-xl mt-11 transition-transform ${
+          isSidebarOpen ? "hidden" : ""
+        }`}
+        onClick={() => setIsSidebarOpen(true)}
+      >
+        &#9776;
+      </button>
+
       {/* Sidebar */}
       <aside
-        className={`bg-custom-blue w-full md:w-[300px] lg:w-[250px] p-4 flex flex-col items-center md:relative fixed top-0 left-0 min-h-screen h-full transition-transform transform ${
+        className={`bg-custom-blue w-[300px] lg:w-[250px] p-4 flex flex-col items-center fixed top-0 left-0 h-full z-50 transition-transform ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } md:translate-x-0 z-50 md:z-auto`}
+        } md:translate-x-0`}
       >
         <button
           className="text-white md:hidden self-end size-10"
@@ -302,20 +310,11 @@ const AdminViewUsers = () => {
         </button>
       </aside>
 
-      {/* Mobile Toggle Button */}
-      <button
-        className={`md:hidden bg-custom-blue text-white p-4 fixed top-4 left-4 z-50 rounded-xl mt-11 transition-transform ${
-          isSidebarOpen ? "hidden" : ""
-        }`}
-        onClick={() => setIsSidebarOpen(true)}
-      >
-        &#9776;
-      </button>
-
       {/* Main Content */}
-      <main className="flex-grow p-8 bg-custom-bg">
+      <main
+        className={`p-8 bg-custom-bg flex-grow transition-transform md:ml-[300px] lg:ml-[250px]`}
+      >
         <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-blue-900">Admin Dashboard</h1>
           <button
             onClick={handleGoBack}
             className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"

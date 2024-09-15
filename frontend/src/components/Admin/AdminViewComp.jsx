@@ -7,7 +7,7 @@ const AdminViewComp = () => {
   const [filteredCompanies, setFilteredCompanies] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const companiesPerPage = 4;
+  const companiesPerPage = 3;
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -118,7 +118,7 @@ const AdminViewComp = () => {
           <input
             type="text"
             placeholder="Search by company name..."
-            className="p-2 border border-gray-300 rounded-lg w-full md:w-1/2"
+            className="p-2 border-2 border-blue-300 rounded-lg w-full md:w-1/2"
             value={searchTerm}
             onChange={handleSearch}
           />
@@ -128,46 +128,46 @@ const AdminViewComp = () => {
             currentCompanies.map((company) => (
               <div
                 key={company.id}
-                className="flex-1 min-w-[300px] p-4 bg-blue-500 rounded-xl shadow-xl"
+                className="flex-1 min-w-[300px] p-4 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow flex flex-col justify-between"
               >
-                <div className="flex flex-col text-left text-white">
+                <div className="flex flex-col text-left flex-grow">
                   <p className="font-semibold text-lg">Company Name:</p>
-                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">
+                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue border-2 border-blue-300 p-2">
                     {company.companyName}
                   </p>
 
                   <p className="font-semibold text-lg">Address:</p>
-                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">
+                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue border-2 border-blue-300 p-2">
                     {company.address}
                   </p>
 
                   <p className="font-semibold text-lg">City:</p>
-                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">
+                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue border-2 border-blue-300 p-2">
                     {company.city}
                   </p>
 
                   <p className="font-semibold text-lg">Description:</p>
-                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">
+                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue border-2 border-blue-300 p-2">
                     {company.companyDescription}
                   </p>
 
                   <p className="font-semibold text-lg">Contact Number:</p>
-                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">
+                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue border-2 border-blue-300 p-2">
                     {company.contactNumber}
                   </p>
 
                   <p className="font-semibold text-lg">Email:</p>
-                  <p className="text-xl bg-custom-bg rounded-md text-custom-blue">
+                  <p className="text-xl bg-custom-bg rounded-md text-custom-blue border-2 border-blue-300 p-2">
                     {company.companyEmail}
                   </p>
-
-                  <button
-                    onClick={() => handleDeleteCompany(company.id)}
-                    className="mt-4 py-2 px-4 rounded-lg bg-red-600 text-white hover:bg-red-700 transition duration-200"
-                  >
-                    Delete
-                  </button>
                 </div>
+
+                <button
+                  onClick={() => handleDeleteCompany(company.id)}
+                  className="mt-auto py-2 px-4 rounded-lg bg-red-600 text-white hover:bg-red-700 transition duration-200"
+                >
+                  Delete
+                </button>
               </div>
             ))
           ) : (
@@ -178,7 +178,9 @@ const AdminViewComp = () => {
         {/* Pagination */}
         <div className="flex justify-center mt-6">
           {Array.from(
-            { length: Math.ceil(filteredCompanies.length / companiesPerPage) },
+            {
+              length: Math.ceil(filteredCompanies.length / companiesPerPage),
+            },
             (_, index) => (
               <button
                 key={index + 1}
@@ -199,12 +201,22 @@ const AdminViewComp = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen bg-blue-100">
+    <div className="flex min-h-screen bg-blue-100">
+      {/* Mobile Toggle Button */}
+      <button
+        className={`md:hidden bg-custom-blue text-white p-4 fixed top-4 left-4 z-50 rounded-xl mt-11 transition-transform ${
+          isSidebarOpen ? "hidden" : ""
+        }`}
+        onClick={() => setIsSidebarOpen(true)}
+      >
+        &#9776;
+      </button>
+
       {/* Sidebar */}
       <aside
-        className={`bg-custom-blue w-full md:w-[300px] lg:w-[250px] p-4 flex flex-col items-center md:relative fixed top-0 left-0 min-h-screen h-full transition-transform transform ${
+        className={`bg-custom-blue w-[300px] lg:w-[250px] p-4 flex flex-col items-center fixed top-0 left-0 h-full z-50 transition-transform ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } md:translate-x-0 z-50 md:z-auto`}
+        } md:translate-x-0`}
       >
         <button
           className="text-white md:hidden self-end size-10"
@@ -292,20 +304,11 @@ const AdminViewComp = () => {
         </button>
       </aside>
 
-      {/* Mobile Toggle Button */}
-      <button
-        className={`md:hidden bg-custom-blue text-white p-4 fixed top-4 left-4 z-50 rounded-xl mt-11 transition-transform ${
-          isSidebarOpen ? "hidden" : ""
-        }`}
-        onClick={() => setIsSidebarOpen(true)}
-      >
-        &#9776;
-      </button>
-
       {/* Main Content */}
-      <main className="flex-grow p-8 bg-custom-bg">
+      <main
+        className={`p-8 bg-custom-bg flex-grow transition-transform md:ml-[300px] lg:ml-[250px]`}
+      >
         <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-blue-900">Admin Dashboard</h1>
           <button
             onClick={handleGoBack}
             className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"

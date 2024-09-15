@@ -246,7 +246,6 @@ const AdminVerifyUsers = () => {
       {/* Main Content */}
       <main className="flex-grow p-8 bg-custom-bg">
         <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-blue-900">Admin Dashboard</h1>
           <button
             onClick={handleGoBack}
             className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
