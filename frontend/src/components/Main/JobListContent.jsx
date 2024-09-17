@@ -305,9 +305,11 @@ const JobListing = () => {
                         {job.qualifications}
                       </p>
                       <div className="mt-4 flex space-x-4">
-                        <button className="bg-blue-500 text-white py-2 px-4 rounded-full shadow-lg hover:bg-blue-600 transition transform hover:scale-105">
-                          Apply Now
-                        </button>
+                        <a href={"/apply?id=" + selectedJob.id}>
+                          <button className="bg-blue-500 text-white py-3 px-6 rounded-full shadow-lg hover:bg-blue-600 hover:shadow-2xl transition transform hover:scale-105">
+                            Apply Now
+                          </button>
+                        </a>
                         <button
                           className="bg-gray-500 text-white py-2 px-4 rounded-full shadow-lg hover:bg-gray-600 transition transform hover:scale-105"
                           onClick={() => setIsMoreInfoVisible(true)}
@@ -321,7 +323,7 @@ const JobListing = () => {
                           <img
                             src={job.companyImage}
                             alt="Company"
-                            className="w-22 h-22 object-cover rounded-2xl absolute top-2 right-2"
+                            className="w-24 h-24 object-cover rounded-xl shadow-xl mx-auto mb-4"
                           />
                           <h3 className="text-lg font-bold text-white">
                             Company Overview
