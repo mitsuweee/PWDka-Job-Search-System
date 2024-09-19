@@ -18,7 +18,6 @@ const PostJob = () => {
   const handleLogout = () => {
     const confirmed = window.confirm("Are you sure you want to logout?");
     if (confirmed) {
-      // Clear session storage and redirect to login page
       sessionStorage.removeItem("Id");
       sessionStorage.removeItem("Role");
       window.location.href = "/login";
@@ -50,13 +49,11 @@ const PostJob = () => {
 
     axios(config)
       .then((response) => {
-        console.log(response.data);
         alert("Job posted successfully!");
       })
       .catch((error) => {
         const errorMessage =
           error.response?.data?.message || "An error occurred";
-        console.log(error.response?.data);
         alert(errorMessage);
       });
   };
@@ -142,91 +139,95 @@ const PostJob = () => {
 
       {/* Main Content */}
       <main className="flex-grow p-8 bg-custom-bg">
-        <h1 className="text-3xl font-bold text-blue-900">Post a Job</h1>
+        <h1 className="text-3xl font-bold text-blue-900 mb-6">Post a Job</h1>
         <form
           onSubmit={handleSubmit}
-          className="bg-blue-500 p-6 rounded-xl shadow-xl text-center"
+          className="bg-white p-6 rounded-xl shadow-lg text-left max-w-4xl mx-auto grid grid-cols-1 gap-6 border border-gray-200"
+          style={{
+            backgroundColor: "#f5faff",
+            boxShadow: "0 8px 20px rgba(0, 0, 0, 0.05)",
+            borderRadius: "12px",
+          }}
         >
-          <div className="mb-4 text-left">
-            <label className="block mb-2 text-white">Position Name</label>
+          <div className="col-span-1">
+            <label className="block mb-2 text-gray-700 font-semibold">
+              Position Name
+            </label>
             <input
               type="text"
               name="positionName"
               value={jobDetails.positionName}
               onChange={handleChange}
-              className="p-2 w-full rounded shadow-lg"
-              style={{
-                boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
-              }}
+              className="p-3 w-full border-2 border-blue-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
               required
             />
           </div>
-          <div className="mb-4 text-left">
-            <label className="block mb-2 text-white">Job Description</label>
+
+          <div className="col-span-1">
+            <label className="block mb-2 text-gray-700 font-semibold">
+              Job Description
+            </label>
             <textarea
               name="jobDescription"
               value={jobDetails.jobDescription}
               onChange={handleChange}
-              className="p-2 w-full rounded shadow-lg"
-              style={{
-                boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
-              }}
+              className="p-3 w-full border-2 border-blue-300 rounded-lg shadow-sm h-28 focus:outline-none focus:ring-2 focus:ring-blue-400"
               required
             />
           </div>
-          <div className="mb-4 text-left">
-            <label className="block mb-2 text-white">Qualifications</label>
+
+          <div className="col-span-1">
+            <label className="block mb-2 text-gray-700 font-semibold">
+              Qualifications
+            </label>
             <textarea
               name="qualifications"
               value={jobDetails.qualifications}
               onChange={handleChange}
-              className="p-2 w-full rounded shadow-lg"
-              style={{
-                boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
-              }}
+              className="p-3 w-full border-2 border-blue-300 rounded-lg shadow-sm h-28 focus:outline-none focus:ring-2 focus:ring-blue-400"
               required
             />
           </div>
-          <div className="flex mb-4 space-x-4">
-            <div className="text-left w-1/2">
-              <label className="block mb-2 text-white">Min-Salary</label>
+
+          <div className="col-span-1 grid grid-cols-2 gap-6">
+            <div>
+              <label className="block mb-2 text-gray-700 font-semibold">
+                Min-Salary
+              </label>
               <input
                 type="text"
                 name="minSalary"
                 value={jobDetails.minSalary}
                 onChange={handleChange}
-                className="p-2 w-full rounded shadow-lg"
-                style={{
-                  boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
-                }}
+                className="p-3 w-full border-2 border-blue-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                 required
               />
             </div>
-            <div className="text-left w-1/2">
-              <label className="block mb-2 text-white">Max-Salary</label>
+
+            <div>
+              <label className="block mb-2 text-gray-700 font-semibold">
+                Max-Salary
+              </label>
               <input
                 type="text"
                 name="maxSalary"
                 value={jobDetails.maxSalary}
                 onChange={handleChange}
-                className="p-2 w-full rounded shadow-lg"
-                style={{
-                  boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
-                }}
+                className="p-3 w-full border-2 border-blue-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                 required
               />
             </div>
           </div>
-          <div className="mb-4 text-left">
-            <label className="block mb-2 text-white">Position Type</label>
+
+          <div className="col-span-1">
+            <label className="block mb-2 text-gray-700 font-semibold">
+              Position Type
+            </label>
             <select
               name="positionType"
               value={jobDetails.positionType}
               onChange={handleChange}
-              className="p-2 w-full rounded shadow-lg"
-              style={{
-                boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
-              }}
+              className="p-3 w-full border-2 border-blue-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
               required
             >
               <option value="full-time">Full-time</option>
@@ -234,11 +235,11 @@ const PostJob = () => {
             </select>
           </div>
 
-          <div className="mb-4 text-left">
+          <div className="col-span-1">
             <button
               type="button"
               onClick={toggleDisabilityOptions}
-              className="bg-green-500 text-white px-4 py-2 rounded shadow-lg"
+              className="bg-blue-600 text-white px-4 py-2 rounded shadow-lg hover:bg-blue-700 transition"
             >
               {showDisabilityOptions
                 ? "Hide Disability Options"
@@ -247,11 +248,11 @@ const PostJob = () => {
           </div>
 
           {showDisabilityOptions && (
-            <div className="mb-4 text-left bg-gray-200 p-4 rounded-lg shadow-lg">
-              <label className="block mb-2 text-black font-bold">
+            <div className="col-span-1 bg-gray-100 p-4 rounded-lg shadow-md border border-gray-300">
+              <label className="block mb-2 text-gray-700 font-bold">
                 Disability Categories
               </label>
-              <div className="flex flex-col space-y-2 text-black">
+              <div className="flex flex-col space-y-2">
                 {[
                   "Visual Disability",
                   "Deaf or Hard of Hearing",
@@ -280,9 +281,7 @@ const PostJob = () => {
 
           <button
             type="submit"
-            className="cursor-pointer transition-all bg-green-500 text-white px-6 py-2 rounded-lg
-                        border-green-600 border-b-[4px] hover:brightness-110 hover:-translate-y-[1px]
-                        hover:border-b-[6px] active:border-b-[2px] active:brightness-90 active:translate-y-[2px]"
+            className="bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-green-600 transition"
           >
             Post Job
           </button>

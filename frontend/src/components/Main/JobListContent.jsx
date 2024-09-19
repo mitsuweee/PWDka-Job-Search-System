@@ -12,49 +12,70 @@ const JobListing = () => {
   const [sortOption, setSortOption] = useState("newest");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isVoiceEnabled, setIsVoiceEnabled] = useState(false);
+  const [userFullName, setUserFullName] = useState("");
 
   const jobsPerPage = 4; // Number of jobs to display per page
   const navigate = useNavigate();
 
   useEffect(() => {
     const userId = sessionStorage.getItem("Id");
-    const config = {
-      method: "get",
-      url: `/joblisting/view/newesttooldest/${userId}`,
-      headers: {
-        "Content-Type": "application/json",
-      },
+
+    // Fetch user's full name
+    const fetchUserFullName = () => {
+      axios
+        .get(`/user/view/${userId}`)
+        .then((response) => {
+          const userData = response.data.data;
+          setUserFullName(userData.full_name);
+        })
+        .catch((error) => {
+          console.log("Error fetching user full name:", error.response?.data);
+        });
     };
 
-    axios(config)
-      .then((response) => {
-        console.log(response.data);
+    // Fetch jobs for the user
+    const fetchJobs = () => {
+      const config = {
+        method: "get",
+        url: `/joblisting/view/newesttooldest/${userId}`,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
 
-        // Combine job and company details into one object per job
-        const fetchedJobs = response.data.data.map((job) => ({
-          id: job.id,
-          jobName: job.position_name,
-          address: job.company_address,
-          positionType: job.position_type,
-          salary: `${job.minimum_salary}-${job.maximum_salary}`,
-          description: job.description,
-          qualifications: job.qualification,
-          companyName: job.company_name,
-          companyEmail: job.company_email,
-          companyContact: job.company_contact_number,
-          companyLocation: job.company_address,
-          companyDescription: job.company_description,
-          companyImage: `data:image/png;base64,${job.company_profile_picture}`, // Placeholder for company logo
-        }));
+      axios(config)
+        .then((response) => {
+          console.log(response.data);
 
-        setJobs(fetchedJobs); // Setting the jobs state
-      })
-      .catch((error) => {
-        const errorMessage =
-          error.response?.data?.message || "An error occurred";
-        console.log(error.response?.data);
-        alert(errorMessage);
-      });
+          // Combine job and company details into one object per job
+          const fetchedJobs = response.data.data.map((job) => ({
+            id: job.id,
+            jobName: job.position_name,
+            address: job.company_address,
+            positionType: job.position_type,
+            salary: `${job.minimum_salary}-${job.maximum_salary}`,
+            description: job.description,
+            qualifications: job.qualification,
+            companyName: job.company_name,
+            companyEmail: job.company_email,
+            companyContact: job.company_contact_number,
+            companyLocation: job.company_address,
+            companyDescription: job.company_description,
+            companyImage: `data:image/png;base64,${job.company_profile_picture}`, // Placeholder for company logo
+          }));
+
+          setJobs(fetchedJobs); // Setting the jobs state
+        })
+        .catch((error) => {
+          const errorMessage =
+            error.response?.data?.message || "An error occurred";
+          console.log(error.response?.data);
+          alert(errorMessage);
+        });
+    };
+
+    fetchUserFullName(); // Call the function to fetch user full name
+    fetchJobs(); // Call the function to fetch jobs
   }, []);
 
   const playJobListingMessage = () => {
@@ -223,7 +244,7 @@ const JobListing = () => {
             <span className="material-symbols-outlined text-2xl mr-2">
               work_update
             </span>
-            Jobs for You
+            Jobs for You, {userFullName}
           </h1>
           <div className="space-y-4">
             {currentJobs.length > 0 ? (
