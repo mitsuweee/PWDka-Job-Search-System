@@ -153,7 +153,7 @@ const AdminViewJobs = () => {
                   </p>
 
                   <p className="font-semibold text-lg">Description:</p>
-                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue border-2 border-blue-300 p-2">
+                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue border-2 border-blue-300 p-2 break-words overflow-hidden max-h-[150px] overflow-y-auto">
                     {listing.description}
                   </p>
 
