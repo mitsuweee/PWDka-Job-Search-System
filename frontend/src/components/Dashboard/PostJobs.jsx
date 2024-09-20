@@ -50,6 +50,7 @@ const PostJob = () => {
     axios(config)
       .then((response) => {
         alert("Job posted successfully!");
+        window.location.reload();
       })
       .catch((error) => {
         const errorMessage =
