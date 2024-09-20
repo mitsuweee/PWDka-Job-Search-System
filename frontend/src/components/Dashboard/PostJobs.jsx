@@ -29,7 +29,7 @@ const PostJob = () => {
 
     const data = JSON.stringify({
       company_id: sessionStorage.getItem("Id"),
-      position_name: jobDetails.positionName.toLowerCase(),
+      position_name: jobDetails.positionName,
       description: jobDetails.jobDescription,
       qualification: jobDetails.qualifications,
       minimum_salary: jobDetails.minSalary,

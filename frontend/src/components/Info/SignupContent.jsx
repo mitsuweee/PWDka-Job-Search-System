@@ -138,7 +138,7 @@ const Signup = () => {
     const data = JSON.stringify(
       isCompany
         ? {
-            name: companyFormValues.companyName.toLowerCase(),
+            name: companyFormValues.companyName,
             address: companyFormValues.companyAddress.toLowerCase(),
             city: companyFormValues.companyCity.toLowerCase(),
             description: companyFormValues.companyDescription,

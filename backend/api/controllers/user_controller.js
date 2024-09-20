@@ -425,7 +425,7 @@ const viewUserViaId = async (req, res, next) => {
           "user.id",
           "disability.type",
           knex.raw(
-            "CONCAT(user.first_name, ' ', user.middle_initial, '. ', user.last_name) AS full_name"
+            "CONCAT(UPPER(SUBSTRING(user.first_name, 1, 1)),LOWER(SUBSTRING(user.first_name, 2)),' ',UPPER(user.middle_initial),'. ',UPPER(SUBSTRING(user.last_name, 1, 1)),LOWER(SUBSTRING(user.last_name, 2))) AS full_name"
           ),
           "user.email",
           "user.address",
