@@ -7,11 +7,9 @@ const ViewJobs = () => {
   const [filteredJobListings, setFilteredJobListings] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [updatedDetails, setUpdatedDetails] = useState({});
-  const [sortOption, setSortOption] = useState("newest");
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [jobsPerPage] = useState(4); // Number of jobs to display per page
+  const [jobsPerPage] = useState(3); // Number of jobs to display per page
 
   // Fetch job listings
   useEffect(() => {
@@ -65,7 +63,6 @@ const ViewJobs = () => {
       qualification: updatedDetails.qualifications,
       minimum_salary: parseFloat(updatedDetails.salary.split("-")[0]),
       maximum_salary: parseFloat(updatedDetails.salary.split("-")[1]),
-      // disability_types: updatedDetails.disabilityTypes,
       positiontype_id: updatedDetails.positionType === "full-time" ? 1 : 2,
     });
 
@@ -224,169 +221,98 @@ const ViewJobs = () => {
   };
 
   const renderViewAllJobListings = () => {
-    const sortedJobListings = currentJobs.sort((a, b) => {
-      if (sortOption === "newest") {
-        return b.id - a.id;
-      } else if (sortOption === "oldest") {
-        return a.id - b.id;
-      } else if (sortOption === "a-z") {
-        return a.jobName.localeCompare(b.jobName);
-      }
-      return 0;
-    });
+    const sortedJobListings = currentJobs;
 
     return (
       <div>
-        <div className="flex justify-between items-center">
-          <h2 className="text-xl font-bold mb-4 text-custom-blue">
-            View All Job Listings
-          </h2>
-          <div className="relative">
-            <button
-              className="py-2 px-4 mb-0 rounded-lg bg-blue-600 text-white"
-              onClick={() => setIsFilterOpen(!isFilterOpen)}
-            >
-              Filter
-            </button>
-            {isFilterOpen && (
-              <div
-                className="absolute right-0 top-full mt-0 space-y-2 bg-white p-4 shadow-lg rounded-lg"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <button
-                  className={`py-2 px-4 rounded-lg w-full ${
-                    sortOption === "newest"
-                      ? "bg-blue-600 text-white"
-                      : "bg-gray-200 text-blue-900"
-                  }`}
-                  onClick={() => setSortOption("newest")}
-                >
-                  Newest
-                </button>
-                <button
-                  className={`py-2 px-4 rounded-lg w-full ${
-                    sortOption === "oldest"
-                      ? "bg-blue-600 text-white"
-                      : "bg-gray-200 text-blue-900"
-                  }`}
-                  onClick={() => setSortOption("oldest")}
-                >
-                  Oldest
-                </button>
-                <button
-                  className={`py-2 px-4 rounded-lg w-full ${
-                    sortOption === "a-z"
-                      ? "bg-blue-600 text-white"
-                      : "bg-gray-200 text-blue-900"
-                  }`}
-                  onClick={() => setSortOption("a-z")}
-                >
-                  A-Z
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
+        <h2 className="text-xl font-bold mb-4 text-custom-blue">
+          View All Job Listings
+        </h2>
         <div className="flex justify-center mb-4">
           <input
             type="text"
             placeholder="Search by job name..."
-            className="p-2 border border-gray-300 rounded-lg w-full md:w-1/2"
+            className="p-2 border-2 border-blue-300 rounded-lg w-full md:w-1/2"
             value={searchTerm}
             onChange={handleSearch}
           />
         </div>
+
         <div className="flex flex-wrap gap-4">
           {sortedJobListings.length > 0 ? (
             sortedJobListings.map((listing) => (
               <div
                 key={listing.id}
-                className="flex-1 min-w-[300px] p-4 bg-blue-500 rounded shadow-xl transition-transform duration-200 ease-in-out hover:scale-105 hover:bg-blue-600"
+                className="flex-1 min-w-[300px] p-4 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow flex flex-col justify-between"
               >
-                <div className="flex flex-col text-left">
-                  <p className="font-semibold text-lg text-white">
-                    Position Name:
-                  </p>
-                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">
+                <div className="flex flex-col text-left flex-grow">
+                  <p className="font-semibold text-lg">Job Name:</p>
+                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue border-2 border-blue-300 p-2">
                     {listing.jobName}
                   </p>
 
-                  <p className="font-semibold text-lg text-white">
-                    Job Description:
-                  </p>
-                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">
+                  <p className="font-semibold text-lg">Description:</p>
+                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue border-2 border-blue-300 p-2 break-words overflow-hidden max-h-[150px] overflow-y-auto">
                     {listing.description}
                   </p>
 
-                  <p className="font-semibold text-lg text-white">
-                    Qualifications:
-                  </p>
-                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">
+                  <p className="font-semibold text-lg">Qualification:</p>
+                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue border-2 border-blue-300 p-2">
                     {listing.qualifications}
                   </p>
 
-                  <p className="font-semibold text-lg text-white">
-                    Salary Range:
-                  </p>
-                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">
-                    {`${listing.minSalary} - ${listing.maxSalary}`}
+                  <p className="font-semibold text-lg">Salary:</p>
+                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue border-2 border-blue-300 p-2">
+                    {listing.minSalary} - {listing.maxSalary}
                   </p>
 
-                  <p className="font-semibold text-lg text-white">
-                    Position Type:
-                  </p>
-                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">
+                  <p className="font-semibold text-lg">Position Type:</p>
+                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue border-2 border-blue-300 p-2">
                     {listing.positionType}
                   </p>
 
-                  <p className="font-semibold text-lg text-white">
-                    Disability Types:
-                  </p>
-                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue">
+                  <p className="font-semibold text-lg">Disabilities:</p>
+                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue border-2 border-blue-300 p-2">
                     {listing.disabilityTypes}
                   </p>
+                </div>
 
-                  {/* Update and Delete Buttons */}
-                  <div className="mt-4 flex space-x-4">
-                    <button
-                      className="py-2 px-4 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition duration-300"
-                      onClick={() => {
-                        setUpdatedDetails({
-                          id: listing.id,
-                          positionName: listing.jobName,
-                          jobDescription: listing.description,
-                          qualifications: listing.qualifications,
-                          salary: `${listing.minSalary}-${listing.maxSalary}`,
-                          positionType: listing.positionType,
-                        });
-                        setIsEditing(true);
-                      }}
-                    >
-                      Update
+                {/* Update, Delete, View Applicants Buttons */}
+                <div className="mt-4 flex space-x-4">
+                  <button
+                    className="py-2 px-4 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition duration-300"
+                    onClick={() => {
+                      setUpdatedDetails({
+                        id: listing.id,
+                        positionName: listing.jobName,
+                        jobDescription: listing.description,
+                        qualifications: listing.qualifications,
+                        salary: `${listing.minSalary}-${listing.maxSalary}`,
+                        positionType: listing.positionType,
+                      });
+                      setIsEditing(true);
+                    }}
+                  >
+                    Update
+                  </button>
+                  <button
+                    className="py-2 px-4 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition duration-300"
+                    onClick={() => handleDelete(listing.id)}
+                  >
+                    Delete
+                  </button>
+                  <a href={`/company/viewapplicants?id=${listing.id}`}>
+                    <button className="bg-blue-500 text-white py-3 px-6 rounded-full shadow-lg hover:bg-blue-600 hover:shadow-2xl transition transform hover:scale-105">
+                      View Applicants
                     </button>
-                    <button
-                      className="py-2 px-4 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition duration-300"
-                      onClick={() => handleDelete(listing.id)}
-                    >
-                      Delete
-                    </button>
-                    <a href={"/company/viewapplicants?id=" + listing.id}>
-                      <button className="bg-blue-500 text-white py-3 px-6 rounded-full shadow-lg hover:bg-blue-600 hover:shadow-2xl transition transform hover:scale-105">
-                        View Applicants
-                      </button>
-                    </a>
-                  </div>
+                  </a>
                 </div>
               </div>
             ))
           ) : (
-            <p>No job listings found.</p>
+            <p className="text-white">No job listings found.</p>
           )}
         </div>
-
-        {isEditing && renderUpdateJobListings()}
-
-        {/* Pagination */}
         <div className="flex justify-center mt-6">
           {Array.from(
             { length: Math.ceil(filteredJobListings.length / jobsPerPage) },
@@ -443,16 +369,6 @@ const ViewJobs = () => {
           <span className="material-symbols-outlined text-xl mr-4">list</span>
           <span className="flex-grow text-center">View All Job Listings</span>
         </a>
-        {/* <a
-          href="/company/viewapplicants"
-          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
-          }}
-        >
-          <span className="material-symbols-outlined text-xl mr-4">people</span>
-          <span className="flex-grow text-center">View Applicants</span>
-        </a> */}
 
         <button
           className="bg-red-600 text-white rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-red-500 transition-all duration-200 ease-in-out mt-6 flex items-center justify-center"
@@ -475,7 +391,9 @@ const ViewJobs = () => {
       {/* Main Content */}
       <main className="flex-grow p-8 bg-custom-bg">
         <h1 className="text-3xl font-bold text-blue-900">View Jobs</h1>
-        <div className="mt-0.5">{renderViewAllJobListings()}</div>
+        <div className="mt-0.5">
+          {isEditing ? renderUpdateJobListings() : renderViewAllJobListings()}
+        </div>
       </main>
     </div>
   );
