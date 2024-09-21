@@ -187,7 +187,7 @@ const UserProf = () => {
 
   return (
     <div className="max-w-4xl mx-auto mt-10 p-8 bg-white rounded-lg shadow-lg">
-      <Toaster position="top-right" reverseOrder={false} />{" "}
+      <Toaster position="top-center" reverseOrder={false} />{" "}
       {/* Toaster for showing toast notifications */}
       {/* Header Section */}
       <div className="flex items-center justify-between">

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import Alert from "@mui/material/Alert";
-import Snackbar from "@mui/material/Snackbar";
+import toast, { Toaster } from "react-hot-toast"; // Import react-hot-toast
 
 const PostJob = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -17,15 +16,6 @@ const PostJob = () => {
   });
   const [showDisabilityOptions, setShowDisabilityOptions] = useState(false);
 
-  const [alertMessage, setAlertMessage] = useState("");
-  const [alertType, setAlertType] = useState("success");
-  const [open, setOpen] = useState(false);
-
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") return;
-    setOpen(false);
-  };
-
   const handleLogout = () => {
     const confirmed = window.confirm("Are you sure you want to logout?");
     if (confirmed) {
@@ -40,7 +30,7 @@ const PostJob = () => {
 
     // Frontend validation for salary
     if (parseFloat(jobDetails.maxSalary) <= parseFloat(jobDetails.minSalary)) {
-      alert("Maximum Salary must be greater than Minimum Salary");
+      toast.error("Maximum Salary must be greater than Minimum Salary");
       return;
     }
     console.log(jobDetails);
@@ -67,9 +57,7 @@ const PostJob = () => {
 
     axios(config)
       .then(() => {
-        setAlertMessage("Job posted successfully!");
-        setAlertType("success");
-        setOpen(true); // Show success alert
+        toast.success("Job posted successfully!");
         setTimeout(() => {
           window.location.reload();
         }, 2000); // Reload page after 2 seconds
@@ -77,9 +65,7 @@ const PostJob = () => {
       .catch((error) => {
         const errorMessage =
           error.response?.data?.message || "An error occurred";
-        setAlertMessage(errorMessage);
-        setAlertType("error");
-        setOpen(true); // Show error alert
+        toast.error(errorMessage);
       });
   };
 
@@ -111,6 +97,8 @@ const PostJob = () => {
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-blue-100">
+      <Toaster position="top-center" reverseOrder={false} />{" "}
+      {/* Toast notifications */}
       {/* Sidebar */}
       <aside
         className={`bg-custom-blue w-full md:w-[300px] lg:w-[250px] p-4 flex flex-col items-center md:relative fixed top-0 left-0 min-h-screen h-full transition-transform transform ${
@@ -151,7 +139,6 @@ const PostJob = () => {
           Logout
         </button>
       </aside>
-
       {/* Mobile Toggle Button */}
       <button
         className={`md:hidden bg-custom-blue text-white p-4 fixed top-4 left-4 z-50 rounded-xl mt-11 transition-transform ${
@@ -161,7 +148,6 @@ const PostJob = () => {
       >
         &#9776;
       </button>
-
       {/* Main Content */}
       <main className="flex-grow p-8 bg-custom-bg">
         <h1 className="text-3xl font-bold text-blue-900 mb-6">Post a Job</h1>
@@ -311,15 +297,6 @@ const PostJob = () => {
             Post Job
           </button>
         </form>
-        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-          <Alert
-            onClose={handleClose}
-            severity={alertType}
-            sx={{ width: "100%" }}
-          >
-            {alertMessage}
-          </Alert>
-        </Snackbar>
       </main>
     </div>
   );

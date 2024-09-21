@@ -64,7 +64,7 @@ const ConfirmPassword = () => {
 
   return (
     <div className="max-w-lg mb-10 mx-auto mt-10 p-12 bg-white rounded-2xl shadow-xl">
-      <Toaster position="top-right" reverseOrder={false} />{" "}
+      <Toaster position="top-center" reverseOrder={false} />{" "}
       {/* Toaster for displaying notifications */}
       <div className="flex justify-center mb-6">
         <img src="imgs/LOGO PWDKA.png" alt="Logo" className="h-14 w-22" />

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import axios from "axios"; // Import Axios for making HTTP requests
+import axios from "axios";
+import toast, { Toaster } from "react-hot-toast"; // Import toast
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
-  const [message, setMessage] = useState(""); // To display success/error messages
   const [isSubmitting, setIsSubmitting] = useState(false); // Track if request is being sent
 
   const handleEmailChange = (e) => {
@@ -30,12 +30,12 @@ const ForgotPassword = () => {
       const response = await axios(config);
       console.log(response.data);
 
-      // Display success message
-      alert("Password reset link has been sent to your email.");
+      // Display success toast
+      toast.success("Password reset link has been sent to your email.");
     } catch (error) {
       console.error("Error sending email:", error);
-      // Display error message
-      alert("Error sending password reset email. Please try again.");
+      // Display error toast
+      toast.error("Error sending password reset email. Please try again.");
     } finally {
       setIsSubmitting(false); // Re-enable the button after the request
       setEmail(""); // Clear the email input field
@@ -44,6 +44,8 @@ const ForgotPassword = () => {
 
   return (
     <div className="max-w-lg mb-10 mx-auto mt-10 p-12 bg-white rounded-2xl shadow-xl">
+      <Toaster position="top-center" reverseOrder={false} />{" "}
+      {/* Add Toaster component */}
       <div className="flex justify-center mb-6">
         <img src="imgs/LOGO PWDKA.png" alt="Logo" className="h-14 w-22" />
       </div>
@@ -54,8 +56,6 @@ const ForgotPassword = () => {
         Enter the email address associated with your account and we'll send you
         a link to reset your password.
       </p>
-      {message && <p className="text-center text-red-500 mb-4">{message}</p>}{" "}
-      {/* Display messages */}
       <form onSubmit={handleSubmit}>
         <div className="mb-6">
           <label
