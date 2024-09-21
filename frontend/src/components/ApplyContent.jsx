@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast"; // Import react-hot-toast
 
 const ApplyPage = () => {
   const [resume, setResume] = useState(null);
@@ -45,15 +46,18 @@ const ApplyPage = () => {
         setResume(pdfBlob);
         setPdfPreviewUrl(URL.createObjectURL(file)); // Create a URL for the PDF file to preview it
         setError("");
+        toast.success("PDF uploaded successfully!"); // Show success toast
       } else {
         setError("File size exceeds 16MB. Please upload a smaller file.");
         setResume(null);
         setPdfPreviewUrl(null);
+        toast.error("File size exceeds 16MB. Please upload a smaller file."); // Show error toast
       }
     } else {
       setError("Please upload a PDF file.");
       setResume(null);
       setPdfPreviewUrl(null);
+      toast.error("Please upload a valid PDF file."); // Show error toast for invalid format
     }
   };
 
@@ -73,8 +77,6 @@ const ApplyPage = () => {
           resume: resume,
         });
 
-        console.log(data);
-
         const config = {
           method: "post",
           url: "/jobapplication/upload/resume",
@@ -86,24 +88,29 @@ const ApplyPage = () => {
 
         axios(config)
           .then((response) => {
-            console.log(JSON.stringify(response.data));
-            alert("Resume submitted successfully!");
+            toast.success("Resume submitted successfully!"); // Show success toast
             playSuccessMessage(); // Play the success message
-            window.location.reload();
+            setTimeout(() => {
+              window.location.reload();
+            }, 2000); // Reload after 2 seconds
           })
           .catch((error) => {
-            console.log(error.response.data.message);
-            setError(error.response.data.message);
+            console.log(error.response?.data?.message);
+            toast.error(error.response?.data?.message || "An error occurred"); // Show error toast
+            setError(error.response?.data?.message || "An error occurred");
           });
       };
       reader.readAsDataURL(resume);
     } else {
       setError("Please upload a PDF file before submitting.");
+      toast.error("Please upload a PDF file before submitting."); // Show error toast if no PDF uploaded
     }
   };
 
   return (
     <div className="max-w-lg mx-auto mt-10 p-8 bg-white rounded-lg shadow-lg">
+      <Toaster position="top-center" reverseOrder={false} />{" "}
+      {/* Add Toaster for Toast Notifications */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-gray-800">Apply for the Job</h2>
         <button

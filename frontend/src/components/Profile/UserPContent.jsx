@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast"; // Import toast
 
 const UserProf = () => {
   const [user, setUser] = useState({
@@ -12,8 +13,6 @@ const UserProf = () => {
     gender: "",
     birthdate: "",
     email: "",
-    pictureWithId: "",
-    pictureOfId: "",
     profilePicture: "",
   });
 
@@ -40,7 +39,6 @@ const UserProf = () => {
     axios(config)
       .then(function (response) {
         const userData = response.data.data;
-
         setUser({
           fullName: userData.full_name,
           disability: userData.type,
@@ -57,7 +55,7 @@ const UserProf = () => {
         const errorMessage =
           error.response?.data?.message || "An error occurred";
         console.log(error.response?.data);
-        alert(errorMessage);
+        toast.error(errorMessage); // Show error toast instead of alert
       });
   }, []);
 
@@ -77,11 +75,12 @@ const UserProf = () => {
           }));
         };
         reader.readAsDataURL(file);
+        toast.success("Profile picture uploaded successfully!"); // Success toast for file upload
       } else {
-        alert("File size exceeds 16MB. Please upload a smaller file.");
+        toast.error("File size exceeds 16MB. Please upload a smaller file."); // Error toast for large file
       }
     } else {
-      alert("Please upload a jpeg/png file.");
+      toast.error("Please upload a jpeg/png file."); // Error toast for invalid file type
     }
   };
 
@@ -105,7 +104,7 @@ const UserProf = () => {
     const userId = sessionStorage.getItem("Id");
 
     if (passwords.newPassword !== passwords.confirmNewPassword) {
-      alert("New password and confirm new password do not match.");
+      toast.error("New password and confirm new password do not match."); // Error toast for password mismatch
       return;
     }
 
@@ -126,13 +125,15 @@ const UserProf = () => {
 
     axios(config)
       .then(function (response) {
-        alert("Password updated successfully.");
+        toast.success("Password updated successfully!"); // Success toast for password update
         console.log(JSON.stringify(response.data));
         setIsChangingPassword(false);
       })
       .catch(function (error) {
         console.log(error);
-        alert("Failed to update password. Please check your current password.");
+        toast.error(
+          "Failed to update password. Please check your current password."
+        ); // Error toast for password update failure
       });
   };
 
@@ -158,14 +159,16 @@ const UserProf = () => {
 
     axios(config)
       .then(function (response) {
-        alert(response.data.message);
+        toast.success(response.data.message); // Success toast for profile update
       })
       .catch(function (error) {
         console.log(error);
-        alert(error.response.data.message);
+        toast.error(error.response.data.message || "An error occurred"); // Error toast for profile update failure
       });
 
-    window.location.reload();
+    setTimeout(() => {
+      window.location.reload();
+    }, 2000); // Reload the page after 2 seconds
   };
 
   const handleGoBack = () => {
@@ -178,11 +181,14 @@ const UserProf = () => {
       sessionStorage.removeItem("Id");
       sessionStorage.removeItem("Role");
       navigate("/login");
+      toast.success("Logged out successfully!"); // Success toast for logout
     }
   };
 
   return (
     <div className="max-w-4xl mx-auto mt-10 p-8 bg-white rounded-lg shadow-lg">
+      <Toaster position="top-right" reverseOrder={false} />{" "}
+      {/* Toaster for showing toast notifications */}
       {/* Header Section */}
       <div className="flex items-center justify-between">
         <div className="flex items-center">
@@ -242,7 +248,6 @@ const UserProf = () => {
           </button>
         </div>
       </div>
-
       {/* User Details Section */}
       <div className="mt-8 grid grid-cols-2 gap-8 text-left text-gray-800">
         <div>
@@ -316,7 +321,6 @@ const UserProf = () => {
           </div>
         </div>
       </div>
-
       {/* Edit Mode */}
       {isEditing && (
         <div className="mt-8">
@@ -383,7 +387,6 @@ const UserProf = () => {
           </button>
         </div>
       )}
-
       {/* Change Password Section */}
       {isChangingPassword && (
         <div className="mt-8">
