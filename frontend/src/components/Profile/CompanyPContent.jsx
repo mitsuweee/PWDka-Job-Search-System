@@ -6,7 +6,6 @@ const CompanyProf = () => {
   const [company, setCompany] = useState({
     logo: "",
     name: "",
-    email: "",
     description: "",
     address: "",
     city: "",
@@ -40,7 +39,6 @@ const CompanyProf = () => {
         setCompany({
           profile_picture: companyData.profile_picture, // Assuming the logo is returned as a base64 string
           name: companyData.name,
-          email: companyData.email,
           description: companyData.description,
           address: companyData.address,
           city: companyData.city,
@@ -150,11 +148,11 @@ const CompanyProf = () => {
     };
 
     axios(config)
-      .then(function (response) {
+      .then(function () {
         alert("Password updated successfully.");
         setIsChangingPassword(false);
       })
-      .catch(function (error) {
+      .catch(function () {
         alert("Failed to update password. Please check your current password.");
       });
   };
@@ -290,18 +288,6 @@ const CompanyProf = () => {
           {/* Editable Fields */}
           <div className="grid grid-cols-2 gap-8">
             <div>
-              <div className="mb-6">
-                <label className="block text-gray-600 font-semibold">
-                  Email:
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  value={company.name}
-                  onChange={handleChange}
-                  className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                />
-              </div>
               <div className="mb-6">
                 <label className="block text-gray-600 font-semibold">
                   Address:

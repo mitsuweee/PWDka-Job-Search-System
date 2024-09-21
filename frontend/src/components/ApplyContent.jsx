@@ -89,10 +89,11 @@ const ApplyPage = () => {
             console.log(JSON.stringify(response.data));
             alert("Resume submitted successfully!");
             playSuccessMessage(); // Play the success message
+            window.location.reload();
           })
           .catch((error) => {
-            console.log(error);
-            setError("An error occurred while submitting your resume.");
+            console.log(error.response.data.message);
+            setError(error.response.data.message);
           });
       };
       reader.readAsDataURL(resume);
@@ -101,25 +102,10 @@ const ApplyPage = () => {
     }
   };
 
-  const handleLogout = () => {
-    const confirmed = window.confirm("Are you sure you want to logout?");
-    if (confirmed) {
-      sessionStorage.removeItem("Id");
-      sessionStorage.removeItem("Role");
-      navigate("/login");
-    }
-  };
-
   return (
     <div className="max-w-lg mx-auto mt-10 p-8 bg-white rounded-lg shadow-lg">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-gray-800">Apply for the Job</h2>
-        <button
-          onClick={handleLogout}
-          className="ml-4 px-4 py-2 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 transition"
-        >
-          Logout
-        </button>
         <button
           onClick={handleToggleVoice}
           className={`ml-4 px-4 py-2 rounded-full transition-colors duration-200 ${

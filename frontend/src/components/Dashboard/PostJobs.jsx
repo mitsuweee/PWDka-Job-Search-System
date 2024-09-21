@@ -27,13 +27,20 @@ const PostJob = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // Frontend validation for salary
+    if (parseFloat(jobDetails.maxSalary) <= parseFloat(jobDetails.minSalary)) {
+      alert("Maximum Salary must be greater than Minimum Salary");
+      return;
+    }
+    console.log(jobDetails);
+
     const data = JSON.stringify({
-      company_id: sessionStorage.getItem("Id"),
+      company_id: parseFloat(sessionStorage.getItem("Id")),
       position_name: jobDetails.positionName,
       description: jobDetails.jobDescription,
       qualification: jobDetails.qualifications,
-      minimum_salary: jobDetails.minSalary,
-      maximum_salary: jobDetails.maxSalary,
+      minimum_salary: parseFloat(jobDetails.minSalary),
+      maximum_salary: parseFloat(jobDetails.maxSalary),
       positiontype_id: jobDetails.positionType,
       disability_ids: jobDetails.disabilityCategories,
     });
@@ -48,7 +55,7 @@ const PostJob = () => {
     };
 
     axios(config)
-      .then((response) => {
+      .then(() => {
         alert("Job posted successfully!");
         window.location.reload();
       })

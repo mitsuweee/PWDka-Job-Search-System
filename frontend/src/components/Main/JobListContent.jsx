@@ -17,6 +17,11 @@ const JobListing = () => {
   const jobsPerPage = 4; // Number of jobs to display per page
   const navigate = useNavigate();
 
+  const toSentenceCase = (str) => {
+    if (!str) return "";
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  };
+
   useEffect(() => {
     const userId = sessionStorage.getItem("Id");
 
@@ -188,7 +193,7 @@ const JobListing = () => {
                   Newest
                 </button>
                 <button
-                  className={`py-2 px-3 rounded-lg w-full ${
+                  className={`py-2 px-3 rounded-lg w-full my-2 ${
                     sortOption === "oldest"
                       ? "bg-blue-600 text-white"
                       : "bg-gray-200 text-blue-900"
@@ -270,19 +275,19 @@ const JobListing = () => {
                         <span className="material-symbols-outlined mr-2">
                           work
                         </span>
-                        {job.jobName}
+                        {toSentenceCase(job.jobName)}
                       </h2>
                       <p className="text-white">
                         <span className="material-symbols-outlined mr-2">
                           location_on
                         </span>
-                        {job.companyLocation}
+                        {toSentenceCase(job.companyLocation)}
                       </p>
                       <p className="font-semibold text-white">
                         <span className="material-symbols-outlined mr-2">
                           schedule
                         </span>
-                        {job.positionType}
+                        {toSentenceCase(job.positionType)}
                       </p>
                       <p className="font-semibold text-white">
                         <span className="material-symbols-outlined mr-2">
@@ -290,7 +295,9 @@ const JobListing = () => {
                         </span>
                         {job.salary}
                       </p>
-                      <p className="text-gray-200 mt-2">{job.description}</p>
+                      <p className="text-gray-200 mt-2">
+                        {toSentenceCase(job.description)}
+                      </p>
                     </div>
                   </div>
 
@@ -305,25 +312,25 @@ const JobListing = () => {
                         &times;
                       </button>
                       <h2 className="text-2xl font-bold mb-2 text-blue-600">
-                        {job.jobName}
+                        {toSentenceCase(job.jobName)}
                       </h2>
                       <p className="text-lg mb-2 text-gray-700">
-                        {job.companyName}
+                        {toSentenceCase(job.companyName)}
                       </p>
                       <p className="text-md mb-2 text-gray-500">
-                        {job.companyLocation}
+                        {toSentenceCase(job.companyLocation)}
                       </p>
                       <p className="font-bold text-md text-blue-600">
-                        {job.positionType}
+                        {toSentenceCase(job.positionType)}
                       </p>
                       <p className="font-bold text-md mb-2 text-blue-600">
                         {job.salary}
                       </p>
                       <p className="text-md text-gray-700 mb-2">
-                        {job.description}
+                        {toSentenceCase(job.description)}
                       </p>
                       <p className="text-md text-gray-700">
-                        {job.qualifications}
+                        {toSentenceCase(job.qualifications)}
                       </p>
                       <div className="mt-4 flex space-x-4">
                         <a href={"/apply?id=" + selectedJob.id}>
@@ -350,21 +357,23 @@ const JobListing = () => {
                             Company Overview
                           </h3>
                           <p className="text-white">
-                            <strong>Company Name:</strong> {job.companyName}
+                            <strong>Company Name:</strong>{" "}
+                            {toSentenceCase(job.companyName)}
                           </p>
                           <p className="text-white">
-                            <strong>Email:</strong> {job.companyEmail}
+                            <strong>Email:</strong>{" "}
+                            {toSentenceCase(job.companyEmail)}
                           </p>
                           <p className="text-white">
                             <strong>Contact Number:</strong>{" "}
-                            {job.companyContact}
+                            {toSentenceCase(job.companyContact)}
                           </p>
                           <p className="text-white">
                             <strong>Primary Location:</strong>{" "}
-                            {job.companyLocation}
+                            {toSentenceCase(job.companyLocation)}
                           </p>
                           <div className="text-md text-white">
-                            {job.companyDescription}
+                            {toSentenceCase(job.companyDescription)}
                           </div>
                           <button
                             className="mt-2 text-white hover:underline"
@@ -460,85 +469,92 @@ const JobListing = () => {
           {selectedJob ? (
             <div key={selectedJob.id}>
               <div className="p-6 bg-white rounded-lg shadow-2xl">
-                <h2 className="text-3xl font-bold mb-4 text-blue-600">
-                  {selectedJob.jobName}
+                <h2 className="text-2xl font-semibold mb-4 text-blue-600">
+                  {toSentenceCase(selectedJob.jobName)}
                 </h2>
                 <p className="text-lg mb-2 text-gray-700 flex items-center">
                   <span className="material-symbols-outlined mr-2">work</span>
-                  {selectedJob.companyName}
+                  {toSentenceCase(selectedJob.companyName)}
                 </p>
 
-                <p className="text-lg mb-4 text-gray-500">
+                <p className="text-lg mb-4 text-gray-500 flex items-center">
                   <span className="material-symbols-outlined mr-2">
                     location_on
                   </span>
-                  {selectedJob.companyLocation}
+                  {toSentenceCase(selectedJob.companyLocation)}
                 </p>
-                <p className="font-bold text-lg text-blue-600">
+
+                <p className="text-lg mb-2 text-gray-700 flex items-center">
                   <span className="material-symbols-outlined mr-2">
                     schedule
                   </span>
-                  {selectedJob.positionType}
+                  {toSentenceCase(selectedJob.positionType)}
                 </p>
-                <p className="font-bold text-lg mb-4 text-blue-600">
+
+                <p className="text-lg mb-4 text-gray-700 flex items-center">
                   <span className="material-symbols-outlined mr-2">
                     payments
                   </span>
                   {selectedJob.salary}
                 </p>
 
-                {/* Job qualification in li */}
-                <p className="mt-4 text-lg font-semibold text-gray-800">
-                  Qualifications:
+                <p className="text-lg font-medium text-gray-800 mt-6">
+                  Qualifications
                 </p>
                 <ul className="text-gray-700 list-disc pl-4">
                   {selectedJob.qualifications
                     .split(",")
                     .map((qualification, index) => (
-                      <li key={index}>{qualification.trim()}</li>
+                      <li key={index}>
+                        {toSentenceCase(qualification.trim())}
+                      </li>
                     ))}
                 </ul>
+
                 <div className="mt-6 flex space-x-4">
-                  <a href={"/apply?id=" + selectedJob.id}>
+                  <a href={`/apply?id=${selectedJob.id}`}>
                     <button className="bg-blue-500 text-white py-3 px-6 rounded-full shadow-lg hover:bg-blue-600 hover:shadow-2xl transition transform hover:scale-105">
-                      Apply Now
+                      Apply now
                     </button>
                   </a>
                   <button
                     className="bg-gray-500 text-white py-3 px-6 rounded-full shadow-lg hover:bg-gray-600 hover:shadow-2xl transition transform hover:scale-105"
                     onClick={() => setIsMoreInfoVisible(!isMoreInfoVisible)}
                   >
-                    Learn More
+                    Learn more
                   </button>
                 </div>
               </div>
+
               {/* Additional Info Section on Desktop */}
               {isMoreInfoVisible && (
-                <div className="mt-4 p-6 bg-blue-600 rounded-lg shadow-2xl relative">
+                <div className="mt-6 p-6 bg-blue-600 rounded-lg shadow-2xl relative">
                   <img
                     src={selectedJob.companyImage}
                     alt="Company"
                     className="w-20 h-20 object-cover rounded-full absolute top-6 right-6"
                   />
-                  <h3 className="text-2xl font-bold text-white">
-                    Company Overview
+                  <h3 className="text-xl font-semibold text-white mb-4">
+                    Company overview
                   </h3>
                   <p className="text-white">
-                    <strong>Company Name:</strong> {selectedJob.companyName}
+                    <span className="font-medium">Company name:</span>{" "}
+                    {toSentenceCase(selectedJob.companyName)}
                   </p>
                   <p className="text-white">
-                    <strong>Email:</strong> {selectedJob.companyEmail}
+                    <span className="font-medium">Email:</span>{" "}
+                    {toSentenceCase(selectedJob.companyEmail)}
                   </p>
                   <p className="text-white">
-                    <strong>Contact Number:</strong>{" "}
-                    {selectedJob.companyContact}
+                    <span className="font-medium">Contact number:</span>{" "}
+                    {toSentenceCase(selectedJob.companyContact)}
                   </p>
                   <p className="text-white">
-                    <strong>Primary Location:</strong>{" "}
-                    {selectedJob.companyLocation}
+                    <span className="font-medium">Primary location:</span>{" "}
+                    {toSentenceCase(selectedJob.companyLocation)}
                   </p>
-                  <p className="text-lg text-white break-words">
-                    {selectedJob.companyDescription}
+                  <p className="text-white mt-4 text-sm leading-relaxed">
+                    {toSentenceCase(selectedJob.companyDescription)}
                   </p>
                 </div>
               )}

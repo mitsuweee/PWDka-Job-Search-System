@@ -553,14 +553,6 @@ const Signup = () => {
         </button>
 
         <button
-          type="button"
-          onClick={() => (window.location.href = "/login")}
-          className="px-6 py-2 text-lg font-medium text-white bg-green-500 rounded-md shadow-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
-        >
-          Login
-        </button>
-
-        <button
           type="submit"
           className="px-6 py-2 text-lg font-medium text-white bg-blue-600 rounded-md shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
@@ -775,13 +767,7 @@ const Signup = () => {
         >
           Reset
         </button>
-        <button
-          type="button"
-          onClick={() => (window.location.href = "/login")}
-          className="px-6 py-2 text-lg font-medium text-white bg-green-500 rounded-md shadow-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
-        >
-          Login
-        </button>
+
         <button
           type="submit"
           className="px-6 py-2 text-lg font-medium text-white bg-blue-600 rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
