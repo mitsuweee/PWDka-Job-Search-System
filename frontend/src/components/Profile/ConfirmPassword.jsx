@@ -1,17 +1,16 @@
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom"; // Import useLocation to extract query params
+import { useLocation } from "react-router-dom";
 import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
 
 const ConfirmPassword = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false); // Track submission state
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Extract the reset token from the URL query parameters
   const query = new URLSearchParams(useLocation().search);
-  const resetToken = query.get("token"); // This gets the ?token=abc123 part of the URL
+  const resetToken = query.get("token");
 
   const handleNewPasswordChange = (e) => {
     setNewPassword(e.target.value);
@@ -26,8 +25,7 @@ const ConfirmPassword = () => {
 
     // Check if passwords match
     if (newPassword !== confirmPassword) {
-      setError("Passwords do not match!");
-      setSuccess("");
+      toast.error("Passwords do not match!");
       return;
     }
 
@@ -52,15 +50,13 @@ const ConfirmPassword = () => {
       const response = await axios(config);
       console.log(response.data);
 
-      // If successful, show success message
-      setSuccess("Your password has been changed successfully!");
-      setError("");
+      // If successful, show success message via toast
+      toast.success("Your password has been changed successfully!");
       setNewPassword("");
       setConfirmPassword("");
     } catch (error) {
       console.error("Error resetting password:", error);
-      setError("Failed to reset password. Please try again.");
-      setSuccess("");
+      toast.error("Failed to reset password. Please try again.");
     } finally {
       setIsSubmitting(false); // Re-enable form
     }
@@ -68,6 +64,8 @@ const ConfirmPassword = () => {
 
   return (
     <div className="max-w-lg mb-10 mx-auto mt-10 p-12 bg-white rounded-2xl shadow-xl">
+      <Toaster position="top-right" reverseOrder={false} />{" "}
+      {/* Toaster for displaying notifications */}
       <div className="flex justify-center mb-6">
         <img src="imgs/LOGO PWDKA.png" alt="Logo" className="h-14 w-22" />
       </div>
@@ -77,10 +75,6 @@ const ConfirmPassword = () => {
       <p className="text-center text-gray-700 mb-6">
         Enter your new password and confirm it below to reset your password.
       </p>
-
-      {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-      {success && <p className="text-green-500 text-center mb-4">{success}</p>}
-
       <form onSubmit={handleSubmit}>
         <div className="mb-6">
           <label

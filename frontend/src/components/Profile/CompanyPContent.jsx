@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
 
 const CompanyProf = () => {
   const [company, setCompany] = useState({
@@ -35,7 +36,6 @@ const CompanyProf = () => {
     axios(config)
       .then(function (response) {
         const companyData = response.data.data;
-
         setCompany({
           profile_picture: companyData.profile_picture, // Assuming the logo is returned as a base64 string
           name: companyData.name,
@@ -48,7 +48,7 @@ const CompanyProf = () => {
       .catch(function (error) {
         const errorMessage =
           error.response?.data?.message || "An error occurred";
-        alert(errorMessage);
+        toast.error(errorMessage);
       });
   }, []);
 
@@ -68,11 +68,12 @@ const CompanyProf = () => {
           }));
         };
         reader.readAsDataURL(file);
+        toast.success("Logo uploaded successfully!");
       } else {
-        alert("File size exceeds 16MB. Please upload a smaller file.");
+        toast.error("File size exceeds 16MB. Please upload a smaller file.");
       }
     } else {
-      alert("Please upload a jpeg/png file.");
+      toast.error("Please upload a jpeg/png file.");
     }
   };
 
@@ -116,19 +117,22 @@ const CompanyProf = () => {
 
     axios(config)
       .then(function (response) {
-        alert(response.data.message);
+        toast.success(response.data.message);
       })
       .catch(function (error) {
-        alert(error.response.data.message);
+        toast.error(error.response.data.message);
       });
-    window.location.reload();
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 2000); // Reload the page after 2 seconds
   };
 
   const handlePasswordUpdate = () => {
     const companyId = sessionStorage.getItem("Id");
 
     if (passwords.newPassword !== passwords.confirmNewPassword) {
-      alert("New password and confirm new password do not match.");
+      toast.error("New password and confirm new password do not match.");
       return;
     }
 
@@ -149,11 +153,13 @@ const CompanyProf = () => {
 
     axios(config)
       .then(function () {
-        alert("Password updated successfully.");
+        toast.success("Password updated successfully.");
         setIsChangingPassword(false);
       })
       .catch(function () {
-        alert("Failed to update password. Please check your current password.");
+        toast.error(
+          "Failed to update password. Please check your current password."
+        ); // Error toast for password update failure
       });
   };
 
@@ -167,11 +173,14 @@ const CompanyProf = () => {
       sessionStorage.removeItem("Id");
       sessionStorage.removeItem("Role");
       navigate("/login");
+      toast.success("Logged out successfully!");
     }
   };
 
   return (
     <div className="max-w-4xl mx-auto mt-10 p-8 bg-white rounded-lg shadow-lg">
+      <Toaster position="top-center" reverseOrder={false} />{" "}
+      {/* Toaster for showing toast notifications */}
       {/* Header Section */}
       <div className="flex items-center justify-between">
         <div className="flex items-center">
@@ -223,13 +232,11 @@ const CompanyProf = () => {
           </button>
         </div>
       </div>
-
       {/* Company Description */}
       <div className="mt-6">
         <h3 className="text-lg font-semibold text-gray-800">About</h3>
         <p className="text-gray-700 mt-2">{company.description}</p>
       </div>
-
       {/* Company Details Section */}
       <div className="mt-8 grid grid-cols-2 gap-8 text-left text-gray-800">
         <div>
@@ -281,7 +288,6 @@ const CompanyProf = () => {
           </div>
         </div>
       </div>
-
       {/* Edit Mode */}
       {isEditing && (
         <div className="mt-8">
@@ -360,7 +366,6 @@ const CompanyProf = () => {
           </button>
         </div>
       )}
-
       {/* Change Password Section */}
       {isChangingPassword && (
         <div className="mt-8">
