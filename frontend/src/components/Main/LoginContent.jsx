@@ -61,7 +61,7 @@ const LoginComp = () => {
 
   return (
     <section className="bg-white relative">
-      <Toaster position="top-right" reverseOrder={false} />{" "}
+      <Toaster position="top-center" reverseOrder={false} />{" "}
       {/* Toast Notifications */}
       {/* Full Page Loader */}
       {loading && (

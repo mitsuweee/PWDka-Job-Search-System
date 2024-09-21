@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
+import toast, { Toaster } from "react-hot-toast"; // Import toast
 
-const MAX_FILE_SIZE = 16777215; // 16,777,215 bytes (16MB)
+const MAX_FILE_SIZE = 16777215; // 16MB
 
 const Signup = () => {
   const [formType, setFormType] = useState("user");
   const [showPassword, setShowPassword] = useState(false);
   const [showReEnterPassword, setShowReEnterPassword] = useState(false);
-  const [fade, setFade] = useState(true);
 
   const [userFormValues, setUserFormValues] = useState({
     firstName: "",
@@ -71,11 +71,12 @@ const Signup = () => {
           }
         };
         reader.readAsDataURL(file);
+        toast.success("File uploaded successfully!"); // Show success toast for file upload
       } else {
-        alert("File size exceeds 16MB. Please upload a smaller file.");
+        toast.error("File size exceeds 16MB. Please upload a smaller file."); // Error toast for large files
       }
     } else {
-      alert("Please upload a jpeg/png file.");
+      toast.error("Please upload a jpeg/png file."); // Error toast for incorrect file type
     }
   };
 
@@ -128,6 +129,7 @@ const Signup = () => {
         companyLogo: "",
       });
     }
+    toast.success("Form reset successfully!"); // Toast on reset
   };
 
   const handleSubmit = (e) => {
@@ -179,14 +181,12 @@ const Signup = () => {
 
     axios(config)
       .then((response) => {
-        console.log(response.data);
-        alert(response.data.message);
+        toast.success(response.data.message); // Show success toast on registration
       })
       .catch((error) => {
         const errorMessage =
           error.response?.data?.message || "An error occurred";
-        console.log(error.response?.data);
-        alert(errorMessage);
+        toast.error(errorMessage); // Show error toast for registration failure
       });
   };
 
@@ -785,6 +785,8 @@ const Signup = () => {
 
   return (
     <section className="bg-white">
+      <Toaster position="top-center" reverseOrder={false} />{" "}
+      {/* Toast Notifications */}
       <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
         <section className="relative flex h-32 items-end bg-gray-900 lg:col-span-5 lg:h-full xl:col-span-6">
           <img
