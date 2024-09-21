@@ -1,5 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
+import Alert from "@mui/material/Alert";
+import Snackbar from "@mui/material/Snackbar";
 
 const PostJob = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -14,6 +16,15 @@ const PostJob = () => {
     disabilityCategories: [],
   });
   const [showDisabilityOptions, setShowDisabilityOptions] = useState(false);
+
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertType, setAlertType] = useState("success");
+  const [open, setOpen] = useState(false);
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") return;
+    setOpen(false);
+  };
 
   const handleLogout = () => {
     const confirmed = window.confirm("Are you sure you want to logout?");
@@ -56,13 +67,19 @@ const PostJob = () => {
 
     axios(config)
       .then(() => {
-        alert("Job posted successfully!");
-        window.location.reload();
+        setAlertMessage("Job posted successfully!");
+        setAlertType("success");
+        setOpen(true); // Show success alert
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000); // Reload page after 2 seconds
       })
       .catch((error) => {
         const errorMessage =
           error.response?.data?.message || "An error occurred";
-        alert(errorMessage);
+        setAlertMessage(errorMessage);
+        setAlertType("error");
+        setOpen(true); // Show error alert
       });
   };
 
@@ -294,6 +311,15 @@ const PostJob = () => {
             Post Job
           </button>
         </form>
+        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+          <Alert
+            onClose={handleClose}
+            severity={alertType}
+            sx={{ width: "100%" }}
+          >
+            {alertMessage}
+          </Alert>
+        </Snackbar>
       </main>
     </div>
   );
