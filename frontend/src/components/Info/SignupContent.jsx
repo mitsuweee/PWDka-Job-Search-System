@@ -570,178 +570,177 @@ const Signup = () => {
         </h2>
       </div>
 
-      <div className="col-span-12 md:col-span-8">
-        <div className="grid grid-cols-2 gap-6">
-          <div className="col-span-2">
-            <label
-              htmlFor="companyName"
-              className="block text-lg font-medium text-gray-700"
-            >
-              Company Name
-            </label>
-            <input
-              type="text"
-              id="companyName"
-              name="companyName"
-              value={companyFormValues.companyName}
-              onChange={handleInputChange}
-              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
-              required
-            />
-          </div>
+      {/* Left Column */}
+      <div className="col-span-12 md:col-span-6">
+        <div>
+          <label
+            htmlFor="companyName"
+            className="block text-lg font-medium text-gray-700"
+          >
+            Company Name
+          </label>
+          <input
+            type="text"
+            id="companyName"
+            name="companyName"
+            value={companyFormValues.companyName}
+            onChange={handleInputChange}
+            className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
+            required
+          />
+        </div>
 
-          <div className="col-span-2">
-            <label
-              htmlFor="companyDescription"
-              className="block text-lg font-medium text-gray-700"
-            >
-              Company Description
-            </label>
-            <input
-              type="text"
-              id="companyDescription"
-              name="companyDescription"
-              value={companyFormValues.companyDescription}
-              onChange={handleInputChange}
-              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
-              required
-            />
-          </div>
+        <div className="mt-4">
+          <label
+            htmlFor="companyDescription"
+            className="block text-lg font-medium text-gray-700"
+          >
+            Company Description
+          </label>
+          <textarea
+            id="companyDescription"
+            name="companyDescription"
+            value={companyFormValues.companyDescription}
+            onChange={handleInputChange}
+            className="mt-2 w-full h-24 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
+            required
+          />
+        </div>
 
-          <div>
-            <label
-              htmlFor="companyAddress"
-              className="block text-lg font-medium text-gray-700"
-            >
-              Address
-            </label>
-            <input
-              type="text"
-              id="companyAddress"
-              name="companyAddress"
-              value={companyFormValues.companyAddress}
-              onChange={handleInputChange}
-              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
-              required
-            />
-          </div>
+        <div className="mt-4">
+          <label
+            htmlFor="companyAddress"
+            className="block text-lg font-medium text-gray-700"
+          >
+            Address
+          </label>
+          <input
+            type="text"
+            id="companyAddress"
+            name="companyAddress"
+            value={companyFormValues.companyAddress}
+            onChange={handleInputChange}
+            className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
+            required
+          />
+        </div>
 
-          <div>
-            <label
-              htmlFor="companyCity"
-              className="block text-lg font-medium text-gray-700"
-            >
-              City
-            </label>
-            <input
-              type="text"
-              id="companyCity"
-              name="companyCity"
-              value={companyFormValues.companyCity}
-              onChange={handleInputChange}
-              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
-              required
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="companyContactNumber"
-              className="block text-lg font-medium text-gray-700"
-            >
-              Contact Number
-            </label>
-            <input
-              type="text"
-              id="companyContactNumber"
-              name="companyContactNumber"
-              value={companyFormValues.companyContactNumber}
-              onChange={handleInputChange}
-              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
-              required
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="companyEmail"
-              className="block text-lg font-medium text-gray-700"
-            >
-              Email
-            </label>
-            <input
-              type="email"
-              id="companyEmail"
-              name="companyEmail"
-              value={companyFormValues.companyEmail}
-              onChange={handleInputChange}
-              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
-              required
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="companyPassword"
-              className="block text-lg font-medium text-gray-700"
-            >
-              Password
-            </label>
-            <div className="relative">
-              <input
-                type={showPassword ? "text" : "password"}
-                id="companyPassword"
-                name="companyPassword"
-                value={companyFormValues.companyPassword}
-                onChange={handleInputChange}
-                className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
-                required
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-600 hover:text-blue-500"
-              >
-                <span className="material-symbols-outlined">
-                  {showPassword ? "visibility_off" : "visibility"}
-                </span>
-              </button>
-            </div>
-          </div>
-
-          <div>
-            <label
-              htmlFor="companyReEnterPassword"
-              className="block text-lg font-medium text-gray-700"
-            >
-              Re-Enter Password
-            </label>
-            <div className="relative">
-              <input
-                type={showReEnterPassword ? "text" : "password"}
-                id="companyReEnterPassword"
-                name="companyReEnterPassword"
-                value={companyFormValues.companyReEnterPassword}
-                onChange={handleInputChange}
-                className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
-                required
-              />
-              <button
-                type="button"
-                onClick={() => setShowReEnterPassword(!showReEnterPassword)}
-                className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-600 hover:text-blue-500"
-              >
-                <span className="material-symbols-outlined">
-                  {showReEnterPassword ? "visibility_off" : "visibility"}
-                </span>
-              </button>
-            </div>
-          </div>
+        <div className="mt-4">
+          <label
+            htmlFor="companyContactNumber"
+            className="block text-lg font-medium text-gray-700"
+          >
+            Contact Number
+          </label>
+          <input
+            type="text"
+            id="companyContactNumber"
+            name="companyContactNumber"
+            value={companyFormValues.companyContactNumber}
+            onChange={handleInputChange}
+            className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
+            required
+          />
         </div>
       </div>
 
-      <div className="col-span-12 md:col-span-4">
+      {/* Right Column */}
+      <div className="col-span-12 md:col-span-6">
         <div>
+          <label
+            htmlFor="companyCity"
+            className="block text-lg font-medium text-gray-700"
+          >
+            City
+          </label>
+          <input
+            type="text"
+            id="companyCity"
+            name="companyCity"
+            value={companyFormValues.companyCity}
+            onChange={handleInputChange}
+            className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
+            required
+          />
+        </div>
+
+        <div className="mt-4">
+          <label
+            htmlFor="companyEmail"
+            className="block text-lg font-medium text-gray-700"
+          >
+            Email
+          </label>
+          <input
+            type="email"
+            id="companyEmail"
+            name="companyEmail"
+            value={companyFormValues.companyEmail}
+            onChange={handleInputChange}
+            className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
+            required
+          />
+        </div>
+
+        <div className="mt-4">
+          <label
+            htmlFor="companyPassword"
+            className="block text-lg font-medium text-gray-700"
+          >
+            Password
+          </label>
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              id="companyPassword"
+              name="companyPassword"
+              value={companyFormValues.companyPassword}
+              onChange={handleInputChange}
+              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
+              required
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-600 hover:text-blue-500"
+            >
+              <span className="material-symbols-outlined">
+                {showPassword ? "visibility_off" : "visibility"}
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <div className="mt-4">
+          <label
+            htmlFor="companyReEnterPassword"
+            className="block text-lg font-medium text-gray-700"
+          >
+            Re-Enter Password
+          </label>
+          <div className="relative">
+            <input
+              type={showReEnterPassword ? "text" : "password"}
+              id="companyReEnterPassword"
+              name="companyReEnterPassword"
+              value={companyFormValues.companyReEnterPassword}
+              onChange={handleInputChange}
+              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
+              required
+            />
+            <button
+              type="button"
+              onClick={() => setShowReEnterPassword(!showReEnterPassword)}
+              className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-600 hover:text-blue-500"
+            >
+              <span className="material-symbols-outlined">
+                {showReEnterPassword ? "visibility_off" : "visibility"}
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <div className="mt-4">
           <label
             htmlFor="companyLogo"
             className="block text-lg font-medium text-gray-700"
