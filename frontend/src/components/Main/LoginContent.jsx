@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
 
 const LoginComp = () => {
   const [formValues, setFormValues] = useState({
     email: "",
     password: "",
   });
-
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false); // Add loading state
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -16,6 +17,7 @@ const LoginComp = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading(true); // Show loader
 
     const data = JSON.stringify({
       email: formValues.email.toLowerCase(),
@@ -33,29 +35,40 @@ const LoginComp = () => {
 
     axios(config)
       .then(function (response) {
-        console.log(response.data);
-        alert(response.data.message);
+        toast.success(response.data.message); // Show success toast
+        setLoading(false); // Hide loader when the request completes
 
-        const { id, role } = response.data;
-        sessionStorage.setItem("Id", id);
-        sessionStorage.setItem("Role", role);
+        // Give some time to show the success toast before redirect
+        setTimeout(() => {
+          const { id, role } = response.data;
+          sessionStorage.setItem("Id", id);
+          sessionStorage.setItem("Role", role);
 
-        if (role === "user") {
-          window.location.href = "/joblist";
-        } else {
-          window.location.href = "/dashc";
-        }
+          if (role === "user") {
+            window.location.href = "/joblist";
+          } else {
+            window.location.href = "/dashc";
+          }
+        }, 2000); // 2-second delay before redirecting
       })
       .catch(function (error) {
         const errorMessage =
           error.response?.data?.message || "An error occurred";
-        console.log(error.response?.data);
-        alert(errorMessage);
+        toast.error(errorMessage); // Show error toast
+        setLoading(false); // Hide loader on error
       });
   };
 
   return (
-    <section className="bg-white">
+    <section className="bg-white relative">
+      <Toaster position="top-right" reverseOrder={false} />{" "}
+      {/* Toast Notifications */}
+      {/* Full Page Loader */}
+      {loading && (
+        <div className="fixed inset-0 bg-white bg-opacity-90 flex items-center justify-center z-50">
+          <div className="animate-spin rounded-full h-32 w-32 border-t-4 border-blue-500"></div>
+        </div>
+      )}
       <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
         <section className="relative flex h-32 items-end bg-gray-900 lg:col-span-5 lg:h-full xl:col-span-6">
           <img
@@ -103,6 +116,8 @@ const LoginComp = () => {
                 You'll be directed to the appropriate dashboard based on your
                 role.
               </p>
+
+              {/* Form */}
               <form
                 className="mt-8 grid grid-cols-12 gap-6"
                 onSubmit={handleSubmit}
@@ -158,6 +173,7 @@ const LoginComp = () => {
                   </div>
                 </div>
 
+                {/* Submit Button */}
                 <div className="col-span-12 flex justify-between mt-6">
                   <button
                     type="submit"
@@ -168,6 +184,7 @@ const LoginComp = () => {
                 </div>
               </form>
 
+              {/* Links */}
               <div className="flex items-center justify-between border-t-2 border-white mt-6 pt-6">
                 <div className="flex items-center justify-start">
                   <p className="text-sm text-gray-800">Not a member?</p>
