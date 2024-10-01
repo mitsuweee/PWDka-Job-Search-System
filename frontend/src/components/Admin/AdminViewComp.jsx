@@ -69,6 +69,8 @@ const AdminViewComp = () => {
       // Clear session storage and redirect to the login route
       sessionStorage.removeItem("Id");
       sessionStorage.removeItem("Role");
+      sessionStorage.removeItem("Token");
+
       navigate("/login");
     }
   };

@@ -14,6 +14,8 @@ const AdminVerifyComp = () => {
     if (confirmed) {
       sessionStorage.removeItem("Id");
       sessionStorage.removeItem("Role");
+      sessionStorage.removeItem("Token");
+
       navigate("/login");
     }
   };

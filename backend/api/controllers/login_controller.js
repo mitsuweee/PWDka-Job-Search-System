@@ -2,6 +2,12 @@ const { json } = require("body-parser");
 const knex = require("../models/connection_db");
 const bcrypt = require("bcrypt");
 
+const crypto = require("crypto");
+const jwt = require("jsonwebtoken");
+
+// Generate a 256-bit (32-byte) secret key, encoded in hexadecimal
+const SECRET_KEY = crypto.randomBytes(32).toString("hex");
+
 const login = async (req, res, next) => {
   const email = req.body.email.toLowerCase();
   const password = req.body.password;
@@ -60,11 +66,19 @@ const login = async (req, res, next) => {
       });
     }
 
-    // Successful login response
+    // Generate a JWT token with a 2-hour expiration
+    const token = jwt.sign(
+      { id, role }, // Payload with user ID and role
+      SECRET_KEY, // Secret key to sign the token
+      { expiresIn: "2h" } // Token expiration time
+    );
+
+    // Successful login response with token
     return res.status(200).json({
       successful: true,
       role: role,
       id: id,
+      token: token, // Include the token in the response
       message: `Successfully Logged In as ${
         role.charAt(0).toUpperCase() + role.slice(1)
       }.`,

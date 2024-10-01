@@ -40,7 +40,10 @@ const LoginComp = () => {
 
         // Give some time to show the success toast before redirect
         setTimeout(() => {
-          const { id, role } = response.data;
+          const { id, role, token } = response.data;
+
+          // Store token in sessionStorage
+          sessionStorage.setItem("Token", token);
           sessionStorage.setItem("Id", id);
           sessionStorage.setItem("Role", role);
 
