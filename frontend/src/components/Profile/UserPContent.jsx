@@ -38,7 +38,6 @@ const UserProf = () => {
 
     axios(config)
       .then(function (response) {
-        console.log(response);
         const userData = response.data.data;
         setUser({
           fullName: userData.full_name,
@@ -55,8 +54,7 @@ const UserProf = () => {
       .catch(function (error) {
         const errorMessage =
           error.response?.data?.message || "An error occurred";
-        console.log(error.response?.data);
-        toast.error(errorMessage); // Show error toast instead of alert
+        toast.error(errorMessage);
       });
   }, []);
 
@@ -76,12 +74,12 @@ const UserProf = () => {
           }));
         };
         reader.readAsDataURL(file);
-        toast.success("Profile picture uploaded successfully!"); // Success toast for file upload
+        toast.success("Profile picture uploaded successfully!");
       } else {
-        toast.error("File size exceeds 16MB. Please upload a smaller file."); // Error toast for large file
+        toast.error("File size exceeds 16MB. Please upload a smaller file.");
       }
     } else {
-      toast.error("Please upload a jpeg/png file."); // Error toast for invalid file type
+      toast.error("Please upload a jpeg/png file.");
     }
   };
 
@@ -105,7 +103,7 @@ const UserProf = () => {
     const userId = sessionStorage.getItem("Id");
 
     if (passwords.newPassword !== passwords.confirmNewPassword) {
-      toast.error("New password and confirm new password do not match."); // Error toast for password mismatch
+      toast.error("New password and confirm new password do not match.");
       return;
     }
 
@@ -126,15 +124,13 @@ const UserProf = () => {
 
     axios(config)
       .then(function (response) {
-        toast.success("Password updated successfully!"); // Success toast for password update
-        console.log(JSON.stringify(response.data));
+        toast.success("Password updated successfully!");
         setIsChangingPassword(false);
       })
       .catch(function (error) {
-        console.log(error);
         toast.error(
           "Failed to update password. Please check your current password."
-        ); // Error toast for password update failure
+        );
       });
   };
 
@@ -160,11 +156,10 @@ const UserProf = () => {
 
     axios(config)
       .then(function (response) {
-        toast.success(response.data.message); // Success toast for profile update
+        toast.success(response.data.message);
       })
       .catch(function (error) {
-        console.log(error);
-        toast.error(error.response.data.message || "An error occurred"); // Error toast for profile update failure
+        toast.error(error.response.data.message || "An error occurred");
       });
 
     setTimeout(() => {
@@ -173,7 +168,7 @@ const UserProf = () => {
   };
 
   const handleGoBack = () => {
-    navigate(-1); // Navigate to the previous page
+    navigate(-1);
   };
 
   const handleLogout = () => {
@@ -182,16 +177,14 @@ const UserProf = () => {
       sessionStorage.removeItem("Id");
       sessionStorage.removeItem("Role");
       navigate("/login");
-      toast.success("Logged out successfully!"); // Success toast for logout
+      toast.success("Logged out successfully!");
     }
   };
 
   return (
     <div className="max-w-4xl mx-auto mt-10 p-8 bg-white rounded-lg shadow-lg">
-      <Toaster position="top-center" reverseOrder={false} />{" "}
-      {/* Toaster for showing toast notifications */}
-      {/* Header Section */}
-      <div className="flex items-center justify-between">
+      <Toaster position="top-center" reverseOrder={false} />
+      <div className="flex flex-col md:flex-row items-center justify-between">
         <div className="flex items-center">
           <img
             src={user.profilePicture}
@@ -199,7 +192,7 @@ const UserProf = () => {
             className="w-24 h-24 rounded-full border-4 border-blue-700 shadow-lg"
           />
           <div className="ml-6">
-            <h2 className="text-3xl font-bold text-gray-900">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
               {user.fullName}
             </h2>
             <div className="flex mt-2">
@@ -208,56 +201,55 @@ const UserProf = () => {
               </p>
               <p className="text-gray-600">{user.disability}</p>
             </div>
-            <div className="flex mt-4">
+            <div className="flex flex-col md:flex-row mt-4">
               <button
                 onClick={handleEdit}
-                className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300 flex items-center justify-center"
+                className="w-full md:w-auto px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300 flex items-center justify-center mb-4 md:mb-0 md:mr-4"
               >
-                <span className="material-symbols-outlined text-xl mr-2 flex-shrink-0">
+                <span className="material-symbols-outlined text-xl mr-2">
                   edit
                 </span>
-                <span className="inline-block">Edit Profile</span>
+                Edit Profile
               </button>
 
               <button
                 onClick={handlePasswordToggle}
-                className="ml-4 px-4 py-2 bg-yellow-500 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 transition duration-300 flex items-center justify-center"
+                className="w-full md:w-auto px-4 py-2 bg-yellow-500 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 transition duration-300 flex items-center justify-center"
               >
                 <span className="material-symbols-outlined text-xl mr-2">
                   lock
                 </span>
-                <span>Change Password</span>
+                Change Password
               </button>
             </div>
           </div>
         </div>
-        <div className="flex mt-4">
+        <div className="flex flex-col md:flex-row mt-4">
           <button
             onClick={handleGoBack}
-            className="px-4 py-2 bg-gray-200 text-blue-900 font-semibold rounded-lg shadow-md hover:bg-gray-300 transition duration-300 mr-4"
+            className="w-full md:w-auto px-4 py-2 bg-gray-200 text-blue-900 font-semibold rounded-lg shadow-md hover:bg-gray-300 transition duration-300 mb-4 md:mb-0 md:mr-4"
           >
             Back
           </button>
           <button
             onClick={handleLogout}
-            className="px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition duration-300 flex items-center"
+            className="w-full md:w-auto px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition duration-300 flex items-center justify-center"
           >
             <span className="material-symbols-outlined text-xl mr-2">
               logout
             </span>
-            <span>Logout</span>
+            Logout
           </button>
         </div>
       </div>
-      {/* User Details Section */}
-      <div className="mt-8 grid grid-cols-2 gap-8 text-left text-gray-800">
+      <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 text-left text-gray-800">
         <div>
           <div className="mb-4">
             <p className="text-lg font-semibold text-gray-800 flex items-center">
               <span className="material-symbols-outlined text-2xl mr-2">
                 home
               </span>
-              <span>Address:</span>
+              Address:
             </p>
             <p className="text-gray-600 bg-gray-200 p-5 rounded-lg">
               {user.address}
@@ -268,7 +260,7 @@ const UserProf = () => {
               <span className="material-symbols-outlined text-2xl mr-2">
                 location_city
               </span>
-              <span>City:</span>
+              City:
             </p>
             <p className="text-gray-600 bg-gray-200 p-5 rounded-lg">
               {user.city}
@@ -279,7 +271,7 @@ const UserProf = () => {
               <span className="material-symbols-outlined text-2xl mr-2">
                 phone
               </span>
-              <span>Contact Number:</span>
+              Contact Number:
             </p>
             <p className="text-gray-600 bg-gray-200 p-5 rounded-lg">
               {user.contactNumber}
@@ -290,7 +282,7 @@ const UserProf = () => {
               <span className="material-symbols-outlined text-2xl mr-2">
                 person
               </span>
-              <span>Gender:</span>
+              Gender:
             </p>
             <p className="text-gray-600 bg-gray-200 p-5 rounded-lg">
               {user.gender}
@@ -303,7 +295,7 @@ const UserProf = () => {
               <span className="material-symbols-outlined text-2xl mr-2">
                 calendar_today
               </span>
-              <span>Birthdate:</span>
+              Birthdate:
             </p>
             <p className="text-gray-600 bg-gray-200 p-5 rounded-lg">
               {user.birthdate}
@@ -314,7 +306,7 @@ const UserProf = () => {
               <span className="material-symbols-outlined text-2xl mr-2">
                 email
               </span>
-              <span>Email:</span>
+              Email:
             </p>
             <p className="text-gray-600 bg-gray-200 p-5 rounded-md">
               {user.email}
@@ -322,11 +314,9 @@ const UserProf = () => {
           </div>
         </div>
       </div>
-      {/* Edit Mode */}
       {isEditing && (
         <div className="mt-8">
-          {/* Editable Fields */}
-          <div className="grid grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
               <div className="mb-6">
                 <label className="block text-gray-600 font-semibold">
@@ -388,7 +378,6 @@ const UserProf = () => {
           </button>
         </div>
       )}
-      {/* Change Password Section */}
       {isChangingPassword && (
         <div className="mt-8">
           <h3 className="text-xl font-bold text-gray-900 mb-4">

@@ -159,7 +159,7 @@ const CompanyProf = () => {
       .catch(function () {
         toast.error(
           "Failed to update password. Please check your current password."
-        ); // Error toast for password update failure
+        );
       });
   };
 
@@ -179,10 +179,8 @@ const CompanyProf = () => {
 
   return (
     <div className="max-w-4xl mx-auto mt-10 p-8 bg-white rounded-lg shadow-lg">
-      <Toaster position="top-center" reverseOrder={false} />{" "}
-      {/* Toaster for showing toast notifications */}
-      {/* Header Section */}
-      <div className="flex items-center justify-between">
+      <Toaster position="top-center" reverseOrder={false} />
+      <div className="flex flex-col md:flex-row items-center justify-between">
         <div className="flex items-center">
           <img
             src={`data:image/png;base64,${company.profile_picture}`}
@@ -190,62 +188,62 @@ const CompanyProf = () => {
             className="w-24 h-24 rounded-full border-4 border-blue-700 shadow-lg"
           />
           <div className="ml-6">
-            <h2 className="text-3xl font-bold text-gray-900">{company.name}</h2>
-            <div className="flex mt-4">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
+              {company.name}
+            </h2>
+            <div className="flex flex-col md:flex-row mt-4">
               <button
                 onClick={handleEdit}
-                className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300 flex items-center justify-center"
+                className="w-full md:w-auto px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300 flex items-center justify-center mb-4 md:mb-0 md:mr-4"
               >
-                <span className="material-symbols-outlined text-xl mr-2 flex-shrink-0">
+                <span className="material-symbols-outlined text-xl mr-2">
                   edit
                 </span>
-                <span className="inline-block">Edit Profile</span>
+                Edit Profile
               </button>
 
               <button
                 onClick={handlePasswordToggle}
-                className="ml-4 px-4 py-2 bg-yellow-500 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 transition duration-300 flex items-center justify-center"
+                className="w-full md:w-auto px-4 py-2 bg-yellow-500 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 transition duration-300 flex items-center justify-center"
               >
                 <span className="material-symbols-outlined text-xl mr-2">
                   lock
                 </span>
-                <span>Change Password</span>
+                Change Password
               </button>
             </div>
           </div>
         </div>
-        <div className="flex mt-4">
+        <div className="flex flex-col md:flex-row mt-4">
           <button
             onClick={handleGoBack}
-            className="px-4 py-2 bg-gray-200 text-blue-900 font-semibold rounded-lg shadow-md hover:bg-gray-300 transition duration-300 mr-4"
+            className="w-full md:w-auto px-4 py-2 bg-gray-200 text-blue-900 font-semibold rounded-lg shadow-md hover:bg-gray-300 transition duration-300 mb-4 md:mb-0 md:mr-4"
           >
             Back
           </button>
           <button
             onClick={handleLogout}
-            className="px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition duration-300 flex items-center"
+            className="w-full md:w-auto px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition duration-300 flex items-center justify-center"
           >
             <span className="material-symbols-outlined text-xl mr-2">
               logout
             </span>
-            <span>Logout</span>
+            Logout
           </button>
         </div>
       </div>
-      {/* Company Description */}
       <div className="mt-6">
         <h3 className="text-lg font-semibold text-gray-800">About</h3>
         <p className="text-gray-700 mt-2">{company.description}</p>
       </div>
-      {/* Company Details Section */}
-      <div className="mt-8 grid grid-cols-2 gap-8 text-left text-gray-800">
+      <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 text-left text-gray-800">
         <div>
           <div className="mb-4">
             <p className="text-lg font-semibold text-gray-800 flex items-center">
               <span className="material-symbols-outlined text-xl mr-2">
                 business
               </span>
-              <span>Name:</span>
+              Name:
             </p>
             <p className="text-gray-600 bg-gray-200 p-5 rounded-lg">
               {company.name}
@@ -256,7 +254,7 @@ const CompanyProf = () => {
               <span className="material-symbols-outlined text-xl mr-2">
                 location_on
               </span>
-              <span>Address:</span>
+              Address:
             </p>
             <p className="text-gray-600 bg-gray-200 p-5 rounded-lg">
               {company.address}
@@ -269,7 +267,7 @@ const CompanyProf = () => {
               <span className="material-symbols-outlined text-xl mr-2">
                 location_city
               </span>
-              <span>City:</span>
+              City:
             </p>
             <p className="text-gray-600 bg-gray-200 p-5 rounded-lg">
               {company.city}
@@ -280,7 +278,7 @@ const CompanyProf = () => {
               <span className="material-symbols-outlined text-xl mr-2">
                 phone
               </span>
-              <span>Contact Number:</span>
+              Contact Number:
             </p>
             <p className="text-gray-600 bg-gray-200 p-5 rounded-lg">
               {company.contactNumber}
@@ -288,11 +286,9 @@ const CompanyProf = () => {
           </div>
         </div>
       </div>
-      {/* Edit Mode */}
       {isEditing && (
         <div className="mt-8">
-          {/* Editable Fields */}
-          <div className="grid grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
               <div className="mb-6">
                 <label className="block text-gray-600 font-semibold">
@@ -366,7 +362,6 @@ const CompanyProf = () => {
           </button>
         </div>
       )}
-      {/* Change Password Section */}
       {isChangingPassword && (
         <div className="mt-8">
           <h3 className="text-xl font-bold text-gray-900 mb-4">
