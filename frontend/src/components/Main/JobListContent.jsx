@@ -355,32 +355,32 @@ const JobListing = () => {
                       </div>
                       {/* Additional Info Popup on Mobile */}
                       {isMoreInfoVisible && (
-                        <div className="mt-4 p-4 bg-blue-600 rounded-lg shadow-lg relative">
+                        <div className="mt-4 p-4 bg-white rounded-lg shadow-lg relative">
                           <img
                             src={job.companyImage}
                             alt="Company"
                             className="w-24 h-24 object-cover rounded-xl shadow-xl mx-auto mb-4"
                           />
-                          <h3 className="text-lg font-bold text-white">
+                          <h3 className="text-lg font-bold text-custom-blue">
                             Company Overview
                           </h3>
-                          <p className="text-white">
+                          <p className="text-black">
                             <strong>Company Name:</strong>{" "}
                             {toSentenceCase(job.companyName)}
                           </p>
-                          <p className="text-white">
+                          <p className="text-black">
                             <strong>Email:</strong>{" "}
                             {toSentenceCase(job.companyEmail)}
                           </p>
-                          <p className="text-white">
+                          <p className="text-black">
                             <strong>Contact Number:</strong>{" "}
                             {toSentenceCase(job.companyContact)}
                           </p>
-                          <p className="text-white">
+                          <p className="text-black">
                             <strong>Primary Location:</strong>{" "}
                             {toSentenceCase(job.companyLocation)}
                           </p>
-                          <div className="text-md text-white">
+                          <div className="text-md text-black">
                             {toSentenceCase(job.companyDescription)}
                           </div>
                           <button
@@ -536,32 +536,32 @@ const JobListing = () => {
 
               {/* Additional Info Section on Desktop */}
               {isMoreInfoVisible && (
-                <div className="mt-6 p-6 bg-blue-600 rounded-lg shadow-2xl relative">
+                <div className="mt-6 p-6 bg-white rounded-lg shadow-2xl relative">
                   <img
                     src={selectedJob.companyImage}
                     alt="Company"
                     className="w-20 h-20 object-cover rounded-full absolute top-6 right-6"
                   />
-                  <h3 className="text-xl font-semibold text-white mb-4">
+                  <h3 className="text-xl font-semibold text-custom-blue mb-4">
                     Company overview
                   </h3>
-                  <p className="text-white">
+                  <p className="text-black">
                     <span className="font-medium">Company name:</span>{" "}
                     {toSentenceCase(selectedJob.companyName)}
                   </p>
-                  <p className="text-white">
+                  <p className="text-black">
                     <span className="font-medium">Email:</span>{" "}
                     {toSentenceCase(selectedJob.companyEmail)}
                   </p>
-                  <p className="text-white">
+                  <p className="text-black">
                     <span className="font-medium">Contact number:</span>{" "}
                     {toSentenceCase(selectedJob.companyContact)}
                   </p>
-                  <p className="text-white">
+                  <p className="text-black">
                     <span className="font-medium">Primary location:</span>{" "}
                     {toSentenceCase(selectedJob.companyLocation)}
                   </p>
-                  <p className="text-white mt-4 text-sm leading-relaxed">
+                  <p className="text-black mt-4 text-sm leading-relaxed">
                     {toSentenceCase(selectedJob.companyDescription)}
                   </p>
                 </div>

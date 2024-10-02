@@ -160,7 +160,7 @@ const AdminViewJobs = () => {
                   </p>
 
                   <p className="font-semibold text-lg">Qualification:</p>
-                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue border-2 border-blue-300 p-2">
+                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue border-2 border-blue-300 p-2 break-words overflow-hidden max-h-[150px] overflow-y-auto">
                     {listing.qualification}
                   </p>
 
@@ -175,7 +175,7 @@ const AdminViewJobs = () => {
                   </p>
 
                   <p className="font-semibold text-lg">Disabilities:</p>
-                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue border-2 border-blue-300 p-2">
+                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue border-2 border-blue-300 p-2 break-words overflow-hidden max-h-[150px] overflow-y-auto">
                     {listing.disabilityTypes}
                   </p>
                 </div>
