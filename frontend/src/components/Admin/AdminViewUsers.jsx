@@ -36,6 +36,7 @@ const AdminViewUsers = () => {
 
     axios(config)
       .then((response) => {
+        console.log(response);
         const fetchedUsers = response.data.data.map((user) => ({
           id: user.id,
           fullName: user.full_name,
@@ -46,6 +47,7 @@ const AdminViewUsers = () => {
           birthdate: user.birth_date,
           contactNumber: user.contact_number,
           email: user.email,
+          profilePicture: user.formal_picture,
         }));
         setUsers(fetchedUsers);
         setFilteredUsers(fetchedUsers);
@@ -124,10 +126,8 @@ const AdminViewUsers = () => {
               >
                 <div className="flex flex-col text-left flex-grow">
                   <img
-                    src={
-                      user.profilePicture || "https://via.placeholder.com/150"
-                    }
-                    alt={user.fullName}
+                    src={user.profilePicture}
+                    alt="Profile"
                     className="w-24 h-24 rounded-full mb-4"
                   />
                   <p className="font-semibold text-lg">Full Name:</p>

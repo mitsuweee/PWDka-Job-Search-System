@@ -180,7 +180,14 @@ const viewUsers = async (req, res, next) => {
         "contact_number",
         "formal_picture"
       )
+
       .where("status", "VERIFIED");
+    const usersWithBase64 = rows.map((user) => ({
+      ...user,
+      formal_picture: user.formal_picture
+        ? `data:image/png;base64,${user.formal_picture.toString("base64")}` // Convert formal_picture to base64
+        : null, // Handle case where there's no formal picture
+    }));
 
     return res.status(200).json({
       successful: true,
