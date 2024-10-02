@@ -397,7 +397,12 @@ const JobListing = () => {
               ))
             ) : (
               <div className="flex justify-center items-center h-64">
-                <p className="text-gray-600">No jobs found.</p>
+                <p className="text-gray-600">
+                  Currently, there are no job listings available. Please rest
+                  assured, we are actively working to provide new opportunities
+                  tailored to your unique skills and abilities. Stay
+                  positive—your next opportunity is just around the corner!
+                </p>
               </div>
             )}
           </div>
