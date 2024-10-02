@@ -47,7 +47,7 @@ const AdminViewUsers = () => {
           birthdate: user.birth_date,
           contactNumber: user.contact_number,
           email: user.email,
-          profilePicture: user.formal_picture,
+          profilePicture: `data:image/png;base64,${user.formal_picture}`,
         }));
         setUsers(fetchedUsers);
         setFilteredUsers(fetchedUsers);
@@ -125,11 +125,13 @@ const AdminViewUsers = () => {
                 className="flex-1 min-w-[300px] p-4 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow flex flex-col justify-between"
               >
                 <div className="flex flex-col text-left flex-grow">
-                  <img
-                    src={user.profilePicture}
-                    alt="Profile"
-                    className="w-24 h-24 rounded-full mb-4"
-                  />
+                  <div className="flex justify-center items-center">
+                    <img
+                      src={user.profilePicture}
+                      alt="Profile"
+                      className="w-24 h-24 rounded-full border-4 border-blue-700 shadow-lg"
+                    />
+                  </div>
                   <p className="font-semibold text-lg">Full Name:</p>
                   <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue border-2 border-blue-300 p-2">
                     {user.fullName}

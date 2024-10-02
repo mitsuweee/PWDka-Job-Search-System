@@ -21,6 +21,7 @@ const CompanyProf = () => {
     confirmNewPassword: "",
   });
 
+  const [isModalOpen, setIsModalOpen] = useState(false); // State for logout modal
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -168,13 +169,19 @@ const CompanyProf = () => {
   };
 
   const handleLogout = () => {
-    const confirmed = window.confirm("Are you sure you want to logout?");
-    if (confirmed) {
-      sessionStorage.removeItem("Id");
-      sessionStorage.removeItem("Role");
-      navigate("/login");
-      toast.success("Logged out successfully!");
-    }
+    setIsModalOpen(true); // Open the modal when logout is clicked
+  };
+
+  const confirmLogout = () => {
+    // Logic for logout
+    sessionStorage.removeItem("Id");
+    sessionStorage.removeItem("Role");
+    navigate("/login");
+    toast.success("Logged out successfully!");
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false); // Close modal without logging out
   };
 
   return (
@@ -414,6 +421,62 @@ const CompanyProf = () => {
           >
             Save New Password
           </button>
+        </div>
+      )}
+      {/* Logout Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
+            {/* Modal Header */}
+            <div className="flex justify-between items-center border-b pb-3 mb-4">
+              <h2 className="text-2xl font-semibold text-gray-800">
+                Logout Confirmation
+              </h2>
+              <button
+                onClick={closeModal}
+                className="text-gray-500 hover:text-gray-800 transition duration-200"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="mb-6">
+              <p className="text-lg text-gray-600">
+                Are you sure you want to logout? You will need to log back in to
+                view or manage your company profile.
+              </p>
+            </div>
+
+            {/* Modal Actions */}
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={closeModal}
+                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-200"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmLogout}
+                className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
