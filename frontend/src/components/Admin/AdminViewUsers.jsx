@@ -173,7 +173,7 @@ const AdminViewUsers = () => {
 
                 <button
                   onClick={() => handleDeleteUser(user.id)}
-                  className="mt-auto py-2 px-4 rounded-lg bg-red-600 text-white hover:bg-red-700 transition duration-200"
+                  className="mt-4 py-2 px-4 rounded-lg bg-red-600 text-white hover:bg-red-700 transition duration-200"
                 >
                   Delete
                 </button>
