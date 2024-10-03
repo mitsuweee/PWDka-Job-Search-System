@@ -195,7 +195,7 @@ const UserProf = () => {
           <img
             src={user.profilePicture}
             alt="Profile"
-            className="w-24 h-24 rounded-full border-4 border-blue-700 shadow-lg"
+            className="w-24 h-25 rounded-full border-4 border-blue-700 shadow-lg object-cover"
           />
           <div className="ml-6">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900">

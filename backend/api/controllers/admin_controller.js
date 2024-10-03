@@ -4,6 +4,12 @@ const { adminModel } = require("../models/admin_model");
 const util = require("./util");
 const bcrypt = require("bcrypt");
 
+const crypto = require("crypto");
+const jwt = require("jsonwebtoken");
+
+// Generate a 256-bit (32-byte) secret key, encoded in hexadecimal
+const SECRET_KEY = crypto.randomBytes(32).toString("hex");
+
 const registerAdmin = async (req, res, next) => {
   let firstName = req.body.firstName.toLowerCase();
   let lastName = req.body.lastName.toLowerCase();
@@ -125,11 +131,19 @@ const loginAdmin = async (req, res, next) => {
       });
     }
 
+    // Create a JWT token
+    const token = jwt.sign(
+      { id, role }, // Payload with user id and role
+      SECRET_KEY, // Secret key for signing the token
+      { expiresIn: "1h" } // Token expiry (1 hour)
+    );
+
     // Successful login response
     return res.status(200).json({
       successful: true,
       role: role,
       id: id,
+      token: token, // Return the generated token
       message: `Successfully Logged In as Admin.`,
     });
   } catch (err) {

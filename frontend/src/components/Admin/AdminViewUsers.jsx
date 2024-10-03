@@ -182,7 +182,13 @@ const AdminViewUsers = () => {
               </div>
             ))
           ) : (
-            <p className="text-white">No verified users found.</p>
+            <div className="flex justify-center items-center h-full w-full bg-blue-500 p-4 sm:p-6 md:p-8 rounded-2xl">
+              <div className="w-full max-w-4xl h-full bg-white p-8 rounded-lg shadow-xl flex justify-center items-center">
+                <h2 className="text-2xl font-bold text-gray-800">
+                  There are no Verified Users.
+                </h2>
+              </div>
+            </div>
           )}
         </div>
 

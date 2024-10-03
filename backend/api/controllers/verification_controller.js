@@ -71,7 +71,7 @@ const viewPendingCompany = async (req, res, next) => {
     const processedRows = rows.map((row) => ({
       ...row,
       profile_picture: row.profile_picture
-        ? row.profile_picture.toString("base64")
+        ? row.profile_picture.toString()
         : null,
     }));
 

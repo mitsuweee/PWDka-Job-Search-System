@@ -56,7 +56,7 @@ const AdminVerifyComp = () => {
       companyDescription: companyData.description,
       contactNumber: companyData.contact_number,
       companyEmail: companyData.email,
-      companyLogo: `data:image/png;base64,${companyData.logo}`, // Assuming logo is in base64 format
+      companyLogo: `data:image/png;base64,${companyData.profile_picture}`, // Assuming logo is in base64 format
     };
   };
 
@@ -261,6 +261,13 @@ const AdminVerifyComp = () => {
                 <p className="text-xl mb-8 text-gray-600 text-center">
                   Company Details
                 </p>
+                <div className="flex justify-center mb-4 sm:mb-6">
+                  <img
+                    src={company.companyLogo}
+                    alt="Logo"
+                    className="w-15 h-15 rounded-full border-2 border-gray-300"
+                  />
+                </div>
                 <div className="grid grid-cols-2 gap-6 text-left text-gray-800 w-full">
                   <div>
                     <p className="font-semibold text-lg">Company Name:</p>

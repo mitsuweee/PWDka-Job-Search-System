@@ -269,7 +269,7 @@ const AdminVerifyUsers = () => {
                   <img
                     src={user.profilePicture}
                     alt={user.fullName}
-                    className="w-16 h-16 sm:w-24 sm:h-24 rounded-full border-2 border-gray-300"
+                    className="w-15 h-15 rounded-full border-2 border-gray-300"
                   />
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 text-left text-gray-800 w-full">
