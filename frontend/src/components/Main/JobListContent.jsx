@@ -13,6 +13,7 @@ const JobListing = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isVoiceEnabled, setIsVoiceEnabled] = useState(false);
   const [userFullName, setUserFullName] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal
 
   const jobsPerPage = 4; // Number of jobs to display per page
   const navigate = useNavigate();
@@ -132,13 +133,19 @@ const JobListing = () => {
   };
 
   const handleLogout = () => {
-    const confirmed = window.confirm("Are you sure you want to logout?");
-    if (confirmed) {
-      sessionStorage.removeItem("Id");
-      sessionStorage.removeItem("Role");
-      sessionStorage.removeItem("Token");
-      navigate("/login");
-    }
+    setIsModalOpen(true); // Open the modal when logout is clicked
+  };
+
+  const confirmLogout = () => {
+    // Logic for logout
+    sessionStorage.removeItem("Id");
+    sessionStorage.removeItem("Role");
+    sessionStorage.removeItem("Token");
+    navigate("/login");
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false); // Close modal without logging out
   };
 
   return (
@@ -390,7 +397,12 @@ const JobListing = () => {
               ))
             ) : (
               <div className="flex justify-center items-center h-64">
-                <p className="text-gray-600">No jobs found.</p>
+                <p className="text-gray-600">
+                  Currently, there are no job listings available. Please rest
+                  assured, we are actively working to provide new opportunities
+                  tailored to your unique skills and abilities. Stay
+                  positive—your next opportunity is just around the corner!
+                </p>
               </div>
             )}
           </div>
@@ -414,7 +426,7 @@ const JobListing = () => {
                   >
                     <path
                       fillRule="evenodd"
-                      d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                      d="M12.707 5.293a1 1 010 1.414L9.414 10l3.293 3.293a1 1 01-1.414 1.414l-4-4a1 1 010-1.414l4-4a1 1 011.414 0z"
                       clipRule="evenodd"
                     />
                   </svg>
@@ -455,7 +467,7 @@ const JobListing = () => {
                   >
                     <path
                       fillRule="evenodd"
-                      d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                      d="M7.293 14.707a1 1 010-1.414L10.586 10 7.293 6.707a1 1 011.414-1.414l4 4a1 1 010 1.414l-4-4a1 1 01-1.414 0z"
                       clipRule="evenodd"
                     />
                   </svg>
@@ -569,6 +581,63 @@ const JobListing = () => {
           )}
         </div>
       </div>
+
+      {/* Logout Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
+            {/* Modal Header */}
+            <div className="flex justify-between items-center border-b pb-3 mb-4">
+              <h2 className="text-2xl font-semibold text-gray-800">
+                Logout Confirmation
+              </h2>
+              <button
+                onClick={closeModal}
+                className="text-gray-500 hover:text-gray-800 transition duration-200"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="mb-6">
+              <p className="text-lg text-gray-600">
+                Are you sure you want to logout? You will need to log back in to
+                access the job listings.
+              </p>
+            </div>
+
+            {/* Modal Actions */}
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={closeModal}
+                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-200"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmLogout}
+                className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

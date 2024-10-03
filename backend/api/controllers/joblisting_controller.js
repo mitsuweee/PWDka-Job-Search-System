@@ -276,7 +276,8 @@ const viewJobListingViaUserNewestToOldest = async (req, res, next) => {
       if (rows.length === 0) {
         return res.status(404).json({
           successful: false,
-          message: "Job Listing not found",
+          message:
+            "No job listings are available at the moment. We are committed to bringing you new opportunities tailored to your skills and abilities. Please stay hopeful, more listings will be available soon.",
         });
       } else {
         // Convert company_profile_picture BLOB to Base64 string for each row

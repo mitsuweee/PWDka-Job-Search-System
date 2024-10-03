@@ -186,7 +186,7 @@ const viewUsers = async (req, res, next) => {
     const formattedUsers = users.map((user) => ({
       ...user,
       formal_picture: user.formal_picture
-        ? user.formal_picture.toString("base64")
+        ? user.formal_picture.toString()
         : null,
     }));
 
