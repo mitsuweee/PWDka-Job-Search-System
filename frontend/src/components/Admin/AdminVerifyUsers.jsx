@@ -50,7 +50,7 @@ const AdminVerifyUsers = () => {
   // Helper function to format user data
   const formatUserData = (userData) => {
     return {
-      id: userData.id,
+      // id: userData.id,
       fullName: userData.full_name,
       pwdId: userData.id,
       disability: userData.type,
