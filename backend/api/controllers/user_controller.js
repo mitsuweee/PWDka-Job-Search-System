@@ -433,7 +433,9 @@ const viewUserViaId = async (req, res, next) => {
           "user.gender",
           "user.birth_date",
           "user.contact_number",
-          "user.formal_picture"
+          "user.formal_picture",
+          "user.picture_with_id",
+          "user.picture_of_pwd_id"
         );
 
       if (rows.length === 0) {
@@ -442,11 +444,17 @@ const viewUserViaId = async (req, res, next) => {
           message: "ID is Invalid",
         });
       } else {
-        // Convert formal_picture BLOB to Base64 string
+        // Convert BLOBs to Base64 for formal_picture, picture_with_id, and picture_of_pwd_id
         const user = {
           ...rows[0],
           formal_picture: rows[0].formal_picture
             ? rows[0].formal_picture.toString()
+            : null,
+          picture_with_id: rows[0].picture_with_id
+            ? rows[0].picture_with_id.toString()
+            : null,
+          picture_of_pwd_id: rows[0].picture_of_pwd_id
+            ? rows[0].picture_of_pwd_id.toString()
             : null,
         };
 

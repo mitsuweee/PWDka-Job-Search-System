@@ -1,84 +1,72 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const AdminViewComp = () => {
   const [companies, setCompanies] = useState([]);
-  const [filteredCompanies, setFilteredCompanies] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const companiesPerPage = 3;
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [company, setCompany] = useState(null); // Store the specific company to view
+  const [isModalOpen, setIsModalOpen] = useState(false); // Control modal visibility
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchCompanies = async () => {
-      const config = {
-        method: "get",
-        url: "http://localhost:8080/admin/view/companies",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-
-      axios(config)
-        .then((response) => {
-          console.log(response.data);
-          const fetchedCompanies = response.data.data.map((company) => ({
-            id: company.id,
-            companyName: company.name,
-            address: company.address,
-            city: company.city,
-            companyDescription: company.description,
-            contactNumber: company.contact_number,
-            companyEmail: company.email,
-          }));
-          setCompanies(fetchedCompanies);
-          setFilteredCompanies(fetchedCompanies);
-        })
-        .catch((error) => {
-          console.log(error);
-          alert("Failed to fetch companies");
-        });
+    // Fetch all companies
+    const config = {
+      method: "get",
+      url: "http://localhost:8080/admin/view/companies", // Fetch companies from your API
+      headers: {
+        "Content-Type": "application/json",
+      },
     };
 
-    fetchCompanies();
+    axios(config)
+      .then((response) => {
+        const companyDataArray = response.data.data;
+        setCompanies(companyDataArray);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error(error);
+        setLoading(false);
+      });
   }, []);
 
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-    const filtered = companies.filter((company) =>
-      company.companyName.toLowerCase().includes(e.target.value.toLowerCase())
-    );
-    setFilteredCompanies(filtered);
-    setCurrentPage(1); // Reset to the first page after search
+  // Fetch and show company details in the modal
+  const handleViewCompany = (companyId) => {
+    const config = {
+      method: "get",
+      url: `http://localhost:8080/company/view/${companyId}`, // Fetch specific company by ID
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    axios(config)
+      .then((response) => {
+        const companyData = response.data.data; // Assuming the company object is returned
+        setCompany(formatCompanyData(companyData)); // Set the company details
+        setIsModalOpen(true); // Open the modal
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
-  const indexOfLastCompany = currentPage * companiesPerPage;
-  const indexOfFirstCompany = indexOfLastCompany - companiesPerPage;
-  const currentCompanies = filteredCompanies.slice(
-    indexOfFirstCompany,
-    indexOfLastCompany
-  );
-
-  const handleLogout = () => {
-    const confirmed = window.confirm("Are you sure you want to logout?");
-    if (confirmed) {
-      // Clear session storage and redirect to the login route
-      sessionStorage.removeItem("Id");
-      sessionStorage.removeItem("Role");
-      sessionStorage.removeItem("Token");
-
-      navigate("/login");
-    }
+  // Helper function to format company data
+  const formatCompanyData = (companyData) => {
+    return {
+      id: companyData.id,
+      companyName: companyData.name,
+      address: companyData.address,
+      city: companyData.city,
+      description: companyData.description,
+      contactNumber: companyData.contact_number,
+      companyEmail: companyData.email,
+      companyProfile: `data:image/png;base64,${companyData.profile_picture}`,
+    };
   };
 
-  const handleGoBack = () => {
-    navigate(-1); // This navigates back to the previous page
-  };
-
+  // Handle delete company
   const handleDeleteCompany = (id) => {
     const confirmed = window.confirm(
       "Are you sure you want to delete this company?"
@@ -86,7 +74,7 @@ const AdminViewComp = () => {
     if (confirmed) {
       const config = {
         method: "delete",
-        url: `http://localhost:8080/admin/delete/company/${id}`,
+        url: `http://localhost:8080/admin/delete/company/${id}`, // Use appropriate API endpoint for deleting a company
         headers: {
           "Content-Type": "application/json",
         },
@@ -99,227 +87,138 @@ const AdminViewComp = () => {
           setCompanies((prevCompanies) =>
             prevCompanies.filter((company) => company.id !== id)
           );
-          setFilteredCompanies((prevCompanies) =>
-            prevCompanies.filter((company) => company.id !== id)
-          );
         })
         .catch((error) => {
-          console.log(error);
+          console.error(error);
           alert("An error occurred while deleting the company.");
         });
     }
   };
 
-  const renderViewAllCompanies = () => {
-    return (
-      <div>
-        <h2 className="text-xl font-bold mb-4 text-custom-blue">
-          View All Verified Companies
-        </h2>
-        <div className="flex justify-center mb-4">
-          <input
-            type="text"
-            placeholder="Search by company name..."
-            className="p-2 border-2 border-blue-300 rounded-lg w-full md:w-1/2"
-            value={searchTerm}
-            onChange={handleSearch}
-          />
-        </div>
-        <div className="flex flex-wrap gap-4">
-          {currentCompanies.length > 0 ? (
-            currentCompanies.map((company) => (
-              <div
-                key={company.id}
-                className="flex-1 min-w-[300px] p-4 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow flex flex-col justify-between"
-              >
-                <div className="flex flex-col text-left flex-grow">
-                  <p className="font-semibold text-lg">Company Name:</p>
-                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue border-2 border-blue-300 p-2">
-                    {company.companyName}
-                  </p>
-
-                  <p className="font-semibold text-lg">Address:</p>
-                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue border-2 border-blue-300 p-2">
-                    {company.address}
-                  </p>
-
-                  <p className="font-semibold text-lg">City:</p>
-                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue border-2 border-blue-300 p-2">
-                    {company.city}
-                  </p>
-
-                  <p className="font-semibold text-lg">Description:</p>
-                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue border-2 border-blue-300 p-2">
-                    {company.companyDescription}
-                  </p>
-
-                  <p className="font-semibold text-lg">Contact Number:</p>
-                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue border-2 border-blue-300 p-2">
-                    {company.contactNumber}
-                  </p>
-
-                  <p className="font-semibold text-lg">Email:</p>
-                  <p className="text-xl bg-custom-bg rounded-md text-custom-blue border-2 border-blue-300 p-2">
-                    {company.companyEmail}
-                  </p>
-                </div>
-
-                <button
-                  onClick={() => handleDeleteCompany(company.id)}
-                  className=" py-2 px-4 rounded-lg bg-red-600 mt-4 text-white hover:bg-red-700 transition duration-200"
-                >
-                  Delete
-                </button>
-              </div>
-            ))
-          ) : (
-            <p className="text-white">No companies found.</p>
-          )}
-        </div>
-
-        {/* Pagination */}
-        <div className="flex justify-center mt-6">
-          {Array.from(
-            {
-              length: Math.ceil(filteredCompanies.length / companiesPerPage),
-            },
-            (_, index) => (
-              <button
-                key={index + 1}
-                onClick={() => paginate(index + 1)}
-                className={`mx-1 px-3 py-1 rounded-lg ${
-                  currentPage === index + 1
-                    ? "bg-blue-900 text-white"
-                    : "bg-gray-200 text-blue-900"
-                }`}
-              >
-                {index + 1}
-              </button>
-            )
-          )}
-        </div>
-      </div>
-    );
+  const closeModal = () => {
+    setIsModalOpen(false); // Close the modal
+    setCompany(null); // Clear the company details
   };
 
+  if (loading) {
+    return <div>Loading companies...</div>;
+  }
+
   return (
-    <div className="flex min-h-screen bg-blue-100">
-      {/* Mobile Toggle Button */}
-      <button
-        className={`md:hidden bg-custom-blue text-white p-4 fixed top-4 left-4 z-50 rounded-xl mt-11 transition-transform ${
-          isSidebarOpen ? "hidden" : ""
-        }`}
-        onClick={() => setIsSidebarOpen(true)}
-      >
-        &#9776;
-      </button>
+    <div className="flex flex-col min-h-screen bg-blue-100">
+      <main className="flex-grow p-8">
+        <h1 className="text-xl font-bold text-gray-700">View All Companies</h1>
 
-      {/* Sidebar */}
-      <aside
-        className={`bg-custom-blue w-[300px] lg:w-[250px] p-4 flex flex-col items-center fixed top-0 left-0 h-full z-50 transition-transform ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } md:translate-x-0`}
-      >
-        <button
-          className="text-white md:hidden self-end size-10"
-          onClick={() => setIsSidebarOpen(false)}
-        >
-          &times;
-        </button>
-        <a
-          href="/admin/dashboard"
-          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
-          }}
-        >
-          <span className="material-symbols-outlined text-xl mr-4">home</span>
-          <span className="flex-grow text-center">Home</span>
-        </a>
-
-        <a
-          href="/admin/dashboard/VerifyUsers"
-          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
-          }}
-        >
-          <span className="material-symbols-outlined text-xl mr-4">
-            group_add
-          </span>
-          <span className="flex-grow text-center">Verify Users</span>
-        </a>
-
-        <a
-          href="/admin/dashboard/VerifyComps"
-          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
-          }}
-        >
-          <span className="material-symbols-outlined text-xl mr-4">
-            apartment
-          </span>
-          <span className="flex-grow text-center">Verify Company</span>
-        </a>
-
-        <a
-          href="/admin/dashboard/ViewUsers"
-          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
-          }}
-        >
-          <span className="material-symbols-outlined text-xl mr-4">group</span>
-          <span className="flex-grow text-center">View All Users</span>
-        </a>
-
-        <a
-          href="/admin/dashboard/ViewCompany"
-          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
-          }}
-        >
-          <span className="material-symbols-outlined text-xl mr-4">
-            source_environment
-          </span>
-          <span className="flex-grow text-center">View All Companies</span>
-        </a>
-
-        <a
-          href="/admin/dashboard/ViewJobs"
-          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
-          }}
-        >
-          <span className="material-symbols-outlined text-xl mr-4">work</span>
-          <span className="flex-grow text-center">View All Job Listings</span>
-        </a>
-
-        <button
-          className="bg-red-600 text-white rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-red-500 transition-all duration-200 ease-in-out mt-6"
-          onClick={handleLogout}
-        >
-          Logout
-        </button>
-      </aside>
-
-      {/* Main Content */}
-      <main
-        className={`p-8 bg-custom-bg flex-grow transition-transform md:ml-[300px] lg:ml-[250px]`}
-      >
-        <div className="flex justify-between items-center">
-          <button
-            onClick={handleGoBack}
-            className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
-          >
-            Back
-          </button>
+        <div className="overflow-x-auto">
+          <table className="min-w-full bg-white mt-4">
+            <thead>
+              <tr className="w-full bg-blue-500 text-white">
+                <th className="py-2 px-4">ID</th>
+                <th className="py-2 px-4">Company Name</th>
+                <th className="py-2 px-4">City</th>
+                <th className="py-2 px-4">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {companies.map((company) => (
+                <tr key={company.id} className="border-b">
+                  <td className="py-2 px-4">{company.id}</td>
+                  <td className="py-2 px-4">{company.name}</td>
+                  <td className="py-2 px-4">{company.city}</td>
+                  <td className="py-2 px-4 flex">
+                    <button
+                      onClick={() => handleViewCompany(company.id)} // Pass company ID when clicking "View"
+                      className="bg-blue-500 text-white px-2 py-1 rounded mr-2 hover:bg-blue-700"
+                    >
+                      View
+                    </button>
+                    <button
+                      onClick={() => handleDeleteCompany(company.id)} // Delete company when clicking "Delete"
+                      className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-700"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-        <div className="mt-4">{renderViewAllCompanies()}</div>
       </main>
+
+      {/* Modal for viewing company details */}
+      {isModalOpen && company && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white w-11/12 md:max-w-3xl p-6 rounded-lg shadow-lg">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-gray-800 text-center">
+              Company Details
+            </h2>
+
+            <div className="flex justify-center mb-4 sm:mb-6">
+              <img
+                src={company.companyProfile}
+                alt="Profile"
+                className="w-40 h-40 rounded-full border-2 border-gray-300"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 text-left text-gray-800 w-full">
+              <div>
+                <p className="font-semibold text-base sm:text-lg">
+                  Company Name:
+                </p>
+                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
+                  {company.companyName}
+                </p>
+              </div>
+              <div>
+                <p className="font-semibold text-base sm:text-lg">City:</p>
+                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
+                  {company.city}
+                </p>
+              </div>
+              <div>
+                <p className="font-semibold text-base sm:text-lg">Address:</p>
+                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
+                  {company.address}
+                </p>
+              </div>
+              <div>
+                <p className="font-semibold text-base sm:text-lg">
+                  Description:
+                </p>
+                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
+                  {company.description}
+                </p>
+              </div>
+              <div>
+                <p className="font-semibold text-base sm:text-lg">
+                  Contact Number:
+                </p>
+                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
+                  {company.contactNumber}
+                </p>
+              </div>
+              <div>
+                <p className="font-semibold text-base sm:text-lg">Email:</p>
+                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
+                  {company.companyEmail}
+                </p>
+              </div>
+            </div>
+
+            {/* Buttons for Back */}
+            <div className="mt-6 text-center space-x-4">
+              <button
+                className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
+                onClick={closeModal} // Close modal
+              >
+                Back
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

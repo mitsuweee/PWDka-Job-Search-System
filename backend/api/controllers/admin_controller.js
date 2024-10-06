@@ -192,15 +192,23 @@ const viewUsers = async (req, res, next) => {
         "gender",
         "birth_date",
         "contact_number",
-        "formal_picture"
+        "formal_picture",
+        "picture_with_id",
+        "picture_of_pwd_id"
       )
       .where("status", "VERIFIED");
 
-    // Convert formal_picture BLOB to Base64 for each user
+    // Convert BLOBs to Base64 for each user
     const formattedUsers = users.map((user) => ({
       ...user,
       formal_picture: user.formal_picture
         ? user.formal_picture.toString()
+        : null,
+      picture_with_id: user.picture_with_id
+        ? user.picture_with_id.toString()
+        : null,
+      picture_of_pwd_id: user.picture_of_pwd_id
+        ? user.picture_of_pwd_id.toString()
         : null,
     }));
 
