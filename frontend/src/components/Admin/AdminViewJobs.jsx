@@ -116,7 +116,6 @@ const AdminViewJobs = () => {
           <table className="min-w-full bg-white mt-4">
             <thead>
               <tr className="w-full bg-blue-500 text-white">
-                <th className="py-2 px-4">ID</th>
                 <th className="py-2 px-4">Company</th>
                 <th className="py-2 px-4">Job Title</th>
                 <th className="py-2 px-4">Actions</th>
@@ -125,7 +124,6 @@ const AdminViewJobs = () => {
             <tbody>
               {jobListings.map((job) => (
                 <tr key={job.id} className="border-b">
-                  <td className="py-2 px-4">{job.id}</td>
                   <td className="py-2 px-4">{job.company_name}</td>
                   <td className="py-2 px-4">{job.position_name}</td>
                   <td className="py-2 px-4 flex">

@@ -113,7 +113,6 @@ const AdminViewComp = () => {
           <table className="min-w-full bg-white mt-4">
             <thead>
               <tr className="w-full bg-blue-500 text-white">
-                <th className="py-2 px-4">ID</th>
                 <th className="py-2 px-4">Company Name</th>
                 <th className="py-2 px-4">City</th>
                 <th className="py-2 px-4">Actions</th>
@@ -122,7 +121,6 @@ const AdminViewComp = () => {
             <tbody>
               {companies.map((company) => (
                 <tr key={company.id} className="border-b">
-                  <td className="py-2 px-4">{company.id}</td>
                   <td className="py-2 px-4">{company.name}</td>
                   <td className="py-2 px-4">{company.city}</td>
                   <td className="py-2 px-4 flex">
