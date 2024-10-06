@@ -27,6 +27,7 @@ import AdminDelCompss from "./pages/AdminDelCompss.jsx";
 import CompanyViewAppl from "./pages/CompanyViewAppl.jsx";
 import ForgotP from "./pages/ForgotP.jsx";
 import ConfirmP from "./pages/ConfirmP.jsx";
+import ProtectedRoute from "./protectedroute.js";
 
 function App() {
   return (
@@ -35,50 +36,137 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<LandingPage />} />
         <Route path="/main" element={<MainPage />} />
-        <Route path="/dashc" element={<DashboardCompany />} />
-        <Route path="admin/dashboard" element={<Dashboard />} />
         <Route path="/privacypolicy" element={<PrivacyPol />} />
         <Route path="/contactpage" element={<Contact />} />
         <Route path="/about" element={<About />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/joblist" element={<JobListingPage />} />
-        <Route path="/profile" element={<Profile />} />{" "}
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/faqs" element={<Faq />} />
+        <Route path="/adminlogin" element={<AdminLog />} />
+        <Route path="/forgotpassword" element={<ForgotP />} />
+        <Route path="/passwordconfirmed" element={<ConfirmP />} />
+
+        {/* Protected Routes */}
+        <Route
+          path="/apply"
+          element={
+            <ProtectedRoute role="user">
+              <ApplyPg />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/joblist"
+          element={
+            <ProtectedRoute role="user">
+              <JobListingPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/dashboard"
+          element={
+            <ProtectedRoute role="admin">
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashc"
+          element={
+            <ProtectedRoute role="company">
+              <DashboardCompany />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/admin/dashboard/VerifyUsers"
-          element={<AdminVerUsers />}
+          element={
+            <ProtectedRoute role="admin">
+              <AdminVerUsers />
+            </ProtectedRoute>
+          }
         />
         <Route
           path="/admin/dashboard/VerifyComps"
-          element={<AdminVerComps />}
+          element={
+            <ProtectedRoute role="admin">
+              <AdminVerComps />
+            </ProtectedRoute>
+          }
         />
         <Route
           path="/admin/dashboard/ViewUsers"
-          element={<AdminViewUserss />}
+          element={
+            <ProtectedRoute role="admin">
+              <AdminViewUserss />
+            </ProtectedRoute>
+          }
         />
         <Route
           path="/admin/dashboard/ViewCompany"
-          element={<AdminViewCompss />}
+          element={
+            <ProtectedRoute role="admin">
+              <AdminViewCompss />
+            </ProtectedRoute>
+          }
         />
-        <Route path="/admin/dashboard/ViewJobs" element={<AdminViewJobss />} />
+        <Route
+          path="/admin/dashboard/ViewJobs"
+          element={
+            <ProtectedRoute role="admin">
+              <AdminViewJobss />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/admin/dashboard/DeleteUser"
-          element={<AdminDelUserss />}
+          element={
+            <ProtectedRoute role="admin">
+              <AdminDelUserss />
+            </ProtectedRoute>
+          }
         />
-        <Route path="/admin/dashboard/DeleteJob" element={<AdminDelJobss />} />
+        <Route
+          path="/admin/dashboard/DeleteJob"
+          element={
+            <ProtectedRoute role="admin">
+              <AdminDelJobss />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/admin/dashboard/DeleteCompany"
-          element={<AdminDelCompss />}
+          element={
+            <ProtectedRoute role="admin">
+              <AdminDelCompss />
+            </ProtectedRoute>
+          }
         />
-        {/* Unified profile route */}
-        <Route path="/apply" element={<ApplyPg />} />
-        <Route path="/dashboard/ViewJobs" element={<ViewJobsPage />} />
-        <Route path="/faqs" element={<Faq />} />
-        <Route path="/adminlogin" element={<AdminLog />} />
-        <Route path="/dashboard/postjob" element={<PostJobPage />} />
-        {/* <Route path="" */}
-        <Route path="/company/viewapplicants" element={<CompanyViewAppl />} />
-        <Route path="/forgotpassword" element={<ForgotP />} />
-        <Route path="/passwordconfirmed" element={<ConfirmP />} />
+        <Route
+          path="/dashboard/ViewJobs"
+          element={
+            <ProtectedRoute role="company">
+              <ViewJobsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/postjob"
+          element={
+            <ProtectedRoute role="company">
+              <PostJobPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/company/viewapplicants"
+          element={
+            <ProtectedRoute role="company">
+              <CompanyViewAppl />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </Router>
   );
