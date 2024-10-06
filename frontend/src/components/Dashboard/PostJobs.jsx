@@ -37,8 +37,10 @@ const PostJob = () => {
     e.preventDefault();
 
     // Frontend validation for salary
-    if (parseFloat(jobDetails.maxSalary) <= parseFloat(jobDetails.minSalary)) {
-      toast.error("Maximum Salary must be greater than Minimum Salary");
+    if (parseFloat(jobDetails.maxSalary) < parseFloat(jobDetails.minSalary)) {
+      toast.error(
+        "Maximum Salary must be equal or greater than Minimum Salary"
+      );
       return;
     }
     console.log(jobDetails);
