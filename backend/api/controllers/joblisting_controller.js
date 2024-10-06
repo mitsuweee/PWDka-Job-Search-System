@@ -436,12 +436,12 @@ const updateJobListing = async (req, res, next) => {
     });
   } else if (
     !util.checkNumbers(maximum_salary) ||
-    maximum_salary <= minimum_salary
+    maximum_salary < minimum_salary
   ) {
     return res.status(400).json({
       successful: false,
       message:
-        "Maximum Salary must only contain numbers that are greater than minimum Salary",
+        "Maximum Salary must only contain numbers that are equal or greater than minimum Salary",
     });
   }
 
