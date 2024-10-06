@@ -151,6 +151,8 @@ const AdminVerifyComp = () => {
         >
           &times;
         </button>
+
+        {/* Sidebar Content */}
         <a
           href="/admin/dashboard"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
@@ -185,7 +187,7 @@ const AdminVerifyComp = () => {
           <span className="material-symbols-outlined text-xl mr-4">
             apartment
           </span>
-          <span className="flex-grow text-center">Verify Company</span>
+          <span className="flex-grow text-center">Verify Companies</span>
         </a>
 
         <a

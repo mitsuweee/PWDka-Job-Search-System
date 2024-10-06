@@ -7,6 +7,7 @@ const AdminViewComp = () => {
   const [company, setCompany] = useState(null); // Store the specific company to view
   const [isModalOpen, setIsModalOpen] = useState(false); // Control modal visibility
   const [loading, setLoading] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Control sidebar visibility for mobile
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -105,7 +106,117 @@ const AdminViewComp = () => {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-blue-100">
+    <div className="flex flex-col md:flex-row min-h-screen bg-blue-100">
+      {/* Sidebar */}
+      <aside
+        className={`bg-custom-blue w-full md:w-[300px] lg:w-[250px] p-4 flex flex-col items-center md:relative fixed top-0 left-0 min-h-screen h-full transition-transform transform ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } md:translate-x-0 z-50 md:z-auto`}
+      >
+        <button
+          className="text-white md:hidden self-end size-10"
+          onClick={() => setIsSidebarOpen(false)}
+        >
+          &times;
+        </button>
+
+        {/* Sidebar Content */}
+        <a
+          href="/admin/dashboard"
+          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
+          style={{
+            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
+          }}
+        >
+          <span className="material-symbols-outlined text-xl mr-4">home</span>
+          <span className="flex-grow text-center">Home</span>
+        </a>
+
+        <a
+          href="/admin/dashboard/VerifyUsers"
+          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
+          style={{
+            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
+          }}
+        >
+          <span className="material-symbols-outlined text-xl mr-4">
+            group_add
+          </span>
+          <span className="flex-grow text-center">Verify Users</span>
+        </a>
+
+        <a
+          href="/admin/dashboard/VerifyComps"
+          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
+          style={{
+            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
+          }}
+        >
+          <span className="material-symbols-outlined text-xl mr-4">
+            apartment
+          </span>
+          <span className="flex-grow text-center">Verify Companies</span>
+        </a>
+
+        <a
+          href="/admin/dashboard/ViewUsers"
+          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
+          style={{
+            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
+          }}
+        >
+          <span className="material-symbols-outlined text-xl mr-4">group</span>
+          <span className="flex-grow text-center">View All Users</span>
+        </a>
+
+        <a
+          href="/admin/dashboard/ViewCompany"
+          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
+          style={{
+            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
+          }}
+        >
+          <span className="material-symbols-outlined text-xl mr-4">
+            source_environment
+          </span>
+          <span className="flex-grow text-center">View All Companies</span>
+        </a>
+
+        <a
+          href="/admin/dashboard/ViewJobs"
+          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
+          style={{
+            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
+          }}
+        >
+          <span className="material-symbols-outlined text-xl mr-4">work</span>
+          <span className="flex-grow text-center">View All Job Listings</span>
+        </a>
+
+        <button
+          className="bg-red-600 text-white rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-red-500 transition-all duration-200 ease-in-out mt-6"
+          onClick={() => {
+            sessionStorage.removeItem("Id");
+            sessionStorage.removeItem("Role");
+            sessionStorage.removeItem("Token");
+            navigate("/login");
+          }}
+        >
+          Logout
+        </button>
+      </aside>
+
+      {/* Mobile Toggle Button */}
+      <button
+        className={`md:hidden bg-custom-blue text-white p-4 fixed top-4 left-4 z-50 rounded-xl mt-11 transition-transform ${
+          isSidebarOpen ? "hidden" : ""
+        }`}
+        onClick={() => setIsSidebarOpen(true)}
+      >
+        &#9776;
+      </button>
+
+      {/* Main Content */}
       <main className="flex-grow p-8">
         <h1 className="text-xl font-bold text-gray-700">View All Companies</h1>
 
