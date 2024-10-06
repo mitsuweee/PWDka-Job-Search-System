@@ -45,7 +45,7 @@ const AdminViewJobs = () => {
     axios(config)
       .then((response) => {
         console.log("Job Details Response:", response);
-        const jobData = response.data.data; // Assuming the job object is returned
+        const jobData = response.data.data[0]; // Assuming the job object is returned
         setJob(formatJobData(jobData)); // Set the job details
         setIsModalOpen(true); // Open the modal
       })
@@ -65,9 +65,7 @@ const AdminViewJobs = () => {
       minimumSalary: jobData.minimum_salary,
       maximumSalary: jobData.maximum_salary,
       positionType: jobData.position_type,
-      disabilityTypes: Array.isArray(jobData.disability_types)
-        ? jobData.disability_types
-        : [], // Ensure disabilityTypes is an array
+      disabilityTypes: jobData.disability_types,
     };
   };
 
@@ -207,9 +205,7 @@ const AdminViewJobs = () => {
                   Disabilities:
                 </p>
                 <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                  {job.disabilityTypes && job.disabilityTypes.length > 0
-                    ? job.disabilityTypes.join(", ")
-                    : "No disabilities listed"}
+                  {job.disabilityTypes}
                 </p>
               </div>
             </div>
