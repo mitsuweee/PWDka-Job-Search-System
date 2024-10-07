@@ -1,9 +1,99 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { Bar } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+
+// Register the required chart components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const CompanyDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [companyCounts, setCompanyCounts] = useState({
+    job_listings: 0,
+    job_applications: 0,
+  });
+
   const navigate = useNavigate();
+
+  // Fetch counts from the backend using Id from sessionStorage
+  useEffect(() => {
+    const Id = sessionStorage.getItem("Id"); // Retrieve Id from sessionStorage
+    if (Id) {
+      const fetchCompanyCounts = async () => {
+        try {
+          const response = await axios.get(
+            `http://localhost:8080/joblisting/view/count/${Id}` // Use Id here
+          );
+
+          if (response.data.successful) {
+            setCompanyCounts(response.data.data); // Set the counts from API
+          } else {
+            console.error(
+              "Error fetching company counts:",
+              response.data.message
+            );
+          }
+        } catch (error) {
+          console.error("Error fetching company counts:", error);
+        }
+      };
+
+      fetchCompanyCounts();
+    } else {
+      console.error("Company ID is not available in session storage");
+    }
+  }, []);
+
+  // Data for the bar chart
+  const barChartData = {
+    labels: ["Job Listings", "Job Applications"],
+    datasets: [
+      {
+        label: "Counts",
+        data: [companyCounts.job_listings, companyCounts.job_applications],
+        backgroundColor: [
+          "rgba(75, 192, 192, 1)", // Solid teal color
+          "rgba(153, 102, 255, 1)", // Solid purple color
+        ],
+        borderColor: ["rgba(75, 192, 192, 1)", "rgba(153, 102, 255, 1)"],
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const barChartOptions = {
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top",
+      },
+      title: {
+        display: true,
+        text: "Company Dashboard Statistics",
+      },
+    },
+  };
 
   const handleLogout = () => {
     const confirmed = window.confirm("Are you sure you want to logout?");
@@ -87,7 +177,32 @@ const CompanyDashboard = () => {
             Back
           </button>
         </div>
-        <div className="mt-4">{/* Render content based on the section */}</div>
+
+        {/* Bar Chart */}
+        <div className="mt-8">
+          <Bar data={barChartData} options={barChartOptions} />
+        </div>
+
+        {/* Dashboard Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
+          <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl hover:translate-y-1 transition-all duration-200 ease-in-out">
+            <h2 className="text-xl font-bold text-gray-800">Job Listings</h2>
+            <p className="text-3xl text-blue-900 font-semibold">
+              {companyCounts.job_listings}
+            </p>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl hover:translate-y-1 transition-all duration-200 ease-in-out">
+            <h2 className="text-xl font-bold text-gray-800">
+              Job Applications
+            </h2>
+            <p className="text-3xl text-blue-900 font-semibold">
+              {companyCounts.job_applications}
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-4">{/* Render additional content here */}</div>
       </main>
     </div>
   );

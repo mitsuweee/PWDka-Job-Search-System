@@ -41,7 +41,7 @@ const AdminDashboard = () => {
       try {
         const response = await axios.get(
           "http://localhost:8080/admin/view/count"
-        ); // Adjust API endpoint
+        );
         if (response.data.successful) {
           setDashboardCounts(response.data.data); // Set the counts from API
         } else {
@@ -61,16 +61,14 @@ const AdminDashboard = () => {
   const handleLogout = () => {
     const confirmed = window.confirm("Are you sure you want to logout?");
     if (confirmed) {
-      // Clear session storage and redirect to the login route
       sessionStorage.removeItem("Id");
       sessionStorage.removeItem("Role");
       sessionStorage.removeItem("Token");
-
       navigate("/login");
     }
   };
 
-  // Data for the bar chart
+  // Data for the bar chart with solid colors
   const barChartData = {
     labels: [
       "Verified Users",
@@ -92,12 +90,12 @@ const AdminDashboard = () => {
           dashboardCounts.total_job_application,
         ],
         backgroundColor: [
-          "rgba(75, 192, 192, 0.2)",
-          "rgba(153, 102, 255, 0.2)",
-          "rgba(255, 159, 64, 0.2)",
-          "rgba(54, 162, 235, 0.2)",
-          "rgba(255, 206, 86, 0.2)",
-          "rgba(75, 192, 192, 0.2)",
+          "rgba(75, 192, 192, 1)", // Solid teal
+          "rgba(153, 102, 255, 1)", // Solid purple
+          "rgba(255, 159, 64, 1)", // Solid orange
+          "rgba(54, 162, 235, 1)", // Solid blue
+          "rgba(255, 206, 86, 1)", // Solid yellow
+          "rgba(75, 192, 192, 1)", // Solid teal
         ],
         borderColor: [
           "rgba(75, 192, 192, 1)",
@@ -233,7 +231,7 @@ const AdminDashboard = () => {
 
         {/* Dashboard Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
-          <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl hover:translate-y-1 transition-all duration-200 ease-in-out">
             <h2 className="text-xl font-bold text-gray-800">
               Total Verified Users
             </h2>
@@ -242,7 +240,7 @@ const AdminDashboard = () => {
             </p>
           </div>
 
-          <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl hover:translate-y-1 transition-all duration-200 ease-in-out">
             <h2 className="text-xl font-bold text-gray-800">
               Total Pending Users
             </h2>
@@ -251,7 +249,7 @@ const AdminDashboard = () => {
             </p>
           </div>
 
-          <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl hover:translate-y-1 transition-all duration-200 ease-in-out">
             <h2 className="text-xl font-bold text-gray-800">
               Total Verified Companies
             </h2>
@@ -260,7 +258,7 @@ const AdminDashboard = () => {
             </p>
           </div>
 
-          <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl hover:translate-y-1 transition-all duration-200 ease-in-out">
             <h2 className="text-xl font-bold text-gray-800">
               Total Pending Companies
             </h2>
@@ -269,7 +267,7 @@ const AdminDashboard = () => {
             </p>
           </div>
 
-          <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl hover:translate-y-1 transition-all duration-200 ease-in-out">
             <h2 className="text-xl font-bold text-gray-800">
               Total Job Listings
             </h2>
@@ -278,7 +276,7 @@ const AdminDashboard = () => {
             </p>
           </div>
 
-          <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl hover:translate-y-1 transition-all duration-200 ease-in-out">
             <h2 className="text-xl font-bold text-gray-800">
               Total Job Applications
             </h2>
