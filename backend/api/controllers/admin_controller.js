@@ -168,6 +168,17 @@ const viewCounts = async (req, res, next) => {
       .count("id as count")
       .first();
 
+    const pendingUsersCount = await knex("user")
+      .where({ status: "PENDING" })
+      .count("id as count")
+      .first(); // Use 'first' to get a single result
+
+    // Query to count VERIFIED companies in the company table
+    const pendingCompaniesCount = await knex("company")
+      .where({ status: "PENDING" })
+      .count("id as count")
+      .first();
+
     // Query to count all job listings
     const totalJobListingsCount = await knex("job_listing")
       .count("id as count")
@@ -184,7 +195,9 @@ const viewCounts = async (req, res, next) => {
       message: "Successfully Retrieved Counts",
       data: {
         verified_users: verifiedUsersCount.count,
+        pending_users: pendingUsersCount.count,
         verified_companies: verifiedCompaniesCount.count,
+        pending_companies: pendingCompaniesCount.count,
         total_job_listings: totalJobListingsCount.count,
         total_job_application: totalJobApplicationCount.count,
       },
