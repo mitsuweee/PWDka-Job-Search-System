@@ -519,6 +519,45 @@ const deleteJob = async (req, res, next) => {
   }
 };
 
+const viewCounts = async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    // Query to count job listings for the given company_id
+    const jobListingsCount = await knex("job_listing")
+      .where({ company_id: id }) // Filter by company_id
+      .count("id as count")
+      .first();
+
+    // Query to count job applications for job listings under the given company_id
+    const jobApplicationsCount = await knex("job_application")
+      .join(
+        "job_listing",
+        "job_application.joblisting_id",
+        "=",
+        "job_listing.id"
+      )
+      .where({ "job_listing.company_id": id })
+      .count("job_application.id as count")
+      .first();
+
+    // Combine the results into a single response
+    return res.status(200).json({
+      successful: true,
+      message: "Successfully Retrieved Counts",
+      data: {
+        job_listings: jobListingsCount.count, // Count of job listings for the given company
+        job_applications: jobApplicationsCount.count, // Count of job applications for job listings under the given company
+      },
+    });
+  } catch (err) {
+    return res.status(500).json({
+      successful: false,
+      message: err.message,
+    });
+  }
+};
+
 module.exports = {
   postJobs,
   viewJobListing,
@@ -526,4 +565,5 @@ module.exports = {
   viewJobsCreatedByCompanyNewestToOldest,
   updateJobListing,
   deleteJob,
+  viewCounts,
 };

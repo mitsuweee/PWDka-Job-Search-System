@@ -4,6 +4,8 @@ const joblistingRouter = express.Router();
 
 joblistingRouter.post("/post/job", jobListingController.postJobs); //Post Jobs
 joblistingRouter.get("/view/:id", jobListingController.viewJobListing); // View Job Listing
+joblistingRouter.get("/view/count/:id", jobListingController.viewCounts); // View Job Listing
+
 joblistingRouter.get(
   "/view/newesttooldest/:id",
   jobListingController.viewJobListingViaUserNewestToOldest
