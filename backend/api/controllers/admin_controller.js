@@ -156,18 +156,32 @@ const loginAdmin = async (req, res, next) => {
 
 const viewCounts = async (req, res, next) => {
   try {
-    // Select counts from different tables
-    const rows = await knex.raw(`
-      SELECT 
-        (SELECT COUNT(*) FROM user WHERE status = 'VERIFIED') AS verified_users,
-        (SELECT COUNT(*) FROM company WHERE status = 'VERIFIED') AS verified_companies,
-        (SELECT COUNT(*) FROM job_listing) AS total_job_listings
-    `);
+    // Query to count VERIFIED users in the user table
+    const verifiedUsersCount = await knex("user")
+      .where({ status: "VERIFIED" })
+      .count("id as count")
+      .first(); // Use 'first' to get a single result
 
+    // Query to count VERIFIED companies in the company table
+    const verifiedCompaniesCount = await knex("company")
+      .where({ status: "VERIFIED" })
+      .count("id as count")
+      .first();
+
+    // Query to count all job listings
+    const totalJobListingsCount = await knex("job_listing")
+      .count("id as count")
+      .first();
+
+    // Combine the results into a single response
     return res.status(200).json({
       successful: true,
       message: "Successfully Retrieved Counts",
-      data: rows[0], // Extract the first row of results
+      data: {
+        verified_users: verifiedUsersCount.count,
+        verified_companies: verifiedCompaniesCount.count,
+        total_job_listings: totalJobListingsCount.count,
+      },
     });
   } catch (err) {
     return res.status(500).json({
