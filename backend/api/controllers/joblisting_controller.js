@@ -392,6 +392,7 @@ const viewJobsCreatedByCompanyNewestToOldest = async (req, res, next) => {
       successful: true,
       message: "Successfully Retrieved Company's Job Listings",
       data: processedRows,
+      count: processedRows.length,
     });
   } catch (err) {
     return res.status(500).json({
