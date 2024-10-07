@@ -1,22 +1,19 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const ViewJobs = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [jobListings, setJobListings] = useState([]);
-  const [filteredJobListings, setFilteredJobListings] = useState([]);
-  const [isEditing, setIsEditing] = useState(false);
-  const [updatedDetails, setUpdatedDetails] = useState({});
-  const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [jobsPerPage] = useState(3); // Number of jobs to display per page
-  const [isModalOpen, setIsModalOpen] = useState(false); // State for logout modal
+  const [isModalOpen, setIsModalOpen] = useState(false); // Control modal visibility
+  const [job, setJob] = useState(null); // Store the specific job to view
+  const [loading, setLoading] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Control sidebar visibility for mobile
+  const [searchTerm, setSearchTerm] = useState(""); // Search term state
+  const [filteredJobListings, setFilteredJobListings] = useState([]); // Filtered job listings
+  const navigate = useNavigate();
 
-  const navigate = useNavigate(); // Initialize useNavigate for navigation
-
-  // Fetch job listings
   useEffect(() => {
+    // Fetch job listings from your API
     const companyId = sessionStorage.getItem("Id");
     const config = {
       method: "get",
@@ -25,85 +22,65 @@ const ViewJobs = () => {
         "Content-Type": "application/json",
       },
     };
+
     axios(config)
       .then((response) => {
-        const fetchedJobListings = response.data.data.map((job) => ({
-          id: job.id,
-          jobName: job.position_name,
-          description: job.description,
-          qualifications: job.qualification,
-          minSalary: job.minimum_salary,
-          maxSalary: job.maximum_salary,
-          positionType: job.position_type,
-          disabilityTypes: job.disability_types,
-        }));
-        setJobListings(fetchedJobListings);
-        setFilteredJobListings(fetchedJobListings); // Initialize filtered jobs
+        const jobDataArray = response.data.data;
+        setJobListings(jobDataArray);
+        setFilteredJobListings(jobDataArray); // Set filtered job listings initially
+        setLoading(false);
       })
       .catch((error) => {
-        const errorMessage =
-          error.response?.data?.message || "An error occurred";
-        alert(errorMessage);
+        console.error(error);
+        setLoading(false);
       });
   }, []);
 
-  const handleLogout = () => {
-    setIsModalOpen(true); // Open the modal when logout is clicked
-  };
-
-  const confirmLogout = () => {
-    // Logic for logout
-    sessionStorage.removeItem("Id");
-    sessionStorage.removeItem("Role");
-    sessionStorage.removeItem("Token");
-    window.location.href = "/login";
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false); // Close modal without logging out
-  };
-
-  const handleUpdateSubmit = (e) => {
-    e.preventDefault();
-    setIsEditing(false);
-
-    const updateJobListing = JSON.stringify({
-      id: updatedDetails.id,
-      position_name: updatedDetails.positionName,
-      description: updatedDetails.jobDescription,
-      qualification: updatedDetails.qualifications,
-      minimum_salary: parseFloat(updatedDetails.salary.split("-")[0]),
-      maximum_salary: parseFloat(updatedDetails.salary.split("-")[1]),
-      positiontype_id: updatedDetails.positionType === "full-time" ? 1 : 2,
-    });
-
+  // Fetch and show job details in the modal
+  const handleViewJob = (jobId) => {
     const config = {
-      method: "put",
-      url: `/joblisting/update/${updatedDetails.id}`,
+      method: "get",
+      url: `/joblisting/view/${jobId}`,
       headers: {
         "Content-Type": "application/json",
       },
-      data: updateJobListing,
     };
 
     axios(config)
       .then((response) => {
-        alert(response.data.message);
-        window.location.reload();
+        const jobData = response.data.data[0]; // Assuming the job object is returned
+        setJob(formatJobData(jobData)); // Set the job details
+        setIsModalOpen(true); // Open the modal
       })
       .catch((error) => {
-        alert(error.response.data.message);
+        console.error(error);
       });
   };
 
-  const handleDelete = (jobId) => {
-    const confirmDelete = window.confirm(
+  // Helper function to format job data
+  const formatJobData = (jobData) => {
+    return {
+      id: jobData.id,
+      companyName: jobData.company_name,
+      jobName: jobData.position_name,
+      description: jobData.description,
+      qualification: jobData.qualification,
+      minimumSalary: jobData.minimum_salary,
+      maximumSalary: jobData.maximum_salary,
+      positionType: jobData.position_type,
+      disabilityTypes: jobData.disability_types,
+    };
+  };
+
+  // Handle delete job listing
+  const handleDeleteJobListing = (id) => {
+    const confirmed = window.confirm(
       "Are you sure you want to delete this job listing?"
     );
-    if (confirmDelete) {
+    if (confirmed) {
       const config = {
         method: "delete",
-        url: `/joblisting/delete/${jobId}`,
+        url: `/joblisting/delete/${id}`,
         headers: {
           "Content-Type": "application/json",
         },
@@ -113,238 +90,42 @@ const ViewJobs = () => {
         .then(() => {
           alert("Job listing deleted successfully!");
           setJobListings((prevListings) =>
-            prevListings.filter((listing) => listing.id !== jobId)
+            prevListings.filter((job) => job.id !== id)
           );
           setFilteredJobListings((prevListings) =>
-            prevListings.filter((listing) => listing.id !== jobId)
+            prevListings.filter((job) => job.id !== id)
           );
         })
-        .catch((error) => {
-          alert(error.response.data.message);
+        .catch(() => {
+          alert("An error occurred while deleting the job listing.");
         });
     }
   };
 
-  const handleUpdateChange = (e) => {
-    const { name, value } = e.target;
-    setUpdatedDetails((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+  const closeModal = () => {
+    setIsModalOpen(false); // Close the modal
+    setJob(null); // Clear the job details
   };
 
+  // Handle search functionality
   const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-    if (e.target.value !== "") {
-      const filteredJobs = jobListings.filter((job) =>
-        job.jobName.toLowerCase().includes(e.target.value.toLowerCase())
-      );
-      setFilteredJobListings(filteredJobs);
-    } else {
-      setFilteredJobListings(jobListings);
-    }
-  };
+    const searchValue = e.target.value.toLowerCase();
+    setSearchTerm(searchValue);
 
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
-  // Get current jobs
-  const indexOfLastJob = currentPage * jobsPerPage;
-  const indexOfFirstJob = indexOfLastJob - jobsPerPage;
-  const currentJobs = filteredJobListings.slice(
-    indexOfFirstJob,
-    indexOfLastJob
-  );
-
-  const renderUpdateJobListings = () => {
-    return (
-      <div>
-        <h2 className="text-xl font-bold mb-4">Update Job Listing</h2>
-        <form
-          onSubmit={handleUpdateSubmit}
-          className="bg-blue-500 p-6 rounded shadow-md text-center"
-        >
-          <div className="mb-4 text-left">
-            <label className="block mb-2 text-white">Position Name</label>
-            <input
-              type="text"
-              name="positionName"
-              value={updatedDetails.positionName}
-              onChange={handleUpdateChange}
-              className="p-2 w-full rounded"
-              required
-            />
-          </div>
-          <div className="mb-4 text-left">
-            <label className="block mb-2 text-white">Job Description</label>
-            <textarea
-              name="jobDescription"
-              value={updatedDetails.jobDescription}
-              onChange={handleUpdateChange}
-              className="p-2 w-full rounded"
-              required
-            />
-          </div>
-          <div className="mb-4 text-left">
-            <label className="block mb-2 text-white">Qualifications</label>
-            <textarea
-              name="qualifications"
-              value={updatedDetails.qualifications}
-              onChange={handleUpdateChange}
-              className="p-2 w-full rounded"
-              required
-            />
-          </div>
-          <div className="mb-4 text-left">
-            <label className="block mb-2 text-white">Salary</label>
-            <input
-              type="text"
-              name="salary"
-              value={updatedDetails.salary}
-              onChange={handleUpdateChange}
-              className="p-2 w-full rounded"
-              required
-            />
-          </div>
-          <div className="mb-4 text-left">
-            <label className="block mb-2 text-white">Position Type</label>
-            <select
-              name="positionType"
-              value={updatedDetails.positionType}
-              onChange={handleUpdateChange}
-              className="p-2 w-full rounded"
-              required
-            >
-              <option value="full-time">Full-time</option>
-              <option value="part-time">Part-time</option>
-            </select>
-          </div>
-          <button
-            type="submit"
-            className="bg-green-500 text-white py-2 px-4 rounded"
-          >
-            Update Job
-          </button>
-        </form>
-      </div>
+    const filteredJobs = jobListings.filter((job) =>
+      job.position_name.toLowerCase().includes(searchValue)
     );
+    setFilteredJobListings(filteredJobs);
   };
 
-  const renderViewAllJobListings = () => {
-    const sortedJobListings = currentJobs;
-
-    return (
-      <div>
-        <h2 className="text-xl font-bold mb-4 text-custom-blue">
-          View All Job Listings
-        </h2>
-        <div className="flex justify-center mb-4">
-          <input
-            type="text"
-            placeholder="Search by job name..."
-            className="p-2 border-2 border-blue-300 rounded-lg w-full md:w-1/2"
-            value={searchTerm}
-            onChange={handleSearch}
-          />
-        </div>
-
-        <div className="flex flex-wrap gap-4">
-          {sortedJobListings.length > 0 ? (
-            sortedJobListings.map((listing) => (
-              <div
-                key={listing.id}
-                className="flex-1 min-w-[300px] p-4 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow flex flex-col justify-between"
-              >
-                <div className="flex flex-col text-left flex-grow">
-                  <p className="font-semibold text-lg">Job Name:</p>
-                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue border-2 border-blue-300 p-2">
-                    {listing.jobName}
-                  </p>
-
-                  <p className="font-semibold text-lg">Description:</p>
-                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue border-2 border-blue-300 p-2 break-words overflow-hidden max-h-[150px] overflow-y-auto">
-                    {listing.description}
-                  </p>
-
-                  <p className="font-semibold text-lg">Qualification:</p>
-                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue border-2 border-blue-300 p-2">
-                    {listing.qualifications}
-                  </p>
-
-                  <p className="font-semibold text-lg">Salary:</p>
-                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue border-2 border-blue-300 p-2">
-                    {listing.minSalary} - {listing.maxSalary}
-                  </p>
-
-                  <p className="font-semibold text-lg">Position Type:</p>
-                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue border-2 border-blue-300 p-2">
-                    {listing.positionType}
-                  </p>
-
-                  <p className="font-semibold text-lg">Disabilities:</p>
-                  <p className="mb-2 text-xl bg-custom-bg rounded-md text-custom-blue border-2 border-blue-300 p-2">
-                    {listing.disabilityTypes}
-                  </p>
-                </div>
-
-                {/* Update, Delete, View Applicants Buttons */}
-                <div className="mt-4 flex space-x-4">
-                  <button
-                    className="py-2 px-4 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition duration-300"
-                    onClick={() => {
-                      setUpdatedDetails({
-                        id: listing.id,
-                        positionName: listing.jobName,
-                        jobDescription: listing.description,
-                        qualifications: listing.qualifications,
-                        salary: `${listing.minSalary}-${listing.maxSalary}`,
-                        positionType: listing.positionType,
-                      });
-                      setIsEditing(true);
-                    }}
-                  >
-                    Update
-                  </button>
-                  <button
-                    className="py-2 px-4 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition duration-300"
-                    onClick={() => handleDelete(listing.id)}
-                  >
-                    Delete
-                  </button>
-                  <a href={`/company/viewapplicants?id=${listing.id}`}>
-                    <button className="bg-blue-500 text-white py-3 px-6 rounded-full shadow-lg hover:bg-blue-600 hover:shadow-2xl transition transform hover:scale-105">
-                      View Applicants
-                    </button>
-                  </a>
-                </div>
-              </div>
-            ))
-          ) : (
-            <p className="text-white">No job listings found.</p>
-          )}
-        </div>
-        <div className="flex justify-center mt-6">
-          {Array.from(
-            { length: Math.ceil(filteredJobListings.length / jobsPerPage) },
-            (_, index) => (
-              <button
-                key={index + 1}
-                onClick={() => handlePageChange(index + 1)}
-                className={`mx-1 px-3 py-1 rounded-lg ${
-                  currentPage === index + 1
-                    ? "bg-blue-900 text-white"
-                    : "bg-gray-200 text-blue-900"
-                }`}
-              >
-                {index + 1}
-              </button>
-            )
-          )}
-        </div>
-      </div>
-    );
+  // Navigate to the "View Applicants" page with jobId
+  const handleViewApplicants = (jobId) => {
+    navigate(`/company/viewapplicants?id=${jobId}`); // Redirect to the View Applicants page with job ID
   };
+
+  if (loading) {
+    return <div>Loading jobs...</div>;
+  }
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-blue-100">
@@ -360,6 +141,8 @@ const ViewJobs = () => {
         >
           &times;
         </button>
+
+        {/* Sidebar Content */}
         <a
           href="/dashboard/postjob"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
@@ -370,6 +153,7 @@ const ViewJobs = () => {
           <span className="material-symbols-outlined text-xl mr-4">work</span>
           <span className="flex-grow text-center">Post Job</span>
         </a>
+
         <a
           href="/dashboard/ViewJobs"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
@@ -382,8 +166,13 @@ const ViewJobs = () => {
         </a>
 
         <button
-          className="bg-red-600 text-white rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-red-500 transition-all duration-200 ease-in-out mt-6 flex items-center justify-center"
-          onClick={handleLogout}
+          className="bg-red-600 text-white rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-red-500 transition-all duration-200 ease-in-out mt-6"
+          onClick={() => {
+            sessionStorage.removeItem("Id");
+            sessionStorage.removeItem("Role");
+            sessionStorage.removeItem("Token");
+            navigate("/login");
+          }}
         >
           Logout
         </button>
@@ -400,72 +189,131 @@ const ViewJobs = () => {
       </button>
 
       {/* Main Content */}
-      <main className="flex-grow p-8 bg-custom-bg">
-        {/* Back Button */}
-        <button
-          onClick={() => navigate(-1)} // Go back to the previous page
-          className="bg-blue-500 text-white px-4 py-2 mb-6 rounded-lg shadow-lg hover:bg-blue-600 transition"
-        >
-          ← Back
-        </button>
+      <main className="flex-grow p-8">
+        <h1 className="text-xl font-bold text-gray-700">
+          View All Job Listings
+        </h1>
 
-        <h1 className="text-3xl font-bold text-blue-900">View Jobs</h1>
-        <div className="mt-0.5">
-          {isEditing ? renderUpdateJobListings() : renderViewAllJobListings()}
+        {/* Search Input */}
+        <div className="flex justify-center my-4">
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={handleSearch}
+            placeholder="Search job listings..."
+            className="p-2 border-2 border-blue-300 rounded-lg w-full md:w-1/2"
+          />
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="min-w-full bg-white mt-4">
+            <thead>
+              <tr className="w-full bg-blue-500 text-white">
+                <th className="py-2 px-4">Company</th>
+                <th className="py-2 px-4">Job Title</th>
+                <th className="py-2 px-4">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredJobListings.map((job) => (
+                <tr key={job.id} className="border-b">
+                  <td className="py-2 px-4">{job.company_name}</td>
+                  <td className="py-2 px-4">{job.position_name}</td>
+                  <td className="py-2 px-4 flex">
+                    <button
+                      onClick={() => handleViewJob(job.id)}
+                      className="bg-blue-500 text-white px-2 py-1 rounded mr-2 hover:bg-blue-700"
+                    >
+                      View
+                    </button>
+                    <button
+                      onClick={() => handleDeleteJobListing(job.id)}
+                      className="bg-red-500 text-white px-2 py-1 rounded mr-2 hover:bg-red-700"
+                    >
+                      Delete
+                    </button>
+                    <button
+                      onClick={() => handleViewApplicants(job.id)}
+                      className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-700"
+                    >
+                      View Applicants
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </main>
 
-      {/* Logout Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
-            {/* Modal Header */}
-            <div className="flex justify-between items-center border-b pb-3 mb-4">
-              <h2 className="text-2xl font-semibold text-gray-800">
-                Logout Confirmation
-              </h2>
-              <button
-                onClick={closeModal}
-                className="text-gray-500 hover:text-gray-800 transition duration-200"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
+      {/* Modal for viewing job details */}
+      {isModalOpen && job && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white w-11/12 md:max-w-3xl p-6 rounded-lg shadow-lg">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-gray-800 text-center">
+              Job Details
+            </h2>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 text-left text-gray-800 w-full">
+              <div>
+                <p className="font-semibold text-base sm:text-lg">Company:</p>
+                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
+                  {job.companyName}
+                </p>
+              </div>
+              <div>
+                <p className="font-semibold text-base sm:text-lg">Job Title:</p>
+                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
+                  {job.jobName}
+                </p>
+              </div>
+              <div>
+                <p className="font-semibold text-base sm:text-lg">
+                  Description:
+                </p>
+                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
+                  {job.description}
+                </p>
+              </div>
+              <div>
+                <p className="font-semibold text-base sm:text-lg">
+                  Qualification:
+                </p>
+                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
+                  {job.qualification}
+                </p>
+              </div>
+              <div>
+                <p className="font-semibold text-base sm:text-lg">Salary:</p>
+                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
+                  {job.minimumSalary} - {job.maximumSalary}
+                </p>
+              </div>
+              <div>
+                <p className="font-semibold text-base sm:text-lg">
+                  Position Type:
+                </p>
+                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
+                  {job.positionType}
+                </p>
+              </div>
+              <div>
+                <p className="font-semibold text-base sm:text-lg">
+                  Disabilities:
+                </p>
+                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
+                  {job.disabilityTypes}
+                </p>
+              </div>
             </div>
 
-            {/* Modal Body */}
-            <div className="mb-6">
-              <p className="text-lg text-gray-600">
-                Are you sure you want to logout? You will need to log back in to
-                view or manage job listings.
-              </p>
-            </div>
-
-            {/* Modal Actions */}
-            <div className="flex justify-end space-x-4">
+            {/* Buttons for Back */}
+            <div className="mt-6 text-center space-x-4">
               <button
-                onClick={closeModal}
-                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-200"
+                className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
+                onClick={closeModal} // Close modal
               >
-                Cancel
-              </button>
-              <button
-                onClick={confirmLogout}
-                className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
-              >
-                Logout
+                Back
               </button>
             </div>
           </div>
