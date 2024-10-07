@@ -8,6 +8,8 @@ const ApplyPage = () => {
   const [pdfPreviewUrl, setPdfPreviewUrl] = useState(null);
   const [error, setError] = useState("");
   const [isVoiceEnabled, setIsVoiceEnabled] = useState(false);
+  const [isUploading, setIsUploading] = useState(false); // For showing progress
+  const [submitSuccess, setSubmitSuccess] = useState(false); // For showing success message
   const navigate = useNavigate();
 
   const MAX_FILE_SIZE = 16777215; // 16,777,215 bytes (16MB)
@@ -38,6 +40,7 @@ const ApplyPage = () => {
   };
 
   const handleFileChange = (e) => {
+    setIsUploading(true); // Start showing the upload progress
     const file = e.target.files[0];
     if (file && file.type === "application/pdf") {
       if (file.size <= MAX_FILE_SIZE) {
@@ -59,6 +62,7 @@ const ApplyPage = () => {
       setPdfPreviewUrl(null);
       toast.error("Please upload a valid PDF file."); // Show error toast for invalid format
     }
+    setIsUploading(false); // Stop showing the upload progress
   };
 
   const handleSubmit = (e) => {
@@ -69,6 +73,11 @@ const ApplyPage = () => {
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         const jobId = urlParams.get("id");
+
+        if (!jobId) {
+          toast.error("Job ID is missing. Unable to submit the application.");
+          return;
+        }
 
         const resume = reader.result.split(",")[1];
         const data = JSON.stringify({
@@ -90,6 +99,7 @@ const ApplyPage = () => {
           .then((response) => {
             toast.success("Resume submitted successfully!"); // Show success toast
             playSuccessMessage(); // Play the success message
+            setSubmitSuccess(true); // Show success animation
             setTimeout(() => {
               window.location.reload();
             }, 2000); // Reload after 2 seconds
@@ -108,16 +118,19 @@ const ApplyPage = () => {
   };
 
   return (
-    <div className="max-w-lg mx-auto mt-10 p-8 bg-white rounded-lg shadow-lg">
+    <div className="max-w-4xl mx-auto mt-10 p-10 bg-white rounded-xl shadow-lg space-y-8 transform transition-all hover:shadow-2xl">
       <Toaster position="top-center" reverseOrder={false} />{" "}
       {/* Add Toaster for Toast Notifications */}
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">Apply for the Job</h2>
+        <h2 className="text-3xl font-bold text-gray-900">Apply for the Job</h2>
         <button
           onClick={handleToggleVoice}
-          className={`ml-4 px-4 py-2 rounded-full transition-colors duration-200 ${
-            isVoiceEnabled ? "bg-blue-500 text-white" : "bg-gray-300 text-black"
-          } hover:bg-blue-600`}
+          className={`ml-4 p-3 rounded-full transition-colors duration-200 shadow-lg ${
+            isVoiceEnabled ? "bg-blue-600 text-white" : "bg-gray-300 text-black"
+          } hover:bg-blue-700`}
+          title={
+            isVoiceEnabled ? "Voice is enabled" : "Enable voice instructions"
+          }
         >
           <span className="material-symbols-outlined text-2xl">
             {isVoiceEnabled ? "volume_up" : "volume_off"}
@@ -125,37 +138,81 @@ const ApplyPage = () => {
         </button>
       </div>
       <form onSubmit={handleSubmit}>
-        <div className="mb-6">
-          <label className="block text-gray-700 font-semibold mb-2">
+        <div className="mb-8">
+          <label className="block text-gray-700 font-semibold mb-4">
             Upload Your Resume (PDF only):
           </label>
-          <input
-            type="file"
-            accept="application/pdf"
-            onChange={handleFileChange}
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm text-gray-800"
-          />
+          <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 cursor-pointer hover:border-blue-400 transition-all">
+            <input
+              type="file"
+              accept="application/pdf"
+              onChange={handleFileChange}
+              className="w-full text-gray-800"
+            />
+            <div className="flex items-center space-x-2 mt-2">
+              <span className="material-symbols-outlined text-gray-500">
+                file_upload
+              </span>
+              <span className="text-gray-600">Choose a PDF</span>
+            </div>
+            <small className="block text-gray-500 mt-2">
+              Max file size: 16MB
+            </small>
+          </div>
           {error && <p className="text-red-500 mt-2">{error}</p>}
+          {isUploading && <div className="loader">Uploading...</div>}
         </div>
         {pdfPreviewUrl && (
-          <div className="mb-6">
-            <label className="block text-gray-700 font-semibold mb-2">
+          <div className="mb-8">
+            <label className="block text-gray-700 font-semibold mb-4">
               Preview Your Resume:
             </label>
             <iframe
-              className="w-full h-64 border rounded-lg shadow-sm"
+              className="w-full h-72 border border-gray-300 rounded-lg shadow-sm"
               src={pdfPreviewUrl}
               title="PDF Preview"
               width="100%"
               height="500px"
             ></iframe>
+            <div className="flex justify-between mt-4">
+              <a
+                href={pdfPreviewUrl}
+                download="resume.pdf"
+                className="text-blue-500 underline"
+              >
+                Download PDF
+              </a>
+              <button
+                className="text-red-500 underline"
+                onClick={() => setResume(null)}
+              >
+                Remove PDF
+              </button>
+            </div>
+          </div>
+        )}
+        {submitSuccess && (
+          <div className="text-green-500 flex items-center mb-4">
+            <span className="material-symbols-outlined">check_circle</span>
+            Application submitted successfully!
           </div>
         )}
         <button
           type="submit"
-          className="w-full py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition duration-300"
+          className="w-full py-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300 transform hover:scale-105"
         >
           Submit Application
+        </button>
+        <button
+          type="reset"
+          className="w-full py-4 mt-4 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition duration-300"
+          onClick={() => {
+            setResume(null);
+            setPdfPreviewUrl(null);
+            setError("");
+          }}
+        >
+          Reset Form
         </button>
       </form>
     </div>
