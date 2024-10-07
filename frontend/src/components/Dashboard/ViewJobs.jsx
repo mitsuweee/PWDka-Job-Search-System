@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import axios from "axios";
 
 const ViewJobs = () => {
@@ -11,6 +12,8 @@ const ViewJobs = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [jobsPerPage] = useState(3); // Number of jobs to display per page
   const [isModalOpen, setIsModalOpen] = useState(false); // State for logout modal
+
+  const navigate = useNavigate(); // Initialize useNavigate for navigation
 
   // Fetch job listings
   useEffect(() => {
@@ -398,6 +401,14 @@ const ViewJobs = () => {
 
       {/* Main Content */}
       <main className="flex-grow p-8 bg-custom-bg">
+        {/* Back Button */}
+        <button
+          onClick={() => navigate(-1)} // Go back to the previous page
+          className="bg-blue-500 text-white px-4 py-2 mb-6 rounded-lg shadow-lg hover:bg-blue-600 transition"
+        >
+          ← Back
+        </button>
+
         <h1 className="text-3xl font-bold text-blue-900">View Jobs</h1>
         <div className="mt-0.5">
           {isEditing ? renderUpdateJobListings() : renderViewAllJobListings()}

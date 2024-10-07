@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast"; // Import react-hot-toast
 
@@ -16,6 +17,8 @@ const PostJob = () => {
   });
   const [showDisabilityOptions, setShowDisabilityOptions] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false); // State for logout modal
+
+  const navigate = useNavigate(); // Initialize useNavigate for navigation
 
   const handleLogout = () => {
     setIsModalOpen(true); // Open the modal when logout is clicked
@@ -43,7 +46,6 @@ const PostJob = () => {
       );
       return;
     }
-    console.log(jobDetails);
 
     const data = JSON.stringify({
       company_id: parseFloat(sessionStorage.getItem("Id")),
@@ -160,6 +162,14 @@ const PostJob = () => {
       </button>
       {/* Main Content */}
       <main className="flex-grow p-8 bg-custom-bg">
+        {/* Back Button */}
+        <button
+          onClick={() => navigate(-1)} // Go back to the previous page
+          className="bg-blue-500 text-white px-4 py-2 mb-6 rounded-lg shadow-lg hover:bg-blue-600 transition"
+        >
+          ← Back
+        </button>
+
         <h1 className="text-3xl font-bold text-blue-900 mb-6">Post a Job</h1>
         <form
           onSubmit={handleSubmit}
