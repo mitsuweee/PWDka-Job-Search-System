@@ -168,12 +168,13 @@ const viewCounts = async (req, res, next) => {
       .count("id as count")
       .first();
 
+    // Query to count PENDING users in the user table
     const pendingUsersCount = await knex("user")
       .where({ status: "PENDING" })
       .count("id as count")
       .first(); // Use 'first' to get a single result
 
-    // Query to count VERIFIED companies in the company table
+    // Query to count PENDING companies in the company table
     const pendingCompaniesCount = await knex("company")
       .where({ status: "PENDING" })
       .count("id as count")
