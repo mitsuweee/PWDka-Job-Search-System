@@ -154,6 +154,28 @@ const loginAdmin = async (req, res, next) => {
   }
 };
 
+const viewCounts = async (req, res, next) => {
+  try {
+    // Select counts from different tables
+    const rows = await knex.raw(`
+      SELECT 
+        (SELECT COUNT(*) FROM user WHERE status = 'VERIFIED') AS verified_users,
+        (SELECT COUNT(*) FROM company WHERE status = 'VERIFIED') AS verified_companies,
+        (SELECT COUNT(*) FROM job_listing) AS total_job_listings
+    `);
+
+    return res.status(200).json({
+      successful: true,
+      message: "Successfully Retrieved Counts",
+      data: rows[0], // Extract the first row of results
+    });
+  } catch (err) {
+    return res.status(500).json({
+      successful: false,
+      message: err.message,
+    });
+  }
+};
 const viewAdmins = async (req, res, next) => {
   try {
     const rows = await knex("admin").select(
@@ -808,6 +830,7 @@ const updateJobListing = async (req, res, next) => {
 module.exports = {
   registerAdmin,
   loginAdmin,
+  viewCounts,
   viewAdmins,
   viewUsers,
   viewCompanies,

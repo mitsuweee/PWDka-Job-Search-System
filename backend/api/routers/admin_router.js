@@ -5,6 +5,7 @@ const adminRouter = express.Router();
 adminRouter.post("/register", adminController.registerAdmin); // Registration
 adminRouter.post("/login", adminController.loginAdmin); // Login Admin
 
+adminRouter.get("/view/count", adminController.viewCounts); // Get all count
 adminRouter.get("/view/admins", adminController.viewAdmins); // Get all admins
 adminRouter.get("/view/users", adminController.viewUsers); // Get all verified users
 adminRouter.get("/view/companies", adminController.viewCompanies); //get all verified companies
