@@ -1,10 +1,62 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Bar } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+
+// Register the required chart components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const AdminDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [dashboardCounts, setDashboardCounts] = useState({
+    verified_users: 0,
+    pending_users: 0,
+    verified_companies: 0,
+    pending_companies: 0,
+    total_job_listings: 0,
+    total_job_application: 0,
+  });
+
   const navigate = useNavigate();
+
+  // Fetch all counts from the backend when the component mounts
+  useEffect(() => {
+    const fetchDashboardCounts = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:8080/admin/view/count"
+        ); // Adjust API endpoint
+        if (response.data.successful) {
+          setDashboardCounts(response.data.data); // Set the counts from API
+        } else {
+          console.error(
+            "Error fetching dashboard counts:",
+            response.data.message
+          );
+        }
+      } catch (error) {
+        console.error("Error fetching dashboard counts:", error);
+      }
+    };
+
+    fetchDashboardCounts();
+  }, []);
 
   const handleLogout = () => {
     const confirmed = window.confirm("Are you sure you want to logout?");
@@ -16,6 +68,66 @@ const AdminDashboard = () => {
 
       navigate("/login");
     }
+  };
+
+  // Data for the bar chart
+  const barChartData = {
+    labels: [
+      "Verified Users",
+      "Pending Users",
+      "Verified Companies",
+      "Pending Companies",
+      "Job Listings",
+      "Job Applications",
+    ],
+    datasets: [
+      {
+        label: "Counts",
+        data: [
+          dashboardCounts.verified_users,
+          dashboardCounts.pending_users,
+          dashboardCounts.verified_companies,
+          dashboardCounts.pending_companies,
+          dashboardCounts.total_job_listings,
+          dashboardCounts.total_job_application,
+        ],
+        backgroundColor: [
+          "rgba(75, 192, 192, 0.2)",
+          "rgba(153, 102, 255, 0.2)",
+          "rgba(255, 159, 64, 0.2)",
+          "rgba(54, 162, 235, 0.2)",
+          "rgba(255, 206, 86, 0.2)",
+          "rgba(75, 192, 192, 0.2)",
+        ],
+        borderColor: [
+          "rgba(75, 192, 192, 1)",
+          "rgba(153, 102, 255, 1)",
+          "rgba(255, 159, 64, 1)",
+          "rgba(54, 162, 235, 1)",
+          "rgba(255, 206, 86, 1)",
+          "rgba(75, 192, 192, 1)",
+        ],
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const barChartOptions = {
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top",
+      },
+      title: {
+        display: true,
+        text: "Dashboard Statistics",
+      },
+    },
   };
 
   return (
@@ -43,12 +155,10 @@ const AdminDashboard = () => {
           <span className="flex-grow text-center">Home</span>
         </a>
 
+        {/* Add additional sidebar links here */}
         <a
           href="/admin/dashboard/VerifyUsers"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
-          }}
         >
           <span className="material-symbols-outlined text-xl mr-4">
             group_add
@@ -59,9 +169,6 @@ const AdminDashboard = () => {
         <a
           href="/admin/dashboard/VerifyComps"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
-          }}
         >
           <span className="material-symbols-outlined text-xl mr-4">
             apartment
@@ -72,9 +179,6 @@ const AdminDashboard = () => {
         <a
           href="/admin/dashboard/ViewUsers"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
-          }}
         >
           <span className="material-symbols-outlined text-xl mr-4">group</span>
           <span className="flex-grow text-center">View All Users</span>
@@ -83,9 +187,6 @@ const AdminDashboard = () => {
         <a
           href="/admin/dashboard/ViewCompany"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
-          }}
         >
           <span className="material-symbols-outlined text-xl mr-4">
             source_environment
@@ -96,9 +197,6 @@ const AdminDashboard = () => {
         <a
           href="/admin/dashboard/ViewJobs"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
-          }}
         >
           <span className="material-symbols-outlined text-xl mr-4">work</span>
           <span className="flex-grow text-center">View All Job Listings</span>
@@ -127,7 +225,68 @@ const AdminDashboard = () => {
         <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold text-blue-900">Admin Dashboard</h1>
         </div>
-        <div className="mt-4">{/* Render content based on the section */}</div>
+
+        {/* Bar Chart */}
+        <div className="mt-8">
+          <Bar data={barChartData} options={barChartOptions} />
+        </div>
+
+        {/* Dashboard Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h2 className="text-xl font-bold text-gray-800">
+              Total Verified Users
+            </h2>
+            <p className="text-3xl text-blue-900 font-semibold">
+              {dashboardCounts.verified_users}
+            </p>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h2 className="text-xl font-bold text-gray-800">
+              Total Pending Users
+            </h2>
+            <p className="text-3xl text-blue-900 font-semibold">
+              {dashboardCounts.pending_users}
+            </p>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h2 className="text-xl font-bold text-gray-800">
+              Total Verified Companies
+            </h2>
+            <p className="text-3xl text-blue-900 font-semibold">
+              {dashboardCounts.verified_companies}
+            </p>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h2 className="text-xl font-bold text-gray-800">
+              Total Pending Companies
+            </h2>
+            <p className="text-3xl text-blue-900 font-semibold">
+              {dashboardCounts.pending_companies}
+            </p>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h2 className="text-xl font-bold text-gray-800">
+              Total Job Listings
+            </h2>
+            <p className="text-3xl text-blue-900 font-semibold">
+              {dashboardCounts.total_job_listings}
+            </p>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h2 className="text-xl font-bold text-gray-800">
+              Total Job Applications
+            </h2>
+            <p className="text-3xl text-blue-900 font-semibold">
+              {dashboardCounts.total_job_application}
+            </p>
+          </div>
+        </div>
       </main>
     </div>
   );
