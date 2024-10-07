@@ -173,6 +173,11 @@ const viewCounts = async (req, res, next) => {
       .count("id as count")
       .first();
 
+    // Query to count all job listings
+    const totalJobApplicationCount = await knex("job_application")
+      .count("id as count")
+      .first();
+
     // Combine the results into a single response
     return res.status(200).json({
       successful: true,
@@ -181,6 +186,7 @@ const viewCounts = async (req, res, next) => {
         verified_users: verifiedUsersCount.count,
         verified_companies: verifiedCompaniesCount.count,
         total_job_listings: totalJobListingsCount.count,
+        total_job_application: totalJobApplicationCount.count,
       },
     });
   } catch (err) {

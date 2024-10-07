@@ -2,7 +2,7 @@ const express = require("express");
 const jobListingController = require("../controllers/joblisting_controller");
 const joblistingRouter = express.Router();
 
-joblistingRouter.post("/post/job", jobListingController.postJobs);
+joblistingRouter.post("/post/job", jobListingController.postJobs); //Post Jobs
 joblistingRouter.get("/view/:id", jobListingController.viewJobListing); // View Job Listing
 joblistingRouter.get(
   "/view/newesttooldest/:id",
