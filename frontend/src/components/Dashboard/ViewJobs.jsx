@@ -5,7 +5,9 @@ import axios from "axios";
 const ViewJobs = () => {
   const [jobListings, setJobListings] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false); // Control modal visibility
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false); // Control update modal visibility
   const [job, setJob] = useState(null); // Store the specific job to view
+  const [jobUpdate, setJobUpdate] = useState({}); // State for job update
   const [loading, setLoading] = useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Control sidebar visibility for mobile
   const [searchTerm, setSearchTerm] = useState(""); // Search term state
@@ -57,6 +59,48 @@ const ViewJobs = () => {
       });
   };
 
+  // Handle update job listing
+  const handleUpdateJob = (jobData) => {
+    setJobUpdate({
+      id: jobData.id,
+      jobName: jobData.position_name,
+      description: jobData.description,
+      qualification: jobData.qualification,
+      minimumSalary: jobData.minimum_salary,
+      maximumSalary: jobData.maximum_salary,
+      positionType: jobData.position_type,
+    });
+    setIsUpdateModalOpen(true); // Open update modal
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setJobUpdate((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmitUpdate = (e) => {
+    e.preventDefault();
+    const config = {
+      method: "put",
+      url: `http://localhost:8080/joblisting/update/${jobUpdate.id}`,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: jobUpdate,
+    };
+
+    axios(config)
+      .then(() => {
+        alert("Job updated successfully!");
+        // Refresh job listings or update state here if needed
+        setIsUpdateModalOpen(false);
+      })
+      .catch((error) => {
+        console.error(error);
+        alert("Error updating job.");
+      });
+  };
+
   // Helper function to format job data
   const formatJobData = (jobData) => {
     return {
@@ -105,6 +149,11 @@ const ViewJobs = () => {
   const closeModal = () => {
     setIsModalOpen(false); // Close the modal
     setJob(null); // Clear the job details
+  };
+
+  const closeUpdateModal = () => {
+    setIsUpdateModalOpen(false); // Close update modal
+    setJobUpdate({}); // Clear job update details
   };
 
   // Handle search functionality
@@ -233,6 +282,14 @@ const ViewJobs = () => {
                       Delete
                     </button>
                     <button
+                      onClick={() => {
+                        handleUpdateJob(job); // Call update handler
+                      }}
+                      className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-700"
+                    >
+                      Edit
+                    </button>
+                    <button
                       onClick={() => handleViewApplicants(job.id)}
                       className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-700"
                     >
@@ -316,6 +373,110 @@ const ViewJobs = () => {
                 Back
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal for updating job details */}
+      {isUpdateModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white w-11/12 md:max-w-3xl p-6 rounded-lg shadow-lg">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-gray-800 text-center">
+              Update Job
+            </h2>
+            <form onSubmit={handleSubmitUpdate}>
+              <div className="grid grid-cols-1 gap-4 text-left">
+                <div>
+                  <label className="font-semibold">Job Title:</label>
+                  <input
+                    type="text"
+                    name="jobName"
+                    value={jobUpdate.jobName || ""}
+                    onChange={handleChange}
+                    placeholder="Job Title"
+                    className="p-2 border-2 border-blue-300 rounded-lg"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="font-semibold">Description:</label>
+                  <textarea
+                    name="description"
+                    value={jobUpdate.description || ""}
+                    onChange={handleChange}
+                    placeholder="Description"
+                    className="p-2 border-2 border-blue-300 rounded-lg"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="font-semibold">Qualification:</label>
+                  <input
+                    type="text"
+                    name="qualification"
+                    value={jobUpdate.qualification || ""}
+                    onChange={handleChange}
+                    placeholder="Qualification"
+                    className="p-2 border-2 border-blue-300 rounded-lg"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="font-semibold">Minimum Salary:</label>
+                  <input
+                    type="number"
+                    name="minimumSalary"
+                    value={jobUpdate.minimumSalary || ""}
+                    onChange={handleChange}
+                    placeholder="Minimum Salary"
+                    className="p-2 border-2 border-blue-300 rounded-lg"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="font-semibold">Maximum Salary:</label>
+                  <input
+                    type="number"
+                    name="maximumSalary"
+                    value={jobUpdate.maximumSalary || ""}
+                    onChange={handleChange}
+                    placeholder="Maximum Salary"
+                    className="p-2 border-2 border-blue-300 rounded-lg"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="font-semibold">Position Type:</label>
+                  <select
+                    name="positionType"
+                    value={jobUpdate.positionType || ""}
+                    onChange={handleChange}
+                    className="p-2 border-2 border-blue-300 rounded-lg"
+                    required
+                  >
+                    <option value="" disabled>
+                      Select Position Type
+                    </option>
+                    <option value="fulltime">Full-time</option>
+                    <option value="parttime">Part-time</option>
+                  </select>
+                </div>
+              </div>
+              <div className="mt-6 text-center space-x-4">
+                <button
+                  type="submit"
+                  className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+                >
+                  Update Job
+                </button>
+                <button
+                  className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
+                  onClick={closeUpdateModal} // Close update modal
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
