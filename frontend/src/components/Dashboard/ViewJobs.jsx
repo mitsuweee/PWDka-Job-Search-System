@@ -67,7 +67,7 @@ const ViewJobs = () => {
       qualification: jobData.qualification,
       minimumSalary: jobData.minimum_salary,
       maximumSalary: jobData.maximum_salary,
-      positionType: jobData.position_type,
+      positionType: jobData.positiontype_id,
     });
     setIsUpdateModalOpen(true);
   };
@@ -85,13 +85,26 @@ const ViewJobs = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      data: jobUpdate,
+      data: {
+        position_name: jobUpdate.jobName,
+        description: jobUpdate.description,
+        qualification: jobUpdate.qualification,
+        minimum_salary: jobUpdate.minimumSalary,
+        maximum_salary: jobUpdate.maximumSalary,
+        positiontype_id:
+          jobUpdate.positionType === "fulltime"
+            ? 1
+            : jobUpdate.positionType === "parttime"
+            ? 2
+            : null,
+      },
     };
 
     axios(config)
       .then(() => {
         alert("Job updated successfully!");
         setIsUpdateModalOpen(false);
+        window.location.reload();
       })
       .catch((error) => {
         console.error(error);
@@ -315,6 +328,7 @@ const ViewJobs = () => {
             <h2 className="text-3xl font-bold mb-6 text-gray-800 text-center">
               Job Details
             </h2>
+<<<<<<< HEAD
             <div className="space-y-4">
               <div className="flex justify-between">
                 <p>
@@ -341,6 +355,46 @@ const ViewJobs = () => {
               <p>
                 <strong>Position Type:</strong> {job?.positionType}
               </p>
+=======
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 text-left text-gray-800 w-full">
+              <div>
+                <p className="font-semibold text-base sm:text-lg">Job Title:</p>
+                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
+                  {job.jobName}
+                </p>
+              </div>
+              <div>
+                <p className="font-semibold text-base sm:text-lg">
+                  Description:
+                </p>
+                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
+                  {job.description}
+                </p>
+              </div>
+              <div>
+                <p className="font-semibold text-base sm:text-lg">
+                  Qualification:
+                </p>
+                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
+                  {job.qualification}
+                </p>
+              </div>
+              <div>
+                <p className="font-semibold text-base sm:text-lg">Salary:</p>
+                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
+                  {job.minimumSalary} - {job.maximumSalary}
+                </p>
+              </div>
+              <div>
+                <p className="font-semibold text-base sm:text-lg">
+                  Position Type:
+                </p>
+                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
+                  {job.positionType}
+                </p>
+              </div>
+>>>>>>> 9aeb0af92b6f4bae20013f7bee029923fc55e35f
             </div>
             <div className="mt-8 flex justify-center space-x-4">
               <button
