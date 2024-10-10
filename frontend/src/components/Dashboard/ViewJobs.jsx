@@ -68,7 +68,7 @@ const ViewJobs = () => {
       qualification: jobData.qualification,
       minimumSalary: jobData.minimum_salary,
       maximumSalary: jobData.maximum_salary,
-      positionType: jobData.position_type,
+      positionType: jobData.positiontype_id,
     });
     setIsUpdateModalOpen(true); // Open update modal
   };
@@ -86,7 +86,19 @@ const ViewJobs = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      data: jobUpdate,
+      data: {
+        position_name: jobUpdate.jobName,
+        description: jobUpdate.description,
+        qualification: jobUpdate.qualification,
+        minimum_salary: jobUpdate.minimumSalary,
+        maximum_salary: jobUpdate.maximumSalary,
+        positiontype_id:
+          jobUpdate.positionType === "fulltime"
+            ? 1
+            : jobUpdate.positionType === "parttime"
+            ? 2
+            : null,
+      },
     };
 
     axios(config)
@@ -94,6 +106,7 @@ const ViewJobs = () => {
         alert("Job updated successfully!");
         // Refresh job listings or update state here if needed
         setIsUpdateModalOpen(false);
+        window.location.reload();
       })
       .catch((error) => {
         console.error(error);
@@ -313,12 +326,6 @@ const ViewJobs = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 text-left text-gray-800 w-full">
               <div>
-                <p className="font-semibold text-base sm:text-lg">Company:</p>
-                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                  {job.companyName}
-                </p>
-              </div>
-              <div>
                 <p className="font-semibold text-base sm:text-lg">Job Title:</p>
                 <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
                   {job.jobName}
@@ -352,14 +359,6 @@ const ViewJobs = () => {
                 </p>
                 <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
                   {job.positionType}
-                </p>
-              </div>
-              <div>
-                <p className="font-semibold text-base sm:text-lg">
-                  Disabilities:
-                </p>
-                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                  {job.disabilityTypes}
                 </p>
               </div>
             </div>
