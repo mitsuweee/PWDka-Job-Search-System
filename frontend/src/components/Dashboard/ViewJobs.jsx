@@ -322,15 +322,15 @@ const ViewJobs = () => {
       </main>
 
       {/* Modal for viewing job details */}
+      {/* Modal for viewing job details */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 transition-opacity">
           <div className="bg-white w-full max-w-3xl p-8 rounded-lg shadow-xl transform transition-transform duration-300 ease-in-out">
             <h2 className="text-3xl font-bold mb-6 text-gray-800 text-center">
               Job Details
             </h2>
-<<<<<<< HEAD
             <div className="space-y-4">
-              <div className="flex justify-between">
+              <div className="flex justify-between bg-gray-200 p-3 rounded-md">
                 <p>
                   <strong>Company Name:</strong> {job?.companyName}
                 </p>
@@ -338,63 +338,29 @@ const ViewJobs = () => {
                   <strong>Job Title:</strong> {job?.jobName}
                 </p>
               </div>
-              <p>
-                <strong>Description:</strong> {job?.description}
-              </p>
-              <p>
-                <strong>Qualification:</strong> {job?.qualification}
-              </p>
-              <p className="flex justify-between">
+              <div className="bg-gray-200 p-3 rounded-md">
+                <p>
+                  <strong>Description:</strong> {job?.description}
+                </p>
+              </div>
+              <div className="bg-gray-200 p-3 rounded-md">
+                <p>
+                  <strong>Qualification:</strong> {job?.qualification}
+                </p>
+              </div>
+              <div className="flex justify-between bg-gray-200 p-3 rounded-md">
                 <span>
                   <strong>Min Salary:</strong> ${job?.minimumSalary}
                 </span>
                 <span>
                   <strong>Max Salary:</strong> ${job?.maximumSalary}
                 </span>
-              </p>
-              <p>
-                <strong>Position Type:</strong> {job?.positionType}
-              </p>
-=======
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 text-left text-gray-800 w-full">
-              <div>
-                <p className="font-semibold text-base sm:text-lg">Job Title:</p>
-                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                  {job.jobName}
+              </div>
+              <div className="bg-gray-200 p-3 rounded-md">
+                <p>
+                  <strong>Position Type:</strong> {job?.positionType}
                 </p>
               </div>
-              <div>
-                <p className="font-semibold text-base sm:text-lg">
-                  Description:
-                </p>
-                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                  {job.description}
-                </p>
-              </div>
-              <div>
-                <p className="font-semibold text-base sm:text-lg">
-                  Qualification:
-                </p>
-                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                  {job.qualification}
-                </p>
-              </div>
-              <div>
-                <p className="font-semibold text-base sm:text-lg">Salary:</p>
-                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                  {job.minimumSalary} - {job.maximumSalary}
-                </p>
-              </div>
-              <div>
-                <p className="font-semibold text-base sm:text-lg">
-                  Position Type:
-                </p>
-                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                  {job.positionType}
-                </p>
-              </div>
->>>>>>> 9aeb0af92b6f4bae20013f7bee029923fc55e35f
             </div>
             <div className="mt-8 flex justify-center space-x-4">
               <button
