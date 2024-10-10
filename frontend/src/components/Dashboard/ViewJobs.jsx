@@ -4,15 +4,14 @@ import axios from "axios";
 
 const ViewJobs = () => {
   const [jobListings, setJobListings] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false); // Control modal visibility
-  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false); // Control update modal visibility
-  const [job, setJob] = useState(null); // Store the specific job to view
-  const [jobUpdate, setJobUpdate] = useState({}); // State for job update
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [job, setJob] = useState(null);
+  const [jobUpdate, setJobUpdate] = useState({});
   const [loading, setLoading] = useState(true);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Control sidebar visibility for mobile
-  const [searchTerm, setSearchTerm] = useState(""); // Search term state
-  const [filteredJobListings, setFilteredJobListings] = useState([]); // Filtered job listings
-  const [activeActionJobId, setActiveActionJobId] = useState(null); // Track jobId for toggled action
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredJobListings, setFilteredJobListings] = useState([]);
 
   const navigate = useNavigate();
 
@@ -51,7 +50,7 @@ const ViewJobs = () => {
     axios(config)
       .then((response) => {
         const jobData = response.data.data[0];
-        setJob(formatJobData(jobData));
+        setJob(jobData);
         setIsModalOpen(true);
       })
       .catch((error) => {
@@ -112,20 +111,6 @@ const ViewJobs = () => {
       });
   };
 
-  const formatJobData = (jobData) => {
-    return {
-      id: jobData.id,
-      companyName: jobData.company_name,
-      jobName: jobData.position_name,
-      description: jobData.description,
-      qualification: jobData.qualification,
-      minimumSalary: jobData.minimum_salary,
-      maximumSalary: jobData.maximum_salary,
-      positionType: jobData.position_type,
-      disabilityTypes: jobData.disability_types,
-    };
-  };
-
   const handleDeleteJobListing = (id) => {
     const confirmed = window.confirm(
       "Are you sure you want to delete this job listing?"
@@ -179,8 +164,8 @@ const ViewJobs = () => {
     navigate(`/company/viewapplicants?id=${jobId}`);
   };
 
-  const toggleActions = (jobId) => {
-    setActiveActionJobId((prev) => (prev === jobId ? null : jobId));
+  const handleGoToDashboard = () => {
+    navigate("/dashboard"); // Navigate to the dashboard page
   };
 
   if (loading) {
@@ -189,13 +174,14 @@ const ViewJobs = () => {
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-blue-100">
+      {/* Sidebar */}
       <aside
         className={`bg-custom-blue w-full md:w-[300px] lg:w-[250px] p-4 flex flex-col items-center md:relative fixed top-0 left-0 min-h-screen h-full transition-transform transform ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 z-50 md:z-auto`}
       >
         <button
-          className="text-white md:hidden self-end size-10"
+          className="text-white md:hidden self-end text-2xl"
           onClick={() => setIsSidebarOpen(false)}
         >
           &times;
@@ -204,9 +190,6 @@ const ViewJobs = () => {
         <a
           href="/dashboard/postjob"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
-          }}
         >
           <span className="material-symbols-outlined text-xl mr-4">work</span>
           <span className="flex-grow text-center">Post Job</span>
@@ -215,9 +198,6 @@ const ViewJobs = () => {
         <a
           href="/dashboard/ViewJobs"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
-          }}
         >
           <span className="material-symbols-outlined text-xl mr-4">list</span>
           <span className="flex-grow text-center">View All Job Listings</span>
@@ -236,17 +216,17 @@ const ViewJobs = () => {
         </button>
       </aside>
 
+      {/* Mobile Dashboard Button */}
       <button
-        className={`md:hidden bg-custom-blue text-white p-4 fixed top-4 left-4 z-50 rounded-xl mt-11 transition-transform ${
-          isSidebarOpen ? "hidden" : ""
-        }`}
-        onClick={() => setIsSidebarOpen(true)}
+        onClick={handleGoToDashboard}
+        className="md:hidden bg-gray-200 text-blue-900 rounded-xl py-2 px-4 fixed bottom-4 left-4 z-50 shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
       >
-        &#9776;
+        Dashboard
       </button>
 
-      <main className="flex-grow p-8">
-        <h1 className="text-xl font-bold text-gray-700">
+      {/* Main Content */}
+      <main className="flex-grow p-4 md:p-8">
+        <h1 className="text-xl font-bold text-gray-700 text-center md:text-left">
           View All Job Listings
         </h1>
 
@@ -260,57 +240,72 @@ const ViewJobs = () => {
           />
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="min-w-full bg-white mt-4 rounded-xl">
+        {/* Table */}
+        <div className="w-full">
+          <table className="table-auto w-full bg-white mt-4 rounded-xl">
             <thead>
-              <tr className="min-w-full bg-blue-500 text-white rounded-xl">
-                <th className="py-2 px-4">Company</th>
-                <th className="py-2 px-4">Job Title</th>
-                <th className="py-2 px-4">Actions</th>
+              <tr className="bg-blue-500 text-white">
+                <th className="py-2 px-2 md:px-4 text-sm md:text-base">
+                  Company
+                </th>
+                <th className="py-2 px-2 md:px-4 text-sm md:text-base">
+                  Job Title
+                </th>
+                <th className="py-2 px-2 md:px-4 text-sm md:text-base">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody>
               {filteredJobListings.map((job) => (
                 <tr key={job.id} className="border-b">
-                  <td className="py-2 px-4">{job.company_name}</td>
-                  <td className="py-2 px-4">{job.position_name}</td>
-                  <td className="py-2 px-4">
-                    <div className="flex justify-end space-x-2 mr-4">
+                  <td className="py-2 px-2 md:px-4 text-sm md:text-base break-words">
+                    {job.company_name}
+                  </td>
+                  <td className="py-2 px-2 md:px-4 text-sm md:text-base break-words">
+                    {job.position_name}
+                  </td>
+                  <td className="py-2 px-2 md:px-4">
+                    <div className="flex space-x-1 md:space-x-2 justify-center md:justify-end">
                       <button
                         onClick={() => handleViewJob(job.id)}
-                        className="flex items-center bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-700 transition-colors"
+                        className="bg-blue-500 text-white p-1 md:px-2 md:py-1 rounded hover:bg-blue-700 transition-colors flex items-center"
                       >
-                        <span className="material-symbols-outlined text-2xl">
+                        <span className="material-symbols-outlined text-base md:text-xl">
                           visibility
                         </span>
-                        View
+                        <span className="ml-1 md:block hidden">View</span>{" "}
+                        {/* Hide on mobile */}
                       </button>
                       <button
                         onClick={() => handleDeleteJobListing(job.id)}
-                        className="flex items-center bg-red-500 text-white px-2 py-1 rounded hover:bg-red-700 transition-colors"
+                        className="bg-red-500 text-white p-1 md:px-2 md:py-1 rounded hover:bg-red-700 transition-colors flex items-center"
                       >
-                        <span className="material-symbols-outlined text-2xl">
+                        <span className="material-symbols-outlined text-base md:text-xl">
                           delete
                         </span>
-                        Delete
+                        <span className="ml-1 md:block hidden">Delete</span>{" "}
+                        {/* Hide on mobile */}
                       </button>
                       <button
                         onClick={() => handleUpdateJob(job)}
-                        className="flex items-center bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-700 transition-colors"
+                        className="bg-yellow-500 text-white p-1 md:px-2 md:py-1 rounded hover:bg-yellow-700 transition-colors flex items-center"
                       >
-                        <span className="material-symbols-outlined text-2xl">
+                        <span className="material-symbols-outlined text-base md:text-xl">
                           edit
                         </span>
-                        Edit
+                        <span className="ml-1 md:block hidden">Edit</span>{" "}
+                        {/* Hide on mobile */}
                       </button>
                       <button
                         onClick={() => handleViewApplicants(job.id)}
-                        className="flex items-center bg-green-500 text-white px-2 py-1 rounded hover:bg-green-700 transition-colors"
+                        className="bg-green-500 text-white p-1 md:px-2 md:py-1 rounded hover:bg-green-700 transition-colors flex items-center"
                       >
-                        <span className="material-symbols-outlined text-2xl">
+                        <span className="material-symbols-outlined text-base md:text-xl">
                           group_add
                         </span>
-                        Applicants
+                        <span className="ml-1 md:block hidden">Applicants</span>{" "}
+                        {/* Hide on mobile */}
                       </button>
                     </div>
                   </td>
@@ -322,20 +317,19 @@ const ViewJobs = () => {
       </main>
 
       {/* Modal for viewing job details */}
-      {/* Modal for viewing job details */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 transition-opacity">
-          <div className="bg-white w-full max-w-3xl p-8 rounded-lg shadow-xl transform transition-transform duration-300 ease-in-out">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white w-full max-w-lg p-6 rounded-lg shadow-xl mx-4 max-h-screen overflow-y-auto">
             <h2 className="text-3xl font-bold mb-6 text-gray-800 text-center">
               Job Details
             </h2>
             <div className="space-y-4">
               <div className="flex justify-between bg-gray-200 p-3 rounded-md">
                 <p>
-                  <strong>Company Name:</strong> {job?.companyName}
+                  <strong>Company Name:</strong> {job?.company_name}
                 </p>
                 <p>
-                  <strong>Job Title:</strong> {job?.jobName}
+                  <strong>Job Title:</strong> {job?.position_name}
                 </p>
               </div>
               <div className="bg-gray-200 p-3 rounded-md">
@@ -350,15 +344,15 @@ const ViewJobs = () => {
               </div>
               <div className="flex justify-between bg-gray-200 p-3 rounded-md">
                 <span>
-                  <strong>Min Salary:</strong> ${job?.minimumSalary}
+                  <strong>Min Salary:</strong> ${job?.minimum_salary}
                 </span>
                 <span>
-                  <strong>Max Salary:</strong> ${job?.maximumSalary}
+                  <strong>Max Salary:</strong> ${job?.maximum_salary}
                 </span>
               </div>
               <div className="bg-gray-200 p-3 rounded-md">
                 <p>
-                  <strong>Position Type:</strong> {job?.positionType}
+                  <strong>Position Type:</strong> {job?.position_type}
                 </p>
               </div>
             </div>
@@ -376,8 +370,8 @@ const ViewJobs = () => {
 
       {/* Modal for editing job details */}
       {isUpdateModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 transition-opacity">
-          <div className="bg-white w-full max-w-3xl p-8 rounded-lg shadow-xl transform transition-transform duration-300 ease-in-out">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white w-full max-w-lg p-6 rounded-lg shadow-xl mx-4">
             <h2 className="text-3xl font-bold mb-6 text-gray-800 text-center">
               Update Job
             </h2>
@@ -437,18 +431,6 @@ const ViewJobs = () => {
                   type="number"
                   name="maximumSalary"
                   value={jobUpdate.maximumSalary}
-                  onChange={handleChange}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              <div>
-                <label className="block text-lg font-medium text-gray-700 mb-2">
-                  Position Type
-                </label>
-                <input
-                  type="text"
-                  name="positionType"
-                  value={jobUpdate.positionType}
                   onChange={handleChange}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
