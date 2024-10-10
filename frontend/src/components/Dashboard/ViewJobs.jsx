@@ -216,16 +216,26 @@ const ViewJobs = () => {
         </button>
       </aside>
 
-      {/* Mobile Dashboard Button */}
+      {/* Mobile Toggle Button */}
       <button
-        onClick={handleGoToDashboard}
-        className="md:hidden bg-gray-200 text-blue-900 rounded-xl py-2 px-4 fixed bottom-4 left-4 z-50 shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
+        className={`md:hidden bg-custom-blue text-white p-4 fixed top-4 left-4 z-50 rounded-xl mt-11 transition-transform ${
+          isSidebarOpen ? "hidden" : ""
+        }`}
+        onClick={() => setIsSidebarOpen(true)}
       >
-        Dashboard
+        &#9776;
       </button>
 
       {/* Main Content */}
       <main className="flex-grow p-4 md:p-8">
+        {/* Back Button */}
+        <button
+          onClick={() => navigate(-1)} // Go back to the previous page
+          className="bg-blue-500 text-white px-4 py-2 mb-6 rounded-lg shadow-lg hover:bg-blue-600 transition"
+        >
+          ← Back
+        </button>
+
         <h1 className="text-xl font-bold text-gray-700 text-center md:text-left">
           View All Job Listings
         </h1>
