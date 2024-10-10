@@ -196,7 +196,7 @@ const ViewApplicants = () => {
             sortedApplicants.map((applicant) => (
               <div
                 key={applicant.id}
-                className="flex-1 min-w-[300px] p-4 bg-blue-500 rounded shadow-xl transition-transform duration-200 ease-in-out hover:scale-105 hover:bg-blue-600"
+                className="flex-1 min-w-[300px] p-4 bg-blue-500 rounded shadow-xl transition-transform duration-200 ease-in-out hover:scale-80 hover:bg-blue-600"
               >
                 <div className="flex flex-col text-left">
                   <p className="font-semibold text-lg text-white">Full Name:</p>

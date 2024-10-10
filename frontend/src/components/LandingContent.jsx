@@ -41,7 +41,7 @@ const LandingContent = () => {
           <div className="mb-16 lg:pr-5 lg:max-w-lg lg:mb-0">
             <div className="mb-6 max-w-xl">
               <p className="inline-block pt-1 pr-3 pb-1 pl-3 mb-4 text-pink-200 bg-pink-500 rounded-2xl uppercase text-xs font-semibold tracking-wider">
-                Brand new
+                Get Hired!
               </p>
               <div className="text-3xl font-bold tracking-tight text-gray-900 max-w-lg sm:text-4xl sm:leading-none mb-6">
                 <p className="text-black text-3xl font-'bold' tracking-tight sm:text-4xl sm:leading-none">
