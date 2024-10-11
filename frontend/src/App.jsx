@@ -28,12 +28,12 @@ import CompanyViewAppl from "./pages/CompanyViewAppl.jsx";
 import ForgotP from "./pages/ForgotP.jsx";
 import ConfirmP from "./pages/ConfirmP.jsx";
 import ProtectedRoute from "./protectedroute.js";
+import RedirectAuthenticated from "./redirectauthenticated.js";
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/login" element={<Login />} />
         <Route path="/" element={<LandingPage />} />
         <Route path="/main" element={<MainPage />} />
         <Route path="/privacypolicy" element={<PrivacyPol />} />
@@ -42,9 +42,26 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/faqs" element={<Faq />} />
-        <Route path="/adminlogin" element={<AdminLog />} />
         <Route path="/forgotpassword" element={<ForgotP />} />
         <Route path="/passwordconfirmed" element={<ConfirmP />} />
+
+        {/* RedirectAuthenticated Routes */}
+        <Route
+          path="/login"
+          element={
+            <RedirectAuthenticated>
+              <Login />
+            </RedirectAuthenticated>
+          }
+        />
+        <Route
+          path="/adminlogin"
+          element={
+            <RedirectAuthenticated>
+              <AdminLog />
+            </RedirectAuthenticated>
+          }
+        />
 
         {/* Protected Routes */}
         <Route
