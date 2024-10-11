@@ -199,8 +199,11 @@ const viewJobListing = async (req, res, next) => {
 
 const viewJobListingViaUserNewestToOldest = async (req, res, next) => {
   const { id } = req.params;
+  const city = req.body.city;
+  const position_name = req.body.position_name;
+  const position_type = req.body.position_type; // Get filters from query parameters
   const page = 1; // Default to page 1 if not provided
-  const limit = 1000; // Default to 5 listings per page if not provided
+  const limit = 1000; // Default to 1000 listings per page if not provided
   const offset = (page - 1) * limit; // Calculate offset for pagination
 
   if (!id) {
@@ -211,7 +214,7 @@ const viewJobListingViaUserNewestToOldest = async (req, res, next) => {
   } else {
     try {
       // Get the total count of job listings for the user
-      const totalJobListings = await knex("job_listing")
+      const baseQuery = knex("job_listing")
         .join(
           "position_type",
           "job_listing.positiontype_id",
@@ -229,13 +232,32 @@ const viewJobListingViaUserNewestToOldest = async (req, res, next) => {
           "disability.id"
         )
         .join("user", "user.disability_id", "disability.id")
-        .where("user.id", id)
-        .count({ count: "*" });
+        .where("user.id", id);
+
+      // Count job listings with applied filters
+      const totalJobListings = await baseQuery.clone().count({ count: "*" });
 
       const totalCount = totalJobListings[0].count;
 
-      // Retrieve paginated job listings
-      const rows = await knex("job_listing")
+      // Add filtering conditions to the base query
+      if (city) {
+        baseQuery.where("company.city", "like", `%${city}%`);
+      }
+
+      if (position_name) {
+        baseQuery.where(
+          "job_listing.position_name",
+          "like",
+          `%${position_name}%`
+        );
+      }
+
+      if (position_type) {
+        baseQuery.where("position_type.type", "like", `%${position_type}%`);
+      }
+
+      // Retrieve paginated job listings with applied filters
+      const rows = await baseQuery
         .select(
           "job_listing.id",
           "job_listing.position_name",
@@ -248,27 +270,10 @@ const viewJobListingViaUserNewestToOldest = async (req, res, next) => {
           "company.profile_picture AS company_profile_picture",
           "company.email AS company_email",
           "company.address AS company_address",
+          "company.city AS company_city",
           "company.contact_number AS company_contact_number",
           "company.description AS company_description"
         )
-        .join(
-          "position_type",
-          "job_listing.positiontype_id",
-          "position_type.id"
-        )
-        .join("company", "job_listing.company_id", "company.id")
-        .join(
-          "disability_job_listing",
-          "job_listing.id",
-          "disability_job_listing.joblisting_id"
-        )
-        .join(
-          "disability",
-          "disability_job_listing.disability_id",
-          "disability.id"
-        )
-        .join("user", "user.disability_id", "disability.id")
-        .where("user.id", id)
         .orderBy("job_listing.date_created", "desc")
         .limit(limit)
         .offset(offset);
