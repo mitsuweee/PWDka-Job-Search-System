@@ -51,9 +51,10 @@ const ViewApplicants = () => {
             resume: applicant.resume, // URL for PDF preview
             jobAppliedFor: applicant.position_name,
             profile: {
-              disability: applicant.disability,
-              city: applicant.city,
-              address: applicant.address,
+              fullName: applicant.full_name, // Full name is concatenated
+              email: applicant.email, // Email
+              disability: applicant.type, // From disability.type
+              location: applicant.Location, // Concatenated address + city
               contactNumber: applicant.contact_number,
               gender: applicant.gender,
               birthdate: new Date(applicant.birth_date).toLocaleDateString(
@@ -63,6 +64,7 @@ const ViewApplicants = () => {
             },
           }))
         );
+        console.log("Job Listing ID:", joblistingId);
 
         setApplicants(fetchedJobApplicants);
       })
@@ -97,6 +99,7 @@ const ViewApplicants = () => {
   };
 
   const openProfileModal = (profile) => {
+    console.log("Opening profile modal for:", profile); // Debugging line
     setSelectedProfile(profile);
     setIsProfileModalOpen(true);
   };
@@ -340,7 +343,7 @@ const ViewApplicants = () => {
                     Disability:
                   </p>
                   <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
-                    {selectedProfile?.disability}
+                    {selectedProfile?.disability || "Not specified"}
                   </p>
                 </div>
 
@@ -353,7 +356,7 @@ const ViewApplicants = () => {
                     City:
                   </p>
                   <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
-                    {selectedProfile?.city}
+                    {selectedProfile?.location || "Not specified"}
                   </p>
                 </div>
 
@@ -366,7 +369,7 @@ const ViewApplicants = () => {
                     Address:
                   </p>
                   <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
-                    {selectedProfile?.address}
+                    {selectedProfile?.address || "Not specified"}
                   </p>
                 </div>
 
@@ -379,7 +382,7 @@ const ViewApplicants = () => {
                     Contact Number:
                   </p>
                   <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
-                    {selectedProfile?.contactNumber}
+                    {selectedProfile?.contactNumber || "Not specified"}
                   </p>
                 </div>
 
@@ -392,7 +395,7 @@ const ViewApplicants = () => {
                     Gender:
                   </p>
                   <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
-                    {selectedProfile?.gender}
+                    {selectedProfile?.gender || "Not specified"}
                   </p>
                 </div>
 
