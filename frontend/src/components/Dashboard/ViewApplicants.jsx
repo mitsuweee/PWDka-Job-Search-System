@@ -289,40 +289,124 @@ const ViewApplicants = () => {
         {/* Profile Modal */}
         {isProfileModalOpen && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-            <div className="bg-white p-8 rounded-lg shadow-lg relative w-full max-w-3xl">
+            <div className="bg-white p-6 rounded-lg shadow-lg relative w-full max-w-2xl">
+              {/* Close Button */}
               <button
                 onClick={closeProfileModal}
-                className="absolute top-2 right-2 text-2xl font-bold text-gray-700 hover:text-gray-900"
+                className="absolute top-2 right-2 text-2xl font-bold text-gray-700 hover:text-gray-900 transition duration-200"
               >
                 &times;
               </button>
-              <h3 className="text-lg font-semibold mb-4">
+
+              {/* Modal Title */}
+              <h3 className="text-xl font-bold text-gray-800 mb-6 text-center">
                 Applicant's Profile
               </h3>
-              <div className="flex flex-col items-center">
+
+              {/* Profile Picture and Info */}
+              <div className="flex flex-col items-center mb-4">
                 <img
                   src={selectedProfile?.profilePicture}
                   alt="Profile"
-                  className="w-24 h-24 rounded-full border-4 border-blue-700 shadow-lg mb-4"
+                  className="w-32 h-32 rounded-full border-4 border-blue-600 shadow-lg mb-4"
                 />
-                <div className="text-left w-full">
-                  <p className="font-semibold">Disability:</p>
-                  <p className="mb-2">{selectedProfile?.disability}</p>
+                <h4 className="text-lg font-semibold text-gray-900">
+                  {selectedProfile?.fullName}
+                </h4>
+                <p className="text-gray-600">{selectedProfile?.email}</p>
+              </div>
 
-                  <p className="font-semibold">City:</p>
-                  <p className="mb-2">{selectedProfile?.city}</p>
+              {/* Profile Details with Icons */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
+                {/* Name */}
+                <div>
+                  <p className="text-lg font-semibold text-gray-800 flex items-center">
+                    <span className="material-symbols-outlined text-2xl mr-2">
+                      person
+                    </span>
+                    Name:
+                  </p>
+                  <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
+                    {selectedProfile?.fullName}
+                  </p>
+                </div>
 
-                  <p className="font-semibold">Address:</p>
-                  <p className="mb-2">{selectedProfile?.address}</p>
+                {/* Disability */}
+                <div>
+                  <p className="text-lg font-semibold text-gray-800 flex items-center">
+                    <span className="material-symbols-outlined text-2xl mr-2">
+                      accessibility
+                    </span>
+                    Disability:
+                  </p>
+                  <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
+                    {selectedProfile?.disability}
+                  </p>
+                </div>
 
-                  <p className="font-semibold">Contact Number:</p>
-                  <p className="mb-2">{selectedProfile?.contactNumber}</p>
+                {/* City */}
+                <div>
+                  <p className="text-lg font-semibold text-gray-800 flex items-center">
+                    <span className="material-symbols-outlined text-2xl mr-2">
+                      location_city
+                    </span>
+                    City:
+                  </p>
+                  <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
+                    {selectedProfile?.city}
+                  </p>
+                </div>
 
-                  <p className="font-semibold">Gender:</p>
-                  <p className="mb-2">{selectedProfile?.gender}</p>
+                {/* Address */}
+                <div>
+                  <p className="text-lg font-semibold text-gray-800 flex items-center">
+                    <span className="material-symbols-outlined text-2xl mr-2">
+                      home
+                    </span>
+                    Address:
+                  </p>
+                  <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
+                    {selectedProfile?.address}
+                  </p>
+                </div>
 
-                  <p className="font-semibold">Birthdate:</p>
-                  <p className="mb-2">{selectedProfile?.birthdate}</p>
+                {/* Contact Number */}
+                <div>
+                  <p className="text-lg font-semibold text-gray-800 flex items-center">
+                    <span className="material-symbols-outlined text-2xl mr-2">
+                      phone
+                    </span>
+                    Contact Number:
+                  </p>
+                  <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
+                    {selectedProfile?.contactNumber}
+                  </p>
+                </div>
+
+                {/* Gender */}
+                <div>
+                  <p className="text-lg font-semibold text-gray-800 flex items-center">
+                    <span className="material-symbols-outlined text-2xl mr-2">
+                      person
+                    </span>
+                    Gender:
+                  </p>
+                  <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
+                    {selectedProfile?.gender}
+                  </p>
+                </div>
+
+                {/* Birthdate */}
+                <div>
+                  <p className="text-lg font-semibold text-gray-800 flex items-center">
+                    <span className="material-symbols-outlined text-2xl mr-2">
+                      calendar_today
+                    </span>
+                    Birthdate:
+                  </p>
+                  <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
+                    {selectedProfile?.birthdate}
+                  </p>
                 </div>
               </div>
             </div>
