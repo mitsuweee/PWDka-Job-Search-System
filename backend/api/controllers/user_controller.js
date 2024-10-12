@@ -27,7 +27,6 @@ const registerUser = async (req, res, next) => {
   if (
     !id ||
     !first_name ||
-    !middle_initial ||
     !last_name ||
     !address ||
     !city ||
@@ -73,7 +72,8 @@ const registerUser = async (req, res, next) => {
   } else if (!util.checkCharacters(city) || !city.endsWith("city")) {
     return res.status(400).json({
       successful: false,
-      message: "City Must only contain alphabetical characters",
+      message:
+        "City Must only contain alphabetical characters and it should end with the word 'city'",
     });
   } else if (!util.checkCharacters(gender)) {
     return res.status(400).json({

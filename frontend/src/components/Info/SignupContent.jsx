@@ -236,7 +236,6 @@ const Signup = () => {
               value={userFormValues.middleInitial}
               onChange={handleInputChange}
               className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
-              required
             />
           </div>
 
