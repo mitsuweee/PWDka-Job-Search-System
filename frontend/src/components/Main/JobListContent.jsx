@@ -15,6 +15,8 @@ const JobListing = () => {
   const [userFullName, setUserFullName] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false); // State for modal
   const [userDisabilityType, setUserDisabilityType] = useState(null);
+  const [isSpeaking, setIsSpeaking] = useState(false); // For tracking speech
+  const [currentJobSpeech, setCurrentJobSpeech] = useState(null); // Track current speech
 
   const jobsPerPage = 4; // Number of jobs to display per page
   const navigate = useNavigate();
@@ -27,15 +29,14 @@ const JobListing = () => {
   useEffect(() => {
     const userId = sessionStorage.getItem("Id");
 
-    // Fetch user's full name and disability type
     const fetchUserFullName = () => {
       axios
         .get(`/user/view/${userId}`)
         .then((response) => {
           const userData = response.data.data;
           setUserFullName(userData.full_name);
-          const userDisabilityType = userData.type; // Assuming 'type' is the field that contains disability type
-          setUserDisabilityType(userDisabilityType); // Storing the disability type in the state
+          const userDisabilityType = userData.type;
+          setUserDisabilityType(userDisabilityType);
         })
         .catch((error) => {
           console.log(
@@ -45,7 +46,6 @@ const JobListing = () => {
         });
     };
 
-    // Fetch jobs for the user
     const fetchJobs = () => {
       const config = {
         method: "get",
@@ -57,9 +57,6 @@ const JobListing = () => {
 
       axios(config)
         .then((response) => {
-          console.log(response.data);
-
-          // Combine job and company details into one object per job
           const fetchedJobs = response.data.data.map((job) => ({
             id: job.id,
             jobName: job.position_name,
@@ -77,7 +74,7 @@ const JobListing = () => {
             companyImage: `data:image/png;base64,${job.company_profile_picture}`, // Placeholder for company logo
           }));
 
-          setJobs(fetchedJobs); // Setting the jobs state
+          setJobs(fetchedJobs);
         })
         .catch((error) => {
           const errorMessage =
@@ -87,26 +84,49 @@ const JobListing = () => {
         });
     };
 
-    fetchUserFullName(); // Call the function to fetch user's full name and disability type
-    fetchJobs(); // Call the function to fetch jobs
+    fetchUserFullName();
+    fetchJobs();
   }, []);
 
-  const playJobListingMessage = () => {
-    const messageText =
-      "This is the Job Listings page where opportunities await. Explore a wide range of job openings tailored for persons with disabilities, and find the role that matches your skills and aspirations. Simply click on the job you’re interested in, then click Apply to take the next step toward your new career.";
+  const playJobListingMessage = (job) => {
+    const jobDetails = `
+      Company: ${job.companyName}.
+      Job Title: ${job.jobName}.
+      Job Description: ${job.description}.
+      Location: ${job.companyLocation}.
+      Position Type: ${job.positionType}.
+      Salary: ${job.salary}.
+      Requirements: ${job.requirements}.
+      Qualifications: ${job.qualifications}.
+      Company Email: ${job.companyEmail}.
+      Contact Number: ${job.companyContact}.
+    `;
 
-    const message = new SpeechSynthesisUtterance(messageText);
-    message.lang = "en-US"; // Set language and accent
-    speechSynthesis.speak(message);
+    if (isSpeaking && currentJobSpeech) {
+      window.speechSynthesis.cancel(); // Stop the current speech if already playing
+      setIsSpeaking(false);
+    } else {
+      const utterance = new SpeechSynthesisUtterance(jobDetails);
+      window.speechSynthesis.speak(utterance);
+      setIsSpeaking(true);
+      setCurrentJobSpeech(utterance);
+
+      // Reset isSpeaking once speech ends
+      utterance.onend = () => {
+        setIsSpeaking(false);
+        setCurrentJobSpeech(null);
+      };
+    }
   };
 
-  const handleToggleVoice = () => {
-    setIsVoiceEnabled(!isVoiceEnabled);
+  const handleToggleVoice = (job) => {
     if (!isVoiceEnabled) {
-      playJobListingMessage();
+      playJobListingMessage(job);
     } else {
-      speechSynthesis.cancel(); // Stop any ongoing speech
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
     }
+    setIsVoiceEnabled(!isVoiceEnabled);
   };
 
   const filteredJobs = jobs
@@ -144,7 +164,6 @@ const JobListing = () => {
   };
 
   const confirmLogout = () => {
-    // Logic for logout
     sessionStorage.removeItem("Id");
     sessionStorage.removeItem("Role");
     sessionStorage.removeItem("Token");
@@ -240,21 +259,6 @@ const JobListing = () => {
             </span>
             <span>Logout</span>
           </button>
-
-          {userDisabilityType !== "Deaf or Hard of Hearing" && (
-            <button
-              onClick={handleToggleVoice}
-              className={`px-4 py-2 rounded-full transition-colors duration-200 ${
-                isVoiceEnabled
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-300 text-black"
-              } hover:bg-blue-600`}
-            >
-              <span className="material-symbols-outlined text-2xl">
-                {isVoiceEnabled ? "volume_up" : "volume_off"}
-              </span>
-            </button>
-          )}
         </div>
       </div>
 
@@ -276,8 +280,8 @@ const JobListing = () => {
                     className="p-4 bg-blue-500 rounded-lg shadow-3xl cursor-pointer hover:bg-blue-600 transition transform hover:scale-95 flex items-center"
                     onClick={() => {
                       setSelectedJobId(job.id);
-                      setIsDetailsVisible(true); // Show job details below the clicked div on mobile
-                      setIsMoreInfoVisible(false); // Reset more info visibility
+                      setIsDetailsVisible(true);
+                      setIsMoreInfoVisible(false);
                     }}
                   >
                     {/* Company Logo */}
@@ -316,95 +320,23 @@ const JobListing = () => {
                         {toSentenceCase(job.description)}
                       </p>
                     </div>
-                  </div>
 
-                  {/* Mobile-Only Popup */}
-                  {isDetailsVisible && selectedJobId === job.id && (
-                    <div className="lg:hidden mt-4 p-4 bg-white rounded-lg shadow-lg relative">
-                      {/* X Button */}
-                      <button
-                        onClick={() => setIsDetailsVisible(false)}
-                        className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
-                      >
-                        &times;
-                      </button>
-                      <h2 className="text-2xl font-bold mb-2 text-blue-600">
-                        {toSentenceCase(job.jobName)}
-                      </h2>
-                      <p className="text-lg mb-2 text-gray-700">
-                        {toSentenceCase(job.companyName)}
-                      </p>
-                      <p className="text-md mb-2 text-gray-500">
-                        {toSentenceCase(job.companyLocation)}
-                      </p>
-                      <p className="font-bold text-md text-blue-600">
-                        {toSentenceCase(job.positionType)}
-                      </p>
-                      <p className="font-bold text-md mb-2 text-blue-600">
-                        {job.salary}
-                      </p>
-                      <p className="text-md text-gray-700 mb-2">
-                        {toSentenceCase(job.requirements)}
-                      </p>
-                      <p className="text-md text-gray-700 mb-2">
-                        {toSentenceCase(job.description)}
-                      </p>
-                      <p className="text-md text-gray-700">
-                        {toSentenceCase(job.qualifications)}
-                      </p>
-                      <div className="mt-4 flex space-x-4">
-                        <a href={"/apply?id=" + selectedJob.id}>
-                          <button className="bg-blue-500 text-white py-3 px-6 rounded-full shadow-lg hover:bg-blue-600 hover:shadow-2xl transition transform hover:scale-105">
-                            Apply Now
-                          </button>
-                        </a>
-                        <button
-                          className="bg-gray-500 text-white py-2 px-4 rounded-full shadow-lg hover:bg-gray-600 transition transform hover:scale-105"
-                          onClick={() => setIsMoreInfoVisible(true)}
-                        >
-                          Learn More
-                        </button>
-                      </div>
-                      {/* Additional Info Popup on Mobile */}
-                      {isMoreInfoVisible && (
-                        <div className="mt-4 p-4 bg-white rounded-lg shadow-lg relative">
-                          <img
-                            src={job.companyImage}
-                            alt="Company"
-                            className="w-24 h-24 object-cover rounded-xl shadow-xl mx-auto mb-4"
-                          />
-                          <h3 className="text-lg font-bold text-custom-blue">
-                            Company Overview
-                          </h3>
-                          <p className="text-black">
-                            <strong>Company Name:</strong>{" "}
-                            {toSentenceCase(job.companyName)}
-                          </p>
-                          <p className="text-black">
-                            <strong>Email:</strong>{" "}
-                            {toSentenceCase(job.companyEmail)}
-                          </p>
-                          <p className="text-black">
-                            <strong>Contact Number:</strong>{" "}
-                            {toSentenceCase(job.companyContact)}
-                          </p>
-                          <p className="text-black">
-                            <strong>Primary Location:</strong>{" "}
-                            {toSentenceCase(job.companyLocation)}
-                          </p>
-                          <div className="text-md text-black">
-                            {toSentenceCase(job.companyDescription)}
-                          </div>
-                          <button
-                            className="mt-2 text-white hover:underline"
-                            onClick={() => setIsMoreInfoVisible(false)}
-                          >
-                            X
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  )}
+                    {/* Voice Toggle Button */}
+                    <button
+                      onClick={() => handleToggleVoice(job)}
+                      className={`ml-4 px-4 py-2 rounded-full transition-colors duration-200 ${
+                        isVoiceEnabled && selectedJobId === job.id
+                          ? "bg-blue-500 text-white"
+                          : "bg-gray-300 text-black"
+                      } hover:bg-blue-600`}
+                    >
+                      <span className="material-symbols-outlined text-2xl">
+                        {isVoiceEnabled && selectedJobId === job.id
+                          ? "volume_up"
+                          : "volume_off"}
+                      </span>
+                    </button>
+                  </div>
                 </div>
               ))
             ) : (

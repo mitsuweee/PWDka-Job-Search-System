@@ -179,6 +179,41 @@ const AdminVerifyComp = () => {
           <span className="flex-grow text-center">Verify Companies</span>
         </a>
 
+        <a
+          href="/admin/dashboard/ViewUsers"
+          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
+          style={{
+            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
+          }}
+        >
+          <span className="material-symbols-outlined text-xl mr-4">group</span>
+          <span className="flex-grow text-center">View All Applicants</span>
+        </a>
+
+        <a
+          href="/admin/dashboard/ViewCompany"
+          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
+          style={{
+            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
+          }}
+        >
+          <span className="material-symbols-outlined text-xl mr-4">
+            source_environment
+          </span>
+          <span className="flex-grow text-center">View All Companies</span>
+        </a>
+
+        <a
+          href="/admin/dashboard/ViewJobs"
+          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
+          style={{
+            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
+          }}
+        >
+          <span className="material-symbols-outlined text-xl mr-4">work</span>
+          <span className="flex-grow text-center">View All Job Listings</span>
+        </a>
+
         <button
           className="bg-red-600 text-white rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-red-500 transition-all duration-200 ease-in-out mt-6"
           onClick={handleLogout}
