@@ -90,16 +90,17 @@ const JobListing = () => {
 
   const playJobListingMessage = (job) => {
     const jobDetails = `
-      Company: ${job.companyName}.
+      Company: ${job.companyName}.  
       Job Title: ${job.jobName}.
       Job Description: ${job.description}.
       Location: ${job.companyLocation}.
-      Position Type: ${job.positionType}.
       Salary: ${job.salary}.
+      Position Type: ${job.positionType}.
       Requirements: ${job.requirements}.
       Qualifications: ${job.qualifications}.
+      Company Contact Number: ${job.companyContact}.
       Company Email: ${job.companyEmail}.
-      Contact Number: ${job.companyContact}.
+      If you are interested, click on APPLY NOW.
     `;
 
     if (isSpeaking && currentJobSpeech) {
