@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast"; // Import toast
+import { useNavigate } from "react-router-dom"; // Add this import
 
 const MAX_FILE_SIZE = 16777215; // 16MB
 
@@ -130,6 +131,10 @@ const Signup = () => {
       });
     }
     toast.success("Form reset successfully!"); // Toast on reset
+  };
+  const navigate = useNavigate();
+  const handleLogin = () => {
+    navigate("/login"); // Adjust the route if needed
   };
 
   const handleSubmit = (e) => {
@@ -547,14 +552,22 @@ const Signup = () => {
         <button
           type="button"
           onClick={handleReset}
-          className="px-6 py-2 text-lg font-medium text-white bg-gray-600 rounded-md shadow-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
+          className="px-6 py-2 text-lg font-medium text-white bg-gray-600 rounded-md shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
         >
           Reset
         </button>
 
         <button
+          type="button"
+          onClick={handleLogin}
+          className="px-6 py-2 text-lg font-medium text-white bg-green-600 rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+        >
+          Login
+        </button>
+
+        <button
           type="submit"
-          className="px-6 py-2 text-lg font-medium text-white bg-blue-600 rounded-md shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="px-6 py-2 text-lg font-medium text-white bg-blue-600 rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           Sign Up
         </button>
@@ -765,6 +778,14 @@ const Signup = () => {
           className="px-6 py-2 text-lg font-medium text-white bg-gray-600 rounded-md shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
         >
           Reset
+        </button>
+
+        <button
+          type="button"
+          onClick={handleLogin}
+          className="px-6 py-2 text-lg font-medium text-white bg-green-600 rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+        >
+          Login
         </button>
 
         <button
