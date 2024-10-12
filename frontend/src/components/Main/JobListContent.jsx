@@ -67,7 +67,6 @@ const JobListing = () => {
             positionType: job.position_type,
             salary: `${job.minimum_salary}-${job.maximum_salary}`,
             description: job.description,
-            requirements: job.requirement,
             qualifications: job.qualification,
             companyName: job.company_name,
             companyEmail: job.company_email,
@@ -344,9 +343,6 @@ const JobListing = () => {
                         {job.salary}
                       </p>
                       <p className="text-md text-gray-700 mb-2">
-                        {toSentenceCase(job.requirements)}
-                      </p>
-                      <p className="text-md text-gray-700 mb-2">
                         {toSentenceCase(job.description)}
                       </p>
                       <p className="text-md text-gray-700">
@@ -533,16 +529,6 @@ const JobListing = () => {
                       <li key={index}>
                         {toSentenceCase(qualification.trim())}
                       </li>
-                    ))}
-                </ul>
-                <p className="text-lg font-medium text-gray-800 mt-6">
-                  Requirements
-                </p>
-                <ul className="text-gray-700 list-disc pl-4">
-                  {selectedJob.requirements
-                    .split(",")
-                    .map((requirement, index) => (
-                      <li key={index}>{toSentenceCase(requirement.trim())}</li>
                     ))}
                 </ul>
 

@@ -9,7 +9,6 @@ const PostJob = () => {
     companyName: "",
     positionName: "",
     jobDescription: "",
-    requirements: "",
     qualifications: "",
     minSalary: "",
     maxSalary: "",
@@ -52,7 +51,6 @@ const PostJob = () => {
       company_id: parseFloat(sessionStorage.getItem("Id")),
       position_name: jobDetails.positionName,
       description: jobDetails.jobDescription,
-      requirement: jobDetails.requirements,
       qualification: jobDetails.qualifications,
       minimum_salary: parseFloat(jobDetails.minSalary),
       maximum_salary: parseFloat(jobDetails.maxSalary),
@@ -203,18 +201,6 @@ const PostJob = () => {
             <textarea
               name="jobDescription"
               value={jobDetails.jobDescription}
-              onChange={handleChange}
-              className="p-3 w-full border-2 border-blue-300 rounded-lg shadow-sm h-28 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              required
-            />
-          </div>
-          <div className="col-span-1">
-            <label className="block mb-2 text-gray-700 font-semibold">
-              Requirements
-            </label>
-            <textarea
-              name="requirements"
-              value={jobDetails.requirements}
               onChange={handleChange}
               className="p-3 w-full border-2 border-blue-300 rounded-lg shadow-sm h-28 focus:outline-none focus:ring-2 focus:ring-blue-400"
               required

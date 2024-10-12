@@ -354,10 +354,10 @@ const ViewJobs = () => {
               </div>
               <div className="flex justify-between bg-gray-200 p-3 rounded-md">
                 <span>
-                  <strong>Min Salary:</strong> ₱ {job?.minimum_salary}
+                  <strong>Min Salary:</strong> ${job?.minimum_salary}
                 </span>
                 <span>
-                  <strong>Max Salary:</strong> ₱ {job?.maximum_salary}
+                  <strong>Max Salary:</strong> ${job?.maximum_salary}
                 </span>
               </div>
               <div className="bg-gray-200 p-3 rounded-md">
