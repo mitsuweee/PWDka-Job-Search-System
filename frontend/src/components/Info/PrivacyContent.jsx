@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 const privacyPolicyContainerStyle = {
   maxWidth: "900px", // Increased width for more content space
@@ -54,6 +55,25 @@ const collapsibleContentStyle = {
 function PrivacyPolicy() {
   const [openSections, setOpenSections] = useState({});
   const [isVoiceEnabled, setIsVoiceEnabled] = useState(false);
+  const [userDisabilityType, setUserDisabilityType] = useState("None");
+
+  useEffect(() => {
+    const userId = sessionStorage.getItem("Id");
+
+    const fetchUserDetails = () => {
+      axios
+        .get(`/user/view/${userId}`)
+        .then((response) => {
+          const userData = response.data.data;
+          setUserDisabilityType(userData.type); // Assuming 'type' is the disability type in the response
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error.response?.data);
+        });
+    };
+
+    fetchUserDetails();
+  }, []);
 
   const toggleSection = (section) => {
     setOpenSections((prevOpenSections) => ({
@@ -83,16 +103,20 @@ function PrivacyPolicy() {
   return (
     <div style={privacyPolicyContainerStyle}>
       <div className="flex justify-between items-center">
-        <button
-          onClick={handleToggleVoice}
-          className={`p-2 rounded-full transition-colors duration-200 ${
-            isVoiceEnabled ? "bg-blue-500 text-white" : "bg-gray-300 text-black"
-          } hover:bg-blue-600`}
-        >
-          <span className="material-symbols-outlined text-2xl">
-            {isVoiceEnabled ? "volume_up" : "volume_off"}
-          </span>
-        </button>
+        {userDisabilityType !== "Deaf or Hard of Hearing" && (
+          <button
+            onClick={handleToggleVoice}
+            className={`p-2 rounded-full transition-colors duration-200 ${
+              isVoiceEnabled
+                ? "bg-blue-500 text-white"
+                : "bg-gray-300 text-black"
+            } hover:bg-blue-600`}
+          >
+            <span className="material-symbols-outlined text-2xl">
+              {isVoiceEnabled ? "volume_up" : "volume_off"}
+            </span>
+          </button>
+        )}
       </div>
       <div style={privacyPolicyContainerStyle}>
         <h1 style={headerStyle}>Privacy Policy</h1>
@@ -124,6 +148,7 @@ function PrivacyPolicy() {
         </p>
       </div>
 
+      {/* Section 1: Who are we? */}
       <div
         style={collapsibleSectionStyle}
         onClick={() => toggleSection("whoAreWe")}
@@ -144,6 +169,7 @@ function PrivacyPolicy() {
         )}
       </div>
 
+      {/* Section 2: Who is responsible for your Personal Information? */}
       <div
         style={collapsibleSectionStyle}
         onClick={() => toggleSection("responsible")}
@@ -171,6 +197,7 @@ function PrivacyPolicy() {
         )}
       </div>
 
+      {/* Section 3: What Personal Information do we collect? */}
       <div
         style={collapsibleSectionStyle}
         onClick={() => toggleSection("collectInfo")}
@@ -297,6 +324,7 @@ function PrivacyPolicy() {
         )}
       </div>
 
+      {/* Section 4: Do we collect Sensitive Information? */}
       <div
         style={collapsibleSectionStyle}
         onClick={() => toggleSection("sensitiveInfo")}
@@ -329,6 +357,7 @@ function PrivacyPolicy() {
         )}
       </div>
 
+      {/* Section 5: How do we collect Personal Information? */}
       <div
         style={collapsibleSectionStyle}
         onClick={() => toggleSection("collectPersonalInfo")}
@@ -350,6 +379,7 @@ function PrivacyPolicy() {
         )}
       </div>
 
+      {/* Section 6: How do we use your Personal Information? */}
       <div
         style={collapsibleSectionStyle}
         onClick={() => toggleSection("useInfo")}
@@ -370,6 +400,7 @@ function PrivacyPolicy() {
         )}
       </div>
 
+      {/* Section 7: What happens if we are unable to collect your Personal Information? */}
       <div
         style={collapsibleSectionStyle}
         onClick={() => toggleSection("unableToCollectInfo")}
@@ -388,6 +419,7 @@ function PrivacyPolicy() {
         )}
       </div>
 
+      {/* Section 8: Who do we share your Personal Information with? */}
       <div
         style={collapsibleSectionStyle}
         onClick={() => toggleSection("shareInfo")}
@@ -425,6 +457,7 @@ function PrivacyPolicy() {
         )}
       </div>
 
+      {/* Section 9: When do we share your Personal Information overseas? */}
       <div
         style={collapsibleSectionStyle}
         onClick={() => toggleSection("shareOverseas")}
@@ -442,12 +475,13 @@ function PrivacyPolicy() {
               facilitate the application process. In such cases, we ensure that
               your data is transferred securely and that the overseas company
               receiving your information adheres to strict data protection
-              standards in line with the Data Privacy Act of 2012.{" "}
+              standards in line with the Data Privacy Act of 2012.
             </p>
           </div>
         )}
       </div>
 
+      {/* Section 10: How do we keep your information secure? */}
       <div
         style={collapsibleSectionStyle}
         onClick={() => toggleSection("secureInfo")}
@@ -466,6 +500,7 @@ function PrivacyPolicy() {
         )}
       </div>
 
+      {/* Section 11: Languages */}
       <div
         style={collapsibleSectionStyle}
         onClick={() => toggleSection("languages")}
@@ -483,6 +518,7 @@ function PrivacyPolicy() {
         )}
       </div>
 
+      {/* Section 12: Definitions */}
       <div
         style={collapsibleSectionStyle}
         onClick={() => toggleSection("definitions")}
