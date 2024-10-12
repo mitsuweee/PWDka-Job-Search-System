@@ -63,14 +63,14 @@ function App() {
             </RedirectAuthenticated>
           }
         />
-        <Route
+        {/* <Route
           path="/adminlogin"
           element={
             <RedirectAuthenticated>
               <AdminLog />
             </RedirectAuthenticated>
           }
-        />
+        /> */}
 
         {/* Protected Routes */}
         <Route
