@@ -1,7 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 const ContactUs = () => {
   const [isVoiceEnabled, setIsVoiceEnabled] = useState(false);
+  const [userDisabilityType, setUserDisabilityType] = useState(""); // State for disability type
+
+  useEffect(() => {
+    const userId = sessionStorage.getItem("Id");
+
+    const fetchUserDetails = () => {
+      axios
+        .get(`/user/view/${userId}`)
+        .then((response) => {
+          const userData = response.data.data;
+          setUserDisabilityType(userData.type); // Assuming 'type' is the disability type in the response
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error.response?.data);
+        });
+    };
+
+    fetchUserDetails();
+  }, []);
 
   // Function to play the Contact Us message
   const playContactMessage = () => {
@@ -31,18 +51,21 @@ const ContactUs = () => {
               <h1 className="text-6xl font-bold text-custom-blue md:text-3xl">
                 Questions? Contact Us!
               </h1>
-              <button
-                onClick={handleToggleVoice}
-                className={`ml-4 p-2 rounded-full transition-colors duration-200 ${
-                  isVoiceEnabled
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-300 text-black"
-                } hover:bg-blue-600`}
-              >
-                <span className="material-symbols-outlined text-2xl">
-                  {isVoiceEnabled ? "volume_up" : "volume_off"}
-                </span>
-              </button>
+              {/* Voice button is hidden if the user's disability type is "Deaf or Hard of Hearing" */}
+              {userDisabilityType !== "Deaf or Hard of Hearing" && (
+                <button
+                  onClick={handleToggleVoice}
+                  className={`ml-4 p-2 rounded-full transition-colors duration-200 ${
+                    isVoiceEnabled
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-300 text-black"
+                  } hover:bg-blue-600`}
+                >
+                  <span className="material-symbols-outlined text-2xl">
+                    {isVoiceEnabled ? "volume_up" : "volume_off"}
+                  </span>
+                </button>
+              )}
             </div>
             <p className="hidden text-gray-500 md:mt-4 md:block">
               Have any questions or need more information? We're here to help.

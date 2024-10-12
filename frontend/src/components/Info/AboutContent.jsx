@@ -1,30 +1,27 @@
 import React, { useEffect, useRef, useState } from "react";
+import axios from "axios";
 
 const AboutContent = () => {
   const sections = useRef([]);
   const [isVoiceEnabled, setIsVoiceEnabled] = useState(false);
+  const [userDisabilityType, setUserDisabilityType] = useState(""); // State for disability type
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("fade-in");
-          }
+    const userId = sessionStorage.getItem("Id");
+
+    const fetchUserDetails = () => {
+      axios
+        .get(`/user/view/${userId}`)
+        .then((response) => {
+          const userData = response.data.data;
+          setUserDisabilityType(userData.type); // Assuming 'type' is the disability type in the response
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error.response?.data);
         });
-      },
-      { threshold: 0.1 }
-    );
-
-    sections.current.forEach((section) => {
-      observer.observe(section);
-    });
-
-    return () => {
-      sections.current.forEach((section) => {
-        observer.unobserve(section);
-      });
     };
+
+    fetchUserDetails();
   }, []);
 
   // Function to play the About Us message
@@ -49,28 +46,6 @@ const AboutContent = () => {
   return (
     <div>
       <style>{`
-          @keyframes fadeIn {
-            0% {
-              opacity: 0;
-              transform: translateY(20px);
-            }
-            100% {
-              opacity: 1;
-              transform: translateY(0);
-            }
-          }
-
-          .fade-in {
-            opacity: 1;
-            transform: translateY(0);
-            animation: fadeIn 1s ease-out forwards;
-          }
-
-          .fade-in {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-
           .hover-effect {
             transition: transform 0.3s, box-shadow 0.3s;
           }
@@ -79,7 +54,7 @@ const AboutContent = () => {
             transform: scale(1.05) rotate(1deg);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
           }
-          
+
           .button-hover {
             transition: background-color 0.3s, color 0.3s;
           }
@@ -93,21 +68,24 @@ const AboutContent = () => {
 
       <div className="mx-auto max-w-screen-2xl px-4 py-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
-          <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold  text-center font-sfprobold text-[#007bff]">
+          <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-center font-sfprobold text-[#007bff]">
             About Us
           </h1>
-          <button
-            onClick={handleToggleVoice}
-            className={`ml-6 p-2 rounded-full transition-colors duration-200 ${
-              isVoiceEnabled
-                ? "bg-blue-500 text-white"
-                : "bg-gray-300 text-black"
-            } hover:bg-blue-600`}
-          >
-            <span className="material-symbols-outlined text-2xl">
-              {isVoiceEnabled ? "volume_up" : "volume_off"}
-            </span>
-          </button>
+          {/* Hide voice button if disability type is "Deaf or Hard of Hearing" */}
+          {userDisabilityType !== "Deaf or Hard of Hearing" && (
+            <button
+              onClick={handleToggleVoice}
+              className={`ml-6 p-2 rounded-full transition-colors duration-200 ${
+                isVoiceEnabled
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-300 text-black"
+              } hover:bg-blue-600`}
+            >
+              <span className="material-symbols-outlined text-2xl">
+                {isVoiceEnabled ? "volume_up" : "volume_off"}
+              </span>
+            </button>
+          )}
         </div>
       </div>
 
@@ -115,10 +93,7 @@ const AboutContent = () => {
       <section>
         <div className="mx-auto max-w-screen-2xl px-4 py-16 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:h-screen lg:grid-cols-2 gap-8">
-            <div
-              className="relative z-10 lg:py-16 rounded-3xl overflow-hidden shadow-lg bg-[#e3edf7] hover-effect fade-in"
-              ref={(el) => (sections.current[0] = el)}
-            >
+            <div className="relative z-10 lg:py-16 rounded-3xl overflow-hidden shadow-lg bg-[#e3edf7] hover-effect">
               <div className="relative h-64 sm:h-80 lg:h-full rounded">
                 <img
                   alt=""
@@ -128,10 +103,7 @@ const AboutContent = () => {
               </div>
             </div>
 
-            <div
-              className="relative flex items-center bg-gray-100 rounded-xl shadow-lg hover-effect fade-in"
-              ref={(el) => (sections.current[1] = el)}
-            >
+            <div className="relative flex items-center bg-gray-100 rounded-xl shadow-lg hover-effect">
               <span className="hidden lg:absolute lg:inset-y-0 lg:-start-16 lg:block lg:w-16 lg:bg-gray-100 rounded-xl"></span>
               <div className="p-8 sm:p-16 lg:p-24">
                 <h2 className="text-2xl font-bold text-[#077bff] sm:text-3xl">
@@ -154,10 +126,7 @@ const AboutContent = () => {
       <section>
         <div className="mx-auto max-w-screen-2xl px-4 py-16 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:h-screen lg:grid-cols-2 gap-8">
-            <div
-              className="relative z-10 lg:py-16 rounded-3xl overflow-hidden shadow-lg bg-[#e3edf7] hover-effect fade-in"
-              ref={(el) => (sections.current[2] = el)}
-            >
+            <div className="relative z-10 lg:py-16 rounded-3xl overflow-hidden shadow-lg bg-[#e3edf7] hover-effect">
               <div className="relative h-64 sm:h-80 lg:h-full rounded">
                 <img
                   alt=""
@@ -167,10 +136,7 @@ const AboutContent = () => {
               </div>
             </div>
 
-            <div
-              className="relative flex items-center bg-gray-100 rounded-xl shadow-lg hover-effect fade-in"
-              ref={(el) => (sections.current[3] = el)}
-            >
+            <div className="relative flex items-center bg-gray-100 rounded-xl shadow-lg hover-effect">
               <span className="hidden lg:absolute lg:inset-y-0 lg:-start-16 lg:block lg:w-16 lg:bg-gray-100 rounded-xl"></span>
               <div className="p-8 sm:p-16 lg:p-24">
                 <h2 className="text-2xl font-bold sm:text-3xl text-[#007bff]">
