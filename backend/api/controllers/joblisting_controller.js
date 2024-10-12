@@ -8,6 +8,7 @@ const postJobs = async (req, res, next) => {
     position_name,
     description,
     qualification,
+    requirement,
     minimum_salary,
     maximum_salary,
     positiontype_id,
@@ -19,6 +20,7 @@ const postJobs = async (req, res, next) => {
     !position_name ||
     !description ||
     !qualification ||
+    !requirement ||
     !positiontype_id ||
     !company_id ||
     !disability_ids ||
@@ -69,6 +71,7 @@ const postJobs = async (req, res, next) => {
           position_name,
           description,
           qualification,
+          requirement,
           minimum_salary,
           maximum_salary,
           positiontype_id: positionType.id,
@@ -127,6 +130,7 @@ const viewJobListing = async (req, res, next) => {
           "job_listing.position_name",
           "job_listing.description",
           "job_listing.qualification",
+          "job_listing.requirement",
           "job_listing.minimum_salary",
           "job_listing.maximum_salary",
           "position_type.type AS position_type",
@@ -162,6 +166,7 @@ const viewJobListing = async (req, res, next) => {
           "job_listing.position_name",
           "job_listing.description",
           "job_listing.qualification",
+          "job_listing.requirement",
           "job_listing.minimum_salary",
           "job_listing.maximum_salary",
           "position_type.type",
@@ -263,6 +268,7 @@ const viewJobListingViaUserNewestToOldest = async (req, res, next) => {
           "job_listing.position_name",
           "job_listing.description",
           "job_listing.qualification",
+          "job_listing.requirement",
           "job_listing.minimum_salary",
           "job_listing.maximum_salary",
           "position_type.type AS position_type",
@@ -363,6 +369,7 @@ const viewJobsCreatedByCompanyNewestToOldest = async (req, res, next) => {
         "job_listing.position_name",
         "job_listing.description",
         "job_listing.qualification",
+        "job_listing.requirement",
         "job_listing.minimum_salary",
         "job_listing.maximum_salary",
         "position_type.type as position_type",
@@ -413,6 +420,7 @@ const updateJobListing = async (req, res, next) => {
     position_name,
     description,
     qualification,
+    requirement,
     minimum_salary,
     maximum_salary,
     positiontype_id,
@@ -423,6 +431,7 @@ const updateJobListing = async (req, res, next) => {
     !position_name ||
     !description ||
     !qualification ||
+    !requirement ||
     !positiontype_id
   ) {
     return res.status(400).json({
@@ -467,6 +476,7 @@ const updateJobListing = async (req, res, next) => {
       position_name,
       description,
       qualification,
+      requirement,
       minimum_salary,
       maximum_salary,
     });
