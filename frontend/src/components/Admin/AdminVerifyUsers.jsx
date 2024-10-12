@@ -7,20 +7,20 @@ const AdminVerifyUsers = () => {
   const [users, setUsers] = useState([]); // Store all users
   const [selectedUser, setSelectedUser] = useState(null); // Store selected user for viewing in the modal
   const [showModal, setShowModal] = useState(false); // State to show/hide modal
+  const [showDeclineModal, setShowDeclineModal] = useState(false); // State for decline modal
+  const [declineReason, setDeclineReason] = useState(""); // Store decline reason
   const navigate = useNavigate();
 
+  // Function to handle logout
   const handleLogout = () => {
     const confirmed = window.confirm("Are you sure you want to logout?");
     if (confirmed) {
       sessionStorage.removeItem("Id");
       sessionStorage.removeItem("Role");
       sessionStorage.removeItem("Token");
+
       navigate("/login");
     }
-  };
-
-  const handleGoBack = () => {
-    navigate(-1);
   };
 
   useEffect(() => {
@@ -61,6 +61,7 @@ const AdminVerifyUsers = () => {
     };
   };
 
+  // Handle approving a user
   const handleApprove = (userId) => {
     const config = {
       method: "put",
@@ -71,7 +72,7 @@ const AdminVerifyUsers = () => {
     };
 
     axios(config)
-      .then(function (response) {
+      .then(function () {
         alert("User approved successfully!");
         setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
         setSelectedUser(null); // Clear selected user
@@ -83,21 +84,31 @@ const AdminVerifyUsers = () => {
       });
   };
 
+  // Handle declining a user with a reason
   const handleDecline = (userId) => {
+    if (!declineReason.trim()) {
+      alert("Please provide a reason for declining the user.");
+      return;
+    }
+
     const config = {
       method: "delete",
       url: `http://localhost:8080/verification/user/${userId}`,
       headers: {
         "Content-Type": "application/json",
       },
+      data: {
+        reason: declineReason, // Include reason in the request body
+      },
     };
 
     axios(config)
-      .then(function (response) {
+      .then(function () {
         alert("User declined successfully!");
         setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
         setSelectedUser(null); // Clear selected user
-        setShowModal(false); // Close modal
+        setShowDeclineModal(false); // Close decline modal
+        setDeclineReason(""); // Clear the reason input
       })
       .catch(function (error) {
         console.log(error);
@@ -105,9 +116,17 @@ const AdminVerifyUsers = () => {
       });
   };
 
+  // Handle viewing a user
   const handleView = (user) => {
     setSelectedUser(formatUserData(user)); // Set formatted user data for display
     setShowModal(true); // Open the modal
+  };
+
+  // Open decline modal and reset the decline reason
+  const openDeclineModal = (user) => {
+    setSelectedUser(user);
+    setDeclineReason("");
+    setShowDeclineModal(true);
   };
 
   return (
@@ -219,12 +238,12 @@ const AdminVerifyUsers = () => {
       {/* Main Content */}
       <main className="flex-grow p-8 bg-custom-bg">
         <div className="flex justify-between items-center">
-          <button
+          {/* <button
             onClick={handleGoBack}
             className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
           >
             Back
-          </button>
+          </button> */}
         </div>
 
         <div className="mt-4">
@@ -260,7 +279,7 @@ const AdminVerifyUsers = () => {
                         </button>
                         <button
                           className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
-                          onClick={() => handleDecline(user.id)}
+                          onClick={() => openDeclineModal(user)}
                         >
                           Decline
                         </button>
@@ -351,9 +370,47 @@ const AdminVerifyUsers = () => {
                   </button>
                   <button
                     className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+                    onClick={() => openDeclineModal(selectedUser)}
+                  >
+                    Decline
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Modal for declining user with reason */}
+          {selectedUser && showDeclineModal && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+              <div className="bg-white rounded-lg p-6 max-w-lg w-full shadow-lg">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-xl font-bold">Decline User</h3>
+                  <button
+                    className="text-gray-500 hover:text-gray-700"
+                    onClick={() => setShowDeclineModal(false)}
+                  >
+                    &times;
+                  </button>
+                </div>
+                <p>Please provide a reason for declining the user:</p>
+                <textarea
+                  className="w-full p-2 mt-2 border rounded-lg focus:ring focus:ring-blue-300"
+                  rows={4}
+                  value={declineReason}
+                  onChange={(e) => setDeclineReason(e.target.value)}
+                ></textarea>
+                <div className="flex justify-end mt-4 space-x-2">
+                  <button
+                    className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
                     onClick={() => handleDecline(selectedUser.id)}
                   >
                     Decline
+                  </button>
+                  <button
+                    className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
+                    onClick={() => setShowDeclineModal(false)}
+                  >
+                    Cancel
                   </button>
                 </div>
               </div>
