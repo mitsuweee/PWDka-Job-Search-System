@@ -39,6 +39,7 @@ const UserProf = () => {
 
     axios(config)
       .then(function (response) {
+        console.log(response);
         const userData = response.data.data;
         setUser({
           fullName: userData.full_name,

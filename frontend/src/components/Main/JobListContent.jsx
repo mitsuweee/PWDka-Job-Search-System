@@ -14,7 +14,7 @@ const JobListing = () => {
   const [isVoiceEnabled, setIsVoiceEnabled] = useState(false);
   const [userFullName, setUserFullName] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false); // State for modal
-  const [userDisabilityId, setUserDisabilityId] = useState(null);
+  const [userDisabilityType, setUserDisabilityType] = useState(null);
 
   const jobsPerPage = 4; // Number of jobs to display per page
   const navigate = useNavigate();
@@ -27,18 +27,21 @@ const JobListing = () => {
   useEffect(() => {
     const userId = sessionStorage.getItem("Id");
 
-    // Fetch user's full name
+    // Fetch user's full name and disability type
     const fetchUserFullName = () => {
       axios
         .get(`/user/view/${userId}`)
         .then((response) => {
           const userData = response.data.data;
           setUserFullName(userData.full_name);
-          const userDisabilityId = response.data.data.disability_id;
-          setUserDisabilityId(userDisabilityId);
+          const userDisabilityType = userData.type; // Assuming 'type' is the field that contains disability type
+          setUserDisabilityType(userDisabilityType); // Storing the disability type in the state
         })
         .catch((error) => {
-          console.log("Error fetching user full name:", error.response?.data);
+          console.log(
+            "Error fetching user full name and disability type:",
+            error.response?.data
+          );
         });
     };
 
@@ -83,7 +86,7 @@ const JobListing = () => {
         });
     };
 
-    fetchUserFullName(); // Call the function to fetch user full name
+    fetchUserFullName(); // Call the function to fetch user's full name and disability type
     fetchJobs(); // Call the function to fetch jobs
   }, []);
 
@@ -237,7 +240,7 @@ const JobListing = () => {
             <span>Logout</span>
           </button>
 
-          {userDisabilityId !== 1 && (
+          {userDisabilityType !== "Deaf or Hard of Hearing" && (
             <button
               onClick={handleToggleVoice}
               className={`px-4 py-2 rounded-full transition-colors duration-200 ${
