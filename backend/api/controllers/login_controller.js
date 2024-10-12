@@ -20,10 +20,11 @@ const login = async (req, res, next) => {
   }
 
   try {
-    // Query only the user and company tables
+    // Query only the user, company, and admin tables
     const tables = ["user", "company"];
     let storedPassword, role, status, id;
 
+    // Check user and company tables
     for (let table of tables) {
       const rows = await knex(table)
         .select("id", "email", "password", "role", "status")
@@ -36,6 +37,20 @@ const login = async (req, res, next) => {
         role = rows.role;
         status = rows.status;
         break;
+      }
+    }
+
+    // If no match found, check the admin table separately (no status field for admin)
+    if (!storedPassword) {
+      const admin = await knex("admin")
+        .select("id", "email", "password", "role")
+        .where({ email })
+        .first();
+
+      if (admin) {
+        id = admin.id;
+        storedPassword = admin.password;
+        role = admin.role;
       }
     }
 
@@ -57,7 +72,7 @@ const login = async (req, res, next) => {
     }
 
     // Check status for user and company roles
-    if (status === "PENDING") {
+    if (status === "PENDING" && role !== "admin") {
       return res.status(400).json({
         successful: false,
         message: `${

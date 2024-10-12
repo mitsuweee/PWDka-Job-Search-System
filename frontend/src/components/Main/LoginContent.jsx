@@ -49,6 +49,8 @@ const LoginComp = () => {
 
           if (role === "user") {
             window.location.href = "/joblist";
+          } else if (role === "admin") {
+            window.location.href = "/admin/dashboard";
           } else {
             window.location.href = "/dashc";
           }

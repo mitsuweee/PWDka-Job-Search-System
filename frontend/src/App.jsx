@@ -39,13 +39,22 @@ function App() {
         <Route path="/privacypolicy" element={<PrivacyPol />} />
         <Route path="/contactpage" element={<Contact />} />
         <Route path="/about" element={<About />} />
-        <Route path="/signup" element={<SignUp />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/faqs" element={<Faq />} />
         <Route path="/forgotpassword" element={<ForgotP />} />
         <Route path="/passwordconfirmed" element={<ConfirmP />} />
 
         {/* RedirectAuthenticated Routes */}
+
+        <Route
+          path="/signup"
+          element={
+            <RedirectAuthenticated>
+              <SignUp />
+            </RedirectAuthenticated>
+          }
+        />
+
         <Route
           path="/login"
           element={
