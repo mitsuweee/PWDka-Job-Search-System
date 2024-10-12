@@ -5,8 +5,8 @@ import { useNavigate } from "react-router-dom";
 const AdminVerifyUsers = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [users, setUsers] = useState([]); // Store all users
-  const [currentIndex, setCurrentIndex] = useState(0); // Index of current user
-  const [user, setUser] = useState(null); // Store single user for display
+  const [selectedUser, setSelectedUser] = useState(null); // Store selected user for viewing in the modal
+  const [showModal, setShowModal] = useState(false); // State to show/hide modal
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -15,7 +15,6 @@ const AdminVerifyUsers = () => {
       sessionStorage.removeItem("Id");
       sessionStorage.removeItem("Role");
       sessionStorage.removeItem("Token");
-
       navigate("/login");
     }
   };
@@ -38,9 +37,6 @@ const AdminVerifyUsers = () => {
       .then(function (response) {
         const userDataArray = response.data.data; // Assuming you get an array of users
         setUsers(userDataArray);
-        if (userDataArray.length > 0) {
-          setUser(formatUserData(userDataArray[0])); // Display the first user by default
-        }
       })
       .catch(function (error) {
         console.log(error);
@@ -65,10 +61,10 @@ const AdminVerifyUsers = () => {
     };
   };
 
-  const handleApprove = () => {
+  const handleApprove = (userId) => {
     const config = {
       method: "put",
-      url: `http://localhost:8080/verification/user/${user.id}`,
+      url: `http://localhost:8080/verification/user/${userId}`,
       headers: {
         "Content-Type": "application/json",
       },
@@ -76,9 +72,10 @@ const AdminVerifyUsers = () => {
 
     axios(config)
       .then(function (response) {
-        console.log(JSON.stringify(response.data));
         alert("User approved successfully!");
-        handleNextUser();
+        setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
+        setSelectedUser(null); // Clear selected user
+        setShowModal(false); // Close modal
       })
       .catch(function (error) {
         console.log(error);
@@ -86,10 +83,10 @@ const AdminVerifyUsers = () => {
       });
   };
 
-  const handleDecline = () => {
+  const handleDecline = (userId) => {
     const config = {
       method: "delete",
-      url: `http://localhost:8080/verification/user/${user.id}`,
+      url: `http://localhost:8080/verification/user/${userId}`,
       headers: {
         "Content-Type": "application/json",
       },
@@ -97,9 +94,10 @@ const AdminVerifyUsers = () => {
 
     axios(config)
       .then(function (response) {
-        console.log(JSON.stringify(response.data));
         alert("User declined successfully!");
-        handleNextUser();
+        setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
+        setSelectedUser(null); // Clear selected user
+        setShowModal(false); // Close modal
       })
       .catch(function (error) {
         console.log(error);
@@ -107,38 +105,9 @@ const AdminVerifyUsers = () => {
       });
   };
 
-  // Handle showing the next user after approval or decline
-  const handleNextUser = () => {
-    if (users.length > 1) {
-      const updatedUsers = users.filter((_, index) => index !== currentIndex);
-      setUsers(updatedUsers);
-      if (updatedUsers.length > 0) {
-        setUser(formatUserData(updatedUsers[0]));
-        setCurrentIndex(0);
-      } else {
-        setUser(null); // No users left
-      }
-    } else {
-      setUsers([]); // No more users
-      setUser(null);
-    }
-  };
-
-  // Handlers for navigating between users
-  const handlePrevious = () => {
-    if (currentIndex > 0) {
-      const newIndex = currentIndex - 1;
-      setCurrentIndex(newIndex);
-      setUser(formatUserData(users[newIndex]));
-    }
-  };
-
-  const handleNext = () => {
-    if (currentIndex < users.length - 1) {
-      const newIndex = currentIndex + 1;
-      setCurrentIndex(newIndex);
-      setUser(formatUserData(users[newIndex]));
-    }
+  const handleView = (user) => {
+    setSelectedUser(formatUserData(user)); // Set formatted user data for display
+    setShowModal(true); // Open the modal
   };
 
   return (
@@ -155,6 +124,8 @@ const AdminVerifyUsers = () => {
         >
           &times;
         </button>
+
+        {/* Sidebar Content */}
         <a
           href="/admin/dashboard"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
@@ -189,7 +160,7 @@ const AdminVerifyUsers = () => {
           <span className="material-symbols-outlined text-xl mr-4">
             apartment
           </span>
-          <span className="flex-grow text-center">Verify Company</span>
+          <span className="flex-grow text-center">Verify Companies</span>
         </a>
 
         <a
@@ -255,145 +226,136 @@ const AdminVerifyUsers = () => {
             Back
           </button>
         </div>
+
         <div className="mt-4">
-          {user ? (
-            <div className="flex justify-center items-center h-full w-full bg-blue-500 p-4 sm:p-6 md:p-8 rounded-2xl">
-              <div className="w-full max-w-4xl h-full bg-white p-4 sm:p-6 md:p-8 rounded-lg shadow-xl flex flex-col justify-center items-center">
-                <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-gray-800 text-center">
-                  Verify User
-                </h2>
-                <p className="text-lg sm:text-xl mb-4 sm:mb-8 text-gray-600 text-center">
-                  User Details
-                </p>
-                <div className="flex justify-center mb-4 sm:mb-6">
+          {users.length > 0 ? (
+            <div className="overflow-x-auto">
+              <table className="min-w-full bg-white border rounded-lg">
+                <thead>
+                  <tr className="bg-blue-500 text-white">
+                    <th className="py-2 px-4 border">ID</th>
+                    <th className="py-2 px-4 border">User</th>
+                    <th className="py-2 px-4 border">Disability</th>
+                    <th className="py-2 px-4 border">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {users.map((user) => (
+                    <tr key={user.id} className="hover:bg-gray-100">
+                      <td className="py-2 px-4 border">{user.id}</td>
+                      <td className="py-2 px-4 border">{user.full_name}</td>
+                      <td className="py-2 px-4 border">{user.type}</td>
+                      <td className="py-2 px-4 border text-center">
+                        <button
+                          className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2 hover:bg-blue-600"
+                          onClick={() => handleView(user)}
+                        >
+                          View
+                        </button>
+                        <button
+                          className="bg-green-500 text-white px-4 py-2 rounded-md mr-2 hover:bg-green-600"
+                          onClick={() => handleApprove(user.id)}
+                        >
+                          Approve
+                        </button>
+                        <button
+                          className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+                          onClick={() => handleDecline(user.id)}
+                        >
+                          Decline
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <p className="text-center text-gray-500">No users to verify yet.</p>
+          )}
+
+          {/* Modal for viewing user details */}
+          {selectedUser && showModal && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+              <div className="bg-white rounded-lg p-6 max-w-2xl w-full shadow-lg">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-xl font-bold">User Details</h3>
+                  <button
+                    className="text-gray-500 hover:text-gray-700"
+                    onClick={() => setShowModal(false)}
+                  >
+                    &times;
+                  </button>
+                </div>
+                <div className="flex justify-center mb-6">
                   <img
-                    src={user.profilePicture}
-                    alt={user.fullName}
-                    className="w-15 h-15 rounded-full border-2 border-gray-300"
+                    src={selectedUser.profilePicture}
+                    alt={selectedUser.fullName}
+                    className="w-32 h-32 rounded-full border-2 border-gray-300"
                   />
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 text-left text-gray-800 w-full">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <p className="font-semibold text-base sm:text-lg">
-                      Full Name:
-                    </p>
-                    <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                      {user.fullName}
-                    </p>
+                    <strong>Full Name:</strong>
+                    <p>{selectedUser.fullName}</p>
                   </div>
                   <div>
-                    <p className="font-semibold text-base sm:text-lg">
-                      PWD ID:
-                    </p>
-                    <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                      {user.pwdId}
-                    </p>
+                    <strong>PWD ID:</strong>
+                    <p>{selectedUser.pwdId}</p>
                   </div>
                   <div>
-                    <p className="font-semibold text-base sm:text-lg">
-                      Disability:
-                    </p>
-                    <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                      {user.disability}
-                    </p>
+                    <strong>Disability:</strong>
+                    <p>{selectedUser.disability}</p>
                   </div>
                   <div>
-                    <p className="font-semibold text-base sm:text-lg">
-                      Address:
-                    </p>
-                    <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                      {user.address}
-                    </p>
+                    <strong>Address:</strong>
+                    <p>{selectedUser.address}</p>
                   </div>
                   <div>
-                    <p className="font-semibold text-base sm:text-lg">City:</p>
-                    <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                      {user.city}
-                    </p>
+                    <strong>City:</strong>
+                    <p>{selectedUser.city}</p>
                   </div>
                   <div>
-                    <p className="font-semibold text-base sm:text-lg">
-                      Birthdate:
-                    </p>
-                    <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                      {user.birthdate}
-                    </p>
+                    <strong>Birthdate:</strong>
+                    <p>{selectedUser.birthdate}</p>
                   </div>
                   <div>
-                    <p className="font-semibold text-base sm:text-lg">
-                      Contact Number:
-                    </p>
-                    <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                      {user.contactNumber}
-                    </p>
+                    <strong>Contact Number:</strong>
+                    <p>{selectedUser.contactNumber}</p>
                   </div>
                   <div>
-                    <p className="font-semibold text-base sm:text-lg">Email:</p>
-                    <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                      {user.email}
-                    </p>
+                    <strong>Email:</strong>
+                    <p>{selectedUser.email}</p>
                   </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 text-left text-gray-800 w-full mt-6">
                   <div>
-                    <p className="font-semibold text-base sm:text-lg">
-                      Picture with ID:
-                    </p>
                     <img
-                      src={user.pictureWithId}
+                      src={selectedUser.pictureWithId}
                       alt="Picture with ID"
                       className="w-full h-auto rounded-lg shadow-lg"
                     />
                   </div>
                   <div>
-                    <p className="font-semibold text-base sm:text-lg">
-                      Picture of PWD ID:
-                    </p>
                     <img
-                      src={user.pictureOfPwdId}
+                      src={selectedUser.pictureOfPwdId}
                       alt="Picture of PWD ID"
                       className="w-full h-auto rounded-lg shadow-lg"
                     />
                   </div>
                 </div>
-
-                <div className="flex flex-col sm:flex-row justify-center mt-4 sm:mt-8 space-y-2 sm:space-y-0 sm:space-x-4">
+                <div className="flex justify-end mt-4 space-x-2">
                   <button
-                    className="transition-all bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 shadow flex items-center justify-center"
-                    onClick={handlePrevious}
-                    disabled={currentIndex === 0} // Disable when at the first user
-                  >
-                    Previous
-                  </button>
-                  <button
-                    className="transition-all bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 shadow"
-                    onClick={handleApprove}
+                    className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
+                    onClick={() => handleApprove(selectedUser.id)}
                   >
                     Approve
                   </button>
                   <button
-                    className="transition-all bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 shadow"
-                    onClick={handleDecline}
+                    className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+                    onClick={() => handleDecline(selectedUser.id)}
                   >
                     Decline
                   </button>
-                  <button
-                    className="transition-all bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 shadow flex items-center justify-center"
-                    onClick={handleNext}
-                    disabled={currentIndex === users.length - 1} // Disable when at the last user
-                  >
-                    Next
-                  </button>
                 </div>
-              </div>
-            </div>
-          ) : (
-            <div className="flex justify-center items-center h-full w-full bg-blue-500 p-4 sm:p-6 md:p-8 rounded-2xl">
-              <div className="w-full max-w-4xl h-full bg-white p-8 rounded-lg shadow-xl flex justify-center items-center">
-                <h2 className="text-2xl font-bold text-gray-800">
-                  There's no user to verify yet.
-                </h2>
               </div>
             </div>
           )}
