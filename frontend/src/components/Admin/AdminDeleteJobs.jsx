@@ -141,7 +141,7 @@ const AdminDeleteJobs = () => {
             boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
           }}
         >
-          Verify Users
+          Verify Applicants
         </a>
         <a
           href="/admin/dashboard/VerifyComps"
@@ -159,7 +159,7 @@ const AdminDeleteJobs = () => {
             boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
           }}
         >
-          View All Users
+          View All Applicants
         </a>
         <a
           href="/admin/dashboard/ViewCompany"

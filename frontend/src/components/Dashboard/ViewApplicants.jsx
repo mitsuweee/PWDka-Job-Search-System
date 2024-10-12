@@ -7,6 +7,7 @@ const ViewApplicants = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [applicants, setApplicants] = useState([]);
+  const [jobName, setJobName] = useState(""); // New state for job name
   const [selectedResume, setSelectedResume] = useState(null); // For resume modal
   const [selectedProfile, setSelectedProfile] = useState(null); // For profile modal
   const [isResumeModalOpen, setIsResumeModalOpen] = useState(false); // Resume modal state
@@ -19,12 +20,11 @@ const ViewApplicants = () => {
       sessionStorage.removeItem("Id");
       sessionStorage.removeItem("Role");
       sessionStorage.removeItem("Token");
-
       navigate("/login");
     }
   };
 
-  // Fetch job listings
+  // Fetch job listings and applicants
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const joblistingId = params.get("id");
@@ -41,6 +41,7 @@ const ViewApplicants = () => {
         "Content-Type": "application/json",
       },
     };
+
     axios(config)
       .then(async (response) => {
         const fetchedJobApplicants = await Promise.all(
@@ -64,7 +65,13 @@ const ViewApplicants = () => {
             },
           }))
         );
-        console.log("Job Listing ID:", joblistingId);
+
+        // Set the job name from the first applicant
+        if (fetchedJobApplicants.length > 0) {
+          setJobName(fetchedJobApplicants[0].jobAppliedFor);
+        } else {
+          setJobName("No Job Found");
+        }
 
         setApplicants(fetchedJobApplicants);
       })
@@ -84,10 +91,6 @@ const ViewApplicants = () => {
     setIsFilterOpen(false);
   };
 
-  const deleteApplicant = (id) => {
-    console.log(`Applicant with id ${id} deleted`);
-  };
-
   const openResumeModal = (resume) => {
     setSelectedResume(resume);
     setIsResumeModalOpen(true);
@@ -99,7 +102,6 @@ const ViewApplicants = () => {
   };
 
   const openProfileModal = (profile) => {
-    console.log("Opening profile modal for:", profile); // Debugging line
     setSelectedProfile(profile);
     setIsProfileModalOpen(true);
   };
@@ -137,9 +139,6 @@ const ViewApplicants = () => {
         <a
           href="/dashboard/postjob"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
-          }}
         >
           <span className="material-symbols-outlined text-xl mr-4">work</span>
           <span className="flex-grow text-center">Post Job</span>
@@ -147,9 +146,6 @@ const ViewApplicants = () => {
         <a
           href="/dashboard/ViewJobs"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
-          }}
         >
           <span className="material-symbols-outlined text-xl mr-4">list</span>
           <span className="flex-grow text-center">View All Job Listings</span>
@@ -162,10 +158,13 @@ const ViewApplicants = () => {
           Logout
         </button>
       </aside>
+
       <div className="flex-1 p-6">
         <div className="flex justify-between items-center mb-6">
+          {/* Display the job name dynamically */}
           <h2 className="text-2xl font-bold text-custom-blue">
-            View Applicants
+            Applicants for{" "}
+            <span className="font-extrabold text-blue-900">{jobName}</span>
           </h2>
           <div className="relative">
             <button
@@ -213,57 +212,59 @@ const ViewApplicants = () => {
             )}
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {sortedApplicants.length > 0 ? (
-            sortedApplicants.map((applicant) => (
-              <div
-                key={applicant.id}
-                className="p-6 bg-blue-500 rounded-lg shadow-md transition-transform duration-200 ease-in-out hover:scale-105 hover:bg-blue-600"
-              >
-                <div className="flex flex-col text-left">
-                  <p className="font-semibold text-lg text-white">Full Name:</p>
-                  <p className="mb-2 text-lg text-black bg-gray-200 p-2 rounded">
-                    {applicant.fullName}
-                  </p>
 
-                  <p className="font-semibold text-lg text-white">Email:</p>
-                  <p className="mb-2 text-lg text-black bg-gray-200 p-2 rounded">
-                    {applicant.email}
-                  </p>
-
-                  <p className="font-semibold text-lg text-white">
-                    Job Applied For:
-                  </p>
-                  <p className="mb-2 text-lg text-black bg-gray-200 p-2 rounded">
-                    {applicant.jobAppliedFor}
-                  </p>
-
-                  <div className="flex space-x-2">
-                    <button
-                      className="mt-4 py-2 px-4 rounded-lg bg-white text-blue-600 font-semibold hover:bg-blue-700 hover:text-white transition duration-200"
-                      onClick={() => openResumeModal(applicant.resume)}
-                    >
-                      View Resume
-                    </button>
-                    <button
-                      className="mt-4 py-2 px-4 rounded-lg bg-white text-blue-600 font-semibold hover:bg-blue-700 hover:text-white transition duration-200"
-                      onClick={() => openProfileModal(applicant.profile)}
-                    >
-                      View Profile
-                    </button>
-                  </div>
-                </div>
-                <button
-                  onClick={() => deleteApplicant(applicant.id)}
-                  className="mt-4 py-2 px-4 rounded-lg bg-red-600 text-white hover:bg-red-700 transition duration-200"
-                >
-                  Delete
-                </button>
-              </div>
-            ))
-          ) : (
-            <p>No applicants found.</p>
-          )}
+        {/* Applicants Table */}
+        <div className="overflow-x-auto">
+          <table className="min-w-full bg-white shadow-md rounded-lg">
+            <thead>
+              <tr className="bg-gray-200 text-gray-700">
+                <th className="py-3 px-6 text-left">Full Name</th>
+                <th className="py-3 px-6 text-left">Email</th>
+                <th className="py-3 px-6 text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {sortedApplicants.length > 0 ? (
+                sortedApplicants.map((applicant) => (
+                  <tr
+                    key={applicant.id}
+                    className="border-b border-gray-200 hover:bg-gray-100 transition duration-200"
+                  >
+                    <td className="py-3 px-6 text-left">
+                      {applicant.fullName}
+                    </td>
+                    <td className="py-3 px-6 text-left">{applicant.email}</td>
+                    <td className="py-3 px-6 text-center space-x-2">
+                      <button
+                        className="py-1 px-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                        onClick={() => openResumeModal(applicant.resume)}
+                      >
+                        View Resume
+                      </button>
+                      <button
+                        className="py-1 px-2 bg-green-500 text-white rounded hover:bg-green-600"
+                        onClick={() => openProfileModal(applicant.profile)}
+                      >
+                        View Profile
+                      </button>
+                      <button
+                        className="py-1 px-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                        onClick={() => openResumeModal(applicant.resume)}
+                      >
+                        Reviewed
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={4} className="py-4 text-center text-gray-500">
+                    No applicants found.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
 
         {/* Resume Modal */}
@@ -293,20 +294,17 @@ const ViewApplicants = () => {
         {isProfileModalOpen && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
             <div className="bg-white p-6 rounded-lg shadow-lg relative w-full max-w-2xl">
-              {/* Close Button */}
               <button
                 onClick={closeProfileModal}
-                className="absolute top-2 right-2 text-2xl font-bold text-gray-700 hover:text-gray-900 transition duration-200"
+                className="absolute top-2 right-2 text-2xl font-bold text-gray-700 hover:text-gray-900"
               >
                 &times;
               </button>
 
-              {/* Modal Title */}
               <h3 className="text-xl font-bold text-gray-800 mb-6 text-center">
                 Applicant's Profile
               </h3>
 
-              {/* Profile Picture and Info */}
               <div className="flex flex-col items-center mb-4">
                 <img
                   src={selectedProfile?.profilePicture}
@@ -319,92 +317,39 @@ const ViewApplicants = () => {
                 <p className="text-gray-600">{selectedProfile?.email}</p>
               </div>
 
-              {/* Profile Details with Icons */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
-                {/* Name */}
                 <div>
-                  <p className="text-lg font-semibold text-gray-800 flex items-center">
-                    <span className="material-symbols-outlined text-2xl mr-2">
-                      person
-                    </span>
-                    Name:
-                  </p>
-                  <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
-                    {selectedProfile?.fullName}
-                  </p>
-                </div>
-
-                {/* Disability */}
-                <div>
-                  <p className="text-lg font-semibold text-gray-800 flex items-center">
-                    <span className="material-symbols-outlined text-2xl mr-2">
-                      accessibility
-                    </span>
+                  <p className="text-lg font-semibold text-gray-800">
                     Disability:
                   </p>
                   <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
                     {selectedProfile?.disability || "Not specified"}
                   </p>
                 </div>
-
-                {/* City */}
                 <div>
-                  <p className="text-lg font-semibold text-gray-800 flex items-center">
-                    <span className="material-symbols-outlined text-2xl mr-2">
-                      location_city
-                    </span>
-                    City:
+                  <p className="text-lg font-semibold text-gray-800">
+                    Location:
                   </p>
                   <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
                     {selectedProfile?.location || "Not specified"}
                   </p>
                 </div>
-
-                {/* Address */}
                 <div>
-                  <p className="text-lg font-semibold text-gray-800 flex items-center">
-                    <span className="material-symbols-outlined text-2xl mr-2">
-                      home
-                    </span>
-                    Address:
-                  </p>
-                  <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
-                    {selectedProfile?.address || "Not specified"}
-                  </p>
-                </div>
-
-                {/* Contact Number */}
-                <div>
-                  <p className="text-lg font-semibold text-gray-800 flex items-center">
-                    <span className="material-symbols-outlined text-2xl mr-2">
-                      phone
-                    </span>
+                  <p className="text-lg font-semibold text-gray-800">
                     Contact Number:
                   </p>
                   <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
                     {selectedProfile?.contactNumber || "Not specified"}
                   </p>
                 </div>
-
-                {/* Gender */}
                 <div>
-                  <p className="text-lg font-semibold text-gray-800 flex items-center">
-                    <span className="material-symbols-outlined text-2xl mr-2">
-                      person
-                    </span>
-                    Gender:
-                  </p>
+                  <p className="text-lg font-semibold text-gray-800">Gender:</p>
                   <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
                     {selectedProfile?.gender || "Not specified"}
                   </p>
                 </div>
-
-                {/* Birthdate */}
                 <div>
-                  <p className="text-lg font-semibold text-gray-800 flex items-center">
-                    <span className="material-symbols-outlined text-2xl mr-2">
-                      calendar_today
-                    </span>
+                  <p className="text-lg font-semibold text-gray-800">
                     Birthdate:
                   </p>
                   <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">

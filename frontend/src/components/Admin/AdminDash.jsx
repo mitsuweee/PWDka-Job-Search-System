@@ -161,7 +161,7 @@ const AdminDashboard = () => {
           <span className="material-symbols-outlined text-xl mr-4">
             group_add
           </span>
-          <span className="flex-grow text-center">Verify Users</span>
+          <span className="flex-grow text-center">Verify Applicants</span>
         </a>
 
         <a
@@ -179,7 +179,7 @@ const AdminDashboard = () => {
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
         >
           <span className="material-symbols-outlined text-xl mr-4">group</span>
-          <span className="flex-grow text-center">View All Users</span>
+          <span className="flex-grow text-center">View All Applicants</span>
         </a>
 
         <a
@@ -233,7 +233,7 @@ const AdminDashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
           <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl hover:translate-y-1 transition-all duration-200 ease-in-out">
             <h2 className="text-xl font-bold text-gray-800">
-              Total Verified Users
+              Total Verified Applicants
             </h2>
             <p className="text-3xl text-blue-900 font-semibold">
               {dashboardCounts.verified_users}
@@ -242,7 +242,7 @@ const AdminDashboard = () => {
 
           <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl hover:translate-y-1 transition-all duration-200 ease-in-out">
             <h2 className="text-xl font-bold text-gray-800">
-              Total Pending Users
+              Total Pending Applicants
             </h2>
             <p className="text-3xl text-blue-900 font-semibold">
               {dashboardCounts.pending_users}

@@ -70,33 +70,6 @@ const AdminViewJobs = () => {
     };
   };
 
-  // Handle delete job listing
-  const handleDeleteJobListing = (id) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this job listing?"
-    );
-    if (confirmed) {
-      const config = {
-        method: "delete",
-        url: `http://localhost:8080/admin/delete/joblisting/${id}`,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-
-      axios(config)
-        .then(() => {
-          alert("Job listing deleted successfully!");
-          setJobListings((prevListings) =>
-            prevListings.filter((job) => job.id !== id)
-          );
-        })
-        .catch(() => {
-          alert("An error occurred while deleting the job listing.");
-        });
-    }
-  };
-
   const closeModal = () => {
     setIsModalOpen(false); // Close the modal
     setJob(null); // Clear the job details
@@ -143,7 +116,7 @@ const AdminViewJobs = () => {
           <span className="material-symbols-outlined text-xl mr-4">
             group_add
           </span>
-          <span className="flex-grow text-center">Verify Users</span>
+          <span className="flex-grow text-center">Verify Applicants</span>
         </a>
 
         <a
@@ -167,7 +140,7 @@ const AdminViewJobs = () => {
           }}
         >
           <span className="material-symbols-outlined text-xl mr-4">group</span>
-          <span className="flex-grow text-center">View All Users</span>
+          <span className="flex-grow text-center">View All Applicants</span>
         </a>
 
         <a
@@ -243,12 +216,6 @@ const AdminViewJobs = () => {
                       className="bg-blue-500 text-white px-2 py-1 rounded mr-2 hover:bg-blue-700"
                     >
                       View
-                    </button>
-                    <button
-                      onClick={() => handleDeleteJobListing(job.id)}
-                      className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-700"
-                    >
-                      Delete
                     </button>
                   </td>
                 </tr>

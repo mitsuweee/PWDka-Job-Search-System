@@ -14,6 +14,7 @@ const JobListing = () => {
   const [isVoiceEnabled, setIsVoiceEnabled] = useState(false);
   const [userFullName, setUserFullName] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false); // State for modal
+  const [userDisabilityId, setUserDisabilityId] = useState(null);
 
   const jobsPerPage = 4; // Number of jobs to display per page
   const navigate = useNavigate();
@@ -33,6 +34,8 @@ const JobListing = () => {
         .then((response) => {
           const userData = response.data.data;
           setUserFullName(userData.full_name);
+          const userDisabilityId = response.data.data.disability_id;
+          setUserDisabilityId(userDisabilityId);
         })
         .catch((error) => {
           console.log("Error fetching user full name:", error.response?.data);
@@ -234,18 +237,20 @@ const JobListing = () => {
             <span>Logout</span>
           </button>
 
-          <button
-            onClick={handleToggleVoice}
-            className={`px-4 py-2 rounded-full transition-colors duration-200 ${
-              isVoiceEnabled
-                ? "bg-blue-500 text-white"
-                : "bg-gray-300 text-black"
-            } hover:bg-blue-600`}
-          >
-            <span className="material-symbols-outlined text-2xl">
-              {isVoiceEnabled ? "volume_up" : "volume_off"}
-            </span>
-          </button>
+          {userDisabilityId !== 1 && (
+            <button
+              onClick={handleToggleVoice}
+              className={`px-4 py-2 rounded-full transition-colors duration-200 ${
+                isVoiceEnabled
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-300 text-black"
+              } hover:bg-blue-600`}
+            >
+              <span className="material-symbols-outlined text-2xl">
+                {isVoiceEnabled ? "volume_up" : "volume_off"}
+              </span>
+            </button>
+          )}
         </div>
       </div>
 

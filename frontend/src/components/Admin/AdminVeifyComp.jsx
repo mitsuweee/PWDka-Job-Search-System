@@ -174,7 +174,7 @@ const AdminVerifyComp = () => {
           <span className="material-symbols-outlined text-xl mr-4">
             group_add
           </span>
-          <span className="flex-grow text-center">Verify Users</span>
+          <span className="flex-grow text-center">Verify Applicants</span>
         </a>
 
         <a
@@ -198,7 +198,7 @@ const AdminVerifyComp = () => {
           }}
         >
           <span className="material-symbols-outlined text-xl mr-4">group</span>
-          <span className="flex-grow text-center">View All Users</span>
+          <span className="flex-grow text-center">View All Applicants</span>
         </a>
 
         <a
