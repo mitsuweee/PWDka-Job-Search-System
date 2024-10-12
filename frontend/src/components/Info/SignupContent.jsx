@@ -9,6 +9,7 @@ const Signup = () => {
   const [formType, setFormType] = useState("user");
   const [showPassword, setShowPassword] = useState(false);
   const [showReEnterPassword, setShowReEnterPassword] = useState(false);
+  const [loading, setLoading] = useState(false); // Add this state
 
   const [userFormValues, setUserFormValues] = useState({
     firstName: "",
@@ -139,6 +140,7 @@ const Signup = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading(true); // Show loader when submitting
 
     const isCompany = formType === "company";
 
@@ -186,12 +188,14 @@ const Signup = () => {
 
     axios(config)
       .then((response) => {
-        toast.success(response.data.message); // Show success toast on registration
+        toast.success(response.data.message); // Show success toast
+        setLoading(false); // Hide loader when success
       })
       .catch((error) => {
         const errorMessage =
           error.response?.data?.message || "An error occurred";
-        toast.error(errorMessage); // Show error toast for registration failure
+        toast.error(errorMessage); // Show error toast
+        setLoading(false); // Hide loader on error
       });
   };
 
@@ -806,6 +810,11 @@ const Signup = () => {
     <section className="bg-white">
       <Toaster position="top-center" reverseOrder={false} />{" "}
       {/* Toast Notifications */}
+      {loading && (
+        <div className="fixed inset-0 bg-white bg-opacity-90 flex items-center justify-center z-50">
+          <div className="animate-spin rounded-full h-32 w-32 border-t-4 border-blue-500"></div>
+        </div>
+      )}
       <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
         <section className="relative flex h-32 items-end bg-gray-900 lg:col-span-5 lg:h-full xl:col-span-6">
           <img
