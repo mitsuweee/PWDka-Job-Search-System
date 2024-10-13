@@ -103,20 +103,25 @@ const JobListing = () => {
       If you are interested, click on APPLY NOW.
     `;
 
-    if (isSpeaking && currentJobSpeech) {
-      window.speechSynthesis.cancel(); // Stop the current speech if already playing
-      setIsSpeaking(false);
+    if (userDisabilityType === "Deaf or Hard of Hearing") {
+      // Do not render or play speech synthesis for users with this disability
+      alert(`Job Details:\n${jobDetails}`); // Use visual alert instead
     } else {
-      const utterance = new SpeechSynthesisUtterance(jobDetails);
-      window.speechSynthesis.speak(utterance);
-      setIsSpeaking(true);
-      setCurrentJobSpeech(utterance);
-
-      // Reset isSpeaking once speech ends
-      utterance.onend = () => {
+      if (isSpeaking && currentJobSpeech) {
+        window.speechSynthesis.cancel(); // Stop the current speech if already playing
         setIsSpeaking(false);
-        setCurrentJobSpeech(null);
-      };
+      } else {
+        const utterance = new SpeechSynthesisUtterance(jobDetails);
+        window.speechSynthesis.speak(utterance);
+        setIsSpeaking(true);
+        setCurrentJobSpeech(utterance);
+
+        // Reset isSpeaking once speech ends
+        utterance.onend = () => {
+          setIsSpeaking(false);
+          setCurrentJobSpeech(null);
+        };
+      }
     }
   };
 
@@ -322,21 +327,23 @@ const JobListing = () => {
                       </p>
                     </div>
 
-                    {/* Voice Toggle Button */}
-                    <button
-                      onClick={() => handleToggleVoice(job)}
-                      className={`ml-4 px-4 py-2 rounded-full transition-colors duration-200 ${
-                        isVoiceEnabled && selectedJobId === job.id
-                          ? "bg-blue-500 text-white"
-                          : "bg-gray-300 text-black"
-                      } hover:bg-blue-600`}
-                    >
-                      <span className="material-symbols-outlined text-2xl">
-                        {isVoiceEnabled && selectedJobId === job.id
-                          ? "volume_up"
-                          : "volume_off"}
-                      </span>
-                    </button>
+                    {/* Voice Toggle Button - Only visible if the user is not "Deaf or Hard of Hearing" */}
+                    {userDisabilityType !== "Deaf or Hard of Hearing" && (
+                      <button
+                        onClick={() => handleToggleVoice(job)}
+                        className={`ml-4 px-4 py-2 rounded-full transition-colors duration-200 ${
+                          isVoiceEnabled && selectedJobId === job.id
+                            ? "bg-blue-500 text-white"
+                            : "bg-gray-300 text-black"
+                        } hover:bg-blue-600`}
+                      >
+                        <span className="material-symbols-outlined text-2xl">
+                          {isVoiceEnabled && selectedJobId === job.id
+                            ? "volume_up"
+                            : "volume_off"}
+                        </span>
+                      </button>
+                    )}
                   </div>
                 </div>
               ))
