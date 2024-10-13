@@ -16,8 +16,8 @@ const UserProf = () => {
     profilePicture: "",
   });
 
-  const [isEditing, setIsEditing] = useState(false); // Edit modal state
-  const [isChangingPassword, setIsChangingPassword] = useState(false); // Password change modal state
+  const [isModalOpen, setIsModalOpen] = useState(false); // Single modal state for both edit and password
+  const [isEditing, setIsEditing] = useState(true); // Toggle between edit profile and change password
   const [passwords, setPasswords] = useState({
     currentPassword: "",
     newPassword: "",
@@ -39,7 +39,6 @@ const UserProf = () => {
 
     axios(config)
       .then(function (response) {
-        console.log(response);
         const userData = response.data.data;
         setUser({
           fullName: userData.full_name,
@@ -94,11 +93,13 @@ const UserProf = () => {
   };
 
   const handleEdit = () => {
-    setIsEditing(true); // Open edit modal
+    setIsEditing(true);
+    setIsModalOpen(true); // Open the modal in edit mode
   };
 
   const handlePasswordToggle = () => {
-    setIsChangingPassword(true); // Open change password modal
+    setIsEditing(false);
+    setIsModalOpen(true); // Open the modal in password change mode
   };
 
   const handlePasswordUpdate = () => {
@@ -127,7 +128,7 @@ const UserProf = () => {
     axios(config)
       .then(function (response) {
         toast.success("Password updated successfully!");
-        setIsChangingPassword(false);
+        setIsModalOpen(false);
       })
       .catch(function (error) {
         toast.error(
@@ -157,7 +158,7 @@ const UserProf = () => {
     axios(config)
       .then(function (response) {
         toast.success(response.data.message);
-        setIsEditing(false); // Close the edit modal
+        setIsModalOpen(false);
       })
       .catch(function (error) {
         toast.error(error.response.data.message || "An error occurred");
@@ -187,14 +188,6 @@ const UserProf = () => {
 
   const closeLogoutModal = () => {
     setIsLogoutModalOpen(false); // Close the logout modal
-  };
-
-  const closeEditModal = () => {
-    setIsEditing(false); // Close edit modal
-  };
-
-  const closePasswordModal = () => {
-    setIsChangingPassword(false); // Close password modal
   };
 
   return (
@@ -384,16 +377,16 @@ const UserProf = () => {
         </div>
       )}
 
-      {/* Edit Profile Modal */}
-      {isEditing && (
+      {/* Edit Profile & Change Password Modal */}
+      {isModalOpen && (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
             <div className="flex justify-between items-center border-b pb-3 mb-4">
               <h2 className="text-2xl font-semibold text-gray-800">
-                Edit Profile
+                {isEditing ? "Edit Profile" : "Change Password"}
               </h2>
               <button
-                onClick={closeEditModal}
+                onClick={() => setIsModalOpen(false)}
                 className="text-gray-500 hover:text-gray-800 transition duration-200"
               >
                 <svg
@@ -412,152 +405,133 @@ const UserProf = () => {
                 </svg>
               </button>
             </div>
-            <div className="grid grid-cols-1 gap-6">
-              <div>
-                <label className="block text-gray-600 font-semibold">
-                  Address:
-                </label>
-                <input
-                  type="text"
-                  name="address"
-                  value={user.address}
-                  onChange={handleChange}
-                  className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                />
-              </div>
-              <div>
-                <label className="block text-gray-600 font-semibold">
-                  City:
-                </label>
-                <input
-                  type="text"
-                  name="city"
-                  value={user.city}
-                  onChange={handleChange}
-                  className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                />
-              </div>
-              <div>
-                <label className="block text-gray-600 font-semibold">
-                  Contact Number:
-                </label>
-                <input
-                  type="text"
-                  name="contactNumber"
-                  value={user.contactNumber}
-                  onChange={handleChange}
-                  className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                />
-              </div>
-              <div>
-                <label className="block text-gray-600 font-semibold">
-                  Profile Picture:
-                </label>
-                <input
-                  type="file"
-                  name="profilePicture"
-                  accept="image/png, image/jpeg"
-                  onChange={handleFileChange}
-                  className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                />
-              </div>
+            <div className="flex justify-between mb-4">
+              <button
+                className={`py-2 px-4 ${
+                  isEditing
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-200 text-gray-700"
+                } rounded-lg`}
+                onClick={() => setIsEditing(true)}
+              >
+                Edit Profile
+              </button>
+              <button
+                className={`py-2 px-4 ${
+                  !isEditing
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-200 text-gray-700"
+                } rounded-lg`}
+                onClick={() => setIsEditing(false)}
+              >
+                Change Password
+              </button>
             </div>
+
+            {isEditing ? (
+              <div className="grid grid-cols-1 gap-6">
+                <div>
+                  <label className="block text-gray-600 font-semibold">
+                    Address:
+                  </label>
+                  <input
+                    type="text"
+                    name="address"
+                    value={user.address}
+                    onChange={handleChange}
+                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-600 font-semibold">
+                    City:
+                  </label>
+                  <input
+                    type="text"
+                    name="city"
+                    value={user.city}
+                    onChange={handleChange}
+                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-600 font-semibold">
+                    Contact Number:
+                  </label>
+                  <input
+                    type="text"
+                    name="contactNumber"
+                    value={user.contactNumber}
+                    onChange={handleChange}
+                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-600 font-semibold">
+                    Profile Picture:
+                  </label>
+                  <input
+                    type="file"
+                    name="profilePicture"
+                    accept="image/png, image/jpeg"
+                    onChange={handleFileChange}
+                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                  />
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 gap-6">
+                <div>
+                  <label className="block text-gray-600 font-semibold">
+                    Current Password:
+                  </label>
+                  <input
+                    type="password"
+                    name="currentPassword"
+                    value={passwords.currentPassword}
+                    onChange={handlePasswordChange}
+                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-600 font-semibold">
+                    New Password:
+                  </label>
+                  <input
+                    type="password"
+                    name="newPassword"
+                    value={passwords.newPassword}
+                    onChange={handlePasswordChange}
+                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-600 font-semibold">
+                    Confirm New Password:
+                  </label>
+                  <input
+                    type="password"
+                    name="confirmNewPassword"
+                    value={passwords.confirmNewPassword}
+                    onChange={handlePasswordChange}
+                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                  />
+                </div>
+              </div>
+            )}
+
             <div className="flex justify-end mt-6 space-x-4">
               <button
-                onClick={closeEditModal}
+                onClick={() => setIsModalOpen(false)}
                 className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-200"
               >
                 Back
               </button>
               <button
-                onClick={handleUpdate}
+                onClick={isEditing ? handleUpdate : handlePasswordUpdate}
                 className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
               >
-                Update Profile
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Change Password Modal */}
-      {isChangingPassword && (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
-            <div className="flex justify-between items-center border-b pb-3 mb-4">
-              <h2 className="text-2xl font-semibold text-gray-800">
-                Change Password
-              </h2>
-              <button
-                onClick={closePasswordModal}
-                className="text-gray-500 hover:text-gray-800 transition duration-200"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-            </div>
-            <div className="grid grid-cols-1 gap-6">
-              <div>
-                <label className="block text-gray-600 font-semibold">
-                  Current Password:
-                </label>
-                <input
-                  type="password"
-                  name="currentPassword"
-                  value={passwords.currentPassword}
-                  onChange={handlePasswordChange}
-                  className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                />
-              </div>
-              <div>
-                <label className="block text-gray-600 font-semibold">
-                  New Password:
-                </label>
-                <input
-                  type="password"
-                  name="newPassword"
-                  value={passwords.newPassword}
-                  onChange={handlePasswordChange}
-                  className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                />
-              </div>
-              <div>
-                <label className="block text-gray-600 font-semibold">
-                  Confirm New Password:
-                </label>
-                <input
-                  type="password"
-                  name="confirmNewPassword"
-                  value={passwords.confirmNewPassword}
-                  onChange={handlePasswordChange}
-                  className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                />
-              </div>
-            </div>
-            <div className="flex justify-end mt-6 space-x-4">
-              <button
-                onClick={closePasswordModal}
-                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-200"
-              >
-                Back
-              </button>
-              <button
-                onClick={handlePasswordUpdate}
-                className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
-              >
-                Save New Password
+                {isEditing ? "Update Profile" : "Save New Password"}
               </button>
             </div>
           </div>

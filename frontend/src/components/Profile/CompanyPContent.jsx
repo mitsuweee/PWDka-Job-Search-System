@@ -13,15 +13,15 @@ const CompanyProf = () => {
     contactNumber: "",
   });
 
-  const [isEditing, setIsEditing] = useState(false);
-  const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false); // Single modal state for both edit and password
+  const [isEditing, setIsEditing] = useState(true); // Toggle between edit profile and change password
   const [passwords, setPasswords] = useState({
     currentPassword: "",
     newPassword: "",
     confirmNewPassword: "",
   });
 
-  const [isModalOpen, setIsModalOpen] = useState(false); // State for logout modal
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false); // State for logout modal
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -38,7 +38,7 @@ const CompanyProf = () => {
       .then(function (response) {
         const companyData = response.data.data;
         setCompany({
-          profile_picture: companyData.profile_picture, // Assuming the logo is returned as a base64 string
+          logo: companyData.profile_picture, // Assuming the logo is returned as a base64 string
           name: companyData.name,
           description: companyData.description,
           address: companyData.address,
@@ -87,15 +87,17 @@ const CompanyProf = () => {
   };
 
   const handleEdit = () => {
-    setIsEditing(!isEditing);
+    setIsEditing(true);
+    setIsModalOpen(true); // Open the modal in edit mode
   };
 
   const handlePasswordToggle = () => {
-    setIsChangingPassword(!isChangingPassword);
+    setIsEditing(false);
+    setIsModalOpen(true); // Open the modal in password change mode
   };
 
   const handleUpdate = () => {
-    setIsEditing(false);
+    setIsModalOpen(false);
 
     const updateCompanyProfile = JSON.stringify({
       name: company.name,
@@ -155,7 +157,7 @@ const CompanyProf = () => {
     axios(config)
       .then(function () {
         toast.success("Password updated successfully.");
-        setIsChangingPassword(false);
+        setIsModalOpen(false);
       })
       .catch(function () {
         toast.error(
@@ -169,11 +171,10 @@ const CompanyProf = () => {
   };
 
   const handleLogout = () => {
-    setIsModalOpen(true); // Open the modal when logout is clicked
+    setIsLogoutModalOpen(true); // Open the modal when logout is clicked
   };
 
   const confirmLogout = () => {
-    // Logic for logout
     sessionStorage.removeItem("Id");
     sessionStorage.removeItem("Role");
     navigate("/login");
@@ -190,7 +191,7 @@ const CompanyProf = () => {
       <div className="flex flex-col md:flex-row items-center justify-between">
         <div className="flex items-center">
           <img
-            src={`data:image/png;base64,${company.profile_picture}`}
+            src={`data:image/png;base64,${company.logo}`}
             alt="Company Logo"
             className="w-24 h-24 rounded-full border-4 border-blue-700 shadow-lg"
           />
@@ -293,133 +294,182 @@ const CompanyProf = () => {
           </div>
         </div>
       </div>
-      {isEditing && (
-        <div className="mt-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div>
-              <div className="mb-6">
-                <label className="block text-gray-600 font-semibold">
-                  Address:
-                </label>
-                <input
-                  type="text"
-                  name="address"
-                  value={company.address}
-                  onChange={handleChange}
-                  className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                />
-              </div>
-              <div className="mb-6">
-                <label className="block text-gray-600 font-semibold">
-                  City:
-                </label>
-                <input
-                  type="text"
-                  name="city"
-                  value={company.city}
-                  onChange={handleChange}
-                  className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                />
-              </div>
-            </div>
-            <div>
-              <div className="mb-6">
-                <label className="block text-gray-600 font-semibold">
-                  Description:
-                </label>
-                <input
-                  type="text"
-                  name="description"
-                  value={company.description}
-                  onChange={handleChange}
-                  className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                />
-              </div>
-              <div className="mb-6">
-                <label className="block text-gray-600 font-semibold">
-                  Contact Number:
-                </label>
-                <input
-                  type="text"
-                  name="contactNumber"
-                  value={company.contactNumber}
-                  onChange={handleChange}
-                  className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                />
-              </div>
-              <div className="mb-6">
-                <label className="block text-gray-600 font-semibold">
-                  Logo:
-                </label>
-                <input
-                  type="file"
-                  name="logo"
-                  accept="image/png, image/jpeg"
-                  onChange={handleFileChange}
-                  className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                />
-              </div>
-            </div>
-          </div>
-          <button
-            onClick={handleUpdate}
-            className="w-full py-3 mt-6 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition duration-300"
-          >
-            Update Profile
-          </button>
-        </div>
-      )}
-      {isChangingPassword && (
-        <div className="mt-8">
-          <h3 className="text-xl font-bold text-gray-900 mb-4">
-            Change Password
-          </h3>
-          <div className="mb-6">
-            <label className="block text-gray-600 font-semibold">
-              Current Password:
-            </label>
-            <input
-              type="password"
-              name="currentPassword"
-              value={passwords.currentPassword}
-              onChange={handlePasswordChange}
-              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-            />
-          </div>
-          <div className="mb-6">
-            <label className="block text-gray-600 font-semibold">
-              New Password:
-            </label>
-            <input
-              type="password"
-              name="newPassword"
-              value={passwords.newPassword}
-              onChange={handlePasswordChange}
-              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-            />
-          </div>
-          <div className="mb-6">
-            <label className="block text-gray-600 font-semibold">
-              Confirm New Password:
-            </label>
-            <input
-              type="password"
-              name="confirmNewPassword"
-              value={passwords.confirmNewPassword}
-              onChange={handlePasswordChange}
-              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-            />
-          </div>
-          <button
-            onClick={handlePasswordUpdate}
-            className="w-full py-3 mt-6 bg-yellow-500 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 transition duration-300"
-          >
-            Save New Password
-          </button>
-        </div>
-      )}
-      {/* Logout Modal */}
+
+      {/* Edit Profile & Change Password Modal */}
       {isModalOpen && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
+            <div className="flex justify-between items-center border-b pb-3 mb-4">
+              <h2 className="text-2xl font-semibold text-gray-800">
+                {isEditing ? "Edit Profile" : "Change Password"}
+              </h2>
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="text-gray-500 hover:text-gray-800 transition duration-200"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div className="flex justify-between mb-4">
+              <button
+                className={`py-2 px-4 ${
+                  isEditing
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-200 text-gray-700"
+                } rounded-lg`}
+                onClick={() => setIsEditing(true)}
+              >
+                Edit Profile
+              </button>
+              <button
+                className={`py-2 px-4 ${
+                  !isEditing
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-200 text-gray-700"
+                } rounded-lg`}
+                onClick={() => setIsEditing(false)}
+              >
+                Change Password
+              </button>
+            </div>
+
+            {isEditing ? (
+              <div className="grid grid-cols-1 gap-6">
+                <div>
+                  <label className="block text-gray-600 font-semibold">
+                    Address:
+                  </label>
+                  <input
+                    type="text"
+                    name="address"
+                    value={company.address}
+                    onChange={handleChange}
+                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-600 font-semibold">
+                    City:
+                  </label>
+                  <input
+                    type="text"
+                    name="city"
+                    value={company.city}
+                    onChange={handleChange}
+                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-600 font-semibold">
+                    Description:
+                  </label>
+                  <input
+                    type="text"
+                    name="description"
+                    value={company.description}
+                    onChange={handleChange}
+                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-600 font-semibold">
+                    Contact Number:
+                  </label>
+                  <input
+                    type="text"
+                    name="contactNumber"
+                    value={company.contactNumber}
+                    onChange={handleChange}
+                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-600 font-semibold">
+                    Logo:
+                  </label>
+                  <input
+                    type="file"
+                    name="logo"
+                    accept="image/png, image/jpeg"
+                    onChange={handleFileChange}
+                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                  />
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 gap-6">
+                <div>
+                  <label className="block text-gray-600 font-semibold">
+                    Current Password:
+                  </label>
+                  <input
+                    type="password"
+                    name="currentPassword"
+                    value={passwords.currentPassword}
+                    onChange={handlePasswordChange}
+                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-600 font-semibold">
+                    New Password:
+                  </label>
+                  <input
+                    type="password"
+                    name="newPassword"
+                    value={passwords.newPassword}
+                    onChange={handlePasswordChange}
+                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-600 font-semibold">
+                    Confirm New Password:
+                  </label>
+                  <input
+                    type="password"
+                    name="confirmNewPassword"
+                    value={passwords.confirmNewPassword}
+                    onChange={handlePasswordChange}
+                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                  />
+                </div>
+              </div>
+            )}
+
+            <div className="flex justify-end mt-6 space-x-4">
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-200"
+              >
+                Back
+              </button>
+              <button
+                onClick={isEditing ? handleUpdate : handlePasswordUpdate}
+                className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
+              >
+                {isEditing ? "Update Profile" : "Save New Password"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Logout Modal */}
+      {isLogoutModalOpen && (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
             {/* Modal Header */}
