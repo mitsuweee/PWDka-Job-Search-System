@@ -1,17 +1,20 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast"; // Import react-hot-toast
 
 const ViewApplicants = () => {
   const [sortOption, setSortOption] = useState("newest");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [applicants, setApplicants] = useState([]);
-  const [jobName, setJobName] = useState(""); // New state for job name
-  const [selectedResume, setSelectedResume] = useState(null); // For resume modal
-  const [selectedProfile, setSelectedProfile] = useState(null); // For profile modal
-  const [isResumeModalOpen, setIsResumeModalOpen] = useState(false); // Resume modal state
-  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false); // Profile modal state
+  const [jobName, setJobName] = useState("");
+  const [selectedResume, setSelectedResume] = useState(null);
+  const [selectedProfile, setSelectedProfile] = useState(null);
+  const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true); // Loading state
+  const [isLoading, setIsLoading] = useState(false); // New loader state
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -42,6 +45,7 @@ const ViewApplicants = () => {
       },
     };
 
+    setIsLoading(true); // Show loader while fetching applicants
     axios(config)
       .then(async (response) => {
         const fetchedJobApplicants = await Promise.all(
@@ -52,10 +56,10 @@ const ViewApplicants = () => {
             resume: applicant.resume, // URL for PDF preview
             jobAppliedFor: applicant.position_name,
             profile: {
-              fullName: applicant.full_name, // Full name is concatenated
-              email: applicant.email, // Email
-              disability: applicant.type, // From disability.type
-              location: applicant.Location, // Concatenated address + city
+              fullName: applicant.full_name,
+              email: applicant.email,
+              disability: applicant.type,
+              location: applicant.Location,
               contactNumber: applicant.contact_number,
               gender: applicant.gender,
               birthdate: new Date(applicant.birth_date).toLocaleDateString(
@@ -66,7 +70,6 @@ const ViewApplicants = () => {
           }))
         );
 
-        // Set the job name from the first applicant
         if (fetchedJobApplicants.length > 0) {
           setJobName(fetchedJobApplicants[0].jobAppliedFor);
         } else {
@@ -74,11 +77,16 @@ const ViewApplicants = () => {
         }
 
         setApplicants(fetchedJobApplicants);
+        toast.success("Applicants loaded successfully!"); // Show success toast
       })
       .catch((error) => {
         const errorMessage =
           error.response?.data?.message || "An error occurred";
-        alert(errorMessage);
+        toast.error(errorMessage); // Show error toast
+      })
+      .finally(() => {
+        setIsLoading(false); // Hide loader
+        setLoading(false);
       });
   }, []);
 
@@ -111,7 +119,6 @@ const ViewApplicants = () => {
     setSelectedProfile(null);
   };
 
-  // Sort applicants based on the selected sort option
   const sortedApplicants = applicants.sort((a, b) => {
     if (sortOption === "newest") {
       return b.id - a.id;
@@ -125,6 +132,14 @@ const ViewApplicants = () => {
 
   return (
     <div className="flex">
+      <Toaster position="top-center" reverseOrder={false} />{" "}
+      {/* Toast notifications */}
+      {/* Loader */}
+      {isLoading && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
+          <div className="text-white text-2xl">Loading...</div>
+        </div>
+      )}
       <aside
         className={`bg-custom-blue w-full md:w-[300px] lg:w-[250px] p-4 flex flex-col items-center md:relative fixed top-0 left-0 min-h-screen h-full transition-transform transform ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
@@ -158,10 +173,8 @@ const ViewApplicants = () => {
           Logout
         </button>
       </aside>
-
       <div className="flex-1 p-6">
         <div className="flex justify-between items-center mb-6">
-          {/* Display the job name dynamically */}
           <h2 className="text-2xl font-bold text-custom-blue">
             Applicants for{" "}
             <span className="font-extrabold text-blue-900">{jobName}</span>

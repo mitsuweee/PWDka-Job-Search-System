@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import toast, { Toaster } from "react-hot-toast"; // Import react-hot-toast
 
 const ViewJobs = () => {
   const [jobListings, setJobListings] = useState([]);
@@ -12,6 +13,7 @@ const ViewJobs = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredJobListings, setFilteredJobListings] = useState([]);
+  const [isLoading, setIsLoading] = useState(false); // New loader state
 
   const navigate = useNavigate();
 
@@ -25,6 +27,7 @@ const ViewJobs = () => {
       },
     };
 
+    setIsLoading(true); // Show loader while fetching jobs
     axios(config)
       .then((response) => {
         const jobDataArray = response.data.data;
@@ -34,7 +37,11 @@ const ViewJobs = () => {
       })
       .catch((error) => {
         console.error(error);
+        toast.error("Error loading jobs."); // Show toast for error
         setLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false); // Hide loader
       });
   }, []);
 
@@ -47,6 +54,7 @@ const ViewJobs = () => {
       },
     };
 
+    setIsLoading(true); // Show loader while fetching job details
     axios(config)
       .then((response) => {
         const jobData = response.data.data[0];
@@ -55,6 +63,10 @@ const ViewJobs = () => {
       })
       .catch((error) => {
         console.error(error);
+        toast.error("Error fetching job details."); // Show toast for error
+      })
+      .finally(() => {
+        setIsLoading(false); // Hide loader
       });
   };
 
@@ -99,15 +111,19 @@ const ViewJobs = () => {
       },
     };
 
+    setIsLoading(true); // Show loader while updating job
     axios(config)
       .then(() => {
-        alert("Job updated successfully!");
+        toast.success("Job updated successfully!"); // Show success toast
         setIsUpdateModalOpen(false);
         window.location.reload();
       })
       .catch((error) => {
         console.error(error);
-        alert("Error updating job.");
+        toast.error("Error updating job."); // Show error toast
+      })
+      .finally(() => {
+        setIsLoading(false); // Hide loader
       });
   };
 
@@ -124,9 +140,10 @@ const ViewJobs = () => {
         },
       };
 
+      setIsLoading(true); // Show loader while deleting job
       axios(config)
         .then(() => {
-          alert("Job listing deleted successfully!");
+          toast.success("Job listing deleted successfully!"); // Show success toast
           setJobListings((prevListings) =>
             prevListings.filter((job) => job.id !== id)
           );
@@ -135,7 +152,10 @@ const ViewJobs = () => {
           );
         })
         .catch(() => {
-          alert("An error occurred while deleting the job listing.");
+          toast.error("An error occurred while deleting the job listing."); // Show error toast
+        })
+        .finally(() => {
+          setIsLoading(false); // Hide loader
         });
     }
   };
@@ -165,7 +185,7 @@ const ViewJobs = () => {
   };
 
   const handleGoToDashboard = () => {
-    navigate("/dashboard"); // Navigate to the dashboard page
+    navigate("/dashboard");
   };
 
   if (loading) {
@@ -174,6 +194,14 @@ const ViewJobs = () => {
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-blue-100">
+      <Toaster position="top-center" reverseOrder={false} />{" "}
+      {/* Toast notifications */}
+      {/* Loader */}
+      {isLoading && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
+          <div className="text-white text-2xl">Loading...</div>
+        </div>
+      )}
       {/* Sidebar */}
       <aside
         className={`bg-custom-blue w-full md:w-[300px] lg:w-[250px] p-4 flex flex-col items-center md:relative fixed top-0 left-0 min-h-screen h-full transition-transform transform ${
@@ -215,7 +243,6 @@ const ViewJobs = () => {
           Logout
         </button>
       </aside>
-
       {/* Mobile Toggle Button */}
       <button
         className={`md:hidden bg-custom-blue text-white p-4 fixed top-4 left-4 z-50 rounded-xl mt-11 transition-transform ${
@@ -225,7 +252,6 @@ const ViewJobs = () => {
       >
         &#9776;
       </button>
-
       {/* Main Content */}
       <main className="flex-grow p-4 md:p-8">
         {/* Back Button */}
@@ -325,7 +351,6 @@ const ViewJobs = () => {
           </table>
         </div>
       </main>
-
       {/* Modal for viewing job details */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
@@ -377,7 +402,6 @@ const ViewJobs = () => {
           </div>
         </div>
       )}
-
       {/* Modal for editing job details */}
       {isUpdateModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
