@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
 
 const JobListing = () => {
-  const [jobs, setJobs] = useState([]); // State to hold the jobs data
+  const [jobs, setJobs] = useState([]);
   const [selectedJobId, setSelectedJobId] = useState(null);
   const [isDetailsVisible, setIsDetailsVisible] = useState(false);
   const [isMoreInfoVisible, setIsMoreInfoVisible] = useState(false);
@@ -13,12 +14,13 @@ const JobListing = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isVoiceEnabled, setIsVoiceEnabled] = useState(false);
   const [userFullName, setUserFullName] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [userDisabilityType, setUserDisabilityType] = useState(null);
-  const [isSpeaking, setIsSpeaking] = useState(false); // For tracking speech
-  const [currentJobSpeech, setCurrentJobSpeech] = useState(null); // Track current speech
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [currentJobSpeech, setCurrentJobSpeech] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const jobsPerPage = 4; // Number of jobs to display per page
+  const jobsPerPage = 4;
   const navigate = useNavigate();
 
   const toSentenceCase = (str) => {
@@ -30,6 +32,7 @@ const JobListing = () => {
     const userId = sessionStorage.getItem("Id");
 
     const fetchUserFullName = () => {
+      setLoading(true);
       axios
         .get(`/user/view/${userId}`)
         .then((response) => {
@@ -37,16 +40,18 @@ const JobListing = () => {
           setUserFullName(userData.full_name);
           const userDisabilityType = userData.type;
           setUserDisabilityType(userDisabilityType);
+          setLoading(false);
         })
         .catch((error) => {
-          console.log(
-            "Error fetching user full name and disability type:",
-            error.response?.data
-          );
+          const errorMessage =
+            error.response?.data?.message || "An error occurred";
+          toast.error(errorMessage);
+          setLoading(false);
         });
     };
 
     const fetchJobs = () => {
+      setLoading(true);
       const config = {
         method: "get",
         url: `/joblisting/view/newesttooldest/${userId}`,
@@ -71,16 +76,19 @@ const JobListing = () => {
             companyContact: job.company_contact_number,
             companyLocation: job.company_address,
             companyDescription: job.company_description,
-            companyImage: `data:image/png;base64,${job.company_profile_picture}`, // Placeholder for company logo
+            companyImage: `data:image/png;base64,${job.company_profile_picture}`,
           }));
 
           setJobs(fetchedJobs);
+          toast.success("Jobs fetched successfully");
+          setLoading(false);
         })
         .catch((error) => {
           const errorMessage =
-            error.response?.data?.message || "An error occurred";
-          console.log(error.response?.data);
-          alert(errorMessage);
+            error.response?.data?.message ||
+            "An error occurred while fetching jobs";
+          toast.error(errorMessage);
+          setLoading(false);
         });
     };
 
@@ -104,11 +112,10 @@ const JobListing = () => {
     `;
 
     if (userDisabilityType === "Deaf or Hard of Hearing") {
-      // Do not render or play speech synthesis for users with this disability
-      alert(`Job Details:\n${jobDetails}`); // Use visual alert instead
+      alert(`Job Details:\n${jobDetails}`);
     } else {
       if (isSpeaking && currentJobSpeech) {
-        window.speechSynthesis.cancel(); // Stop the current speech if already playing
+        window.speechSynthesis.cancel();
         setIsSpeaking(false);
       } else {
         const utterance = new SpeechSynthesisUtterance(jobDetails);
@@ -116,7 +123,6 @@ const JobListing = () => {
         setIsSpeaking(true);
         setCurrentJobSpeech(utterance);
 
-        // Reset isSpeaking once speech ends
         utterance.onend = () => {
           setIsSpeaking(false);
           setCurrentJobSpeech(null);
@@ -150,7 +156,6 @@ const JobListing = () => {
       return 0;
     });
 
-  // Pagination Logic
   const indexOfLastJob = currentPage * jobsPerPage;
   const indexOfFirstJob = indexOfLastJob - jobsPerPage;
   const currentJobs = filteredJobs.slice(indexOfFirstJob, indexOfLastJob);
@@ -166,7 +171,7 @@ const JobListing = () => {
   };
 
   const handleLogout = () => {
-    setIsModalOpen(true); // Open the modal when logout is clicked
+    setIsModalOpen(true);
   };
 
   const confirmLogout = () => {
@@ -177,16 +182,22 @@ const JobListing = () => {
   };
 
   const closeModal = () => {
-    setIsModalOpen(false); // Close modal without logging out
+    setIsModalOpen(false);
   };
 
   return (
     <div className="flex flex-col w-full h-full">
+      <Toaster position="top-center" reverseOrder={false} />
+      {loading && (
+        <div className="fixed inset-0 bg-white bg-opacity-90 flex items-center justify-center z-50">
+          <div className="animate-spin rounded-full h-32 w-32 border-t-4 border-blue-500"></div>
+        </div>
+      )}
+
       <div
         className="w-full bg-cover bg-center py-4 lg:h-40 flex flex-col sm:flex-row justify-center items-center px-4"
         style={{ backgroundImage: `url('/imgs/bg search.png')` }}
       >
-        {/* Search Bar and Search Button - Centered and Bigger */}
         <div className="w-full lg:w-2/3 mb-4 sm:mb-0 flex justify-center">
           <div className="flex w-full">
             <input
@@ -205,7 +216,6 @@ const JobListing = () => {
           </div>
         </div>
 
-        {/* Buttons - Centered with Small Space between Search and Filter */}
         <div className="flex justify-center items-center space-x-2 ml-4">
           <div className="relative">
             <button
@@ -268,9 +278,7 @@ const JobListing = () => {
         </div>
       </div>
 
-      {/* Job Listings and Details */}
       <div className="flex flex-col lg:flex-row w-full h-full mt-6">
-        {/* Left Part - Job Listings */}
         <div className="lg:w-1/2 p-4 overflow-auto">
           <h1 className="text-3xl font-bold mb-6 text-blue-600">
             <span className="material-symbols-outlined text-2xl mr-2">
@@ -290,13 +298,11 @@ const JobListing = () => {
                       setIsMoreInfoVisible(false);
                     }}
                   >
-                    {/* Company Logo */}
                     <img
                       src={job.companyImage}
                       alt="Company Logo"
                       className="w-24 h-24 object-cover rounded-xl mr-4 shadow-xl"
                     />
-                    {/* Job Details */}
                     <div>
                       <h2 className="text-xl font-bold text-white">
                         <span className="material-symbols-outlined mr-2">
@@ -326,8 +332,6 @@ const JobListing = () => {
                         {toSentenceCase(job.description)}
                       </p>
                     </div>
-
-                    {/* Voice Toggle Button - Only visible if the user is not "Deaf or Hard of Hearing" */}
                     {userDisabilityType !== "Deaf or Hard of Hearing" && (
                       <button
                         onClick={() => handleToggleVoice(job)}
@@ -359,10 +363,8 @@ const JobListing = () => {
             )}
           </div>
 
-          {/* Pagination Controls */}
           <div className="flex justify-center mt-6">
             <ol className="flex justify-center gap-1 text-xs font-medium">
-              {/* Previous Page Button */}
               <li>
                 <button
                   onClick={() => currentPage > 1 && paginate(currentPage - 1)}
@@ -385,7 +387,6 @@ const JobListing = () => {
                 </button>
               </li>
 
-              {/* Page Numbers */}
               {Array.from({ length: totalPages }, (_, index) => (
                 <li key={index + 1}>
                   <button
@@ -401,7 +402,6 @@ const JobListing = () => {
                 </li>
               ))}
 
-              {/* Next Page Button */}
               <li>
                 <button
                   onClick={() =>
@@ -429,7 +429,6 @@ const JobListing = () => {
           </div>
         </div>
 
-        {/* Right Part - Job Details for Desktop */}
         <div className={`lg:w-1/2 p-4 hidden lg:block`}>
           {selectedJob ? (
             <div key={selectedJob.id}>
@@ -501,7 +500,6 @@ const JobListing = () => {
                 </div>
               </div>
 
-              {/* Additional Info Section on Desktop */}
               {isMoreInfoVisible && (
                 <div className="mt-6 p-6 bg-white rounded-lg shadow-2xl relative">
                   <img
@@ -544,11 +542,9 @@ const JobListing = () => {
         </div>
       </div>
 
-      {/* Logout Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
-            {/* Modal Header */}
             <div className="flex justify-between items-center border-b pb-3 mb-4">
               <h2 className="text-2xl font-semibold text-gray-800">
                 Logout Confirmation
@@ -574,7 +570,6 @@ const JobListing = () => {
               </button>
             </div>
 
-            {/* Modal Body */}
             <div className="mb-6">
               <p className="text-lg text-gray-600">
                 Are you sure you want to logout? You will need to log back in to
@@ -582,7 +577,6 @@ const JobListing = () => {
               </p>
             </div>
 
-            {/* Modal Actions */}
             <div className="flex justify-end space-x-4">
               <button
                 onClick={closeModal}
