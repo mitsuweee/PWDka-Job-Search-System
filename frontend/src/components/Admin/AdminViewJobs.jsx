@@ -1,43 +1,45 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
 
 const AdminViewJobs = () => {
   const [jobListings, setJobListings] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false); // Control modal visibility
-  const [job, setJob] = useState(null); // Store the specific job to view
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Control sidebar visibility for mobile
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false); // Logout confirmation modal state
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch all job listings
     const config = {
       method: "get",
-      url: "http://localhost:8080/admin/view/all/joblisting/newesttooldest", // Fetch job listings from your API
+      url: "http://localhost:8080/admin/view/all/joblisting/newesttooldest",
       headers: {
         "Content-Type": "application/json",
       },
     };
 
+    setLoading(true);
     axios(config)
       .then((response) => {
-        console.log("Job Listings Response:", response);
         const jobDataArray = response.data.data;
         setJobListings(jobDataArray);
         setLoading(false);
+        toast.success("Job listings loaded successfully");
       })
       .catch((error) => {
-        console.error(error);
         setLoading(false);
+        toast.error("Failed to load job listings");
+        console.error(error);
       });
   }, []);
 
-  // Fetch and show job details in the modal
   const handleViewJob = (jobId) => {
     const config = {
       method: "get",
-      url: `http://localhost:8080/admin/view/joblisting/${jobId}`, // Fetch specific job by ID
+      url: `http://localhost:8080/admin/view/joblisting/${jobId}`,
       headers: {
         "Content-Type": "application/json",
       },
@@ -45,17 +47,16 @@ const AdminViewJobs = () => {
 
     axios(config)
       .then((response) => {
-        console.log("Job Details Response:", response);
-        const jobData = response.data.data[0]; // Assuming the job object is returned
-        setJob(formatJobData(jobData)); // Set the job details
-        setIsModalOpen(true); // Open the modal
+        const jobData = response.data.data[0];
+        setJob(formatJobData(jobData));
+        setIsModalOpen(true);
       })
       .catch((error) => {
+        toast.error("Failed to load job details");
         console.error(error);
       });
   };
 
-  // Helper function to format job data
   const formatJobData = (jobData) => {
     return {
       id: jobData.id,
@@ -71,17 +72,41 @@ const AdminViewJobs = () => {
   };
 
   const closeModal = () => {
-    setIsModalOpen(false); // Close the modal
-    setJob(null); // Clear the job details
+    setIsModalOpen(false);
+    setJob(null);
+  };
+
+  // Open logout confirmation modal
+  const handleLogout = () => {
+    setIsLogoutModalOpen(true);
+  };
+
+  // Confirm logout
+  const confirmLogout = () => {
+    sessionStorage.removeItem("Id");
+    sessionStorage.removeItem("Role");
+    sessionStorage.removeItem("Token");
+    toast.success("Logged out successfully", { position: "top-center" });
+    navigate("/login");
+    setIsLogoutModalOpen(false);
+  };
+
+  const closeLogoutModal = () => {
+    setIsLogoutModalOpen(false);
   };
 
   if (loading) {
-    return <div>Loading jobs...</div>;
+    return (
+      <div className="fixed inset-0 bg-white bg-opacity-90 flex items-center justify-center z-50">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-4 border-blue-500"></div>
+      </div>
+    );
   }
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-blue-100">
-      {/* Sidebar */}
+      <Toaster position="top-center" reverseOrder={false} />
+
       <aside
         className={`bg-custom-blue w-full md:w-[300px] lg:w-[250px] p-4 flex flex-col items-center md:relative fixed top-0 left-0 min-h-screen h-full transition-transform transform ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
@@ -98,9 +123,6 @@ const AdminViewJobs = () => {
         <a
           href="/admin/dashboard"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
-          }}
         >
           <span className="material-symbols-outlined text-xl mr-4">home</span>
           <span className="flex-grow text-center">Home</span>
@@ -109,9 +131,6 @@ const AdminViewJobs = () => {
         <a
           href="/admin/dashboard/VerifyUsers"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
-          }}
         >
           <span className="material-symbols-outlined text-xl mr-4">
             group_add
@@ -122,9 +141,6 @@ const AdminViewJobs = () => {
         <a
           href="/admin/dashboard/VerifyComps"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
-          }}
         >
           <span className="material-symbols-outlined text-xl mr-4">
             apartment
@@ -135,9 +151,6 @@ const AdminViewJobs = () => {
         <a
           href="/admin/dashboard/ViewUsers"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
-          }}
         >
           <span className="material-symbols-outlined text-xl mr-4">group</span>
           <span className="flex-grow text-center">View All Applicants</span>
@@ -146,9 +159,6 @@ const AdminViewJobs = () => {
         <a
           href="/admin/dashboard/ViewCompany"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
-          }}
         >
           <span className="material-symbols-outlined text-xl mr-4">
             source_environment
@@ -159,9 +169,6 @@ const AdminViewJobs = () => {
         <a
           href="/admin/dashboard/ViewJobs"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
-          }}
         >
           <span className="material-symbols-outlined text-xl mr-4">work</span>
           <span className="flex-grow text-center">View All Job Listings</span>
@@ -169,12 +176,7 @@ const AdminViewJobs = () => {
 
         <button
           className="bg-red-600 text-white rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-red-500 transition-all duration-200 ease-in-out mt-6"
-          onClick={() => {
-            sessionStorage.removeItem("Id");
-            sessionStorage.removeItem("Role");
-            sessionStorage.removeItem("Token");
-            navigate("/login");
-          }}
+          onClick={handleLogout}
         >
           Logout
         </button>
@@ -197,9 +199,9 @@ const AdminViewJobs = () => {
         </h1>
 
         <div className="overflow-x-auto">
-          <table className="min-w-full bg-white mt-4">
+          <table className="min-w-full bg-white mt-4 rounded-lg shadow-lg">
             <thead>
-              <tr className="w-full bg-blue-500 text-white">
+              <tr className="bg-blue-500 text-white">
                 <th className="py-2 px-4">Company</th>
                 <th className="py-2 px-4">Job Title</th>
                 <th className="py-2 px-4">Actions</th>
@@ -207,13 +209,16 @@ const AdminViewJobs = () => {
             </thead>
             <tbody>
               {jobListings.map((job) => (
-                <tr key={job.id} className="border-b">
+                <tr
+                  key={job.id}
+                  className="border-b hover:bg-gray-100 transition-all"
+                >
                   <td className="py-2 px-4">{job.company_name}</td>
                   <td className="py-2 px-4">{job.position_name}</td>
                   <td className="py-2 px-4 flex">
                     <button
                       onClick={() => handleViewJob(job.id)}
-                      className="bg-blue-500 text-white px-2 py-1 rounded mr-2 hover:bg-blue-700"
+                      className="bg-blue-500 text-white px-2 py-1 rounded mr-2 hover:bg-blue-700 shadow-md"
                     >
                       View
                     </button>
@@ -286,13 +291,64 @@ const AdminViewJobs = () => {
               </div>
             </div>
 
-            {/* Buttons for Back */}
             <div className="mt-6 text-center space-x-4">
               <button
                 className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
-                onClick={closeModal} // Close modal
+                onClick={closeModal}
               >
                 Back
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Logout Confirmation Modal */}
+      {isLogoutModalOpen && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
+            <div className="flex justify-between items-center border-b pb-3 mb-4">
+              <h2 className="text-2xl font-semibold text-gray-800">
+                Logout Confirmation
+              </h2>
+              <button
+                onClick={closeLogoutModal}
+                className="text-gray-500 hover:text-gray-800 transition duration-200"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div className="mb-6">
+              <p className="text-lg text-gray-600">
+                Are you sure you want to log out?
+              </p>
+            </div>
+
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={closeLogoutModal}
+                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-200"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmLogout}
+                className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
+              >
+                Logout
               </button>
             </div>
           </div>

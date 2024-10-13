@@ -1,22 +1,32 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
 
 const AdminVerifyUsers = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [users, setUsers] = useState([]); // Store all users
-  const [selectedUser, setSelectedUser] = useState(null); // Store selected user for viewing in the modal
-  const [showModal, setShowModal] = useState(false); // State to show/hide modal
+  const [users, setUsers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false); // State for logout confirmation modal
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    const confirmed = window.confirm("Are you sure you want to logout?");
-    if (confirmed) {
-      sessionStorage.removeItem("Id");
-      sessionStorage.removeItem("Role");
-      sessionStorage.removeItem("Token");
-      navigate("/login");
-    }
+    setIsLogoutModalOpen(true); // Open logout confirmation modal
+  };
+
+  const confirmLogout = () => {
+    sessionStorage.removeItem("Id");
+    sessionStorage.removeItem("Role");
+    sessionStorage.removeItem("Token");
+    toast.success("Logged out successfully", { position: "top-center" });
+    navigate("/login");
+    setIsLogoutModalOpen(false); // Close the modal
+  };
+
+  const closeLogoutModal = () => {
+    setIsLogoutModalOpen(false); // Close the logout confirmation modal
   };
 
   const handleGoBack = () => {
@@ -33,17 +43,21 @@ const AdminVerifyUsers = () => {
       },
     };
 
+    setLoading(true);
     axios(config)
       .then(function (response) {
-        const userDataArray = response.data.data; // Assuming you get an array of users
+        const userDataArray = response.data.data;
         setUsers(userDataArray);
+        setLoading(false);
+        toast.success("Users loaded successfully");
       })
       .catch(function (error) {
+        setLoading(false);
+        toast.error("Failed to load users");
         console.log(error);
       });
   }, []);
 
-  // Helper function to format user data
   const formatUserData = (userData) => {
     return {
       id: userData.id,
@@ -70,16 +84,19 @@ const AdminVerifyUsers = () => {
       },
     };
 
+    setLoading(true);
     axios(config)
-      .then(function (response) {
-        alert("User approved successfully!");
+      .then(function () {
+        toast.success("User approved successfully");
         setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
-        setSelectedUser(null); // Clear selected user
-        setShowModal(false); // Close modal
+        setSelectedUser(null);
+        setShowModal(false);
+        setLoading(false);
       })
       .catch(function (error) {
+        setLoading(false);
+        toast.error("An error occurred while approving the user");
         console.log(error);
-        alert("An error occurred while approving the user.");
       });
   };
 
@@ -92,27 +109,36 @@ const AdminVerifyUsers = () => {
       },
     };
 
+    setLoading(true);
     axios(config)
-      .then(function (response) {
-        alert("User declined successfully!");
+      .then(function () {
+        toast.success("User declined successfully");
         setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
-        setSelectedUser(null); // Clear selected user
-        setShowModal(false); // Close modal
+        setSelectedUser(null);
+        setShowModal(false);
+        setLoading(false);
       })
       .catch(function (error) {
+        setLoading(false);
+        toast.error("An error occurred while declining the user");
         console.log(error);
-        alert("An error occurred while declining the user.");
       });
   };
 
   const handleView = (user) => {
-    setSelectedUser(formatUserData(user)); // Set formatted user data for display
-    setShowModal(true); // Open the modal
+    setSelectedUser(formatUserData(user));
+    setShowModal(true);
   };
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-blue-100">
-      {/* Sidebar */}
+      <Toaster position="top-center" reverseOrder={false} />
+      {loading && (
+        <div className="fixed inset-0 bg-white bg-opacity-90 flex items-center justify-center z-50">
+          <div className="animate-spin rounded-full h-32 w-32 border-t-4 border-blue-500"></div>
+        </div>
+      )}
+
       <aside
         className={`bg-custom-blue w-full md:w-[300px] lg:w-[250px] p-4 flex flex-col items-center md:relative fixed top-0 left-0 min-h-screen h-full transition-transform transform ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
@@ -125,13 +151,9 @@ const AdminVerifyUsers = () => {
           &times;
         </button>
 
-        {/* Sidebar Content */}
         <a
           href="/admin/dashboard"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
-          }}
         >
           <span className="material-symbols-outlined text-xl mr-4">home</span>
           <span className="flex-grow text-center">Home</span>
@@ -140,9 +162,6 @@ const AdminVerifyUsers = () => {
         <a
           href="/admin/dashboard/VerifyUsers"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
-          }}
         >
           <span className="material-symbols-outlined text-xl mr-4">
             group_add
@@ -153,9 +172,6 @@ const AdminVerifyUsers = () => {
         <a
           href="/admin/dashboard/VerifyComps"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
-          }}
         >
           <span className="material-symbols-outlined text-xl mr-4">
             apartment
@@ -166,9 +182,6 @@ const AdminVerifyUsers = () => {
         <a
           href="/admin/dashboard/ViewUsers"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
-          }}
         >
           <span className="material-symbols-outlined text-xl mr-4">group</span>
           <span className="flex-grow text-center">View All Applicants</span>
@@ -177,9 +190,6 @@ const AdminVerifyUsers = () => {
         <a
           href="/admin/dashboard/ViewCompany"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
-          }}
         >
           <span className="material-symbols-outlined text-xl mr-4">
             source_environment
@@ -190,9 +200,6 @@ const AdminVerifyUsers = () => {
         <a
           href="/admin/dashboard/ViewJobs"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
-          }}
         >
           <span className="material-symbols-outlined text-xl mr-4">work</span>
           <span className="flex-grow text-center">View All Job Listings</span>
@@ -206,7 +213,6 @@ const AdminVerifyUsers = () => {
         </button>
       </aside>
 
-      {/* Mobile Toggle Button */}
       <button
         className={`md:hidden bg-custom-blue text-white p-4 fixed top-4 left-4 z-50 rounded-xl mt-11 transition-transform ${
           isSidebarOpen ? "hidden" : ""
@@ -216,7 +222,6 @@ const AdminVerifyUsers = () => {
         &#9776;
       </button>
 
-      {/* Main Content */}
       <main className="flex-grow p-8 bg-custom-bg">
         <div className="flex justify-between items-center">
           <button
@@ -274,10 +279,9 @@ const AdminVerifyUsers = () => {
             <p className="text-center text-gray-500">No users to verify yet.</p>
           )}
 
-          {/* Modal for viewing user details */}
           {selectedUser && showModal && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-              <div className="bg-white rounded-lg p-6 max-w-2xl w-full shadow-lg">
+              <div className="bg-white rounded-lg p-6 max-w-2xl w-full shadow-lg hover:shadow-2xl transition-shadow duration-300">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-xl font-bold">User Details</h3>
                   <button
@@ -291,7 +295,7 @@ const AdminVerifyUsers = () => {
                   <img
                     src={selectedUser.profilePicture}
                     alt={selectedUser.fullName}
-                    className="w-32 h-32 rounded-full border-2 border-gray-300"
+                    className="w-32 h-32 rounded-full border-2 border-gray-300 hover:shadow-lg transition-shadow duration-300"
                   />
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -331,14 +335,14 @@ const AdminVerifyUsers = () => {
                     <img
                       src={selectedUser.pictureWithId}
                       alt="Picture with ID"
-                      className="w-full h-auto rounded-lg shadow-lg"
+                      className="w-full h-auto rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
                     />
                   </div>
                   <div>
                     <img
                       src={selectedUser.pictureOfPwdId}
                       alt="Picture of PWD ID"
-                      className="w-full h-auto rounded-lg shadow-lg"
+                      className="w-full h-auto rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
                     />
                   </div>
                 </div>
@@ -361,6 +365,57 @@ const AdminVerifyUsers = () => {
           )}
         </div>
       </main>
+
+      {isLogoutModalOpen && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
+            <div className="flex justify-between items-center border-b pb-3 mb-4">
+              <h2 className="text-2xl font-semibold text-gray-800">
+                Logout Confirmation
+              </h2>
+              <button
+                onClick={closeLogoutModal}
+                className="text-gray-500 hover:text-gray-800 transition duration-200"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div className="mb-6">
+              <p className="text-lg text-gray-600">
+                Are you sure you want to log out?
+              </p>
+            </div>
+
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={closeLogoutModal}
+                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-200"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmLogout}
+                className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

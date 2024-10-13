@@ -1,26 +1,37 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
 
 const AdminVerifyComp = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [companies, setCompanies] = useState([]); // Store all companies
-  const [selectedCompany, setSelectedCompany] = useState(null); // Store selected company for viewing in the modal
-  const [showModal, setShowModal] = useState(false); // State to show/hide modal
+  const [companies, setCompanies] = useState([]);
+  const [selectedCompany, setSelectedCompany] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [actionInProgress, setActionInProgress] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false); // State for logout confirmation modal
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    const confirmed = window.confirm("Are you sure you want to logout?");
-    if (confirmed) {
-      sessionStorage.removeItem("Id");
-      sessionStorage.removeItem("Role");
-      sessionStorage.removeItem("Token");
-      navigate("/login");
-    }
+    setIsLogoutModalOpen(true); // Open logout confirmation modal
+  };
+
+  const confirmLogout = () => {
+    sessionStorage.removeItem("Id");
+    sessionStorage.removeItem("Role");
+    sessionStorage.removeItem("Token");
+    toast.success("Logged out successfully", { position: "top-center" });
+    navigate("/login");
+    setIsLogoutModalOpen(false); // Close the modal
+  };
+
+  const closeLogoutModal = () => {
+    setIsLogoutModalOpen(false); // Close the logout confirmation modal
   };
 
   const handleGoBack = () => {
-    navigate(-1); // This navigates back to the previous page
+    navigate(-1);
   };
 
   useEffect(() => {
@@ -32,17 +43,21 @@ const AdminVerifyComp = () => {
       },
     };
 
+    setLoading(true); // Show loader for initial loading
     axios(config)
       .then(function (response) {
         const companyDataArray = response.data.data;
         setCompanies(companyDataArray);
+        setLoading(false); // Hide loader after data is loaded
+        toast.success("Companies loaded successfully");
       })
       .catch(function (error) {
+        setLoading(false); // Hide loader on error
+        toast.error("Failed to load companies");
         console.log(error);
       });
   }, []);
 
-  // Helper function to format company data
   const formatCompanyData = (companyData) => {
     return {
       id: companyData.id,
@@ -52,11 +67,13 @@ const AdminVerifyComp = () => {
       companyDescription: companyData.description,
       contactNumber: companyData.contact_number,
       companyEmail: companyData.email,
-      companyLogo: `data:image/png;base64,${companyData.profile_picture}`, // Assuming logo is in base64 format
+      companyLogo: `data:image/png;base64,${companyData.profile_picture}`,
     };
   };
 
   const handleApprove = (companyId) => {
+    if (actionInProgress) return; // Prevent multiple actions
+    setActionInProgress(true);
     const config = {
       method: "put",
       url: `http://localhost:8080/verification/company/${companyId}`,
@@ -65,22 +82,31 @@ const AdminVerifyComp = () => {
       },
     };
 
+    setLoading(true); // Show loader while approving
     axios(config)
-      .then(function (response) {
-        alert("Company approved successfully!");
+      .then(function () {
+        toast.success("Company approved successfully");
+
         setCompanies((prevCompanies) =>
           prevCompanies.filter((company) => company.id !== companyId)
         );
+
         setSelectedCompany(null); // Clear selected company
         setShowModal(false); // Close modal
+        setLoading(false); // Hide loader after action
+        setActionInProgress(false); // Allow further actions
       })
       .catch(function (error) {
+        setLoading(false); // Hide loader on error
+        setActionInProgress(false); // Allow further actions
+        toast.error("An error occurred while approving the company");
         console.log(error);
-        alert("An error occurred while approving the company.");
       });
   };
 
   const handleDecline = (companyId) => {
+    if (actionInProgress) return; // Prevent multiple actions
+    setActionInProgress(true);
     const config = {
       method: "delete",
       url: `http://localhost:8080/verification/company/${companyId}`,
@@ -89,18 +115,25 @@ const AdminVerifyComp = () => {
       },
     };
 
+    setLoading(true); // Show loader while declining
     axios(config)
-      .then(function (response) {
-        alert("Company declined successfully!");
+      .then(function () {
+        toast.success("Company declined successfully");
+
         setCompanies((prevCompanies) =>
           prevCompanies.filter((company) => company.id !== companyId)
         );
+
         setSelectedCompany(null); // Clear selected company
         setShowModal(false); // Close modal
+        setLoading(false); // Hide loader after action
+        setActionInProgress(false); // Allow further actions
       })
       .catch(function (error) {
+        setLoading(false); // Hide loader on error
+        setActionInProgress(false); // Allow further actions
+        toast.error("An error occurred while declining the company");
         console.log(error);
-        alert("An error occurred while declining the company.");
       });
   };
 
@@ -109,9 +142,20 @@ const AdminVerifyComp = () => {
     setShowModal(true); // Open the modal
   };
 
+  const closeModal = () => {
+    setShowModal(false); // Close modal
+    setSelectedCompany(null); // Clear selected company details
+  };
+
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-blue-100">
-      {/* Sidebar */}
+      <Toaster position="top-center" reverseOrder={false} />
+      {loading && (
+        <div className="fixed inset-0 bg-white bg-opacity-90 flex items-center justify-center z-50">
+          <div className="animate-spin rounded-full h-32 w-32 border-t-4 border-blue-500"></div>
+        </div>
+      )}
+
       <aside
         className={`bg-custom-blue w-full md:w-[300px] lg:w-[250px] p-4 flex flex-col items-center md:relative fixed top-0 left-0 min-h-screen h-full transition-transform transform ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
@@ -124,13 +168,9 @@ const AdminVerifyComp = () => {
           &times;
         </button>
 
-        {/* Sidebar Content */}
         <a
           href="/admin/dashboard"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
-          }}
         >
           <span className="material-symbols-outlined text-xl mr-4">home</span>
           <span className="flex-grow text-center">Home</span>
@@ -139,9 +179,6 @@ const AdminVerifyComp = () => {
         <a
           href="/admin/dashboard/VerifyUsers"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
-          }}
         >
           <span className="material-symbols-outlined text-xl mr-4">
             group_add
@@ -152,9 +189,6 @@ const AdminVerifyComp = () => {
         <a
           href="/admin/dashboard/VerifyComps"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
-          }}
         >
           <span className="material-symbols-outlined text-xl mr-4">
             apartment
@@ -165,9 +199,6 @@ const AdminVerifyComp = () => {
         <a
           href="/admin/dashboard/ViewUsers"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
-          }}
         >
           <span className="material-symbols-outlined text-xl mr-4">group</span>
           <span className="flex-grow text-center">View All Applicants</span>
@@ -176,9 +207,6 @@ const AdminVerifyComp = () => {
         <a
           href="/admin/dashboard/ViewCompany"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
-          }}
         >
           <span className="material-symbols-outlined text-xl mr-4">
             source_environment
@@ -189,9 +217,6 @@ const AdminVerifyComp = () => {
         <a
           href="/admin/dashboard/ViewJobs"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
-          }}
         >
           <span className="material-symbols-outlined text-xl mr-4">work</span>
           <span className="flex-grow text-center">View All Job Listings</span>
@@ -205,7 +230,6 @@ const AdminVerifyComp = () => {
         </button>
       </aside>
 
-      {/* Mobile Toggle Button */}
       <button
         className={`md:hidden bg-custom-blue text-white p-4 fixed top-4 left-4 z-50 rounded-xl mt-11 transition-transform ${
           isSidebarOpen ? "hidden" : ""
@@ -215,7 +239,6 @@ const AdminVerifyComp = () => {
         &#9776;
       </button>
 
-      {/* Main Content */}
       <main className="flex-grow p-8 bg-custom-bg">
         <div className="flex justify-between items-center">
           <button
@@ -244,19 +267,34 @@ const AdminVerifyComp = () => {
                       <td className="py-2 px-4 border">{company.city}</td>
                       <td className="py-2 px-4 border text-center">
                         <button
-                          className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2 hover:bg-blue-600"
+                          disabled={actionInProgress}
+                          className={`bg-blue-500 text-white px-4 py-2 rounded-md mr-2 hover:bg-blue-600 ${
+                            actionInProgress
+                              ? "opacity-50 cursor-not-allowed"
+                              : ""
+                          }`}
                           onClick={() => handleView(company)}
                         >
                           View
                         </button>
                         <button
-                          className="bg-green-500 text-white px-4 py-2 rounded-md mr-2 hover:bg-green-600"
+                          disabled={actionInProgress}
+                          className={`bg-green-500 text-white px-4 py-2 rounded-md mr-2 hover:bg-green-600 ${
+                            actionInProgress
+                              ? "opacity-50 cursor-not-allowed"
+                              : ""
+                          }`}
                           onClick={() => handleApprove(company.id)}
                         >
                           Approve
                         </button>
                         <button
-                          className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+                          disabled={actionInProgress}
+                          className={`bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 ${
+                            actionInProgress
+                              ? "opacity-50 cursor-not-allowed"
+                              : ""
+                          }`}
                           onClick={() => handleDecline(company.id)}
                         >
                           Decline
@@ -273,7 +311,6 @@ const AdminVerifyComp = () => {
             </p>
           )}
 
-          {/* Modal for viewing company details */}
           {selectedCompany && showModal && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
               <div className="bg-white rounded-lg p-6 max-w-2xl w-full shadow-lg">
@@ -281,7 +318,7 @@ const AdminVerifyComp = () => {
                   <h3 className="text-xl font-bold">Company Details</h3>
                   <button
                     className="text-gray-500 hover:text-gray-700"
-                    onClick={() => setShowModal(false)}
+                    onClick={closeModal}
                   >
                     &times;
                   </button>
@@ -338,6 +375,57 @@ const AdminVerifyComp = () => {
           )}
         </div>
       </main>
+
+      {isLogoutModalOpen && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
+            <div className="flex justify-between items-center border-b pb-3 mb-4">
+              <h2 className="text-2xl font-semibold text-gray-800">
+                Logout Confirmation
+              </h2>
+              <button
+                onClick={closeLogoutModal}
+                className="text-gray-500 hover:text-gray-800 transition duration-200"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div className="mb-6">
+              <p className="text-lg text-gray-600">
+                Are you sure you want to log out?
+              </p>
+            </div>
+
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={closeLogoutModal}
+                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-200"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmLogout}
+                className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

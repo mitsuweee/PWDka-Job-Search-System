@@ -11,6 +11,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import toast, { Toaster } from "react-hot-toast";
 
 // Register the required chart components
 ChartJS.register(
@@ -32,7 +33,7 @@ const AdminDashboard = () => {
     total_job_listings: 0,
     total_job_application: 0,
   });
-
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false); // State for logout confirmation modal
   const navigate = useNavigate();
 
   // Fetch all counts from the backend when the component mounts
@@ -59,16 +60,23 @@ const AdminDashboard = () => {
   }, []);
 
   const handleLogout = () => {
-    const confirmed = window.confirm("Are you sure you want to logout?");
-    if (confirmed) {
-      sessionStorage.removeItem("Id");
-      sessionStorage.removeItem("Role");
-      sessionStorage.removeItem("Token");
-      navigate("/login");
-    }
+    setIsLogoutModalOpen(true); // Open logout confirmation modal
   };
 
-  // Data for the bar chart with solid colors
+  const confirmLogout = () => {
+    sessionStorage.removeItem("Id");
+    sessionStorage.removeItem("Role");
+    sessionStorage.removeItem("Token");
+    toast.success("Logged out successfully", { position: "top-center" });
+    navigate("/login");
+    setIsLogoutModalOpen(false); // Close the modal
+  };
+
+  const closeLogoutModal = () => {
+    setIsLogoutModalOpen(false); // Close logout confirmation modal
+  };
+
+  // Data for the bar chart
   const barChartData = {
     labels: [
       "Verified Users",
@@ -130,6 +138,8 @@ const AdminDashboard = () => {
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-blue-100">
+      <Toaster position="top-center" reverseOrder={false} />
+
       {/* Sidebar */}
       <aside
         className={`bg-custom-blue w-full md:w-[300px] lg:w-[250px] p-4 flex flex-col items-center md:relative fixed top-0 left-0 min-h-screen h-full transition-transform transform ${
@@ -153,7 +163,6 @@ const AdminDashboard = () => {
           <span className="flex-grow text-center">Home</span>
         </a>
 
-        {/* Add additional sidebar links here */}
         <a
           href="/admin/dashboard/VerifyUsers"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
@@ -171,7 +180,7 @@ const AdminDashboard = () => {
           <span className="material-symbols-outlined text-xl mr-4">
             apartment
           </span>
-          <span className="flex-grow text-center">Verify Company</span>
+          <span className="flex-grow text-center">Verify Companies</span>
         </a>
 
         <a
@@ -286,6 +295,58 @@ const AdminDashboard = () => {
           </div>
         </div>
       </main>
+
+      {/* Logout Confirmation Modal */}
+      {isLogoutModalOpen && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
+            <div className="flex justify-between items-center border-b pb-3 mb-4">
+              <h2 className="text-2xl font-semibold text-gray-800">
+                Logout Confirmation
+              </h2>
+              <button
+                onClick={closeLogoutModal}
+                className="text-gray-500 hover:text-gray-800 transition duration-200"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div className="mb-6">
+              <p className="text-lg text-gray-600">
+                Are you sure you want to log out?
+              </p>
+            </div>
+
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={closeLogoutModal}
+                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-200"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmLogout}
+                className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

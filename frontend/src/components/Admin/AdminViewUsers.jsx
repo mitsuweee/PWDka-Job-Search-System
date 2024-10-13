@@ -1,59 +1,67 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
 
 const AdminViewUsers = () => {
   const [users, setUsers] = useState([]);
+  const [user, setUser] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false); // Control modal visibility
-  const [user, setUser] = useState(null); // Store the specific user to view
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Control sidebar visibility for mobile
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [deleteUserId, setDeleteUserId] = useState(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false); // State for logout confirmation modal
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch all users
     const config = {
       method: "get",
-      url: "http://localhost:8080/admin/view/users", // Fetch users from your API
+      url: "http://localhost:8080/admin/view/users",
       headers: {
         "Content-Type": "application/json",
       },
     };
 
+    setLoading(true);
     axios(config)
       .then((response) => {
         const userDataArray = response.data.data;
         setUsers(userDataArray);
         setLoading(false);
+        toast.success("Users loaded successfully");
       })
       .catch((error) => {
-        console.error(error);
         setLoading(false);
+        toast.error("Failed to load users");
+        console.error(error);
       });
   }, []);
 
-  // Fetch and show user details in the modal
   const handleViewUser = (userId) => {
     const config = {
       method: "get",
-      url: `http://localhost:8080/user/view/${userId}`, // Fetch specific user by ID
+      url: `http://localhost:8080/user/view/${userId}`,
       headers: {
         "Content-Type": "application/json",
       },
     };
 
+    setLoading(true);
     axios(config)
       .then((response) => {
-        const userData = response.data.data; // Assuming the user object is returned
-        setUser(formatUserData(userData)); // Set the user details
-        setIsModalOpen(true); // Open the modal
+        const userData = response.data.data;
+        setUser(formatUserData(userData));
+        setIsModalOpen(true);
+        setLoading(false);
       })
       .catch((error) => {
+        setLoading(false);
+        toast.error("Failed to load user details");
         console.error(error);
       });
   };
 
-  // Helper function to format user data
   const formatUserData = (userData) => {
     return {
       id: userData.id,
@@ -70,45 +78,75 @@ const AdminViewUsers = () => {
     };
   };
 
-  // Handle delete user
-  const handleDeleteUser = (id) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this user?"
-    );
-    if (confirmed) {
-      const config = {
-        method: "delete",
-        url: `http://localhost:8080/admin/delete/user/${id}`, // Use appropriate API endpoint for deleting a user
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
+  const handleDeleteUser = (userId) => {
+    setDeleteUserId(userId);
+    setIsDeleteModalOpen(true);
+  };
 
-      axios(config)
-        .then((response) => {
-          alert("User deleted successfully!");
-          // Remove the deleted user from the state to update the UI
-          setUsers((prevUsers) => prevUsers.filter((user) => user.id !== id));
-        })
-        .catch((error) => {
-          console.error(error);
-          alert("An error occurred while deleting the user.");
+  const confirmDelete = () => {
+    const config = {
+      method: "delete",
+      url: `http://localhost:8080/admin/delete/user/${deleteUserId}`,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    setLoading(true);
+    axios(config)
+      .then(() => {
+        toast.success("User deleted successfully", { position: "top-center" });
+        setUsers((prevUsers) =>
+          prevUsers.filter((user) => user.id !== deleteUserId)
+        );
+        setLoading(false);
+        setIsDeleteModalOpen(false);
+      })
+      .catch((error) => {
+        setLoading(false);
+        toast.error("An error occurred while deleting the user", {
+          position: "top-center",
         });
-    }
+        setIsDeleteModalOpen(false);
+        console.error(error);
+      });
   };
 
   const closeModal = () => {
-    setIsModalOpen(false); // Close the modal
-    setUser(null); // Clear the user details
+    setIsModalOpen(false);
+    setUser(null);
   };
 
-  if (loading) {
-    return <div>Loading users...</div>;
-  }
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+  };
+
+  const handleLogout = () => {
+    setIsLogoutModalOpen(true);
+  };
+
+  const confirmLogout = () => {
+    sessionStorage.removeItem("Id");
+    sessionStorage.removeItem("Role");
+    sessionStorage.removeItem("Token");
+    toast.success("Logged out successfully", { position: "top-center" });
+    navigate("/login");
+    setIsLogoutModalOpen(false);
+  };
+
+  const closeLogoutModal = () => {
+    setIsLogoutModalOpen(false);
+  };
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-blue-100">
-      {/* Sidebar */}
+      <Toaster position="top-center" reverseOrder={false} />
+      {loading && (
+        <div className="fixed inset-0 bg-white bg-opacity-90 flex items-center justify-center z-50">
+          <div className="animate-spin rounded-full h-32 w-32 border-t-4 border-blue-500"></div>
+        </div>
+      )}
+
       <aside
         className={`bg-custom-blue w-full md:w-[300px] lg:w-[250px] p-4 flex flex-col items-center md:relative fixed top-0 left-0 min-h-screen h-full transition-transform transform ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
@@ -121,13 +159,9 @@ const AdminViewUsers = () => {
           &times;
         </button>
 
-        {/* Sidebar Content */}
         <a
           href="/admin/dashboard"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
-          }}
         >
           <span className="material-symbols-outlined text-xl mr-4">home</span>
           <span className="flex-grow text-center">Home</span>
@@ -136,9 +170,6 @@ const AdminViewUsers = () => {
         <a
           href="/admin/dashboard/VerifyUsers"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
-          }}
         >
           <span className="material-symbols-outlined text-xl mr-4">
             group_add
@@ -149,9 +180,6 @@ const AdminViewUsers = () => {
         <a
           href="/admin/dashboard/VerifyComps"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
-          }}
         >
           <span className="material-symbols-outlined text-xl mr-4">
             apartment
@@ -162,9 +190,6 @@ const AdminViewUsers = () => {
         <a
           href="/admin/dashboard/ViewUsers"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
-          }}
         >
           <span className="material-symbols-outlined text-xl mr-4">group</span>
           <span className="flex-grow text-center">View All Applicants</span>
@@ -173,9 +198,6 @@ const AdminViewUsers = () => {
         <a
           href="/admin/dashboard/ViewCompany"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
-          }}
         >
           <span className="material-symbols-outlined text-xl mr-4">
             source_environment
@@ -186,9 +208,6 @@ const AdminViewUsers = () => {
         <a
           href="/admin/dashboard/ViewJobs"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
-          }}
         >
           <span className="material-symbols-outlined text-xl mr-4">work</span>
           <span className="flex-grow text-center">View All Job Listings</span>
@@ -196,18 +215,12 @@ const AdminViewUsers = () => {
 
         <button
           className="bg-red-600 text-white rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-red-500 transition-all duration-200 ease-in-out mt-6"
-          onClick={() => {
-            sessionStorage.removeItem("Id");
-            sessionStorage.removeItem("Role");
-            sessionStorage.removeItem("Token");
-            navigate("/login");
-          }}
+          onClick={handleLogout}
         >
           Logout
         </button>
       </aside>
 
-      {/* Mobile Toggle Button */}
       <button
         className={`md:hidden bg-custom-blue text-white p-4 fixed top-4 left-4 z-50 rounded-xl mt-11 transition-transform ${
           isSidebarOpen ? "hidden" : ""
@@ -217,14 +230,13 @@ const AdminViewUsers = () => {
         &#9776;
       </button>
 
-      {/* Main Content */}
       <main className="flex-grow p-8">
         <h1 className="text-xl font-bold text-gray-700">
           View All Verified Users
         </h1>
 
         <div className="overflow-x-auto">
-          <table className="min-w-full bg-white mt-4">
+          <table className="min-w-full bg-white mt-4 rounded-lg shadow-lg">
             <thead>
               <tr className="w-full bg-blue-500 text-white">
                 <th className="py-2 px-4">ID</th>
@@ -235,19 +247,19 @@ const AdminViewUsers = () => {
             </thead>
             <tbody>
               {users.map((user) => (
-                <tr key={user.id} className="border-b">
+                <tr key={user.id} className="border-b hover:bg-gray-100">
                   <td className="py-2 px-4">{user.id}</td>
                   <td className="py-2 px-4">{user.full_name}</td>
                   <td className="py-2 px-4">{user.type}</td>
                   <td className="py-2 px-4 flex">
                     <button
-                      onClick={() => handleViewUser(user.id)} // Pass user ID when clicking "View"
+                      onClick={() => handleViewUser(user.id)}
                       className="bg-blue-500 text-white px-2 py-1 rounded mr-2 hover:bg-blue-700"
                     >
                       View
                     </button>
                     <button
-                      onClick={() => handleDeleteUser(user.id)} // Delete user when clicking "Delete"
+                      onClick={() => handleDeleteUser(user.id)}
                       className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-700"
                     >
                       Delete
@@ -260,10 +272,9 @@ const AdminViewUsers = () => {
         </div>
       </main>
 
-      {/* Modal for viewing user details */}
       {isModalOpen && user && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white w-11/12 md:max-w-3xl p-6 rounded-lg shadow-lg">
+          <div className="bg-white w-11/12 md:max-w-xl p-6 rounded-lg shadow-lg">
             <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-gray-800 text-center">
               User Details
             </h2>
@@ -331,36 +342,115 @@ const AdminViewUsers = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 text-left text-gray-800 w-full mt-6">
-              <div>
-                <p className="font-semibold text-base sm:text-lg">
-                  Picture with ID:
-                </p>
-                <img
-                  src={user.pictureWithId}
-                  alt="Picture with ID"
-                  className="w-full h-auto rounded-lg shadow-lg"
-                />
-              </div>
-              <div>
-                <p className="font-semibold text-base sm:text-lg">
-                  Picture of PWD ID:
-                </p>
-                <img
-                  src={user.pictureOfPwdId}
-                  alt="Picture of PWD ID"
-                  className="w-full h-auto rounded-lg shadow-lg"
-                />
-              </div>
-            </div>
-
-            {/* Buttons for Back */}
             <div className="mt-6 text-center space-x-4">
               <button
                 className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
-                onClick={closeModal} // Close modal
+                onClick={closeModal}
               >
                 Back
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {isDeleteModalOpen && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
+            <div className="flex justify-between items-center border-b pb-3 mb-4">
+              <h2 className="text-2xl font-semibold text-gray-800">
+                Delete Confirmation
+              </h2>
+              <button
+                onClick={closeDeleteModal}
+                className="text-gray-500 hover:text-gray-800 transition duration-200"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div className="mb-6">
+              <p className="text-lg text-gray-600">
+                Are you sure you want to delete this user? This action cannot be
+                undone.
+              </p>
+            </div>
+
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={closeDeleteModal}
+                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-200"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDelete}
+                className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {isLogoutModalOpen && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
+            <div className="flex justify-between items-center border-b pb-3 mb-4">
+              <h2 className="text-2xl font-semibold text-gray-800">
+                Logout Confirmation
+              </h2>
+              <button
+                onClick={closeLogoutModal}
+                className="text-gray-500 hover:text-gray-800 transition duration-200"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div className="mb-6">
+              <p className="text-lg text-gray-600">
+                Are you sure you want to log out?
+              </p>
+            </div>
+
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={closeLogoutModal}
+                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-200"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmLogout}
+                className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
+              >
+                Logout
               </button>
             </div>
           </div>
