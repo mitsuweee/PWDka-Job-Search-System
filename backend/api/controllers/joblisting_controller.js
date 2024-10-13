@@ -432,6 +432,8 @@ const updateJobListing = async (req, res, next) => {
     !description ||
     !qualification ||
     !requirement ||
+    !minimum_salary ||
+    !maximum_salary ||
     !positiontype_id
   ) {
     return res.status(400).json({
@@ -479,6 +481,7 @@ const updateJobListing = async (req, res, next) => {
       requirement,
       minimum_salary,
       maximum_salary,
+      positiontype_id,
     });
 
     if (result === 0) {
