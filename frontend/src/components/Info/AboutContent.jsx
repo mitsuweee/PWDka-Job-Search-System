@@ -4,7 +4,7 @@ import axios from "axios";
 const AboutContent = () => {
   const sections = useRef([]);
   const [isVoiceEnabled, setIsVoiceEnabled] = useState(false);
-  const [userDisabilityType, setUserDisabilityType] = useState(""); // State for disability type
+  const [userDisabilityType, setUserDisabilityType] = useState("");
 
   useEffect(() => {
     const userId = sessionStorage.getItem("Id");
@@ -14,7 +14,7 @@ const AboutContent = () => {
         .get(`/user/view/${userId}`)
         .then((response) => {
           const userData = response.data.data;
-          setUserDisabilityType(userData.type); // Assuming 'type' is the disability type in the response
+          setUserDisabilityType(userData.type);
         })
         .catch((error) => {
           console.error("Error fetching user data:", error.response?.data);
@@ -24,58 +24,44 @@ const AboutContent = () => {
     fetchUserDetails();
   }, []);
 
-  // Function to play the About Us message
   const playAboutMessage = () => {
     const message = new SpeechSynthesisUtterance(
       "This is the About Us page where you’ll discover the heart and soul of PWDKa. Join us as we turn possibilities into realities, one opportunity at a time."
     );
-    message.lang = "en-US"; // Set the language to English (US)
+    message.lang = "en-US";
     speechSynthesis.speak(message);
   };
 
-  // Toggle voice message
   const handleToggleVoice = () => {
     setIsVoiceEnabled(!isVoiceEnabled);
     if (!isVoiceEnabled) {
       playAboutMessage();
     } else {
-      speechSynthesis.cancel(); // Stop any ongoing speech
+      speechSynthesis.cancel();
     }
   };
 
   return (
     <div>
-      <style>{`
-          .hover-effect {
-            transition: transform 0.3s, box-shadow 0.3s;
-          }
-
-          .hover-effect:hover {
-            transform: scale(1.05) rotate(1deg);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-          }
-
-          .button-hover {
-            transition: background-color 0.3s, color 0.3s;
-          }
-
-          .button-hover:hover {
-            background-color: transparent;
-            color: #007bff;
-            border-color: #007bff;
-          }
-        `}</style>
-
-      <div className="mx-auto max-w-screen-2xl px-4 py-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center">
-          <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-center font-sfprobold text-[#007bff]">
-            About Us
+      {/* About Us Section Header with Background Image */}
+      <div className="relative w-full h-[300px] flex justify-center items-center">
+        {/* Blurred Background Image */}
+        <div className="absolute inset-0">
+          <img
+            src="/imgs/bg search.png"
+            alt="Background"
+            className="w-full h-full object-cover filter blur-sm"
+          />
+        </div>
+        {/* Foreground Text and Button */}
+        <div className="relative z-10 text-center">
+          <h1 className="text-6xl md:text-6xl lg:text-7xl font-bold text-white">
+            about us.
           </h1>
-          {/* Hide voice button if disability type is "Deaf or Hard of Hearing" */}
           {userDisabilityType !== "Deaf or Hard of Hearing" && (
             <button
               onClick={handleToggleVoice}
-              className={`ml-6 p-2 rounded-full transition-colors duration-200 ${
+              className={`mt-4 p-3 rounded-full shadow-lg transition-colors duration-200 ${
                 isVoiceEnabled
                   ? "bg-blue-500 text-white"
                   : "bg-gray-300 text-black"
@@ -91,32 +77,42 @@ const AboutContent = () => {
 
       {/* Section 1 */}
       <section>
-        <div className="mx-auto max-w-screen-2xl px-4 py-16 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:h-screen lg:grid-cols-2 gap-8">
-            <div className="relative z-10 lg:py-16 rounded-3xl overflow-hidden shadow-lg bg-[#e3edf7] hover-effect">
-              <div className="relative h-64 sm:h-80 lg:h-full rounded">
-                <img
-                  alt=""
-                  src="/imgs/pwd1.jpg"
-                  className="absolute inset-0 h-full w-full object-cover rounded-3xl hover:scale-110 transition-transform duration-500"
-                />
-              </div>
+        <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
+          <div className="max-w-3xl">
+            <h2 className="text-3xl text-custom-blue font-bold sm:text-4xl">
+              Breaking Barriers, Building Futures
+            </h2>
+          </div>
+
+          <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-16">
+            <div className="relative h-64 overflow-hidden sm:h-80 lg:h-full">
+              <img
+                alt=""
+                src="/imgs/pwd1.jpg"
+                className="absolute inset-0 h-full w-full object-cover"
+              />
             </div>
 
-            <div className="relative flex items-center bg-gray-100 rounded-xl shadow-lg hover-effect">
-              <span className="hidden lg:absolute lg:inset-y-0 lg:-start-16 lg:block lg:w-16 lg:bg-gray-100 rounded-xl"></span>
-              <div className="p-8 sm:p-16 lg:p-24">
-                <h2 className="text-2xl font-bold text-[#077bff] sm:text-3xl">
-                  Breaking Barriers, Building Futures
-                </h2>
-                <p className="mt-4 text-gray-600">
+            <div className="lg:py-16">
+              <article className="space-y-4 text-black">
+                <p>
                   Our mission is to create inclusive opportunities for persons
                   with disabilities, recognizing their potential and the value
                   they bring. We are dedicated to fostering a supportive
                   environment where diverse talents can thrive, driving
                   innovation and success for both individuals and a company.
                 </p>
-              </div>
+
+                <p>
+                  Our commitment goes beyond just offering opportunities; it
+                  extends to reshaping mindsets and challenging stereotypes,
+                  showing that diversity, particularly the inclusion of persons
+                  with disabilities, is a vital driver of growth, excellence,
+                  and resilience in today’s evolving world. We believe that an
+                  inclusive workplace leads to a stronger, more dynamic
+                  workforce, and in turn, a better future for all.
+                </p>
+              </article>
             </div>
           </div>
         </div>
@@ -124,39 +120,44 @@ const AboutContent = () => {
 
       {/* Section 2 */}
       <section>
-        <div className="mx-auto max-w-screen-2xl px-4 py-16 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:h-screen lg:grid-cols-2 gap-8">
-            <div className="relative z-10 lg:py-16 rounded-3xl overflow-hidden shadow-lg bg-[#e3edf7] hover-effect">
-              <div className="relative h-64 sm:h-80 lg:h-full rounded">
-                <img
-                  alt=""
-                  src="/imgs/pwd3.jpg"
-                  className="absolute inset-0 h-full w-full object-cover rounded-2xl hover:scale-110 transition-transform duration-500"
-                />
-              </div>
+        <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
+          <div className="max-w-3xl mb-4">
+            <h2 className="text-3xl font-bold sm:text-4xl text-[#007bff] text-center lg:text-left">
+              Unlock Potential, Amplify Success
+            </h2>
+          </div>
+
+          <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-16">
+            <div className="lg:order-last relative h-64 overflow-hidden sm:h-80 lg:h-full">
+              <img
+                alt=""
+                src="/imgs/pwd3.jpg"
+                className="absolute inset-0 h-full w-full object-cover"
+              />
             </div>
 
-            <div className="relative flex items-center bg-gray-100 rounded-xl shadow-lg hover-effect">
-              <span className="hidden lg:absolute lg:inset-y-0 lg:-start-16 lg:block lg:w-16 lg:bg-gray-100 rounded-xl"></span>
-              <div className="p-8 sm:p-16 lg:p-24">
-                <h2 className="text-2xl font-bold sm:text-3xl text-[#007bff]">
-                  Unlock Potential, Amplify Success
-                </h2>
-                <p className="mt-4 text-gray-600">
+            <div className="lg:py-16">
+              <article className="space-y-4 text-gray-600">
+                <p>
                   We envision a future where businesses harness the unique
                   strengths of persons with disabilities, leading to enhanced
                   creativity and growth. Our goal is to create pathways that
                   drive mutual success and progress, fostering a culture of
                   inclusivity that enriches organizations and transforms
-                  industries. By integrating diverse talents, we help companies
-                  unlock their full potential and achieve sustainable success.
+                  industries.
                 </p>
-              </div>
+
+                <p>
+                  By integrating diverse talents, we help companies unlock their
+                  full potential and achieve sustainable success.
+                </p>
+              </article>
             </div>
           </div>
         </div>
       </section>
 
+      {/* Remaining content */}
       <div className="bg-white pt-0 pr-16 pb-0 pl-16"></div>
 
       <div className="w-full bg-custombg pt-16 pr-4 pb-16 pl-4 mt-0 mr-auto mb-0 ml-auto sm:max-w-xl md:max-w-full md:px-24 lg:px-8 lg:py-20">
