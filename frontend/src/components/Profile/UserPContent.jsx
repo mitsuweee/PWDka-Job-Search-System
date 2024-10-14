@@ -126,11 +126,11 @@ const UserProf = () => {
     };
 
     axios(config)
-      .then(function (response) {
+      .then(function () {
         toast.success("Password updated successfully!");
         setIsModalOpen(false);
       })
-      .catch(function (error) {
+      .catch(function () {
         toast.error(
           "Failed to update password. Please check your current password."
         );

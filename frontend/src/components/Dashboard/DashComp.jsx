@@ -107,10 +107,6 @@ const CompanyDashboard = () => {
     }
   };
 
-  const handleGoBack = () => {
-    navigate(-1); // This navigates back to the previous page
-  };
-
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-blue-100">
       {/* Sidebar */}
@@ -170,12 +166,6 @@ const CompanyDashboard = () => {
           <h1 className="text-3xl font-bold text-blue-900">
             Company Dashboard
           </h1>
-          <button
-            onClick={handleGoBack}
-            className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
-          >
-            Back
-          </button>
         </div>
 
         {/* Bar Chart */}

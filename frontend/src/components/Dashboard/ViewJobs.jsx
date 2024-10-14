@@ -14,6 +14,9 @@ const ViewJobs = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredJobListings, setFilteredJobListings] = useState([]);
   const [isLoading, setIsLoading] = useState(false); // New loader state
+  const [showDisabilityOptions, setShowDisabilityOptions] = useState(false); // Toggle state for disability options
+  const [selectedDisabilityCategories, setSelectedDisabilityCategories] =
+    useState([]); // State to handle selected disability categories
 
   const navigate = useNavigate();
 
@@ -58,6 +61,7 @@ const ViewJobs = () => {
     axios(config)
       .then((response) => {
         const jobData = response.data.data[0];
+        console.log(jobData);
         setJob(jobData);
         setIsModalOpen(true);
       })
@@ -75,12 +79,26 @@ const ViewJobs = () => {
       id: jobData.id,
       jobName: jobData.position_name,
       description: jobData.description,
+      requirements: jobData.requirement,
       qualification: jobData.qualification,
       minimumSalary: jobData.minimum_salary,
       maximumSalary: jobData.maximum_salary,
-      positionType: jobData.positiontype_id,
+      positionType: jobData.positiontype_id === 1 ? "fulltime" : "parttime",
+      disabilityCategories: jobData.disability_ids || [], // Add this line to capture disability categories
     });
+    setSelectedDisabilityCategories(jobData.disability_ids || []); // Initialize the selected disabilities
     setIsUpdateModalOpen(true);
+  };
+
+  const handleCheckboxChange = (e) => {
+    const { value, checked } = e.target;
+    if (checked) {
+      setSelectedDisabilityCategories((prev) => [...prev, value]);
+    } else {
+      setSelectedDisabilityCategories((prev) =>
+        prev.filter((category) => category !== value)
+      );
+    }
   };
 
   const handleChange = (e) => {
@@ -100,6 +118,7 @@ const ViewJobs = () => {
         position_name: jobUpdate.jobName,
         description: jobUpdate.description,
         qualification: jobUpdate.qualification,
+        requirement: jobUpdate.requirements,
         minimum_salary: jobUpdate.minimumSalary,
         maximum_salary: jobUpdate.maximumSalary,
         positiontype_id:
@@ -107,23 +126,24 @@ const ViewJobs = () => {
             ? 1
             : jobUpdate.positionType === "parttime"
             ? 2
-            : null,
+            : null, // Ensure this value is either 1 (Full-Time) or 2 (Part-Time)
+        disability_ids: selectedDisabilityCategories, // Include selected disabilities
       },
     };
 
-    setIsLoading(true); // Show loader while updating job
+    setIsLoading(true);
     axios(config)
       .then(() => {
-        toast.success("Job updated successfully!"); // Show success toast
+        toast.success("Job updated successfully!");
         setIsUpdateModalOpen(false);
         window.location.reload();
       })
       .catch((error) => {
         console.error(error);
-        toast.error("Error updating job."); // Show error toast
+        toast.error("Error updating job.");
       })
       .finally(() => {
-        setIsLoading(false); // Hide loader
+        setIsLoading(false);
       });
   };
 
@@ -160,6 +180,10 @@ const ViewJobs = () => {
     }
   };
 
+  const toggleDisabilityOptions = () => {
+    setShowDisabilityOptions(!showDisabilityOptions); // Toggle visibility of disability options
+  };
+
   const closeModal = () => {
     setIsModalOpen(false);
     setJob(null);
@@ -182,10 +206,6 @@ const ViewJobs = () => {
 
   const handleViewApplicants = (jobId) => {
     navigate(`/company/viewapplicants?id=${jobId}`);
-  };
-
-  const handleGoToDashboard = () => {
-    navigate("/dashboard");
   };
 
   if (loading) {
@@ -374,6 +394,12 @@ const ViewJobs = () => {
               </div>
               <div className="bg-gray-200 p-3 rounded-md">
                 <p>
+                  <strong>Requirements:</strong> {job?.requirement}{" "}
+                  {/* Ensure this displays the requirements */}
+                </p>
+              </div>
+              <div className="bg-gray-200 p-3 rounded-md">
+                <p>
                   <strong>Qualification:</strong> {job?.qualification}
                 </p>
               </div>
@@ -390,6 +416,26 @@ const ViewJobs = () => {
                   <strong>Position Type:</strong> {job?.position_type}
                 </p>
               </div>
+
+              {/* Disability Categories */}
+              {job?.disability_types ? (
+                <div className="bg-gray-200 p-3 rounded-md">
+                  <p>
+                    <strong>Disability Categories:</strong>
+                  </p>
+                  <ul className="list-disc pl-5">
+                    {job.disability_types
+                      .split(",")
+                      .map((disability, index) => (
+                        <li key={index}>{disability.trim()}</li>
+                      ))}
+                  </ul>
+                </div>
+              ) : (
+                <div className="bg-gray-200 p-3 rounded-md">
+                  <p>No disability categories specified.</p>
+                </div>
+              )}
             </div>
             <div className="mt-8 flex justify-center space-x-4">
               <button
@@ -405,7 +451,9 @@ const ViewJobs = () => {
       {/* Modal for editing job details */}
       {isUpdateModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white w-full max-w-lg p-6 rounded-lg shadow-xl mx-4">
+          <div className="bg-white w-full max-w-2xl p-8 rounded-lg shadow-xl mx-4">
+            {" "}
+            {/* Increased max-width and padding */}
             <h2 className="text-3xl font-bold mb-6 text-gray-800 text-center">
               Update Job
             </h2>
@@ -435,6 +483,18 @@ const ViewJobs = () => {
               </div>
               <div>
                 <label className="block text-lg font-medium text-gray-700 mb-2">
+                  Requirements
+                </label>
+                <input
+                  type="text"
+                  name="requirements"
+                  value={jobUpdate.requirements} // Bind to the jobUpdate requirements
+                  onChange={handleChange}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div>
+                <label className="block text-lg font-medium text-gray-700 mb-2">
                   Qualification
                 </label>
                 <input
@@ -445,30 +505,94 @@ const ViewJobs = () => {
                   className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
-              <div>
-                <label className="block text-lg font-medium text-gray-700 mb-2">
-                  Minimum Salary
-                </label>
-                <input
-                  type="number"
-                  name="minimumSalary"
-                  value={jobUpdate.minimumSalary}
-                  onChange={handleChange}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+              <div className="flex space-x-4">
+                <div className="w-1/2">
+                  <label className="block text-lg font-medium text-gray-700 mb-2">
+                    Minimum Salary
+                  </label>
+                  <input
+                    type="number"
+                    name="minimumSalary"
+                    value={jobUpdate.minimumSalary}
+                    onChange={handleChange}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <div className="w-1/2">
+                  <label className="block text-lg font-medium text-gray-700 mb-2">
+                    Maximum Salary
+                  </label>
+                  <input
+                    type="number"
+                    name="maximumSalary"
+                    value={jobUpdate.maximumSalary}
+                    onChange={handleChange}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
               </div>
               <div>
                 <label className="block text-lg font-medium text-gray-700 mb-2">
-                  Maximum Salary
+                  Position Type
                 </label>
-                <input
-                  type="number"
-                  name="maximumSalary"
-                  value={jobUpdate.maximumSalary}
+                <select
+                  name="positionType"
+                  value={jobUpdate.positionType}
                   onChange={handleChange}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+                >
+                  <option value="">Select Position Type</option>
+                  <option value="fulltime">Full-Time</option>
+                  <option value="parttime">Part-Time</option>
+                </select>
               </div>
+              <div className="mt-4">
+                <button
+                  type="button"
+                  onClick={toggleDisabilityOptions}
+                  className="text-blue-500 underline"
+                >
+                  {showDisabilityOptions
+                    ? "Hide Disability Categories"
+                    : "Show Disability Categories"}
+                </button>
+              </div>
+
+              {showDisabilityOptions && (
+                <div className="bg-gray-100 p-4 rounded-lg shadow-md border border-gray-300">
+                  <label className="block mb-2 text-gray-700 font-bold">
+                    Disability Categories
+                  </label>
+                  <div className="flex flex-col space-y-2">
+                    {[
+                      "Visual Disability",
+                      "Deaf or Hard of Hearing",
+                      "Learning Disability",
+                      "Mental Disability",
+                      "Physical Disability (Orthopedic)",
+                      "Psychosocial Disability",
+                      "Speech and Language Impairment",
+                      "Intellectual Disability",
+                      "Cancer (RA11215)",
+                      "Rare Disease (RA10747)",
+                    ].map((category) => (
+                      <label key={category} className="flex items-center">
+                        <input
+                          type="checkbox"
+                          value={category}
+                          checked={selectedDisabilityCategories.includes(
+                            category
+                          )}
+                          onChange={handleCheckboxChange}
+                          className="mr-2"
+                        />
+                        {category}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <div className="mt-6 text-center">
                 <button
                   type="submit"

@@ -58,9 +58,9 @@ function App() {
         <Route
           path="/login"
           element={
-            <RedirectAuthenticated>
-              <Login />
-            </RedirectAuthenticated>
+            // <RedirectAuthenticated>
+            <Login />
+            // </RedirectAuthenticated>
           }
         />
         {/* <Route
