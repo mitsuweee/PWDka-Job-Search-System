@@ -115,7 +115,7 @@ const ApplyPage = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto mt-10 p-10 bg-white rounded-xl shadow-lg space-y-8 transform transition-all hover:shadow-2xl">
+    <div className="max-w-4xl mx-auto mb-10 mt-10 p-10 bg-white rounded-xl shadow-lg space-y-8  transform transition-all hover:shadow-2xl">
       <Toaster position="top-center" reverseOrder={false} />{" "}
       {/* Add Toaster for Toast Notifications */}
       {submitSuccess ? ( // Conditionally render thank you message

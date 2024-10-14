@@ -212,7 +212,7 @@ const CompanyProf = () => {
 
               <button
                 onClick={handlePasswordToggle}
-                className="w-full md:w-auto px-4 py-2 bg-yellow-500 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 transition duration-300 flex items-center justify-center"
+                className="w-full md:w-auto px-4 py-2 bg-custom-blue text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 transition duration-300 flex items-center justify-center"
               >
                 <span className="material-symbols-outlined text-xl mr-2">
                   lock
@@ -225,7 +225,7 @@ const CompanyProf = () => {
         <div className="flex flex-col md:flex-row mt-4">
           <button
             onClick={handleGoBack}
-            className="w-full md:w-auto px-4 py-2 bg-gray-200 text-blue-900 font-semibold rounded-lg shadow-md hover:bg-gray-300 transition duration-300 mb-4 md:mb-0 md:mr-4"
+            className="w-full md:w-auto px-4 py-2 bg-gray-100 text-blue-900 font-semibold rounded-lg shadow-md hover:bg-gray-300 transition duration-300 mb-4 md:mb-0 md:mr-4"
           >
             Back
           </button>

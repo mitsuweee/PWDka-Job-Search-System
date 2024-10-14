@@ -9,7 +9,7 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-[#e3edf7]">
+    <footer className="bg-white">
       <div className="w-full max-w-screen-xl mx-auto px-6 py-8">
         {/* Flex container */}
         <div className="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">

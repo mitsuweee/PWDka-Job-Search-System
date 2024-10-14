@@ -492,7 +492,7 @@ const JobListing = () => {
                     </button>
                   </a>
                   <button
-                    className="bg-gray-500 text-white py-3 px-6 rounded-full shadow-lg hover:bg-gray-600 hover:shadow-2xl transition transform hover:scale-105"
+                    className="bg-transparent border-2 border-custom-blue text-custom-blue py-3 px-6 rounded-full shadow-lg hover:bg-custom-blue hover:text-white hover:shadow-2xl transition transform hover:scale-105"
                     onClick={() => setIsMoreInfoVisible(!isMoreInfoVisible)}
                   >
                     Learn more
