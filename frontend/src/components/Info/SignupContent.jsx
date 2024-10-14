@@ -220,7 +220,7 @@ const Signup = () => {
               name="firstName"
               value={userFormValues.firstName}
               onChange={handleInputChange}
-              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
+              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
               required
             />
           </div>
@@ -239,7 +239,7 @@ const Signup = () => {
               name="middleInitial"
               value={userFormValues.middleInitial}
               onChange={handleInputChange}
-              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
+              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
             />
           </div>
 
@@ -256,7 +256,7 @@ const Signup = () => {
               name="lastName"
               value={userFormValues.lastName}
               onChange={handleInputChange}
-              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
+              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
               required
             />
           </div>
@@ -273,7 +273,7 @@ const Signup = () => {
               name="gender"
               value={userFormValues.gender}
               onChange={handleInputChange}
-              className="mt-2 w-full h-10 p-2 bg-white text-gray-600 rounded-lg focus:outline-none"
+              className="mt-2 w-full h-10 p-2 bg-white text-gray-600 rounded-lg focus:outline-none border border-gray-300 focus:border-blue-500 transition duration-300"
               required
             >
               <option value="" disabled>
@@ -297,7 +297,7 @@ const Signup = () => {
               name="birthdate"
               value={userFormValues.birthdate}
               onChange={handleInputChange}
-              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
+              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
               required
             />
           </div>
@@ -315,7 +315,7 @@ const Signup = () => {
               name="address"
               value={userFormValues.address}
               onChange={handleInputChange}
-              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
+              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
               required
             />
           </div>
@@ -333,7 +333,7 @@ const Signup = () => {
               name="city"
               value={userFormValues.city}
               onChange={handleInputChange}
-              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
+              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
               required
             />
           </div>
@@ -352,7 +352,7 @@ const Signup = () => {
               name="contactNumber"
               value={userFormValues.contactNumber}
               onChange={handleInputChange}
-              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
+              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
               required
             />
           </div>
@@ -369,7 +369,7 @@ const Signup = () => {
               name="disability"
               value={userFormValues.disability}
               onChange={handleInputChange}
-              className="mt-2 w-full h-10 p-2 bg-white text-gray-600 rounded-lg focus:outline-none"
+              className="mt-2 w-full h-10 p-2 bg-white text-gray-600 rounded-lg focus:outline-none border border-gray-300 focus:border-blue-500 transition duration-300"
               required
             >
               <option value="" disabled>
@@ -413,7 +413,7 @@ const Signup = () => {
               name="email"
               value={userFormValues.email}
               onChange={handleInputChange}
-              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
+              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
               required
             />
           </div>
@@ -432,7 +432,7 @@ const Signup = () => {
                 name="password"
                 value={userFormValues.password}
                 onChange={handleInputChange}
-                className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
+                className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
                 required
               />
               <button
@@ -461,7 +461,7 @@ const Signup = () => {
                 name="reEnterPassword"
                 value={userFormValues.reEnterPassword}
                 onChange={handleInputChange}
-                className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
+                className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
                 required
               />
               <button
@@ -492,7 +492,7 @@ const Signup = () => {
             name="pwdID"
             value={userFormValues.pwdID}
             onChange={handleInputChange}
-            className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
+            className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
             required
           />
         </div>
@@ -509,7 +509,7 @@ const Signup = () => {
             id="idPicture"
             name="idPicture"
             onChange={(e) => handleFileChange(e, "idPicture")}
-            className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-1 rounded-lg focus:outline-none shadow-2xl"
+            className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-1 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
             accept="image/png, image/jpeg"
             required
           />
@@ -527,7 +527,7 @@ const Signup = () => {
             id="profilePicture"
             name="profilePicture"
             onChange={(e) => handleFileChange(e, "userProfile")}
-            className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-1 rounded-lg focus:outline-none shadow-2xl"
+            className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-1 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
             accept="image/png, image/jpeg"
             required
           />
@@ -545,34 +545,41 @@ const Signup = () => {
             id="selfieWithID"
             name="selfieWithID"
             onChange={(e) => handleFileChange(e, "selfieWithID")}
-            className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-1 rounded-lg focus:outline-none shadow-2xl"
+            className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-1 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
             accept="image/*"
           />
         </div>
       </div>
 
-      <div className="col-span-12 flex justify-between">
+      <div className="col-span-12 flex justify-between items-center w-full">
+        {/* Already have an account on the left */}
+        <p className="text-sm text-black">
+          Already have an account?{" "}
+          <button
+            onClick={handleLogin}
+            className="text-blue-600 hover:underline focus:outline-none"
+          >
+            Log in
+          </button>
+        </p>
+
+        {/* Sign Up button in the center */}
+        <div className="flex justify-center">
+          <button
+            type="submit"
+            className="px-6 py-2 text-md font-medium text-white bg-blue-600 rounded-md shadow-lg hover:bg-blue-700 hover:shadow-xl transition-all focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            Sign Up
+          </button>
+        </div>
+
+        {/* Reset button on the right */}
         <button
           type="button"
           onClick={handleReset}
-          className="px-6 py-2 text-lg font-medium text-white bg-gray-600 rounded-md shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
+          className="px-4 py-2 text-md font-medium text-gray-600 bg-gray-100 rounded-md shadow-sm hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500"
         >
-          Reset
-        </button>
-
-        <button
-          type="button"
-          onClick={handleLogin}
-          className="px-6 py-2 text-lg font-medium text-white bg-green-600 rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
-        >
-          Login
-        </button>
-
-        <button
-          type="submit"
-          className="px-6 py-2 text-lg font-medium text-white bg-blue-600 rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          Sign Up
+          Reset Form
         </button>
       </div>
     </form>
@@ -601,7 +608,7 @@ const Signup = () => {
             name="companyName"
             value={companyFormValues.companyName}
             onChange={handleInputChange}
-            className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
+            className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
             required
           />
         </div>
@@ -618,7 +625,7 @@ const Signup = () => {
             name="companyDescription"
             value={companyFormValues.companyDescription}
             onChange={handleInputChange}
-            className="mt-2 w-full h-24 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
+            className="mt-2 w-full h-24 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
             required
           />
         </div>
@@ -636,7 +643,7 @@ const Signup = () => {
             name="companyAddress"
             value={companyFormValues.companyAddress}
             onChange={handleInputChange}
-            className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
+            className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
             required
           />
         </div>
@@ -654,7 +661,7 @@ const Signup = () => {
             name="companyContactNumber"
             value={companyFormValues.companyContactNumber}
             onChange={handleInputChange}
-            className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
+            className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
             required
           />
         </div>
@@ -675,7 +682,7 @@ const Signup = () => {
             name="companyCity"
             value={companyFormValues.companyCity}
             onChange={handleInputChange}
-            className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
+            className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
             required
           />
         </div>
@@ -693,7 +700,7 @@ const Signup = () => {
             name="companyEmail"
             value={companyFormValues.companyEmail}
             onChange={handleInputChange}
-            className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
+            className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
             required
           />
         </div>
@@ -712,7 +719,7 @@ const Signup = () => {
               name="companyPassword"
               value={companyFormValues.companyPassword}
               onChange={handleInputChange}
-              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
+              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
               required
             />
             <button
@@ -741,7 +748,7 @@ const Signup = () => {
               name="companyReEnterPassword"
               value={companyFormValues.companyReEnterPassword}
               onChange={handleInputChange}
-              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl"
+              className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
               required
             />
             <button
@@ -768,7 +775,7 @@ const Signup = () => {
             id="companyLogo"
             name="companyLogo"
             onChange={(e) => handleFileChange(e, "companyLogo")}
-            className="mt-2 w-full h-10 p-1 text-gray-600 bg-gray-100 rounded-lg focus:outline-none shadow-2xl"
+            className="mt-2 w-full h-10 p-1 text-gray-600 bg-gray-100 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
             accept="image/*"
           />
         </div>
@@ -853,41 +860,35 @@ const Signup = () => {
 
         <main className="flex items-start justify-start px-8 py-8 sm:px-12 lg:col-span-7 lg:px-16 lg:py-12 xl:col-span-6 bg-custom-bg">
           <div className="w-full">
-            <div className="switchContainer max-w-md mx-auto shadow-xl rounded-lg p-4 bg-custom-bg flex justify-start items-center gap-12 mb-6">
-              <span className="switchLabel font-bold text-lg text-custom-blue">
+            <div className="switchContainer max-w-xs mx-auto shadow-xl rounded-lg p-4 bg-white flex justify-start items-center gap-4 mb-8">
+              <span className="switchLabel font-bold text-lg text-blue-600">
                 Sign up as:
               </span>
-              <div className="switchButtons flex gap-2 ml-2">
+              <div className="switchButtons flex gap-2">
                 <button
-                  className={`switchButton ${
+                  className={`inline-block rounded ${
                     formType === "user"
-                      ? "bg-blue-700 text-white"
-                      : "bg-blue-500 text-white"
-                  } px-4 py-2 rounded-md shadow-md transition-colors duration-200`}
+                      ? "bg-blue-600 text-white"
+                      : "border border-blue-600 text-blue-600"
+                  } px-4 py-2 text-sm font-medium transition hover:scale-110 hover:shadow-xl focus:outline-none focus:ring active:bg-blue-500`}
                   onClick={() => setFormType("user")}
                 >
                   User
                 </button>
                 <button
-                  className={`switchButton ${
+                  className={`inline-block rounded ${
                     formType === "company"
-                      ? "bg-blue-700 text-white"
-                      : "bg-blue-500 text-white"
-                  } px-4 py-2 rounded-md shadow-md transition-colors duration-200`}
+                      ? "bg-blue-600 text-white"
+                      : "border border-blue-600 text-blue-600"
+                  } px-4 py-2 text-sm font-medium transition hover:scale-110 hover:shadow-xl focus:outline-none focus:ring active:bg-blue-500`}
                   onClick={() => setFormType("company")}
                 >
                   Company
                 </button>
-                <button
-                  className="switchButton bg-gray-500 text-white px-4 py-2 rounded-md shadow-md transition-colors duration-200"
-                  onClick={() => window.history.back()}
-                >
-                  Back
-                </button>
               </div>
             </div>
 
-            <div className="bg-custom-bg p-8  shadow-2xl rounded-2xl">
+            <div className="bg-white p-8  shadow-2xl rounded-2xl">
               {formType === "user" ? renderUserForm() : renderCompanyForm()}
             </div>
           </div>

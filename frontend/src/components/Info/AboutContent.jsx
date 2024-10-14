@@ -50,7 +50,7 @@ const AboutContent = () => {
           <img
             src="/imgs/bg search.png"
             alt="Background"
-            className="w-full h-full object-cover filter blur-sm"
+            className="w-full h-full object-cover filter "
           />
         </div>
         {/* Foreground Text and Button */}
