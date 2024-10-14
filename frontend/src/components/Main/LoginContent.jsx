@@ -107,7 +107,7 @@ const LoginComp = () => {
             <p className="text-[#007bff] text-left text-sfprobold font-extrabold leading-snug tracking-tight mb-4 md:text-4xl">
               Welcome Back!
             </p>
-            <div className="bg-custom-bg p-8 shadow-2xl rounded-2xl">
+            <div className="bg-white p-8 shadow-2xl rounded-2xl">
               <h2 className="text-3xl font-bold mt-2 text-custom-blue">
                 <span className="material-symbols-outlined text-2xl mr-4">
                   login
@@ -139,7 +139,7 @@ const LoginComp = () => {
                       name="email"
                       value={formValues.email}
                       onChange={handleInputChange}
-                      className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-7 rounded-lg focus:outline-none shadow-2xl"
+                      className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-7 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
                       placeholder="Ex: user@gmail.com"
                       required
                     />
@@ -160,7 +160,7 @@ const LoginComp = () => {
                       name="password"
                       value={formValues.password}
                       onChange={handleInputChange}
-                      className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-7 rounded-lg focus:outline-none shadow-2xl"
+                      className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-7 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
                       placeholder="******"
                       required
                     />
