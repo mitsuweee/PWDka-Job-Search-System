@@ -157,9 +157,6 @@ const AboutContent = () => {
         </div>
       </section>
 
-      {/* Remaining content */}
-      <div className="bg-white pt-0 pr-16 pb-0 pl-16"></div>
-
       <div className="w-full bg-custombg pt-16 pr-4 pb-16 pl-4 mt-0 mr-auto mb-0 ml-auto sm:max-w-xl md:max-w-full md:px-24 lg:px-8 lg:py-20">
         <div className="mt-0 mr-auto mb-10 ml-auto max-w-xl md:mx-auto sm:text-center lg:max-w-2xl md:mb-12">
           <div>
@@ -181,7 +178,7 @@ const AboutContent = () => {
           </p>
         </div>
 
-        <div className="grid mt-0 mr-auto mb-0 ml-auto gap-10 row-gap-8 sm:row-gap-10 lg:max-w-screen-lg sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid mt-0 mr-auto mb-0 ml-auto gap-10 row-gap-8 bg-custom-bg sm:row-gap-10 lg:max-w-screen-lg sm:grid-cols-2 lg:grid-cols-3">
           {[
             {
               name: "Kyle Anakin Aguas",
@@ -219,13 +216,17 @@ const AboutContent = () => {
               img: "/imgs/mits.jpg",
             },
           ].map((member) => (
-            <div className="flex hover-effect rounded-xl" key={member.name}>
+            <div
+              className="flex p-4 hover:scale-105 hover:shadow-xl transition-transform duration-300 ease-in-out rounded-xl bg-custom-bg items-center"
+              key={member.name}
+            >
               <img
                 src={member.img}
-                className="shadow object-cover mt-0 mr-4 mb-0 ml-0 rounded-full w-20 h-20"
+                className="shadow object-cover mt-0 mr-4 mb-0 ml-0 rounded-full w-24 h-24"
+                alt={member.name}
               />
               <div className="flex justify-center flex-col">
-                <p className="text-lg font-bold text-[#007bff]">
+                <p className="text-md font-bold text-[#007bff]">
                   {member.name}
                 </p>
                 <p className="text-sm text-gray-800 mt-0 mr-0 mb-4 ml-0">
