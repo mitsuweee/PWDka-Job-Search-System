@@ -204,9 +204,18 @@ const loginCompany = async (req, res, next) => {
 
 const updateCompany = async (req, res, next) => {
   const { id } = req.params;
-  const { name, address, city, description, contact_number } = req.body;
+  const { name, address, city, description, contact_number, email } = req.body;
 
-  if (!id || !name || !address || !city || !description || !contact_number) {
+  // Check for missing details
+  if (
+    !id ||
+    !name ||
+    !address ||
+    !city ||
+    !description ||
+    !contact_number ||
+    !email
+  ) {
     return res.status(400).json({
       successful: false,
       message: "One or more details are missing",
@@ -226,33 +235,53 @@ const updateCompany = async (req, res, next) => {
       successful: false,
       message: "Invalid Contact Number Format",
     });
-  }
-
-  try {
-    const result = await knex("company").where({ id }).update({
-      name,
-      address,
-      city,
-      description,
-      contact_number,
+  } else if (!util.checkEmail(email)) {
+    return res.status(400).json({
+      successful: false,
+      message: "Invalid Email Format",
     });
+  } else {
+    try {
+      // Check if email exists in user, company, or admin tables
+      const emailExistsInUser = await knex("user").where({ email }).first();
+      const emailExistsInAdmin = await knex("admin").where({ email }).first();
+      const emailExistsInCompany = await knex("company")
+        .where({ email })
+        .first();
 
-    if (result === 0) {
-      return res.status(404).json({
+      if (emailExistsInUser || emailExistsInAdmin || emailExistsInCompany) {
+        return res.status(400).json({
+          successful: false,
+          message: "Email already exists in the system",
+        });
+      }
+
+      const result = await knex("company").where({ id }).update({
+        name,
+        address,
+        city,
+        description,
+        contact_number,
+        email,
+      });
+
+      if (result === 0) {
+        return res.status(404).json({
+          successful: false,
+          message: "Company not found",
+        });
+      }
+
+      return res.status(200).json({
+        successful: true,
+        message: "Company Details updated successfully",
+      });
+    } catch (err) {
+      return res.status(500).json({
         successful: false,
-        message: "Company not found",
+        message: err.message,
       });
     }
-
-    return res.status(200).json({
-      successful: true,
-      message: "Company Details updated successfully",
-    });
-  } catch (err) {
-    return res.status(500).json({
-      successful: false,
-      message: err.message,
-    });
   }
 };
 
