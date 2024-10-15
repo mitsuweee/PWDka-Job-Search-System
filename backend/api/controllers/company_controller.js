@@ -204,39 +204,24 @@ const loginCompany = async (req, res, next) => {
 
 const updateCompany = async (req, res, next) => {
   const { id } = req.params;
-  const { name, address, city, description, contact_number, profile_picture } =
-    req.body;
+  const { name, address, city, description, contact_number } = req.body;
 
-  if (
-    !id ||
-    !name ||
-    !address ||
-    !city ||
-    !description ||
-    !contact_number ||
-    !profile_picture
-  ) {
+  if (!id || !name || !address || !city || !description || !contact_number) {
     return res.status(400).json({
       successful: false,
       message: "One or more details are missing",
     });
-  }
-
-  if (util.checkSpecialChar(address)) {
+  } else if (util.checkSpecialChar(address)) {
     return res.status(400).json({
       successful: false,
       message: "Invalid Address Format",
     });
-  }
-
-  if (util.checkNumbersAndSpecialChar(city)) {
+  } else if (util.checkNumbersAndSpecialChar(city)) {
     return res.status(400).json({
       successful: false,
       message: "Invalid City Format",
     });
-  }
-
-  if (!util.checkContactNumber(contact_number)) {
+  } else if (!util.checkContactNumber(contact_number)) {
     return res.status(400).json({
       successful: false,
       message: "Invalid Contact Number Format",
@@ -250,7 +235,6 @@ const updateCompany = async (req, res, next) => {
       city,
       description,
       contact_number,
-      profile_picture,
     });
 
     if (result === 0) {
@@ -269,6 +253,41 @@ const updateCompany = async (req, res, next) => {
       successful: false,
       message: err.message,
     });
+  }
+};
+
+const updateCompanyProfilePicture = async (req, res, next) => {
+  const id = req.params.id;
+  const profile_picture = req.body.profile_picture;
+
+  if (!id || !profile_picture) {
+    return res.status(400).json({
+      successful: false,
+      message: "One or more details are missing",
+    });
+  } else {
+    try {
+      const result = await knex("company").where({ id }).update({
+        profile_picture,
+      });
+
+      if (result === 0) {
+        return res.status(404).json({
+          successful: false,
+          message: "Company not found",
+        });
+      }
+
+      return res.status(200).json({
+        successful: true,
+        message: "Company Profile Picture updated successfully",
+      });
+    } catch (err) {
+      return res.status(500).json({
+        successful: false,
+        message: err.message,
+      });
+    }
   }
 };
 
@@ -401,6 +420,7 @@ module.exports = {
   registerCompany,
   loginCompany,
   updateCompany,
+  updateCompanyProfilePicture,
   companyChangePassword,
   viewCompanyViaId,
 };

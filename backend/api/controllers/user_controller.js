@@ -284,9 +284,8 @@ const updateUser = async (req, res, next) => {
   const address = req.body.address.toLowerCase();
   const city = req.body.city.toLowerCase();
   const contactNumber = req.body.contact_number;
-  const formalPicture = req.body.formal_picture;
 
-  if (!id || !address || !city || !contactNumber || !formalPicture) {
+  if (!id || !address || !city || !contactNumber) {
     return res.status(404).json({
       successful: false,
       message: "One or more details are missing",
@@ -312,6 +311,40 @@ const updateUser = async (req, res, next) => {
         address,
         city,
         contact_number: contactNumber,
+      });
+
+      if (result === 0) {
+        return res.status(404).json({
+          successful: false,
+          message: "User not found",
+        });
+      } else {
+        return res.status(200).json({
+          successful: true,
+          message: "User Details updated successfully",
+        });
+      }
+    } catch (err) {
+      return res.status(500).json({
+        successful: false,
+        message: err.message,
+      });
+    }
+  }
+};
+
+const updateUserProfilePicture = async (req, res, next) => {
+  const id = req.params.id;
+  const formalPicture = req.body.formal_picture;
+
+  if (!id || !formalPicture) {
+    return res.status(404).json({
+      successful: false,
+      message: "One Or More Details missing",
+    });
+  } else {
+    try {
+      const result = await knex("user").where({ id }).update({
         formal_picture: formalPicture,
       });
 
@@ -476,6 +509,7 @@ module.exports = {
   registerUser,
   loginUser,
   updateUser,
+  updateUserProfilePicture,
   userChangePassword,
   viewUserViaId,
 };
