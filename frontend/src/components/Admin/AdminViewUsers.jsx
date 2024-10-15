@@ -126,9 +126,9 @@ const AdminViewUsers = () => {
   };
 
   const confirmLogout = () => {
-    sessionStorage.removeItem("Id");
-    sessionStorage.removeItem("Role");
-    sessionStorage.removeItem("Token");
+    localStorage.removeItem("Id");
+    localStorage.removeItem("Role");
+    localStorage.removeItem("Token");
     toast.success("Logged out successfully", { position: "top-center" });
     navigate("/login");
     setIsLogoutModalOpen(false);

@@ -30,7 +30,7 @@ const UserProf = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const userId = sessionStorage.getItem("Id");
+    const userId = localStorage.getItem("Id");
     const config = {
       method: "get",
       url: `/user/view/${userId}`,
@@ -91,7 +91,7 @@ const UserProf = () => {
   };
 
   const handleProfilePictureSubmit = () => {
-    const userId = sessionStorage.getItem("Id");
+    const userId = localStorage.getItem("Id");
     const config = {
       method: "put",
       url: `/user/update/picture/${userId}`,
@@ -136,7 +136,7 @@ const UserProf = () => {
   };
 
   const handlePasswordUpdate = () => {
-    const userId = sessionStorage.getItem("Id");
+    const userId = localStorage.getItem("Id");
 
     if (passwords.newPassword !== passwords.confirmNewPassword) {
       toast.error("New password and confirm new password do not match.");
@@ -177,7 +177,7 @@ const UserProf = () => {
       contact_number: user.contactNumber,
     });
 
-    const userId = sessionStorage.getItem("Id");
+    const userId = localStorage.getItem("Id");
     const config = {
       method: "put",
       url: `/user/update/${userId}`,
@@ -211,9 +211,9 @@ const UserProf = () => {
   };
 
   const confirmLogout = () => {
-    sessionStorage.removeItem("Id");
-    sessionStorage.removeItem("Role");
-    sessionStorage.removeItem("Token");
+    localStorage.removeItem("Id");
+    localStorage.removeItem("Role");
+    localStorage.removeItem("Token");
 
     navigate("/login");
     toast.success("Logged out successfully!");

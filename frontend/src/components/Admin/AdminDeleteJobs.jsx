@@ -9,9 +9,9 @@ const AdminDeleteJobs = () => {
     const confirmed = window.confirm("Are you sure you want to logout?");
     if (confirmed) {
       // Clear session storage and redirect to the login route
-      sessionStorage.removeItem("Id");
-      sessionStorage.removeItem("Role");
-      sessionStorage.removeItem("Token");
+      localStorage.removeItem("Id");
+      localStorage.removeItem("Role");
+      localStorage.removeItem("Token");
 
       navigate("/login");
     }

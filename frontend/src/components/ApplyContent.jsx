@@ -81,7 +81,7 @@ const ApplyPage = () => {
 
         const resume = reader.result.split(",")[1];
         const data = JSON.stringify({
-          user_id: sessionStorage.getItem("Id"), // Assuming userId is stored in sessionStorage
+          user_id: localStorage.getItem("Id"), // Assuming userId is stored in localStorage
           joblisting_id: jobId, // Use the joblisting_id from URL params
           resume: resume,
         });

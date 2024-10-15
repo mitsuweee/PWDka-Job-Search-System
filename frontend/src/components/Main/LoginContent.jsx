@@ -42,10 +42,10 @@ const LoginComp = () => {
         setTimeout(() => {
           const { id, role, token } = response.data;
 
-          // Store token in sessionStorage
-          sessionStorage.setItem("Token", token);
-          sessionStorage.setItem("Id", id);
-          sessionStorage.setItem("Role", role);
+          // Store token in localStorage
+          localStorage.setItem("Token", token);
+          localStorage.setItem("Id", id);
+          localStorage.setItem("Role", role);
 
           if (role === "user") {
             window.location.href = "/joblist";

@@ -38,9 +38,9 @@ const AdminLogin = () => {
 
         // Store id and role in session storage
         const { id, role, token } = response.data;
-        sessionStorage.setItem("Id", id);
-        sessionStorage.setItem("Role", role);
-        sessionStorage.setItem("Token", token);
+        localStorage.setItem("Id", id);
+        localStorage.setItem("Role", role);
+        localStorage.setItem("Token", token);
 
         // Redirect to Admin Dashboard
         if (role === "admin") {

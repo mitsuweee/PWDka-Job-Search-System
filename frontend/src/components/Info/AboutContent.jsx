@@ -7,7 +7,7 @@ const AboutContent = () => {
   const [userDisabilityType, setUserDisabilityType] = useState("");
 
   useEffect(() => {
-    const userId = sessionStorage.getItem("Id");
+    const userId = localStorage.getItem("Id");
 
     const fetchUserDetails = () => {
       axios
