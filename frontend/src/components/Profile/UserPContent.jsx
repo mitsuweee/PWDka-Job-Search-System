@@ -18,6 +18,8 @@ const UserProf = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false); // Single modal state for both edit and password
   const [isEditing, setIsEditing] = useState(true); // Toggle between edit profile and change password
+  const [isProfilePictureModalOpen, setIsProfilePictureModalOpen] =
+    useState(false); // Profile picture modal state
   const [passwords, setPasswords] = useState({
     currentPassword: "",
     newPassword: "",
@@ -84,6 +86,37 @@ const UserProf = () => {
     }
   };
 
+  const handleProfilePictureEdit = () => {
+    setIsProfilePictureModalOpen(true);
+  };
+
+  const handleProfilePictureSubmit = () => {
+    const userId = sessionStorage.getItem("Id");
+    const config = {
+      method: "put",
+      url: `/user/update/picture/${userId}`,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: {
+        formal_picture: user.profilePicture,
+      },
+    };
+
+    axios(config)
+      .then(() => {
+        toast.success("Profile picture updated successfully!");
+        setIsProfilePictureModalOpen(false);
+        window.location.reload();
+      })
+      .catch((error) => {
+        toast.error(
+          error.response?.data?.message ||
+            "An error occurred while updating profile picture."
+        );
+      });
+  };
+
   const handleChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
   };
@@ -142,7 +175,6 @@ const UserProf = () => {
       address: user.address,
       city: user.city,
       contact_number: user.contactNumber,
-      formal_picture: user.profilePicture,
     });
 
     const userId = sessionStorage.getItem("Id");
@@ -159,6 +191,7 @@ const UserProf = () => {
       .then(function (response) {
         toast.success(response.data.message);
         setIsModalOpen(false);
+        window.location.reload();
       })
       .catch(function (error) {
         toast.error(error.response.data.message || "An error occurred");
@@ -194,43 +227,49 @@ const UserProf = () => {
     <div className="max-w-4xl mx-auto mb-10 mt-10 p-8 bg-white rounded-lg shadow-lg">
       <Toaster position="top-center" reverseOrder={false} />
       <div className="flex flex-col md:flex-row items-center justify-between">
-        <div className="flex items-center">
+        <div className="relative">
           <img
             src={user.profilePicture}
             alt="Profile"
             className="w-24 h-25 rounded-full border-4 border-blue-700 shadow-lg object-cover"
           />
-          <div className="ml-6">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
-              {user.fullName}
-            </h2>
-            <div className="flex mt-2">
-              <p className="bg-blue-100 text-blue-700 text-sm font-semibold mr-2 px-2.5 py-0.5 rounded">
-                Disability:
-              </p>
-              <p className="text-gray-600">{user.disability}</p>
-            </div>
-            <div className="flex flex-col md:flex-row mt-4">
-              <button
-                onClick={handleEdit}
-                className="w-full md:w-auto px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300 flex items-center justify-center mb-4 md:mb-0 md:mr-4"
-              >
-                <span className="material-symbols-outlined text-xl mr-2">
-                  edit
-                </span>
-                Edit Profile
-              </button>
+          <button
+            onClick={handleProfilePictureEdit}
+            className="absolute bottom-0 right-0 bg-white border border-gray-300 rounded-full p-1 shadow-md"
+          >
+            <span className="material-symbols-outlined">edit</span>
+          </button>
+        </div>
+        <div className="ml-6">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
+            {user.fullName}
+          </h2>
+          <div className="flex mt-2">
+            <p className="bg-blue-100 text-blue-700 text-sm font-semibold mr-2 px-2.5 py-0.5 rounded">
+              Disability:
+            </p>
+            <p className="text-gray-600">{user.disability}</p>
+          </div>
+          <div className="flex flex-col md:flex-row mt-4">
+            <button
+              onClick={handleEdit}
+              className="w-full md:w-auto px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300 flex items-center justify-center mb-4 md:mb-0 md:mr-4"
+            >
+              <span className="material-symbols-outlined text-xl mr-2">
+                edit
+              </span>
+              Edit Profile
+            </button>
 
-              <button
-                onClick={handlePasswordToggle}
-                className="w-full md:w-auto px-4 py-2 bg-custom-blue text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 transition duration-300 flex items-center justify-center"
-              >
-                <span className="material-symbols-outlined text-xl mr-2">
-                  lock
-                </span>
-                Change Password
-              </button>
-            </div>
+            <button
+              onClick={handlePasswordToggle}
+              className="w-full md:w-auto px-4 py-2 bg-custom-blue text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 transition duration-300 flex items-center justify-center"
+            >
+              <span className="material-symbols-outlined text-xl mr-2">
+                lock
+              </span>
+              Change Password
+            </button>
           </div>
         </div>
         <div className="flex flex-col md:flex-row mt-4">
@@ -252,6 +291,7 @@ const UserProf = () => {
         </div>
       </div>
 
+      {/* Profile Details */}
       <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 text-left text-gray-800">
         <div>
           <div className="mb-4">
@@ -261,40 +301,21 @@ const UserProf = () => {
               </span>
               Address:
             </p>
-            <p className="text-gray-600 bg-gray-200 p-5 rounded-lg">
-              {user.address
-                ? user.address
-                    .split(" ")
-                    .map(
-                      (word) =>
-                        word.charAt(0).toUpperCase() +
-                        word.slice(1).toLowerCase()
-                    )
-                    .join(" ")
-                : ""}
+            <p className="text-gray-600 bg-gray-200 p-5 rounded-lg capitalize">
+              {user.address}
             </p>
           </div>
           <div className="mb-4">
-            <p className="text-lg font-semibold text-gray-800 flex items-center">
+            <p className="text-lg font-semibold text-gray-800 flex items-center capitalize">
               <span className="material-symbols-outlined text-2xl mr-2">
                 location_city
               </span>
               City:
             </p>
-            <p className="text-gray-600 bg-gray-200 p-5 rounded-lg">
-              {user.city
-                ? user.city
-                    .split(" ")
-                    .map(
-                      (word) =>
-                        word.charAt(0).toUpperCase() +
-                        word.slice(1).toLowerCase()
-                    )
-                    .join(" ")
-                : ""}
+            <p className="text-gray-600 bg-gray-200 p-5 rounded-lg capitalize">
+              {user.city}
             </p>
           </div>
-
           <div className="mb-4">
             <p className="text-lg font-semibold text-gray-800 flex items-center">
               <span className="material-symbols-outlined text-2xl mr-2">
@@ -313,11 +334,8 @@ const UserProf = () => {
               </span>
               Gender:
             </p>
-            <p className="text-gray-600 bg-gray-200 p-5 rounded-lg">
-              {user.gender
-                ? user.gender.charAt(0).toUpperCase() +
-                  user.gender.slice(1).toLowerCase()
-                : ""}
+            <p className="text-gray-600 bg-gray-200 p-5 rounded-lg capitalize">
+              {user.gender}
             </p>
           </div>
         </div>
@@ -347,6 +365,64 @@ const UserProf = () => {
         </div>
       </div>
 
+      {/* Profile Picture Modal */}
+      {isProfilePictureModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75">
+          <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
+            <div className="flex justify-between items-center border-b pb-3 mb-4">
+              <h2 className="text-2xl font-semibold text-gray-800">
+                Update Profile Picture
+              </h2>
+              <button
+                onClick={() => setIsProfilePictureModalOpen(false)}
+                className="text-gray-500 hover:text-gray-800 transition duration-200"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-600 font-semibold">
+                Select a new profile picture:
+              </label>
+              <input
+                type="file"
+                accept="image/png, image/jpeg"
+                onChange={handleFileChange}
+                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+              />
+            </div>
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={() => setIsProfilePictureModalOpen(false)}
+                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-200"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleProfilePictureSubmit}
+                className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
+              >
+                Update Picture
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Other modals and content */}
       {/* Logout Modal */}
       {isLogoutModalOpen && (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
@@ -485,18 +561,6 @@ const UserProf = () => {
                     name="contactNumber"
                     value={user.contactNumber}
                     onChange={handleChange}
-                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-600 font-semibold">
-                    Profile Picture:
-                  </label>
-                  <input
-                    type="file"
-                    name="profilePicture"
-                    accept="image/png, image/jpeg"
-                    onChange={handleFileChange}
                     className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
                   />
                 </div>

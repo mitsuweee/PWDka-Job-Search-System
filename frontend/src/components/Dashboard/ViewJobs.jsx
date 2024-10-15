@@ -302,9 +302,6 @@ const ViewJobs = () => {
             <thead>
               <tr className="bg-blue-500 text-white">
                 <th className="py-2 px-2 md:px-4 text-sm md:text-base">
-                  Company
-                </th>
-                <th className="py-2 px-2 md:px-4 text-sm md:text-base">
                   Job Title
                 </th>
                 <th className="py-2 px-2 md:px-4 text-sm md:text-base">
@@ -315,9 +312,6 @@ const ViewJobs = () => {
             <tbody>
               {filteredJobListings.map((job) => (
                 <tr key={job.id} className="border-b">
-                  <td className="py-2 px-2 md:px-4 text-sm md:text-base break-words">
-                    {job.company_name}
-                  </td>
                   <td className="py-2 px-2 md:px-4 text-sm md:text-base break-words">
                     {job.position_name
                       ? job.position_name
@@ -419,14 +413,15 @@ const ViewJobs = () => {
                 <p>
                   <strong>Requirements:</strong>{" "}
                   {job?.requirement
-                    ? job.requirement
-                        .split(",")
+                    ? job.requirement.split(",") +
+                      "."
                         .map(
                           (part) =>
                             part.trim().charAt(0).toUpperCase() +
                             part.trim().slice(1).toLowerCase()
                         )
-                        .join(", ")
+                        .join(", ") +
+                      "."
                     : ""}
                 </p>
               </div>
@@ -434,14 +429,15 @@ const ViewJobs = () => {
                 <p>
                   <strong>Qualification:</strong>{" "}
                   {job?.qualification
-                    ? job.qualification
-                        .split(",")
+                    ? job.qualification.split(",") +
+                      "."
                         .map(
                           (part) =>
                             part.trim().charAt(0).toUpperCase() +
                             part.trim().slice(1).toLowerCase()
                         )
-                        .join(", ")
+                        .join(", ") +
+                      "."
                     : ""}
                 </p>
               </div>
