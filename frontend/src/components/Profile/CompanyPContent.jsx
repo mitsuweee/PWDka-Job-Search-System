@@ -177,6 +177,7 @@ const CompanyProf = () => {
   const confirmLogout = () => {
     sessionStorage.removeItem("Id");
     sessionStorage.removeItem("Role");
+    sessionStorage.removeItem("Token");
     navigate("/login");
     toast.success("Logged out successfully!");
   };
