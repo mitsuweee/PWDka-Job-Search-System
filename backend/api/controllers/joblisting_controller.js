@@ -133,6 +133,7 @@ const viewJobListing = async (req, res, next) => {
           "job_listing.requirement",
           "job_listing.minimum_salary",
           "job_listing.maximum_salary",
+          "job_listing.salary_visibility",
           "position_type.type AS position_type",
           "company.name AS company_name",
           "company.profile_picture AS company_profile_picture",
@@ -169,6 +170,7 @@ const viewJobListing = async (req, res, next) => {
           "job_listing.requirement",
           "job_listing.minimum_salary",
           "job_listing.maximum_salary",
+          "job_listing.salary_visibility",
           "position_type.type",
           "company.name"
         );
@@ -271,6 +273,7 @@ const viewJobListingViaUserNewestToOldest = async (req, res, next) => {
           "job_listing.requirement",
           "job_listing.minimum_salary",
           "job_listing.maximum_salary",
+          "job_listing.salary_visibility",
           "position_type.type AS position_type",
           "company.name AS company_name",
           "company.profile_picture AS company_profile_picture",
@@ -359,6 +362,7 @@ const viewJobsCreatedByCompanyNewestToOldest = async (req, res, next) => {
         "job_listing.qualification",
         "job_listing.minimum_salary",
         "job_listing.maximum_salary",
+        "job_listing.salary_visibility",
         "position_type.type",
         "company.name",
         "job_listing.date_created"
@@ -372,6 +376,7 @@ const viewJobsCreatedByCompanyNewestToOldest = async (req, res, next) => {
         "job_listing.requirement",
         "job_listing.minimum_salary",
         "job_listing.maximum_salary",
+        "job_listing.salary_visibility",
         "position_type.type as position_type",
         "company.name as company_name",
         "company.profile_picture as company_profile_picture",
@@ -423,6 +428,7 @@ const updateJobListing = async (req, res, next) => {
     requirement,
     minimum_salary,
     maximum_salary,
+    salary_visibility,
     positiontype_id,
     disability_ids, // These are now disability "types", not IDs
   } = req.body;
@@ -435,6 +441,7 @@ const updateJobListing = async (req, res, next) => {
     !requirement ||
     !minimum_salary ||
     !maximum_salary ||
+    !salary_visibility ||
     !positiontype_id ||
     !disability_ids ||
     disability_ids.length === 0
@@ -488,6 +495,7 @@ const updateJobListing = async (req, res, next) => {
         requirement,
         minimum_salary,
         maximum_salary,
+        salary_visibility,
         positiontype_id,
       });
 

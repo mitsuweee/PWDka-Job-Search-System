@@ -347,6 +347,7 @@ const viewAllJobListingNewestToOldest = async (req, res, next) => {
         "job_listing.requirement",
         "job_listing.minimum_salary",
         "job_listing.maximum_salary",
+        "job_listing.salary_visibility",
         "position_type.type AS position_type",
         "company.name AS company_name",
         "company.profile_picture AS company_profile_picture",
@@ -362,6 +363,7 @@ const viewAllJobListingNewestToOldest = async (req, res, next) => {
         "job_listing.requirement",
         "job_listing.minimum_salary",
         "job_listing.maximum_salary",
+        "job_listing.salary_visibility",
         "position_type.type",
         "company.profile_picture",
         "company.name"
@@ -434,6 +436,7 @@ const viewJobListing = async (req, res, next) => {
           "job_listing.requirement",
           "job_listing.minimum_salary",
           "job_listing.maximum_salary",
+          "job_listing.salary_visibility",
           "position_type.type AS position_type",
           "company.profile_picture AS company_profile_picture",
           "company.name AS company_name",
@@ -450,6 +453,7 @@ const viewJobListing = async (req, res, next) => {
           "job_listing.requirement",
           "job_listing.minimum_salary",
           "job_listing.maximum_salary",
+          "job_listing.salary_visibility",
           "position_type.type",
           "company.name",
           "company.profile_picture"
