@@ -346,12 +346,12 @@ const Signup = () => {
               Contact Number
             </label>
             <input
-              type="number"
-              maxLength="11"
+              type="tel"
               id="contactNumber"
               name="contactNumber"
               value={userFormValues.contactNumber}
               onChange={handleInputChange}
+              pattern="[0-9]{10,11}" // Optional: Ensures 10-11 digits
               className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
               required
             />
@@ -684,11 +684,12 @@ const Signup = () => {
             Contact Number
           </label>
           <input
-            type="text"
+            type="tel"
             id="companyContactNumber"
             name="companyContactNumber"
             value={companyFormValues.companyContactNumber}
             onChange={handleInputChange}
+            pattern="[0-9]{10,11}" // Optional: Ensures 10-11 digits
             className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
             required
           />
