@@ -68,6 +68,7 @@ const JobListing = () => {
             address: job.company_address,
             positionType: job.position_type,
             salary: `${job.minimum_salary}-${job.maximum_salary}`,
+            salaryVisibility: job.salary_visibility,
             description: job.description,
             requirements: job.requirement,
             qualifications: job.qualification,
@@ -97,12 +98,17 @@ const JobListing = () => {
   }, []);
 
   const playJobListingMessage = (job) => {
+    const salaryMessage =
+      job.salaryVisibility === "SHOW"
+        ? `Salary: ${job.salary}.`
+        : "Salary is hidden.";
+
     const jobDetails = `
       Company: ${job.companyName}.  
       Job Title: ${job.jobName}.
       Job Description: ${job.description}.
       Location: ${job.companyLocation}.
-      Salary: ${job.salary}.
+      ${salaryMessage}
       Position Type: ${job.positionType}.
       Requirements: ${job.requirements}.
       Qualifications: ${job.qualifications}.
@@ -322,12 +328,21 @@ const JobListing = () => {
                         </span>
                         {toSentenceCase(job.positionType)}
                       </p>
-                      <p className="font-semibold text-white">
-                        <span className="material-symbols-outlined mr-2">
-                          payments
-                        </span>
-                        {job.salary}
-                      </p>
+                      {job.salaryVisibility === "SHOW" ? (
+                        <p className="font-semibold text-white">
+                          <span className="material-symbols-outlined mr-2">
+                            payments
+                          </span>
+                          {job.salary}
+                        </p>
+                      ) : (
+                        <p className="font-semibold text-white">
+                          <span className="material-symbols-outlined mr-2">
+                            payments
+                          </span>
+                          Salary: Hidden
+                        </p>
+                      )}
                       <p className="text-gray-200 mt-2">
                         {toSentenceCase(job.description)}
                       </p>
@@ -455,12 +470,21 @@ const JobListing = () => {
                   {toSentenceCase(selectedJob.positionType)}
                 </p>
 
-                <p className="text-lg mb-4 text-gray-700 flex items-center">
-                  <span className="material-symbols-outlined mr-2">
-                    payments
-                  </span>
-                  {selectedJob.salary}
-                </p>
+                {selectedJob.salaryVisibility === "SHOW" ? (
+                  <p className="text-lg mb-4 text-gray-700 flex items-center">
+                    <span className="material-symbols-outlined mr-2">
+                      payments
+                    </span>
+                    {selectedJob.salary}
+                  </p>
+                ) : (
+                  <p className="text-lg mb-4 text-gray-700 flex items-center">
+                    <span className="material-symbols-outlined mr-2">
+                      payments
+                    </span>
+                    Salary: Hidden
+                  </p>
+                )}
 
                 <p className="text-lg font-medium text-gray-800 mt-6">
                   Qualifications

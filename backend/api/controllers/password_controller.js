@@ -14,64 +14,64 @@ const emailForgotPassword = async (req, res, next) => {
       successful: false,
       message: "Email is missing",
     });
-  }
+  } else {
+    try {
+      // Check if the email exists in the 'user' or 'company' table
+      const user =
+        (await knex("user").where({ email }).first()) ||
+        (await knex("company").where({ email }).first());
 
-  try {
-    // Check if the email exists in the 'user' or 'company' table
-    const user =
-      (await knex("user").where({ email }).first()) ||
-      (await knex("company").where({ email }).first());
+      if (!user) {
+        return res.status(400).json({
+          successful: false,
+          message: "Email not found in our records",
+        });
+      }
 
-    if (!user) {
-      return res.status(400).json({
-        successful: false,
-        message: "Email not found in our records",
+      // Generate a unique token for password reset
+      const resetToken = crypto.randomBytes(20).toString("hex");
+      const resetExpires = new Date(Date.now() + 3600000); // 1 hour from now
+
+      // Update user record with reset token and expiration time
+      await knex(user.role).where({ email }).update({
+        reset_password_token: resetToken,
+        reset_password_expires: resetExpires,
       });
-    }
 
-    // Generate a unique token for password reset
-    const resetToken = crypto.randomBytes(20).toString("hex");
-    const resetExpires = new Date(Date.now() + 3600000); // 1 hour from now
+      // Prepare the reset password URL
+      const resetUrl = `http://127.0.0.1:8080/passwordconfirmed?token=${resetToken}`;
 
-    // Update user record with reset token and expiration time
-    await knex(user.role).where({ email }).update({
-      reset_password_token: resetToken,
-      reset_password_expires: resetExpires,
-    });
+      const transporter = nodemailer.createTransport({
+        service: "Gmail",
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASSWORD,
+        },
+      });
 
-    // Prepare the reset password URL
-    const resetUrl = `http://127.0.0.1:8080/passwordconfirmed?token=${resetToken}`;
-
-    const transporter = nodemailer.createTransport({
-      service: "Gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD,
-      },
-    });
-
-    // Send the reset password email
-    const mailOptions = {
-      to: email,
-      from: process.env.EMAIL_USER,
-      subject: "Password Reset Request",
-      text: `You are receiving this email because you (or someone else) have requested a password reset for your account.\n\n
+      // Send the reset password email
+      const mailOptions = {
+        to: email,
+        from: process.env.EMAIL_USER,
+        subject: "Password Reset Request",
+        text: `You are receiving this email because you have requested a password reset for your account.\n\n
 Please click on the following link, or paste it into your browser to complete the process:\n\n
 ${resetUrl}\n\n
 If you did not request this, please ignore this email and your password will remain unchanged.\n`,
-    };
+      };
 
-    await transporter.sendMail(mailOptions);
+      await transporter.sendMail(mailOptions);
 
-    return res.status(200).json({
-      successful: true,
-      message: "A password reset link has been sent to your email address.",
-    });
-  } catch (err) {
-    return res.status(500).json({
-      successful: false,
-      message: err.message,
-    });
+      return res.status(200).json({
+        successful: true,
+        message: "A password reset link has been sent to your email address.",
+      });
+    } catch (err) {
+      return res.status(500).json({
+        successful: false,
+        message: err.message,
+      });
+    }
   }
 };
 
@@ -119,14 +119,23 @@ const resetPassword = async (req, res, next) => {
       });
     }
 
+    // Compare the new password with the current password
+    const isSamePassword = await bcrypt.compare(new_password, user.password);
+    if (isSamePassword) {
+      return res.status(400).json({
+        successful: false,
+        message: "New Password can't be the same as the old one.",
+      });
+    }
+
     // Hash the new password
     const hashedPassword = await bcrypt.hash(new_password, 10);
 
-    // Update the user's password and clear the reset token
+    // Update the user's password, clear the reset token and expiration
     await knex(user.role).where({ id: user.id }).update({
       password: hashedPassword,
-      reset_password_token: null,
-      reset_password_expires: null,
+      reset_password_token: null, // Clearing the reset token
+      reset_password_expires: null, // Clearing the expiration
     });
 
     return res.status(200).json({

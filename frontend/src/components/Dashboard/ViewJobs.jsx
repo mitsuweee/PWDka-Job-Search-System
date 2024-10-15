@@ -61,7 +61,6 @@ const ViewJobs = () => {
     axios(config)
       .then((response) => {
         const jobData = response.data.data[0];
-        console.log(jobData);
         setJob(jobData);
         setIsModalOpen(true);
       })
@@ -83,6 +82,7 @@ const ViewJobs = () => {
       qualification: jobData.qualification,
       minimumSalary: jobData.minimum_salary,
       maximumSalary: jobData.maximum_salary,
+      salaryVisibility: jobData.salary_visibility || "HIDE", // Capture salary visibility
       positionType: jobData.positiontype_id === 1 ? "fulltime" : "parttime",
       disabilityCategories: jobData.disability_ids || [], // Add this line to capture disability categories
     });
@@ -121,6 +121,7 @@ const ViewJobs = () => {
         requirement: jobUpdate.requirements,
         minimum_salary: jobUpdate.minimumSalary,
         maximum_salary: jobUpdate.maximumSalary,
+        salary_visibility: jobUpdate.salaryVisibility, // Include salary visibility
         positiontype_id:
           jobUpdate.positionType === "fulltime"
             ? 1
@@ -464,6 +465,14 @@ const ViewJobs = () => {
                     : ""}
                 </p>
               </div>
+              {/* Salary Visibility */}
+              <div className="bg-gray-200 p-3 rounded-md">
+                <p>
+                  <strong>Salary Visibility:</strong>{" "}
+                  {job?.salary_visibility === "SHOW" ? "Visible" : "Hidden"}
+                </p>
+              </div>
+
               {/* Disability Categories */}
               {job?.disability_types ? (
                 <div className="bg-gray-200 p-3 rounded-md">
@@ -577,6 +586,20 @@ const ViewJobs = () => {
                     className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
+              </div>
+              <div>
+                <label className="block text-lg font-medium text-gray-700 mb-2">
+                  Salary Visibility
+                </label>
+                <select
+                  name="salaryVisibility"
+                  value={jobUpdate.salaryVisibility}
+                  onChange={handleChange}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="SHOW">Show</option>
+                  <option value="HIDE">Hide</option>
+                </select>
               </div>
               <div>
                 <label className="block text-lg font-medium text-gray-700 mb-2">

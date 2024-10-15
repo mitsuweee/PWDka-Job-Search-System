@@ -21,6 +21,7 @@ const PostJob = () => {
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false); // Submit confirmation modal
   const [isLoading, setIsLoading] = useState(false); // Loader state
   const [isSuccessCardVisible, setIsSuccessCardVisible] = useState(false); // Success card visibility
+  const [showSalaryDetails, setShowSalaryDetails] = useState(false);
 
   const navigate = useNavigate();
 
@@ -89,6 +90,10 @@ const PostJob = () => {
           error.response?.data?.message || "An error occurred";
         toast.error(errorMessage);
       });
+  };
+
+  const toggleSalaryDetails = () => {
+    setShowSalaryDetails(!showSalaryDetails);
   };
 
   const resetForm = () => {
