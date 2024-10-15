@@ -1,7 +1,7 @@
-import React from 'react'
-import CompanyProf from '../components/Profile/CompanyPContent'
-import Navbar from '../components/Navbar'
-import Footer from '../components/Footer'
+import React from "react";
+import CompanyProf from "../components/Profile/CompanyPContent";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 const CompanyProfile = () => {
   return (
@@ -9,12 +9,12 @@ const CompanyProfile = () => {
       <header>
         <Navbar />
       </header>
-        <CompanyProf/>
+      <CompanyProf />
       <footer>
         <Footer />
       </footer>
     </div>
-  )
-}
+  );
+};
 
-export default CompanyProfile
+export default CompanyProfile;

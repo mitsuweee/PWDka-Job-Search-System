@@ -13,7 +13,7 @@ import JobListingPage from "./pages/JobListPage.jsx";
 import Profile from "./components/Profile/Profile.jsx"; // Corrected import path
 import ApplyPg from "./pages/ApplyPg.jsx";
 import Faq from "./pages/Faq.jsx";
-import AdminLog from "./pages/AdminLogin.jsx";
+// import AdminLog from "./pages/AdminLogin.jsx";
 import PostJobPage from "./pages/PostJobPage.jsx";
 import ViewJobsPage from "./pages/ViewJobsPage.jsx";
 import AdminVerUsers from "./pages/AdminVerUser.jsx";
@@ -29,6 +29,8 @@ import ForgotP from "./pages/ForgotP.jsx";
 import ConfirmP from "./pages/ConfirmP.jsx";
 import ProtectedRoute from "./protectedroute.js";
 import RedirectAuthenticated from "./redirectauthenticated.js";
+import AdminProfile from "./pages/AdminProfile.jsx";
+import AdminProf from "./components/Profile/AdminPContent.jsx";
 
 function App() {
   return (
@@ -43,6 +45,8 @@ function App() {
         <Route path="/faqs" element={<Faq />} />
         <Route path="/forgotpassword" element={<ForgotP />} />
         <Route path="/passwordconfirmed" element={<ConfirmP />} />
+        <Route path="/adminprofile" element={AdminProfile} />
+        <Route path="/adminprofile" element={AdminProf}></Route>
 
         {/* RedirectAuthenticated Routes */}
 
