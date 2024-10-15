@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast"; // Import react-hot-toast
@@ -10,11 +10,31 @@ const ApplyPage = () => {
   const [isVoiceEnabled, setIsVoiceEnabled] = useState(false);
   const [isUploading, setIsUploading] = useState(false); // For showing progress
   const [submitSuccess, setSubmitSuccess] = useState(false); // For showing success message
+  const [userDisabilityType, setUserDisabilityType] = useState(""); // Track user disability type
   const navigate = useNavigate();
 
   const MAX_FILE_SIZE = 16777215; // 16,777,215 bytes (16MB)
 
+  useEffect(() => {
+    const userId = localStorage.getItem("Id");
+
+    const fetchUserDetails = () => {
+      axios
+        .get(`/user/view/${userId}`)
+        .then((response) => {
+          const userData = response.data.data;
+          setUserDisabilityType(userData.type);
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error.response?.data);
+        });
+    };
+
+    fetchUserDetails();
+  }, []);
+
   const playIntroMessage = () => {
+    if (userDisabilityType === "Deaf or Hard of Hearing") return;
     const introMessage =
       "This is the Apply page where your journey begins. Upload your resume below to take the next step toward your desired job. Please note that if you have already applied for a job with this company, you cannot apply again for the same position.";
     const message = new SpeechSynthesisUtterance(introMessage);
@@ -23,6 +43,7 @@ const ApplyPage = () => {
   };
 
   const playSuccessMessage = () => {
+    if (userDisabilityType === "Deaf or Hard of Hearing") return;
     const successMessage =
       "You have successfully applied for the job! We’ve received your application, and the company will review it soon. Keep an eye on your email for further updates.";
     const message = new SpeechSynthesisUtterance(successMessage);
@@ -31,6 +52,7 @@ const ApplyPage = () => {
   };
 
   const handleToggleVoice = () => {
+    if (userDisabilityType === "Deaf or Hard of Hearing") return;
     setIsVoiceEnabled(!isVoiceEnabled);
     if (!isVoiceEnabled) {
       playIntroMessage();
@@ -98,7 +120,7 @@ const ApplyPage = () => {
         axios(config)
           .then((response) => {
             toast.success("Resume submitted successfully!"); // Show success toast
-            playSuccessMessage(); // Play the success message
+            playSuccessMessage(); // Play the success message if applicable
             setSubmitSuccess(true); // Show success message
           })
           .catch((error) => {
@@ -142,23 +164,25 @@ const ApplyPage = () => {
             <h2 className="text-3xl font-bold text-gray-900">
               Apply for the Job
             </h2>
-            <button
-              onClick={handleToggleVoice}
-              className={`ml-4 p-3 rounded-full transition-colors duration-200 shadow-lg ${
-                isVoiceEnabled
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-300 text-black"
-              } hover:bg-blue-700`}
-              title={
-                isVoiceEnabled
-                  ? "Voice is enabled"
-                  : "Enable voice instructions"
-              }
-            >
-              <span className="material-symbols-outlined text-2xl">
-                {isVoiceEnabled ? "volume_up" : "volume_off"}
-              </span>
-            </button>
+            {userDisabilityType !== "Deaf or Hard of Hearing" && (
+              <button
+                onClick={handleToggleVoice}
+                className={`ml-4 p-3 rounded-full transition-colors duration-200 shadow-lg ${
+                  isVoiceEnabled
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-300 text-black"
+                } hover:bg-blue-700`}
+                title={
+                  isVoiceEnabled
+                    ? "Voice is enabled"
+                    : "Enable voice instructions"
+                }
+              >
+                <span className="material-symbols-outlined text-2xl">
+                  {isVoiceEnabled ? "volume_up" : "volume_off"}
+                </span>
+              </button>
+            )}
           </div>
           <form onSubmit={handleSubmit}>
             <div className="mb-8">
