@@ -262,7 +262,16 @@ const UserProf = () => {
               Address:
             </p>
             <p className="text-gray-600 bg-gray-200 p-5 rounded-lg">
-              {user.address}
+              {user.address
+                ? user.address
+                    .split(" ")
+                    .map(
+                      (word) =>
+                        word.charAt(0).toUpperCase() +
+                        word.slice(1).toLowerCase()
+                    )
+                    .join(" ")
+                : ""}
             </p>
           </div>
           <div className="mb-4">
@@ -273,9 +282,19 @@ const UserProf = () => {
               City:
             </p>
             <p className="text-gray-600 bg-gray-200 p-5 rounded-lg">
-              {user.city}
+              {user.city
+                ? user.city
+                    .split(" ")
+                    .map(
+                      (word) =>
+                        word.charAt(0).toUpperCase() +
+                        word.slice(1).toLowerCase()
+                    )
+                    .join(" ")
+                : ""}
             </p>
           </div>
+
           <div className="mb-4">
             <p className="text-lg font-semibold text-gray-800 flex items-center">
               <span className="material-symbols-outlined text-2xl mr-2">
@@ -295,7 +314,10 @@ const UserProf = () => {
               Gender:
             </p>
             <p className="text-gray-600 bg-gray-200 p-5 rounded-lg">
-              {user.gender}
+              {user.gender
+                ? user.gender.charAt(0).toUpperCase() +
+                  user.gender.slice(1).toLowerCase()
+                : ""}
             </p>
           </div>
         </div>

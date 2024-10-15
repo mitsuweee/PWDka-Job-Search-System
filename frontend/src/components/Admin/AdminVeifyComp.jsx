@@ -263,8 +263,31 @@ const AdminVerifyComp = () => {
                 <tbody>
                   {companies.map((company) => (
                     <tr key={company.id} className="hover:bg-gray-100">
-                      <td className="py-2 px-4 border">{company.name}</td>
-                      <td className="py-2 px-4 border">{company.city}</td>
+                      <td className="py-2 px-4 border">
+                        {company.name
+                          ? company.name
+                              .split(" ")
+                              .map(
+                                (word) =>
+                                  word.charAt(0).toUpperCase() +
+                                  word.slice(1).toLowerCase()
+                              )
+                              .join(" ")
+                          : ""}
+                      </td>
+                      <td className="py-2 px-4 border">
+                        {company.city
+                          ? company.city
+                              .split(" ")
+                              .map(
+                                (word) =>
+                                  word.charAt(0).toUpperCase() +
+                                  word.slice(1).toLowerCase()
+                              )
+                              .join(" ")
+                          : ""}
+                      </td>
+
                       <td className="py-2 px-4 border text-center">
                         <button
                           disabled={actionInProgress}
@@ -337,15 +360,48 @@ const AdminVerifyComp = () => {
                   </div>
                   <div>
                     <strong>City:</strong>
-                    <p>{selectedCompany.city}</p>
+                    <p>
+                      {selectedCompany.city
+                        ? selectedCompany.city
+                            .split(" ")
+                            .map(
+                              (word) =>
+                                word.charAt(0).toUpperCase() +
+                                word.slice(1).toLowerCase()
+                            )
+                            .join(" ")
+                        : ""}
+                    </p>
                   </div>
                   <div>
                     <strong>Company Description:</strong>
-                    <p>{selectedCompany.companyDescription}</p>
+                    <p>
+                      {selectedCompany.companyDescription
+                        ? selectedCompany.companyDescription
+                            .split(". ")
+                            .map(
+                              (sentence) =>
+                                sentence.charAt(0).toUpperCase() +
+                                sentence.slice(1).toLowerCase()
+                            )
+                            .join(". ")
+                        : ""}
+                    </p>
                   </div>
                   <div>
                     <strong>Address:</strong>
-                    <p>{selectedCompany.address}</p>
+                    <p>
+                      {selectedCompany.address
+                        ? selectedCompany.address
+                            .split(" ")
+                            .map(
+                              (word) =>
+                                word.charAt(0).toUpperCase() +
+                                word.slice(1).toLowerCase()
+                            )
+                            .join(" ")
+                        : ""}
+                    </p>
                   </div>
                   <div>
                     <strong>Contact Number:</strong>

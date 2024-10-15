@@ -249,7 +249,16 @@ const AdminViewUsers = () => {
               {users.map((user) => (
                 <tr key={user.id} className="border-b hover:bg-gray-100">
                   <td className="py-2 px-4">{user.id}</td>
-                  <td className="py-2 px-4">{user.full_name}</td>
+                  <td className="py-2 px-4">
+                    {user.full_name
+                      .split(" ")
+                      .map(
+                        (word) =>
+                          word.charAt(0).toUpperCase() +
+                          word.slice(1).toLowerCase()
+                      )
+                      .join(" ")}
+                  </td>
                   <td className="py-2 px-4">{user.type}</td>
                   <td className="py-2 px-4 flex">
                     <button
@@ -311,13 +320,19 @@ const AdminViewUsers = () => {
               <div>
                 <p className="font-semibold text-base sm:text-lg">Address:</p>
                 <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                  {user.address}
+                  {user.address
+                    .split(" ")
+                    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                    .join(" ")}
                 </p>
               </div>
               <div>
                 <p className="font-semibold text-base sm:text-lg">City:</p>
                 <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                  {user.city}
+                  {user.city
+                    .split(" ")
+                    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                    .join(" ")}
                 </p>
               </div>
               <div>

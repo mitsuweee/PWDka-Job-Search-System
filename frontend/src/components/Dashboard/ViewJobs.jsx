@@ -319,7 +319,16 @@ const ViewJobs = () => {
                     {job.company_name}
                   </td>
                   <td className="py-2 px-2 md:px-4 text-sm md:text-base break-words">
-                    {job.position_name}
+                    {job.position_name
+                      ? job.position_name
+                          .split(" ")
+                          .map(
+                            (word) =>
+                              word.charAt(0).toUpperCase() +
+                              word.slice(1).toLowerCase()
+                          )
+                          .join(" ")
+                      : ""}
                   </td>
                   <td className="py-2 px-2 md:px-4">
                     <div className="flex space-x-1 md:space-x-2 justify-center md:justify-end">
@@ -379,44 +388,88 @@ const ViewJobs = () => {
               Job Details
             </h2>
             <div className="space-y-4">
-              <div className="flex justify-between bg-gray-200 p-3 rounded-md">
+              <div>
+                <div className="bg-gray-200 p-3 rounded-md mb-2">
+                  <p>
+                    <strong>Company Name:</strong> {job?.company_name}
+                  </p>
+                </div>
+                <div className="bg-gray-200 p-3 rounded-md">
+                  <p>
+                    <strong>Job Title:</strong> {job?.position_name}
+                  </p>
+                </div>
+              </div>
+              <div className="bg-gray-200 p-3 rounded-md">
                 <p>
-                  <strong>Company Name:</strong> {job?.company_name}
-                </p>
-                <p>
-                  <strong>Job Title:</strong> {job?.position_name}
+                  <strong>Description:</strong>{" "}
+                  {job?.description
+                    ? job.description
+                        .split(".")
+                        .map(
+                          (sentence) =>
+                            sentence.trim().charAt(0).toUpperCase() +
+                            sentence.trim().slice(1).toLowerCase()
+                        )
+                        .join(". ") + "."
+                    : ""}
                 </p>
               </div>
               <div className="bg-gray-200 p-3 rounded-md">
                 <p>
-                  <strong>Description:</strong> {job?.description}
+                  <strong>Requirements:</strong>{" "}
+                  {job?.requirement
+                    ? job.requirement
+                        .split(",")
+                        .map(
+                          (part) =>
+                            part.trim().charAt(0).toUpperCase() +
+                            part.trim().slice(1).toLowerCase()
+                        )
+                        .join(", ")
+                    : ""}
                 </p>
               </div>
               <div className="bg-gray-200 p-3 rounded-md">
                 <p>
-                  <strong>Requirements:</strong> {job?.requirement}{" "}
-                  {/* Ensure this displays the requirements */}
-                </p>
-              </div>
-              <div className="bg-gray-200 p-3 rounded-md">
-                <p>
-                  <strong>Qualification:</strong> {job?.qualification}
-                </p>
-              </div>
-              <div className="flex justify-between bg-gray-200 p-3 rounded-md">
-                <span>
-                  <strong>Min Salary:</strong> ${job?.minimum_salary}
-                </span>
-                <span>
-                  <strong>Max Salary:</strong> ${job?.maximum_salary}
-                </span>
-              </div>
-              <div className="bg-gray-200 p-3 rounded-md">
-                <p>
-                  <strong>Position Type:</strong> {job?.position_type}
+                  <strong>Qualification:</strong>{" "}
+                  {job?.qualification
+                    ? job.qualification
+                        .split(",")
+                        .map(
+                          (part) =>
+                            part.trim().charAt(0).toUpperCase() +
+                            part.trim().slice(1).toLowerCase()
+                        )
+                        .join(", ")
+                    : ""}
                 </p>
               </div>
 
+              <div className="flex justify-between bg-gray-200 p-3 rounded-md">
+                <span>
+                  <strong>Min Salary:</strong> ₱ {job?.minimum_salary}
+                </span>
+                <span>
+                  <strong>Max Salary:</strong> ₱ {job?.maximum_salary}
+                </span>
+              </div>
+
+              <div className="bg-gray-200 p-3 rounded-md">
+                <p>
+                  <strong>Position Type:</strong>{" "}
+                  {job?.position_type
+                    ? job.position_type
+                        .split("-")
+                        .map(
+                          (part) =>
+                            part.trim().charAt(0).toUpperCase() +
+                            part.trim().slice(1).toLowerCase()
+                        )
+                        .join(" - ")
+                    : ""}
+                </p>
+              </div>
               {/* Disability Categories */}
               {job?.disability_types ? (
                 <div className="bg-gray-200 p-3 rounded-md">

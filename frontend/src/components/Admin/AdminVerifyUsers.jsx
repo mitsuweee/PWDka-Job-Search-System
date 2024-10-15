@@ -248,7 +248,19 @@ const AdminVerifyUsers = () => {
                   {users.map((user) => (
                     <tr key={user.id} className="hover:bg-gray-100">
                       <td className="py-2 px-4 border">{user.id}</td>
-                      <td className="py-2 px-4 border">{user.full_name}</td>
+                      <td className="py-2 px-4">
+                        {user.full_name
+                          ? user.full_name
+                              .split(" ")
+                              .map(
+                                (word) =>
+                                  word.charAt(0).toUpperCase() +
+                                  word.slice(1).toLowerCase()
+                              )
+                              .join(" ")
+                          : ""}
+                      </td>
+
                       <td className="py-2 px-4 border">{user.type}</td>
                       <td className="py-2 px-4 border text-center">
                         <button
@@ -301,8 +313,20 @@ const AdminVerifyUsers = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <strong>Full Name:</strong>
-                    <p>{selectedUser.fullName}</p>
+                    <p>
+                      {selectedUser.fullName
+                        ? selectedUser.fullName
+                            .split(" ")
+                            .map(
+                              (word) =>
+                                word.charAt(0).toUpperCase() +
+                                word.slice(1).toLowerCase()
+                            )
+                            .join(" ")
+                        : ""}
+                    </p>
                   </div>
+
                   <div>
                     <strong>PWD ID:</strong>
                     <p>{selectedUser.pwdId}</p>
@@ -313,12 +337,35 @@ const AdminVerifyUsers = () => {
                   </div>
                   <div>
                     <strong>Address:</strong>
-                    <p>{selectedUser.address}</p>
+                    <p>
+                      {selectedUser.address
+                        ? selectedUser.address
+                            .split(" ")
+                            .map(
+                              (word) =>
+                                word.charAt(0).toUpperCase() +
+                                word.slice(1).toLowerCase()
+                            )
+                            .join(" ")
+                        : ""}
+                    </p>
                   </div>
                   <div>
                     <strong>City:</strong>
-                    <p>{selectedUser.city}</p>
+                    <p>
+                      {selectedUser.city
+                        ? selectedUser.city
+                            .split(" ")
+                            .map(
+                              (word) =>
+                                word.charAt(0).toUpperCase() +
+                                word.slice(1).toLowerCase()
+                            )
+                            .join(" ")
+                        : ""}
+                    </p>
                   </div>
+
                   <div>
                     <strong>Birthdate:</strong>
                     <p>{selectedUser.birthdate}</p>

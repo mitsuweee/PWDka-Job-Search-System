@@ -63,6 +63,7 @@ const AdminViewJobs = () => {
       companyName: jobData.company_name,
       jobName: jobData.position_name,
       description: jobData.description,
+      requirements: jobData.requirement,
       qualification: jobData.qualification,
       minimumSalary: jobData.minimum_salary,
       maximumSalary: jobData.maximum_salary,
@@ -255,22 +256,46 @@ const AdminViewJobs = () => {
                 <p className="font-semibold text-base sm:text-lg">
                   Description:
                 </p>
-                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                  {job.description}
+                <div className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
+                  {job.description.split(".").map((sentence, index) => (
+                    <p key={index}>
+                      {sentence.trim().charAt(0).toUpperCase() +
+                        sentence.trim().slice(1).toLowerCase()}
+                      .
+                    </p>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <p className="font-semibold text-base sm:text-lg">
+                  Requirements:
                 </p>
+                <div className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
+                  {job.requirements.split(",").map((requirement, index) => (
+                    <p key={index}>
+                      {requirement.trim().charAt(0).toUpperCase() +
+                        requirement.trim().slice(1).toLowerCase()}
+                    </p>
+                  ))}
+                </div>
               </div>
               <div>
                 <p className="font-semibold text-base sm:text-lg">
                   Qualification:
                 </p>
-                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                  {job.qualification}
-                </p>
+                <div className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
+                  {job.qualification.split(",").map((qualification, index) => (
+                    <p key={index}>
+                      {qualification.trim().charAt(0).toUpperCase() +
+                        qualification.trim().slice(1).toLowerCase()}
+                    </p>
+                  ))}
+                </div>
               </div>
               <div>
                 <p className="font-semibold text-base sm:text-lg">Salary:</p>
                 <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                  {job.minimumSalary} - {job.maximumSalary}
+                  ₱ {job.minimumSalary} - ₱ {job.maximumSalary}
                 </p>
               </div>
               <div>
@@ -278,7 +303,13 @@ const AdminViewJobs = () => {
                   Position Type:
                 </p>
                 <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                  {job.positionType}
+                  {job.positionType
+                    .split("-")
+                    .map(
+                      (part) =>
+                        part.charAt(0).toUpperCase() + part.slice(1).trim()
+                    )
+                    .join(" - ")}
                 </p>
               </div>
               <div>

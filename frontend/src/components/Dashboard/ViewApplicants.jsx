@@ -344,7 +344,16 @@ const ViewApplicants = () => {
                     Location:
                   </p>
                   <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
-                    {selectedProfile?.location || "Not specified"}
+                    {selectedProfile?.location
+                      ? selectedProfile.location
+                          .split(" ")
+                          .map(
+                            (word) =>
+                              word.charAt(0).toUpperCase() +
+                              word.slice(1).toLowerCase()
+                          )
+                          .join(" ")
+                      : "Not specified"}
                   </p>
                 </div>
                 <div>
@@ -358,7 +367,10 @@ const ViewApplicants = () => {
                 <div>
                   <p className="text-lg font-semibold text-gray-800">Gender:</p>
                   <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
-                    {selectedProfile?.gender || "Not specified"}
+                    {selectedProfile?.gender
+                      ? selectedProfile.gender.charAt(0).toUpperCase() +
+                        selectedProfile.gender.slice(1).toLowerCase()
+                      : "Not specified"}
                   </p>
                 </div>
                 <div>
