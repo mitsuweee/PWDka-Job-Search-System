@@ -28,7 +28,7 @@ const CompanyProf = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const userId = sessionStorage.getItem("Id");
+    const userId = localStorage.getItem("Id");
     const config = {
       method: "get",
       url: `/company/view/${userId}`,
@@ -83,7 +83,7 @@ const CompanyProf = () => {
   };
 
   const handleProfilePictureSubmit = () => {
-    const userId = sessionStorage.getItem("Id");
+    const userId = localStorage.getItem("Id");
     const config = {
       method: "put",
       url: `/company/update/picture/${userId}`,
@@ -139,7 +139,7 @@ const CompanyProf = () => {
       email: company.companyEmail,
     });
 
-    const companyId = sessionStorage.getItem("Id");
+    const companyId = localStorage.getItem("Id");
     const config = {
       method: "put",
       url: `/company/update/${companyId}`,
@@ -163,7 +163,7 @@ const CompanyProf = () => {
   };
 
   const handlePasswordUpdate = () => {
-    const companyId = sessionStorage.getItem("Id");
+    const companyId = localStorage.getItem("Id");
 
     if (passwords.newPassword !== passwords.confirmNewPassword) {
       toast.error("New password and confirm new password do not match.");
@@ -206,9 +206,9 @@ const CompanyProf = () => {
   };
 
   const confirmLogout = () => {
-    sessionStorage.removeItem("Id");
-    sessionStorage.removeItem("Role");
-    sessionStorage.removeItem("Token");
+    localStorage.removeItem("Id");
+    localStorage.removeItem("Role");
+    localStorage.removeItem("Token");
     navigate("/login");
     toast.success("Logged out successfully!");
   };

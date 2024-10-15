@@ -21,7 +21,7 @@ const ViewJobs = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const companyId = sessionStorage.getItem("Id");
+    const companyId = localStorage.getItem("Id");
     const config = {
       method: "get",
       url: `/joblisting/view/newesttooldest/company/${companyId}`,
@@ -254,9 +254,9 @@ const ViewJobs = () => {
         <button
           className="bg-red-600 text-white rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-red-500 transition-all duration-200 ease-in-out mt-6"
           onClick={() => {
-            sessionStorage.removeItem("Id");
-            sessionStorage.removeItem("Role");
-            sessionStorage.removeItem("Token");
+            localStorage.removeItem("Id");
+            localStorage.removeItem("Role");
+            localStorage.removeItem("Token");
             navigate("/login");
           }}
         >

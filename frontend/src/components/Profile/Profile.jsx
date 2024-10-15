@@ -1,12 +1,12 @@
-import React from 'react';
-import UserProf from './UserPContent';
-import CompanyProf from './CompanyPContent';
-import Footer from '../Footer';
-import Navbar from '../Navbar';
+import React from "react";
+import UserProf from "./UserPContent";
+import CompanyProf from "./CompanyPContent";
+import Footer from "../Footer";
+import Navbar from "../Navbar";
 
 const Profile = () => {
-  // Assume the user type is stored in sessionStorage
-  const userType = sessionStorage.getItem('Role'); // Could be 'user' or 'company'
+  // Assume the user type is stored in localStorage
+  const userType = localStorage.getItem("Role"); // Could be 'user' or 'company'
 
   return (
     <div className="bg-[#E3EDF7] min-h-screen flex flex-col">
@@ -16,9 +16,9 @@ const Profile = () => {
 
       {/* Render the appropriate profile based on the user type */}
       <main className="flex-grow">
-        {userType === 'company' ? (
+        {userType === "company" ? (
           <CompanyProf />
-        ) : userType === 'user' ? (
+        ) : userType === "user" ? (
           <UserProf />
         ) : (
           <div>Error: Unknown user type</div>

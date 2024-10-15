@@ -31,9 +31,9 @@ const CompanyDashboard = () => {
 
   const navigate = useNavigate();
 
-  // Fetch counts from the backend using Id from sessionStorage
+  // Fetch counts from the backend using Id from localStorage
   useEffect(() => {
-    const Id = sessionStorage.getItem("Id"); // Retrieve Id from sessionStorage
+    const Id = localStorage.getItem("Id"); // Retrieve Id from localStorage
     if (Id) {
       const fetchCompanyCounts = async () => {
         try {
@@ -99,9 +99,9 @@ const CompanyDashboard = () => {
     const confirmed = window.confirm("Are you sure you want to logout?");
     if (confirmed) {
       // Clear session storage and redirect to the login route
-      sessionStorage.removeItem("Id");
-      sessionStorage.removeItem("Role");
-      sessionStorage.removeItem("Token");
+      localStorage.removeItem("Id");
+      localStorage.removeItem("Role");
+      localStorage.removeItem("Token");
 
       navigate("/login");
     }

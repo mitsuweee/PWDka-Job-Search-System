@@ -58,7 +58,7 @@ function PrivacyPolicy() {
   const [userDisabilityType, setUserDisabilityType] = useState("None");
 
   useEffect(() => {
-    const userId = sessionStorage.getItem("Id");
+    const userId = localStorage.getItem("Id");
 
     const fetchUserDetails = () => {
       axios

@@ -11,7 +11,7 @@ const ContactUs = () => {
   const [formSuccess, setFormSuccess] = useState(""); // State for form success message
 
   useEffect(() => {
-    const userId = sessionStorage.getItem("Id");
+    const userId = localStorage.getItem("Id");
 
     const fetchUserDetails = () => {
       axios

@@ -29,9 +29,9 @@ const PostJob = () => {
   };
 
   const confirmLogout = () => {
-    sessionStorage.removeItem("Id");
-    sessionStorage.removeItem("Role");
-    sessionStorage.removeItem("Token");
+    localStorage.removeItem("Id");
+    localStorage.removeItem("Role");
+    localStorage.removeItem("Token");
     window.location.href = "/login";
   };
 
@@ -57,7 +57,7 @@ const PostJob = () => {
     setIsLoading(true); // Show loader
 
     const data = JSON.stringify({
-      company_id: parseFloat(sessionStorage.getItem("Id")),
+      company_id: parseFloat(localStorage.getItem("Id")),
       position_name: jobDetails.positionName,
       description: jobDetails.jobDescription,
       requirement: jobDetails.requirements,

@@ -1,6 +1,6 @@
 const ProtectedRoute = ({ children, role }) => {
-  const userRole = sessionStorage.getItem("Role");
-  const token = sessionStorage.getItem("Token");
+  const userRole = localStorage.getItem("Role");
+  const token = localStorage.getItem("Token");
 
   // Check if the user has a valid token and the required role
   if (token && userRole === role) {

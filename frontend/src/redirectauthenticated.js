@@ -3,12 +3,12 @@ import { useNavigate } from "react-router-dom";
 
 const RedirectAuthenticated = ({ children }) => {
   const navigate = useNavigate();
-  const token = sessionStorage.getItem("Token");
+  const token = localStorage.getItem("Token");
 
   useEffect(() => {
     if (token) {
       // Redirect to the user's appropriate dashboard based on their role
-      const role = sessionStorage.getItem("Role");
+      const role = localStorage.getItem("Role");
       if (role === "admin") {
         navigate("/admin/dashboard");
       } else if (role === "company") {

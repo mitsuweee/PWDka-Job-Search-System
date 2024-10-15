@@ -29,7 +29,7 @@ const JobListing = () => {
   };
 
   useEffect(() => {
-    const userId = sessionStorage.getItem("Id");
+    const userId = localStorage.getItem("Id");
 
     const fetchUserFullName = () => {
       setLoading(true);
@@ -175,9 +175,9 @@ const JobListing = () => {
   };
 
   const confirmLogout = () => {
-    sessionStorage.removeItem("Id");
-    sessionStorage.removeItem("Role");
-    sessionStorage.removeItem("Token");
+    localStorage.removeItem("Id");
+    localStorage.removeItem("Role");
+    localStorage.removeItem("Token");
     navigate("/login");
   };
 
