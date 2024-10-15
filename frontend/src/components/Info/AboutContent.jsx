@@ -43,40 +43,48 @@ const AboutContent = () => {
 
   return (
     <div>
-      {/* About Us Section Header with Background Image */}
-      <div className="relative w-full h-[300px] flex justify-center items-center">
-        {/* Blurred Background Image */}
-        <div className="absolute inset-0">
-          <img
-            src="/imgs/bg search.png"
-            alt="Background"
-            className="w-full h-full object-cover filter "
-          />
+      {/* New Section with Background Image and Buttons */}
+      <section className="relative bg-[url('/imgs/wheelchair.jpg')] bg-cover bg-center bg-no-repeat">
+        <div className="absolute inset-0 bg-gray-900/75 sm:bg-transparent sm:from-gray-900/95 sm:to-gray-900/25 ltr:sm:bg-gradient-to-r rtl:sm:bg-gradient-to-l"></div>
+
+        <div className="relative mx-auto max-w-screen-xl px-4 py-32 sm:px-6 lg:flex lg:h-screen lg:items-center lg:px-8">
+          <div className="max-w-xl text-left">
+            <h1 className="text-3xl font-extrabold shadow-lg text-white sm:text-5xl">
+              Hello! We Are
+              <strong className="block font-extrabold text-blue-500">
+                PWDka
+              </strong>
+            </h1>
+
+            <p className="mt-4 max-w-lg shadow-lg text-white sm:text-xl">
+              At PWDKa, our mission is to champion inclusivity and create
+              meaningful opportunities for Persons with Disabilities (PWDs). We
+              are driven by a vision of a world where every individual,
+              regardless of ability, has equal access to career opportunities
+              and professional growth.
+            </p>
+
+            <div className="mt-8 flex flex-wrap justify-start gap-4">
+              <a
+                href="#section1"
+                className="block w-full rounded bg-blue-600 px-12 py-3 text-sm font-medium text-white shadow hover:bg-blue-700 focus:outline-none focus:ring active:bg-blue-500 sm:w-auto"
+              >
+                Our Mission
+              </a>
+
+              <a
+                href="#makers"
+                className="block w-full rounded bg-white px-12 py-3 text-sm font-medium text-blue-600 shadow hover:text-blue-700 focus:outline-none focus:ring active:text-blue-500 sm:w-auto"
+              >
+                Developers
+              </a>
+            </div>
+          </div>
         </div>
-        {/* Foreground Text and Button */}
-        <div className="relative z-10 text-center">
-          <h1 className="text-6xl md:text-6xl lg:text-7xl font-bold text-white">
-            about us.
-          </h1>
-          {userDisabilityType !== "Deaf or Hard of Hearing" && (
-            <button
-              onClick={handleToggleVoice}
-              className={`mt-4 p-3 rounded-full shadow-lg transition-colors duration-200 ${
-                isVoiceEnabled
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-300 text-black"
-              } hover:bg-blue-600`}
-            >
-              <span className="material-symbols-outlined text-2xl">
-                {isVoiceEnabled ? "volume_up" : "volume_off"}
-              </span>
-            </button>
-          )}
-        </div>
-      </div>
+      </section>
 
       {/* Section 1 */}
-      <section>
+      <section id="section1">
         <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
           <div className="max-w-3xl">
             <h2 className="text-3xl text-custom-blue font-bold sm:text-4xl">
@@ -157,7 +165,11 @@ const AboutContent = () => {
         </div>
       </section>
 
-      <div className="w-full bg-custombg pt-16 pr-4 pb-16 pl-4 mt-0 mr-auto mb-0 ml-auto sm:max-w-xl md:max-w-full md:px-24 lg:px-8 lg:py-20">
+      {/* Makers Section */}
+      <div
+        id="makers"
+        className="w-full bg-custombg pt-16 pr-4 pb-16 pl-4 mt-0 mr-auto mb-0 ml-auto sm:max-w-xl md:max-w-full md:px-24 lg:px-8 lg:py-20"
+      >
         <div className="mt-0 mr-auto mb-10 ml-auto max-w-xl md:mx-auto sm:text-center lg:max-w-2xl md:mb-12">
           <div>
             <p className="pt-px pr-3 pb-px pl-3 mt-0 mr-0 mb-4 ml-0 text-xs font-semibold text-white bg-pink-500 inline-block tracking-wider uppercase rounded-full">

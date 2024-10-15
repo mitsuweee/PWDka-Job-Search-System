@@ -551,36 +551,61 @@ const Signup = () => {
         </div>
       </div>
 
-      <div className="col-span-12 flex justify-between items-center w-full">
-        {/* Already have an account on the left */}
-        <p className="text-sm text-black">
-          Already have an account?{" "}
-          <button
-            onClick={handleLogin}
-            className="text-blue-600 hover:underline focus:outline-none"
-          >
-            Log in
-          </button>
-        </p>
-
-        {/* Sign Up button in the center */}
-        <div className="flex justify-center">
-          <button
-            type="submit"
-            className="px-6 py-2 text-md font-medium text-white bg-blue-600 rounded-md shadow-lg hover:bg-blue-700 hover:shadow-xl transition-all focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            Sign Up
-          </button>
+      {/* Grouping the Log in, Sign Up, and Reset buttons below the privacy policy */}
+      <div className="col-span-12 w-full">
+        {/* Terms and Conditions and Privacy Policy on top */}
+        <div className="mb-4 w-full">
+          <p className="text-sm text-gray-600 whitespace-nowrap overflow-hidden text-ellipsis">
+            By creating an account, you agree to our{" "}
+            <a
+              href="/terms"
+              className="text-blue-600 hover:underline focus:outline-none"
+            >
+              terms and conditions
+            </a>{" "}
+            and{" "}
+            <a
+              href="/privacypolicy"
+              className="text-blue-600 hover:underline focus:outline-none"
+            >
+              privacy policy
+            </a>
+            .
+          </p>
         </div>
 
-        {/* Reset button on the right */}
-        <button
-          type="button"
-          onClick={handleReset}
-          className="px-4 py-2 text-md font-medium text-gray-600 bg-gray-100 rounded-md shadow-sm hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500"
-        >
-          Reset Form
-        </button>
+        {/* Grouping the Log in, Sign Up, and Reset buttons below the privacy policy */}
+        <div className="flex justify-between items-center w-full mt-4">
+          {/* Already have an account on the left */}
+          <p className="text-sm text-black">
+            Already have an account?{" "}
+            <button
+              onClick={handleLogin}
+              className="text-blue-600 hover:underline focus:outline-none"
+            >
+              Log in
+            </button>
+          </p>
+
+          {/* Sign Up button in the center */}
+          <div className="flex justify-center">
+            <button
+              type="submit"
+              className="px-6 py-2 text-md font-medium text-white bg-blue-600 rounded-md shadow-lg hover:bg-blue-700 hover:shadow-xl transition-all focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              Sign Up
+            </button>
+          </div>
+
+          {/* Reset button on the right */}
+          <button
+            type="button"
+            onClick={handleReset}
+            className="px-4 py-2 text-md font-medium text-gray-600 bg-gray-100 rounded-md shadow-sm hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500"
+          >
+            Reset Form
+          </button>
+        </div>
       </div>
     </form>
   );
@@ -781,29 +806,60 @@ const Signup = () => {
         </div>
       </div>
 
-      <div className="col-span-12 flex justify-between">
-        <button
-          type="button"
-          onClick={handleReset}
-          className="px-6 py-2 text-lg font-medium text-white bg-gray-600 rounded-md shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
-        >
-          Reset
-        </button>
+      <div className="col-span-12 w-full">
+        {/* Terms and Conditions and Privacy Policy on top */}
+        <div className="mb-4 w-full">
+          <p className="text-sm text-black whitespace-nowrap overflow-hidden text-ellipsis">
+            By creating an account, you agree to our{" "}
+            <a
+              href="/terms"
+              className="text-blue-600 hover:underline focus:outline-none"
+            >
+              terms and conditions
+            </a>{" "}
+            and{" "}
+            <a
+              href="/privacypolicy"
+              className="text-blue-600 hover:underline focus:outline-none"
+            >
+              privacy policy
+            </a>
+            .
+          </p>
+        </div>
 
-        <button
-          type="button"
-          onClick={handleLogin}
-          className="px-6 py-2 text-lg font-medium text-white bg-green-600 rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
-        >
-          Login
-        </button>
+        {/* Grouping the Log in, Sign Up, and Reset buttons below the privacy policy */}
+        <div className="flex justify-between items-center w-full mt-4">
+          {/* Already have an account on the left */}
+          <p className="text-sm text-black">
+            Already have an account?{" "}
+            <button
+              onClick={handleLogin}
+              className="text-blue-600 hover:underline focus:outline-none"
+            >
+              Log in
+            </button>
+          </p>
 
-        <button
-          type="submit"
-          className="px-6 py-2 text-lg font-medium text-white bg-blue-600 rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          Sign Up
-        </button>
+          {/* Sign Up button in the center */}
+          <div className="flex justify-center">
+            <button
+              type="submit"
+              className="px-6 py-2 text-md font-medium text-white bg-blue-600 rounded-md shadow-lg hover:bg-blue-700 hover:shadow-xl transition-all focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              Sign Up
+            </button>
+          </div>
+
+          {/* Reset button on the right */}
+          <button
+            type="button"
+            onClick={handleReset}
+            className="px-4 py-2 text-md font-medium text-gray-600 bg-gray-100 rounded-md shadow-sm hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500"
+          >
+            Reset Form
+          </button>
+        </div>
       </div>
     </form>
   );
