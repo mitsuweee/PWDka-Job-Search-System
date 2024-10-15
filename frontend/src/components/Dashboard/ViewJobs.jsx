@@ -405,7 +405,7 @@ const ViewJobs = () => {
                             sentence.trim().charAt(0).toUpperCase() +
                             sentence.trim().slice(1).toLowerCase()
                         )
-                        .join(". ") + "."
+                        .join(". ")
                     : ""}
                 </p>
               </div>
@@ -413,15 +413,14 @@ const ViewJobs = () => {
                 <p>
                   <strong>Requirements:</strong>{" "}
                   {job?.requirement
-                    ? job.requirement.split(",") +
-                      "."
+                    ? job.requirement
+                        .split(",")
                         .map(
                           (part) =>
                             part.trim().charAt(0).toUpperCase() +
                             part.trim().slice(1).toLowerCase()
                         )
-                        .join(", ") +
-                      "."
+                        .join(", ")
                     : ""}
                 </p>
               </div>
@@ -429,15 +428,14 @@ const ViewJobs = () => {
                 <p>
                   <strong>Qualification:</strong>{" "}
                   {job?.qualification
-                    ? job.qualification.split(",") +
-                      "."
+                    ? job.qualification
+                        .split(",")
                         .map(
                           (part) =>
                             part.trim().charAt(0).toUpperCase() +
                             part.trim().slice(1).toLowerCase()
                         )
-                        .join(", ") +
-                      "."
+                        .join(", ")
                     : ""}
                 </p>
               </div>

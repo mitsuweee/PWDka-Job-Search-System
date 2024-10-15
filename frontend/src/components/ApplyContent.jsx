@@ -130,7 +130,7 @@ const ApplyPage = () => {
           </p>
           <button
             className="mt-8 py-3 px-6 bg-blue-600 text-white rounded-lg shadow-lg hover:bg-blue-700 transition duration-300"
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/joblist")}
           >
             Go back to home
           </button>
