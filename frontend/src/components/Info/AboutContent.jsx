@@ -49,14 +49,14 @@ const AboutContent = () => {
 
         <div className="relative mx-auto max-w-screen-xl px-4 py-32 sm:px-6 lg:flex lg:h-screen lg:items-center lg:px-8">
           <div className="max-w-xl text-left">
-            <h1 className="text-3xl font-extrabold shadow-lg text-white sm:text-5xl">
+            <h1 className="text-3xl font-extrabold  text-white sm:text-5xl">
               Hello! We Are
               <strong className="block font-extrabold text-blue-500">
                 PWDka
               </strong>
             </h1>
 
-            <p className="mt-4 max-w-lg shadow-lg text-white sm:text-xl">
+            <p className="mt-4 max-w-lg  text-white sm:text-xl">
               At PWDKa, our mission is to champion inclusivity and create
               meaningful opportunities for Persons with Disabilities (PWDs). We
               are driven by a vision of a world where every individual,
