@@ -169,20 +169,28 @@ const CompanyDashboard = () => {
         </div>
 
         {/* Bar Chart */}
-        <div className="mt-8">
+        <div className="mt-8 w-full md:w-3/4 lg:w-2/3 mx-auto h-72 md:h-80">
+          {" "}
+          {/* Adjust width and height as needed */}
           <Bar data={barChartData} options={barChartOptions} />
         </div>
 
         {/* Dashboard Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
-          <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl hover:translate-y-1 transition-all duration-200 ease-in-out">
+          <div
+            className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl hover:translate-y-1 transition-all duration-200 ease-in-out cursor-pointer"
+            onClick={() => navigate("/dashboard/ViewJobs")} // Navigate to ViewJobs on card click
+          >
             <h2 className="text-xl font-bold text-gray-800">Job Listings</h2>
             <p className="text-3xl text-blue-900 font-semibold">
               {companyCounts.job_listings}
             </p>
           </div>
 
-          <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl hover:translate-y-1 transition-all duration-200 ease-in-out">
+          <div
+            className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl hover:translate-y-1 transition-all duration-200 ease-in-out cursor-pointer"
+            onClick={() => navigate("/dashboard/ViewJobs")} // Navigate to ViewJobs on card click
+          >
             <h2 className="text-xl font-bold text-gray-800">
               Job Applications
             </h2>
