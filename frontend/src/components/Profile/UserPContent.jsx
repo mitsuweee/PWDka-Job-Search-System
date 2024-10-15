@@ -16,17 +16,23 @@ const UserProf = () => {
     profilePicture: "",
   });
 
-  const [isModalOpen, setIsModalOpen] = useState(false); // Single modal state for both edit and password
-  const [isEditing, setIsEditing] = useState(true); // Toggle between edit profile and change password
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(true);
   const [isProfilePictureModalOpen, setIsProfilePictureModalOpen] =
-    useState(false); // Profile picture modal state
+    useState(false);
   const [passwords, setPasswords] = useState({
     currentPassword: "",
     newPassword: "",
     confirmNewPassword: "",
   });
 
-  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false); // State for logout modal
+  const [passwordVisibility, setPasswordVisibility] = useState({
+    currentPassword: false,
+    newPassword: false,
+    confirmNewPassword: false,
+  });
+
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -125,14 +131,21 @@ const UserProf = () => {
     setPasswords({ ...passwords, [e.target.name]: e.target.value });
   };
 
+  const togglePasswordVisibility = (field) => {
+    setPasswordVisibility((prevState) => ({
+      ...prevState,
+      [field]: !prevState[field],
+    }));
+  };
+
   const handleEdit = () => {
     setIsEditing(true);
-    setIsModalOpen(true); // Open the modal in edit mode
+    setIsModalOpen(true);
   };
 
   const handlePasswordToggle = () => {
     setIsEditing(false);
-    setIsModalOpen(true); // Open the modal in password change mode
+    setIsModalOpen(true);
   };
 
   const handlePasswordUpdate = () => {
@@ -199,7 +212,7 @@ const UserProf = () => {
 
     setTimeout(() => {
       window.location.reload();
-    }, 2000); // Reload the page after 2 seconds
+    }, 2000);
   };
 
   const handleGoBack = () => {
@@ -207,7 +220,7 @@ const UserProf = () => {
   };
 
   const handleLogout = () => {
-    setIsLogoutModalOpen(true); // Open logout modal
+    setIsLogoutModalOpen(true);
   };
 
   const confirmLogout = () => {
@@ -220,7 +233,7 @@ const UserProf = () => {
   };
 
   const closeLogoutModal = () => {
-    setIsLogoutModalOpen(false); // Close the logout modal
+    setIsLogoutModalOpen(false);
   };
 
   return (
@@ -422,7 +435,6 @@ const UserProf = () => {
         </div>
       )}
 
-      {/* Other modals and content */}
       {/* Logout Modal */}
       {isLogoutModalOpen && (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
@@ -571,37 +583,88 @@ const UserProf = () => {
                   <label className="block text-gray-600 font-semibold">
                     Current Password:
                   </label>
-                  <input
-                    type="password"
-                    name="currentPassword"
-                    value={passwords.currentPassword}
-                    onChange={handlePasswordChange}
-                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                  />
+                  <div className="relative">
+                    <input
+                      type={
+                        passwordVisibility.currentPassword ? "text" : "password"
+                      }
+                      name="currentPassword"
+                      value={passwords.currentPassword}
+                      onChange={handlePasswordChange}
+                      className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                    />
+                    <button
+                      type="button"
+                      className="absolute inset-y-0 right-3 flex items-center"
+                      onClick={() =>
+                        togglePasswordVisibility("currentPassword")
+                      }
+                    >
+                      <span className="material-symbols-outlined">
+                        {passwordVisibility.currentPassword
+                          ? "visibility"
+                          : "visibility_off"}
+                      </span>
+                    </button>
+                  </div>
                 </div>
                 <div>
                   <label className="block text-gray-600 font-semibold">
                     New Password:
                   </label>
-                  <input
-                    type="password"
-                    name="newPassword"
-                    value={passwords.newPassword}
-                    onChange={handlePasswordChange}
-                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                  />
+                  <div className="relative">
+                    <input
+                      type={
+                        passwordVisibility.newPassword ? "text" : "password"
+                      }
+                      name="newPassword"
+                      value={passwords.newPassword}
+                      onChange={handlePasswordChange}
+                      className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                    />
+                    <button
+                      type="button"
+                      className="absolute inset-y-0 right-3 flex items-center"
+                      onClick={() => togglePasswordVisibility("newPassword")}
+                    >
+                      <span className="material-symbols-outlined">
+                        {passwordVisibility.newPassword
+                          ? "visibility"
+                          : "visibility_off"}
+                      </span>
+                    </button>
+                  </div>
                 </div>
                 <div>
                   <label className="block text-gray-600 font-semibold">
                     Confirm New Password:
                   </label>
-                  <input
-                    type="password"
-                    name="confirmNewPassword"
-                    value={passwords.confirmNewPassword}
-                    onChange={handlePasswordChange}
-                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                  />
+                  <div className="relative">
+                    <input
+                      type={
+                        passwordVisibility.confirmNewPassword
+                          ? "text"
+                          : "password"
+                      }
+                      name="confirmNewPassword"
+                      value={passwords.confirmNewPassword}
+                      onChange={handlePasswordChange}
+                      className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                    />
+                    <button
+                      type="button"
+                      className="absolute inset-y-0 right-3 flex items-center"
+                      onClick={() =>
+                        togglePasswordVisibility("confirmNewPassword")
+                      }
+                    >
+                      <span className="material-symbols-outlined">
+                        {passwordVisibility.confirmNewPassword
+                          ? "visibility"
+                          : "visibility_off"}
+                      </span>
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
