@@ -206,7 +206,7 @@ const Signup = () => {
       </div>
 
       <div className="col-span-12 md:col-span-8">
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-2 gap-x-4 gap-y-4">
           <div>
             <label
               htmlFor="firstName"
@@ -611,7 +611,10 @@ const Signup = () => {
   );
 
   const renderCompanyForm = () => (
-    <form className="mt-8 grid grid-cols-12 gap-6" onSubmit={handleSubmit}>
+    <form
+      className="mt-8 grid grid-cols-12 gap-x-4 gap-y-4"
+      onSubmit={handleSubmit}
+    >
       <div className="col-span-12">
         <h2 className="text-3xl font-bold text-custom-blue">
           Hire People Now!
