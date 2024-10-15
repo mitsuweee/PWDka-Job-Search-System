@@ -3,7 +3,7 @@ const knex = require("../models/connection_db");
 const { adminModel } = require("../models/admin_model");
 const util = require("./util");
 const bcrypt = require("bcrypt");
-
+const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 
@@ -932,6 +932,53 @@ const updateJobListing = async (req, res, next) => {
   }
 };
 
+const sendEmailConcern = async (req, res) => {
+  const email = req.body.email;
+  const subject = req.body.subject;
+  const body = req.body.body;
+
+  if (!email || !body || !subject) {
+    return res.status(400).json({
+      successful: false,
+      message: "Email , Subject and Body are required",
+    });
+  } else if (!util.checkEmail(email)) {
+    return res.status(400).json({
+      successful: false,
+      message: "Invalid Email",
+    });
+  } else {
+    try {
+      const transporter = nodemailer.createTransport({
+        service: "Gmail",
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASSWORD,
+        },
+      });
+
+      const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: process.env.EMAIL_USER,
+        subject: `${subject}" -"Concern From ${email}`,
+        text: body,
+      };
+
+      await transporter.sendMail(mailOptions);
+
+      return res.status(200).json({
+        successful: true,
+        message: "Email sent successfully!",
+      });
+    } catch (error) {
+      return res.status(500).json({
+        successful: false,
+        message: "Failed to send email",
+        error: error.message,
+      });
+    }
+  }
+};
 module.exports = {
   registerAdmin,
   loginAdmin,
@@ -949,4 +996,5 @@ module.exports = {
   searchUser,
   viewAdminViaId,
   updateJobListing,
+  sendEmailConcern,
 };

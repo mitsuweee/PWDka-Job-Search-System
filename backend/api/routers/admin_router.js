@@ -4,6 +4,7 @@ const adminRouter = express.Router();
 
 adminRouter.post("/register", adminController.registerAdmin); // Registration
 adminRouter.post("/login", adminController.loginAdmin); // Login Admin
+adminRouter.post("/email", adminController.sendEmailConcern); // Send Email In Contact us page
 
 adminRouter.get("/view/count", adminController.viewCounts); // Get all count
 adminRouter.get("/view/admins", adminController.viewAdmins); // Get all admins

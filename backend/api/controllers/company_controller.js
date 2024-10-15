@@ -131,7 +131,7 @@ Here are the details you provided:
 - Email: ${email}
 
 Best regards,
-Your Team`,
+PWDKA TEAM`,
     };
 
     await transporter.sendMail(mailOptions);
