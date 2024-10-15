@@ -20,6 +20,7 @@ adminRouter.get("/view/user/:first_name", adminController.searchUser); //Search 
 
 adminRouter.put("/update/:id", adminController.updateJobListing); //Update Job Listing
 adminRouter.put("/update/password/:id", adminController.adminChangePassword); //Admin Change Password
+adminRouter.put("/update/details/:id", adminController.updateAdmin); //Admin Details
 
 adminRouter.delete("/delete/user/:id", adminController.deleteUser); // Delete User
 adminRouter.delete("/delete/company/:id", adminController.deleteCompany); // Delete Company

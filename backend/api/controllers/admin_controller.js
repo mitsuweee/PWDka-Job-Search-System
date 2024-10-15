@@ -560,6 +560,73 @@ const adminChangePassword = async (req, res, next) => {
   }
 };
 
+const updateAdmin = async (req, res, next) => {
+  const id = req.params.id;
+  const firstName = req.body.first_name.toLowerCase();
+  const lastName = req.body.last_name.toLowerCase();
+  const email = req.body.email.toLowerCase();
+
+  if (!id || !firstName || !lastName || !email) {
+    return res.status(404).json({
+      successful: false,
+      message: "One or more details are missing",
+    });
+  } else if (
+    util.checkNumbersAndSpecialChar(firstName) ||
+    util.checkNumbersAndSpecialChar(lastName)
+  ) {
+    return res.status(400).json({
+      successful: false,
+      message: "Special characters or numbers are not allowed in name fields",
+    });
+  } else if (!util.checkEmail(email)) {
+    return res.status(400).json({
+      successful: false,
+      message: "Invalid Email Format",
+    });
+  } else {
+    try {
+      // Check if email exists in other tables (excluding current admin)
+      const adminWithEmail = await knex("admin")
+        .where({ email })
+        .andWhereNot({ id })
+        .first();
+      const userWithEmail = await knex("user").where({ email }).first();
+      const companyWithEmail = await knex("company").where({ email }).first();
+
+      if (adminWithEmail || userWithEmail || companyWithEmail) {
+        return res.status(400).json({
+          successful: false,
+          message: "Email already exists",
+        });
+      }
+
+      const result = await knex("admin").where({ id }).update({
+        first_name: firstName,
+        last_name: lastName,
+        email: email,
+      });
+
+      if (result === 0) {
+        return res.status(404).json({
+          successful: false,
+          message: "Admin not found",
+        });
+      } else {
+        return res.status(200).json({
+          successful: true,
+          message: "Admin details updated successfully",
+        });
+      }
+    } catch (err) {
+      return res.status(500).json({
+        successful: false,
+        message: err.message,
+      });
+    }
+  }
+};
+
 const deleteAdmin = async (req, res, next) => {
   let id = req.params.id;
 
@@ -875,6 +942,7 @@ module.exports = {
   viewAllJobListingNewestToOldest,
   viewJobListing,
   adminChangePassword,
+  updateAdmin,
   deleteUser,
   deleteCompany,
   deleteJob,
