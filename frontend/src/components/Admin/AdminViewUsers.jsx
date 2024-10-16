@@ -282,88 +282,90 @@ const AdminViewUsers = () => {
       </main>
 
       {isModalOpen && user && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white w-11/12 md:max-w-xl p-6 rounded-lg shadow-lg">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-gray-800 text-center">
-              User Details
-            </h2>
-
-            <div className="flex justify-center mb-4 sm:mb-6">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg p-6 w-[600px] h-[700px] shadow-lg hover:shadow-2xl transition-shadow duration-300">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xl font-bold">User Details</h3>
+              <button
+                className="text-gray-500 hover:text-gray-700"
+                onClick={() => setIsModalOpen(false)}
+              >
+                &times;
+              </button>
+            </div>
+            <div className="flex justify-center mb-6">
               <img
                 src={user.profilePicture}
-                alt="Profile"
-                className="w-40 h-40 rounded-full border-2 border-gray-300"
+                alt={user.fullName}
+                className="w-32 h-32 rounded-full border-2 border-gray-300 hover:shadow-lg transition-shadow duration-300 object-cover"
               />
             </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 text-left text-gray-800 w-full">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-gray-100 p-4 rounded-lg">
               <div>
-                <p className="font-semibold text-base sm:text-lg">Full Name:</p>
-                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                  {user.fullName}
+                <strong>Full Name:</strong>
+                <p className="shadow-lg p-1">
+                  {user.fullName
+                    ? user.fullName
+                        .split(" ")
+                        .map(
+                          (word) =>
+                            word.charAt(0).toUpperCase() +
+                            word.slice(1).toLowerCase()
+                        )
+                        .join(" ")
+                    : ""}
                 </p>
               </div>
               <div>
-                <p className="font-semibold text-base sm:text-lg">PWD ID:</p>
-                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                  {user.id}
-                </p>
+                <strong>PWD ID:</strong>
+                <p className="shadow-lg p-1">{user.id}</p>
               </div>
               <div>
-                <p className="font-semibold text-base sm:text-lg">
-                  Disability:
-                </p>
-                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                  {user.disability}
-                </p>
+                <strong>Disability:</strong>
+                <p className="shadow-lg p-1">{user.disability}</p>
               </div>
               <div>
-                <p className="font-semibold text-base sm:text-lg">Address:</p>
-                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
+                <strong>Address:</strong>
+                <p className="shadow-lg p-1">
                   {user.address
-                    .split(" ")
-                    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-                    .join(" ")}
+                    ? user.address
+                        .split(" ")
+                        .map(
+                          (word) =>
+                            word.charAt(0).toUpperCase() +
+                            word.slice(1).toLowerCase()
+                        )
+                        .join(" ")
+                    : ""}
                 </p>
               </div>
               <div>
-                <p className="font-semibold text-base sm:text-lg">City:</p>
-                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
+                <strong>City:</strong>
+                <p className="shadow-lg p-1">
                   {user.city
-                    .split(" ")
-                    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-                    .join(" ")}
+                    ? user.city
+                        .split(" ")
+                        .map(
+                          (word) =>
+                            word.charAt(0).toUpperCase() +
+                            word.slice(1).toLowerCase()
+                        )
+                        .join(" ")
+                    : ""}
                 </p>
               </div>
               <div>
-                <p className="font-semibold text-base sm:text-lg">Birthdate:</p>
-                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                  {user.birthdate}
-                </p>
+                <strong>Birthdate:</strong>
+                <p className="shadow-lg p-1">{user.birthdate}</p>
               </div>
               <div>
-                <p className="font-semibold text-base sm:text-lg">
-                  Contact Number:
-                </p>
-                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                  {user.contactNumber}
-                </p>
+                <strong>Contact Number:</strong>
+                <p className="shadow-lg p-1">{user.contactNumber}</p>
               </div>
               <div>
-                <p className="font-semibold text-base sm:text-lg">Email:</p>
-                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                  {user.email}
-                </p>
+                <strong>Email:</strong>
+                <p className="shadow-lg p-1">{user.email}</p>
               </div>
-            </div>
-
-            <div className="mt-6 text-center space-x-4">
-              <button
-                className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
-                onClick={closeModal}
-              >
-                Back
-              </button>
             </div>
           </div>
         </div>

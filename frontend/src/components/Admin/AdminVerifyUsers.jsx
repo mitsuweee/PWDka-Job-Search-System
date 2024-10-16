@@ -293,7 +293,7 @@ const AdminVerifyUsers = () => {
 
           {selectedUser && showModal && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-              <div className="bg-white rounded-lg p-6 max-w-2xl w-full shadow-lg hover:shadow-2xl transition-shadow duration-300">
+              <div className="bg-white rounded-lg p-6 w-[600px] h-[700px] shadow-lg hover:shadow-2xl transition-shadow duration-300">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-xl font-bold">User Details</h3>
                   <button
@@ -307,13 +307,13 @@ const AdminVerifyUsers = () => {
                   <img
                     src={selectedUser.profilePicture}
                     alt={selectedUser.fullName}
-                    className="w-32 h-32 rounded-full border-2 border-gray-300 hover:shadow-lg transition-shadow duration-300"
+                    className="w-32 h-32 rounded-full border-2 border-gray-300 hover:shadow-lg transition-shadow duration-300 object-cover"
                   />
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-gray-100 p-4 rounded-lg">
                   <div>
                     <strong>Full Name:</strong>
-                    <p>
+                    <p className="shadow-lg p-1">
                       {selectedUser.fullName
                         ? selectedUser.fullName
                             .split(" ")
@@ -329,15 +329,15 @@ const AdminVerifyUsers = () => {
 
                   <div>
                     <strong>PWD ID:</strong>
-                    <p>{selectedUser.pwdId}</p>
+                    <p className="shadow-lg p-1">{selectedUser.pwdId}</p>
                   </div>
                   <div>
                     <strong>Disability:</strong>
-                    <p>{selectedUser.disability}</p>
+                    <p className="shadow-lg p-1">{selectedUser.disability}</p>
                   </div>
                   <div>
                     <strong>Address:</strong>
-                    <p>
+                    <p className="shadow-lg p-1">
                       {selectedUser.address
                         ? selectedUser.address
                             .split(" ")
@@ -352,7 +352,7 @@ const AdminVerifyUsers = () => {
                   </div>
                   <div>
                     <strong>City:</strong>
-                    <p>
+                    <p className="shadow-lg p-1">
                       {selectedUser.city
                         ? selectedUser.city
                             .split(" ")
@@ -368,28 +368,30 @@ const AdminVerifyUsers = () => {
 
                   <div>
                     <strong>Birthdate:</strong>
-                    <p>{selectedUser.birthdate}</p>
+                    <p className="shadow-lg p-1">{selectedUser.birthdate}</p>
                   </div>
                   <div>
                     <strong>Contact Number:</strong>
-                    <p>{selectedUser.contactNumber}</p>
+                    <p className="shadow-lg p-1">
+                      {selectedUser.contactNumber}
+                    </p>
                   </div>
                   <div>
                     <strong>Email:</strong>
-                    <p>{selectedUser.email}</p>
+                    <p className="shadow-lg p-1">{selectedUser.email}</p>
                   </div>
                   <div>
                     <img
                       src={selectedUser.pictureWithId}
                       alt="Picture with ID"
-                      className="w-full h-auto rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
+                      className="w-full h-40 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 object-cover"
                     />
                   </div>
                   <div>
                     <img
                       src={selectedUser.pictureOfPwdId}
                       alt="Picture of PWD ID"
-                      className="w-full h-auto rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
+                      className="w-full h-40 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 object-cover"
                     />
                   </div>
                 </div>

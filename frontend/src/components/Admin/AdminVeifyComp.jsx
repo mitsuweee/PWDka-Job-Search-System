@@ -336,7 +336,7 @@ const AdminVerifyComp = () => {
 
           {selectedCompany && showModal && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-              <div className="bg-white rounded-lg p-6 max-w-2xl w-full shadow-lg">
+              <div className="bg-white rounded-lg p-6 w-[600px] h-[700px] shadow-lg hover:shadow-2xl transition-shadow duration-300">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-xl font-bold">Company Details</h3>
                   <button
@@ -350,17 +350,19 @@ const AdminVerifyComp = () => {
                   <img
                     src={selectedCompany.companyLogo}
                     alt={selectedCompany.companyName}
-                    className="w-32 h-32 rounded-full border-2 border-gray-300"
+                    className="w-32 h-32 rounded-full border-2 border-gray-300 hover:shadow-lg transition-shadow duration-300 object-cover"
                   />
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-gray-100 p-4 rounded-lg">
                   <div>
                     <strong>Company Name:</strong>
-                    <p>{selectedCompany.companyName}</p>
+                    <p className="shadow-lg p-1">
+                      {selectedCompany.companyName}
+                    </p>
                   </div>
                   <div>
                     <strong>City:</strong>
-                    <p>
+                    <p className="shadow-lg p-1">
                       {selectedCompany.city
                         ? selectedCompany.city
                             .split(" ")
@@ -375,7 +377,7 @@ const AdminVerifyComp = () => {
                   </div>
                   <div>
                     <strong>Company Description:</strong>
-                    <p>
+                    <p className="shadow-lg p-1">
                       {selectedCompany.companyDescription
                         ? selectedCompany.companyDescription
                             .split(". ")
@@ -390,7 +392,7 @@ const AdminVerifyComp = () => {
                   </div>
                   <div>
                     <strong>Address:</strong>
-                    <p>
+                    <p className="shadow-lg p-1">
                       {selectedCompany.address
                         ? selectedCompany.address
                             .split(" ")
@@ -405,11 +407,15 @@ const AdminVerifyComp = () => {
                   </div>
                   <div>
                     <strong>Contact Number:</strong>
-                    <p>{selectedCompany.contactNumber}</p>
+                    <p className="shadow-lg p-1">
+                      {selectedCompany.contactNumber}
+                    </p>
                   </div>
                   <div>
                     <strong>Email:</strong>
-                    <p>{selectedCompany.companyEmail}</p>
+                    <p className="shadow-lg p-1">
+                      {selectedCompany.companyEmail}
+                    </p>
                   </div>
                 </div>
                 <div className="flex justify-end mt-4 space-x-2">

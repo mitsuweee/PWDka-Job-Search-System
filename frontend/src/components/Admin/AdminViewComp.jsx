@@ -270,66 +270,51 @@ const AdminViewComp = () => {
       </main>
 
       {isModalOpen && company && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white w-11/12 md:max-w-xl p-6 rounded-lg shadow-lg">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-gray-800 text-center">
-              Company Details
-            </h2>
-
-            <div className="flex justify-center mb-4 sm:mb-6">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg p-6 w-[600px] shadow-lg hover:shadow-2xl transition-shadow duration-300">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xl font-bold">Company Details</h3>
+              <button
+                className="text-gray-500 hover:text-gray-700"
+                onClick={closeModal}
+              >
+                &times;
+              </button>
+            </div>
+            <div className="flex justify-center mb-6">
               <img
                 src={company.companyProfile}
                 alt="Profile"
-                className="w-40 h-40 rounded-full border-2 border-gray-300"
+                className="w-32 h-32 rounded-full border-2 border-gray-300 hover:shadow-lg transition-shadow duration-300 object-cover"
               />
             </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 text-left text-gray-800 w-full">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-gray-100 p-4 rounded-lg">
               <div>
-                <p className="font-semibold text-base sm:text-lg">
-                  Company Name:
-                </p>
-                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                  {company.companyName}
-                </p>
+                <strong>Company Name:</strong>
+                <p className="shadow-lg p-1">{company.companyName}</p>
               </div>
               <div>
-                <p className="font-semibold text-base sm:text-lg">City:</p>
-                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                  {company.city}
-                </p>
+                <strong>City:</strong>
+                <p className="shadow-lg p-1">{company.city}</p>
               </div>
               <div>
-                <p className="font-semibold text-base sm:text-lg">Address:</p>
-                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                  {company.address}
-                </p>
+                <strong>Address:</strong>
+                <p className="shadow-lg p-1">{company.address}</p>
               </div>
               <div>
-                <p className="font-semibold text-base sm:text-lg">
-                  Description:
-                </p>
-                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                  {company.description}
-                </p>
+                <strong>Description:</strong>
+                <p className="shadow-lg p-1">{company.description}</p>
               </div>
               <div>
-                <p className="font-semibold text-base sm:text-lg">
-                  Contact Number:
-                </p>
-                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                  {company.contactNumber}
-                </p>
+                <strong>Contact Number:</strong>
+                <p className="shadow-lg p-1">{company.contactNumber}</p>
               </div>
               <div>
-                <p className="font-semibold text-base sm:text-lg">Email:</p>
-                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                  {company.companyEmail}
-                </p>
+                <strong>Email:</strong>
+                <p className="shadow-lg p-1">{company.companyEmail}</p>
               </div>
             </div>
-
-            <div className="mt-6 text-center space-x-4">
+            <div className="flex justify-end mt-4 space-x-2">
               <button
                 className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
                 onClick={closeModal}
