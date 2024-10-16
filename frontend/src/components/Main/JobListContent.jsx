@@ -9,6 +9,8 @@ const JobListing = () => {
   const [isDetailsVisible, setIsDetailsVisible] = useState(false);
   const [isMoreInfoVisible, setIsMoreInfoVisible] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [locationSearchTerm, setLocationSearchTerm] = useState(""); // For location search
+  const [jobType, setJobType] = useState(""); // For full-time or part-time filter
   const [currentPage, setCurrentPage] = useState(1);
   const [sortOption, setSortOption] = useState("newest");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -19,9 +21,6 @@ const JobListing = () => {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [currentJobSpeech, setCurrentJobSpeech] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [cityTerm, setCityTerm] = useState(""); // Added for city search
-  const [selectedWorkType, setSelectedWorkType] = useState(""); // For Work Type (Full-time/Part-time)
-  const [isWorkTypeOpen, setIsWorkTypeOpen] = useState(false); // Dropdown for work type
 
   const jobsPerPage = 4;
   const navigate = useNavigate();
@@ -156,16 +155,6 @@ const JobListing = () => {
     .filter((job) =>
       job.jobName.toLowerCase().includes(searchTerm.toLowerCase())
     )
-    .filter((job) =>
-      selectedWorkType
-        ? job.positionType.toLowerCase() === selectedWorkType.toLowerCase()
-        : true
-    ) // Filter by work type
-    .filter((job) =>
-      cityTerm
-        ? job.companyLocation.toLowerCase().includes(cityTerm.toLowerCase())
-        : true
-    ) // Filter by city
     .sort((a, b) => {
       if (sortOption === "newest") {
         return b.id - a.id;
@@ -217,34 +206,49 @@ const JobListing = () => {
 
       <div
         className="w-full bg-cover bg-center py-4 lg:h-40 flex flex-col sm:flex-row justify-center items-center px-4"
-        style={{ backgroundImage: `url('/imgs/bg search.png')` }}
+        style={{
+          backgroundImage: `url('/imgs/bg search.png')`,
+          backgroundSize: "cover", // Ensures the image covers the whole container
+          backgroundPosition: "center", // Keeps the image centered
+          backgroundRepeat: "no-repeat", // Prevents the image from repeating
+        }}
       >
         <div className="w-full lg:w-2/3 mb-4 sm:mb-0 flex justify-center">
           <div className="flex w-full">
+            {/* Main Job Search */}
             <input
               type="text"
               placeholder="Search Job Name"
-              className="w-full p-3  rounded-l-lg focus:outline-none focus:border-2 focus:border-blue-500 transition duration-200 text-lg"
+              className="w-3/5 p-3 rounded-lg focus:outline-none focus:border-2 focus:border-blue-500 transition duration-200 text-lg mx-2"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <button
-              className="p-3 bg-blue-600 text-white rounded-r-lg shadow-md hover:bg-blue-700 transition flex items-center justify-center"
-              onClick={handleSearch}
-            >
-              <span className="material-symbols-outlined text-2xl">search</span>
-            </button>
-          </div>
-          <div className="flex w-full">
+
+            {/* Location Search */}
             <input
               type="text"
-              placeholder="Search City"
-              className="w-full p-3  rounded-l-lg focus:outline-none focus:border-2 focus:border-blue-500 transition duration-200 text-lg"
-              value={cityTerm}
-              onChange={(e) => setCityTerm(e.target.value)}
+              placeholder="Location"
+              className="w-1/4 p-3 focus:outline-none rounded-lg focus:border-2 focus:border-blue-500 transition duration-200 text-lg mx-2"
+              value={locationSearchTerm}
+              onChange={(e) => setLocationSearchTerm(e.target.value)}
             />
+
+            {/* Job Type Dropdown */}
+            <select
+              className="w-1/4 p-3 focus:outline-none rounded-lg focus:border-2 focus:border-blue-500 transition duration-200 text-lg mx-2"
+              value={jobType}
+              onChange={(e) => setJobType(e.target.value)}
+            >
+              <option value="" className="text-gray-400">
+                Job Type
+              </option>
+              <option value="full-time">Full-Time</option>
+              <option value="part-time">Part-Time</option>
+            </select>
+
+            {/* Search Button */}
             <button
-              className="p-3 bg-blue-600 text-white rounded-r-lg shadow-md hover:bg-blue-700 transition flex items-center justify-center"
+              className="p-3 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition flex items-center justify-center mx-2"
               onClick={handleSearch}
             >
               <span className="material-symbols-outlined text-2xl">search</span>
@@ -298,48 +302,6 @@ const JobListing = () => {
                 >
                   A-Z
                 </button>
-                <div className="relative mt-4">
-                  <button
-                    className="w-full px-4 py-2 bg-gray-200 text-blue-900 rounded-lg"
-                    onClick={() => setIsWorkTypeOpen(!isWorkTypeOpen)}
-                  >
-                    {selectedWorkType ? selectedWorkType : "All Work Types"}
-                  </button>
-                  {isWorkTypeOpen && (
-                    <div className="absolute mt-2 w-full bg-white shadow-lg rounded-lg z-50">
-                      <div className="flex flex-col space-y-2 p-4">
-                        <label className="flex items-center space-x-2">
-                          <input
-                            type="checkbox"
-                            checked={selectedWorkType === "Full time"}
-                            onChange={() =>
-                              setSelectedWorkType(
-                                selectedWorkType === "Full time"
-                                  ? ""
-                                  : "Full-time"
-                              )
-                            }
-                          />
-                          <span>Full time</span>
-                        </label>
-                        <label className="flex items-center space-x-2">
-                          <input
-                            type="checkbox"
-                            checked={selectedWorkType === "Part time"}
-                            onChange={() =>
-                              setSelectedWorkType(
-                                selectedWorkType === "Part time"
-                                  ? ""
-                                  : "Part-time"
-                              )
-                            }
-                          />
-                          <span>Part time</span>
-                        </label>
-                      </div>
-                    </div>
-                  )}
-                </div>
               </div>
             )}
           </div>
@@ -538,13 +500,6 @@ const JobListing = () => {
                   <span className="material-symbols-outlined mr-2">
                     location_on
                   </span>
-                  {toSentenceCase(selectedJob.companyCity)}
-                </p>
-
-                <p className="text-lg mb-4 text-gray-500 flex items-center">
-                  <span className="material-symbols-outlined mr-2">
-                    location_on
-                  </span>
                   {toSentenceCase(selectedJob.companyLocation)}
                 </p>
 
@@ -632,8 +587,12 @@ const JobListing = () => {
                     {toSentenceCase(selectedJob.companyContact)}
                   </p>
                   <p className="text-black">
-                    <span className="font-medium">Primary location:</span>{" "}
+                    <span className="font-medium">Address:</span>{" "}
                     {toSentenceCase(selectedJob.companyLocation)}
+                  </p>
+                  <p className="text-black">
+                    <span className="font-medium">City:</span>{" "}
+                    {toSentenceCase(selectedJob.companyCity)}
                   </p>
                   <p className="text-black mt-4 text-sm leading-relaxed">
                     {toSentenceCase(selectedJob.companyDescription)}
