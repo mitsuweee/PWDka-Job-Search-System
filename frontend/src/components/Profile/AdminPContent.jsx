@@ -59,7 +59,6 @@ const AdminProf = () => {
   const handleEdit = () => {
     setIsEditing(true);
     setIsModalOpen(true); // Open the modal in edit mode
-    window.location.href = "/adminprofile";
   };
 
   const handlePasswordToggle = () => {
