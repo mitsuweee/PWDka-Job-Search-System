@@ -233,76 +233,75 @@ const AdminViewJobs = () => {
 
       {/* Modal for viewing job details */}
       {isModalOpen && job && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white w-11/12 md:max-w-3xl p-6 rounded-lg shadow-lg">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-gray-800 text-center">
-              Job Details
-            </h2>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 text-left text-gray-800 w-full">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg p-6 w-[600px] shadow-lg hover:shadow-2xl transition-shadow duration-300">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xl font-bold">Job Details</h3>
+              <button
+                className="text-gray-500 hover:text-gray-700"
+                onClick={closeModal}
+              >
+                &times;
+              </button>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-gray-100 p-4 rounded-lg">
               <div>
-                <p className="font-semibold text-base sm:text-lg">Company:</p>
-                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                  {job.companyName}
+                <strong>Company:</strong>
+                <p className="shadow-lg p-1">{job.companyName}</p>
+              </div>
+              <div>
+                <strong>Job Title:</strong>
+                <p className="shadow-lg p-1">{job.jobName}</p>
+              </div>
+              <div>
+                <strong>Description:</strong>
+                <p className="shadow-lg p-1">
+                  {job.description
+                    .split(".")
+                    .map(
+                      (sentence) =>
+                        sentence.trim().charAt(0).toUpperCase() +
+                        sentence.trim().slice(1).toLowerCase() +
+                        "."
+                    )
+                    .join(" ")}
                 </p>
               </div>
               <div>
-                <p className="font-semibold text-base sm:text-lg">Job Title:</p>
-                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                  {job.jobName}
+                <strong>Requirements:</strong>
+                <p className="shadow-lg p-1">
+                  {job.requirements
+                    .split(",")
+                    .map(
+                      (requirement) =>
+                        requirement.trim().charAt(0).toUpperCase() +
+                        requirement.trim().slice(1).toLowerCase()
+                    )
+                    .join(", ")}
                 </p>
               </div>
               <div>
-                <p className="font-semibold text-base sm:text-lg">
-                  Description:
+                <strong>Qualification:</strong>
+                <p className="shadow-lg p-1">
+                  {job.qualification
+                    .split(",")
+                    .map(
+                      (qualification) =>
+                        qualification.trim().charAt(0).toUpperCase() +
+                        qualification.trim().slice(1).toLowerCase()
+                    )
+                    .join(", ")}
                 </p>
-                <div className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                  {job.description.split(".").map((sentence, index) => (
-                    <p key={index}>
-                      {sentence.trim().charAt(0).toUpperCase() +
-                        sentence.trim().slice(1).toLowerCase()}
-                      .
-                    </p>
-                  ))}
-                </div>
               </div>
               <div>
-                <p className="font-semibold text-base sm:text-lg">
-                  Requirements:
-                </p>
-                <div className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                  {job.requirements.split(",").map((requirement, index) => (
-                    <p key={index}>
-                      {requirement.trim().charAt(0).toUpperCase() +
-                        requirement.trim().slice(1).toLowerCase()}
-                    </p>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <p className="font-semibold text-base sm:text-lg">
-                  Qualification:
-                </p>
-                <div className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                  {job.qualification.split(",").map((qualification, index) => (
-                    <p key={index}>
-                      {qualification.trim().charAt(0).toUpperCase() +
-                        qualification.trim().slice(1).toLowerCase()}
-                    </p>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <p className="font-semibold text-base sm:text-lg">Salary:</p>
-                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
+                <strong>Salary:</strong>
+                <p className="shadow-lg p-1">
                   ₱ {job.minimumSalary} - ₱ {job.maximumSalary}
                 </p>
               </div>
               <div>
-                <p className="font-semibold text-base sm:text-lg">
-                  Position Type:
-                </p>
-                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
+                <strong>Position Type:</strong>
+                <p className="shadow-lg p-1">
                   {job.positionType
                     .split("-")
                     .map(
@@ -313,16 +312,11 @@ const AdminViewJobs = () => {
                 </p>
               </div>
               <div>
-                <p className="font-semibold text-base sm:text-lg">
-                  Disabilities:
-                </p>
-                <p className="text-lg sm:text-xl bg-gray-100 rounded-md p-2">
-                  {job.disabilityTypes}
-                </p>
+                <strong>Disabilities:</strong>
+                <p className="shadow-lg p-1">{job.disabilityTypes}</p>
               </div>
             </div>
-
-            <div className="mt-6 text-center space-x-4">
+            <div className="flex justify-end mt-4 space-x-2">
               <button
                 className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
                 onClick={closeModal}
