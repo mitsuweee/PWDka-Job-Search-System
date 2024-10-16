@@ -79,6 +79,7 @@ const JobListing = () => {
             companyEmail: job.company_email,
             companyContact: job.company_contact_number,
             companyLocation: job.company_address,
+            companyCity: job.company_city,
             companyDescription: job.company_description,
             companyImage: `data:image/png;base64,${job.company_profile_picture}`,
           }));
@@ -111,6 +112,7 @@ const JobListing = () => {
       Job Title: ${job.jobName}.
       Job Description: ${job.description}.
       Location: ${job.companyLocation}.
+      City: ${job.companyCity}.
       ${salaryMessage}
       Position Type: ${job.positionType}.
       Requirements: ${job.requirements}.
@@ -392,6 +394,12 @@ const JobListing = () => {
                         </span>
                         {toSentenceCase(job.companyLocation)}
                       </p>
+                      <p className="text-white">
+                        <span className="material-symbols-outlined mr-2">
+                          location_on
+                        </span>
+                        {toSentenceCase(job.companyCity)}
+                      </p>
                       <p className="font-semibold text-white">
                         <span className="material-symbols-outlined mr-2">
                           schedule
@@ -524,6 +532,13 @@ const JobListing = () => {
                 <p className="text-lg mb-2 text-gray-700 flex items-center">
                   <span className="material-symbols-outlined mr-2">work</span>
                   {toSentenceCase(selectedJob.companyName)}
+                </p>
+
+                <p className="text-lg mb-4 text-gray-500 flex items-center">
+                  <span className="material-symbols-outlined mr-2">
+                    location_on
+                  </span>
+                  {toSentenceCase(selectedJob.companyCity)}
                 </p>
 
                 <p className="text-lg mb-4 text-gray-500 flex items-center">
