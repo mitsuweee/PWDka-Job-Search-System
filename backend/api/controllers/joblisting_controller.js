@@ -139,6 +139,7 @@ const viewJobListing = async (req, res, next) => {
           "company.profile_picture AS company_profile_picture",
           "company.email AS company_email",
           "company.address AS company_address",
+          "company.city AS company_city",
           "company.contact_number AS company_contact_number",
           "company.description AS company_description",
           knex.raw(
