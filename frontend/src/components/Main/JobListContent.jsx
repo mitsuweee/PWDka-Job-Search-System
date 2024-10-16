@@ -163,9 +163,20 @@ const JobListing = () => {
   };
 
   const filteredJobs = jobs
-    .filter((job) =>
-      job.jobName.toLowerCase().includes(searchTerm.toLowerCase())
-    )
+    .filter((job) => {
+      const jobNameMatch = job.jobName
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+      const cityMatch = job.companyCity
+        .toLowerCase()
+        .includes(locationSearchTerm.toLowerCase());
+      const jobTypeMatch =
+        jobType === "" ||
+        job.positionType.toLowerCase() === jobType.toLowerCase();
+
+      // Apply all three filters: job name, city, and job type
+      return jobNameMatch && cityMatch && jobTypeMatch;
+    })
     .sort((a, b) => {
       if (sortOption === "newest") {
         return b.id - a.id;
