@@ -18,6 +18,13 @@ const AdminProf = () => {
     confirmNewPassword: "",
   });
 
+  const [passwordVisibility, setPasswordVisibility] = useState({
+    currentPassword: false,
+    newPassword: false,
+    confirmNewPassword: false,
+  });
+
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -38,9 +45,7 @@ const AdminProf = () => {
           lastName: adminData.last_name,
           email: adminData.email,
         });
-        console.log(response);
       })
-
       .catch(function (error) {
         const errorMessage =
           error.response?.data?.message || "An error occurred";
@@ -54,6 +59,13 @@ const AdminProf = () => {
 
   const handlePasswordChange = (e) => {
     setPasswords({ ...passwords, [e.target.name]: e.target.value });
+  };
+
+  const togglePasswordVisibility = (field) => {
+    setPasswordVisibility((prevState) => ({
+      ...prevState,
+      [field]: !prevState[field],
+    }));
   };
 
   const handleEdit = () => {
@@ -133,6 +145,27 @@ const AdminProf = () => {
     }, 2000); // Reload the page after 2 seconds
   };
 
+  const handleLogout = () => {
+    setIsLogoutModalOpen(true);
+  };
+
+  const confirmLogout = () => {
+    localStorage.removeItem("Id");
+    localStorage.removeItem("Role");
+    localStorage.removeItem("Token");
+    toast.success("Logged out successfully!");
+    navigate("/login");
+    setIsLogoutModalOpen(false);
+  };
+
+  const closeLogoutModal = () => {
+    setIsLogoutModalOpen(false);
+  };
+
+  const handleBack = () => {
+    navigate("/admin/dashboard"); // Adjust the path as needed
+  };
+
   return (
     <div className="max-w-4xl mx-auto mb-10 mt-10 p-8 bg-white rounded-lg shadow-lg">
       <Toaster position="top-center" reverseOrder={false} />
@@ -160,6 +193,21 @@ const AdminProf = () => {
             Change Password
           </button>
         </div>
+      </div>
+
+      <div className="mt-6 space-y-4">
+        <button
+          className="w-full bg-red-600 text-white py-2 px-4 rounded-lg shadow-md hover:shadow-xl hover:bg-red-500 transition-all duration-200 ease-in-out"
+          onClick={handleLogout}
+        >
+          Logout
+        </button>
+        <button
+          className="w-full bg-gray-300 text-gray-900 py-2 px-4 rounded-lg shadow-md hover:bg-gray-400 transition-all duration-200 ease-in-out"
+          onClick={handleBack}
+        >
+          Back to Dashboard
+        </button>
       </div>
 
       {/* Edit Profile & Change Password Modal */}
@@ -258,37 +306,88 @@ const AdminProf = () => {
                   <label className="block text-gray-600 font-semibold">
                     Current Password:
                   </label>
-                  <input
-                    type="password"
-                    name="currentPassword"
-                    value={passwords.currentPassword}
-                    onChange={handlePasswordChange}
-                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                  />
+                  <div className="relative">
+                    <input
+                      type={
+                        passwordVisibility.currentPassword ? "text" : "password"
+                      }
+                      name="currentPassword"
+                      value={passwords.currentPassword}
+                      onChange={handlePasswordChange}
+                      className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                    />
+                    <button
+                      type="button"
+                      className="absolute inset-y-0 right-3 flex items-center"
+                      onClick={() =>
+                        togglePasswordVisibility("currentPassword")
+                      }
+                    >
+                      <span className="material-symbols-outlined">
+                        {passwordVisibility.currentPassword
+                          ? "visibility"
+                          : "visibility_off"}
+                      </span>
+                    </button>
+                  </div>
                 </div>
                 <div>
                   <label className="block text-gray-600 font-semibold">
                     New Password:
                   </label>
-                  <input
-                    type="password"
-                    name="newPassword"
-                    value={passwords.newPassword}
-                    onChange={handlePasswordChange}
-                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                  />
+                  <div className="relative">
+                    <input
+                      type={
+                        passwordVisibility.newPassword ? "text" : "password"
+                      }
+                      name="newPassword"
+                      value={passwords.newPassword}
+                      onChange={handlePasswordChange}
+                      className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                    />
+                    <button
+                      type="button"
+                      className="absolute inset-y-0 right-3 flex items-center"
+                      onClick={() => togglePasswordVisibility("newPassword")}
+                    >
+                      <span className="material-symbols-outlined">
+                        {passwordVisibility.newPassword
+                          ? "visibility"
+                          : "visibility_off"}
+                      </span>
+                    </button>
+                  </div>
                 </div>
                 <div>
                   <label className="block text-gray-600 font-semibold">
                     Confirm New Password:
                   </label>
-                  <input
-                    type="password"
-                    name="confirmNewPassword"
-                    value={passwords.confirmNewPassword}
-                    onChange={handlePasswordChange}
-                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                  />
+                  <div className="relative">
+                    <input
+                      type={
+                        passwordVisibility.confirmNewPassword
+                          ? "text"
+                          : "password"
+                      }
+                      name="confirmNewPassword"
+                      value={passwords.confirmNewPassword}
+                      onChange={handlePasswordChange}
+                      className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                    />
+                    <button
+                      type="button"
+                      className="absolute inset-y-0 right-3 flex items-center"
+                      onClick={() =>
+                        togglePasswordVisibility("confirmNewPassword")
+                      }
+                    >
+                      <span className="material-symbols-outlined">
+                        {passwordVisibility.confirmNewPassword
+                          ? "visibility"
+                          : "visibility_off"}
+                      </span>
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
@@ -305,6 +404,58 @@ const AdminProf = () => {
                 className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
               >
                 {isEditing ? "Update Profile" : "Save New Password"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Logout Confirmation Modal */}
+      {isLogoutModalOpen && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
+            <div className="flex justify-between items-center border-b pb-3 mb-4">
+              <h2 className="text-2xl font-semibold text-gray-800">
+                Logout Confirmation
+              </h2>
+              <button
+                onClick={closeLogoutModal}
+                className="text-gray-500 hover:text-gray-800 transition duration-200"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div className="mb-6">
+              <p className="text-lg text-gray-600">
+                Are you sure you want to log out?
+              </p>
+            </div>
+
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={closeLogoutModal}
+                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-200"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmLogout}
+                className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
+              >
+                Logout
               </button>
             </div>
           </div>
