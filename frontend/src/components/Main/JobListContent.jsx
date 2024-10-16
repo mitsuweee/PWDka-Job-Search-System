@@ -52,14 +52,21 @@ const JobListing = () => {
         });
     };
 
-    const fetchJobs = () => {
+    const fetchJobs = (city, position_name, position_type) => {
       setLoading(true);
+      const searchParams = {
+        city: city || "",
+        position_name: position_name || "",
+        position_type: position_type || "",
+      };
+
       const config = {
         method: "get",
         url: `/joblisting/view/newesttooldest/${userId}`,
         headers: {
           "Content-Type": "application/json",
         },
+        data: searchParams,
       };
 
       axios(config)
@@ -151,6 +158,10 @@ const JobListing = () => {
     setIsVoiceEnabled(!isVoiceEnabled);
   };
 
+  const handleSearch = () => {
+    // Trigger fetching jobs with filters
+  };
+
   const filteredJobs = jobs
     .filter((job) =>
       job.jobName.toLowerCase().includes(searchTerm.toLowerCase())
@@ -176,10 +187,6 @@ const JobListing = () => {
 
   const selectedJob = jobs.find((job) => job.id === selectedJobId);
 
-  const handleSearch = () => {
-    console.log("Search button clicked with term:", searchTerm);
-  };
-
   const handleLogout = () => {
     setIsModalOpen(true);
   };
@@ -204,13 +211,14 @@ const JobListing = () => {
         </div>
       )}
 
+      {/* Search and Filters Section */}
       <div
         className="w-full bg-cover bg-center py-4 lg:h-40 flex flex-col sm:flex-row justify-center items-center px-4"
         style={{
           backgroundImage: `url('/imgs/bg search.png')`,
-          backgroundSize: "cover", // Ensures the image covers the whole container
-          backgroundPosition: "center", // Keeps the image centered
-          backgroundRepeat: "no-repeat", // Prevents the image from repeating
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
         }}
       >
         <div className="w-full lg:w-2/3 mb-4 sm:mb-0 flex justify-center">
@@ -318,6 +326,7 @@ const JobListing = () => {
         </div>
       </div>
 
+      {/* Job Listings and Pagination */}
       <div className="flex flex-col lg:flex-row w-full h-full mt-6">
         <div className="lg:w-1/2 p-4 overflow-auto">
           <h1 className="text-3xl font-bold mb-6 text-blue-600">
@@ -418,6 +427,7 @@ const JobListing = () => {
             )}
           </div>
 
+          {/* Pagination */}
           <div className="flex justify-center mt-6">
             <ol className="flex justify-center gap-1 text-xs font-medium">
               <li>
