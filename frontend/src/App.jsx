@@ -30,7 +30,6 @@ import ConfirmP from "./pages/ConfirmP.jsx";
 import ProtectedRoute from "./protectedroute.js";
 import RedirectAuthenticated from "./redirectauthenticated.js";
 import AdminProfile from "./pages/AdminProfile.jsx";
-import AdminProf from "./components/Profile/AdminPContent.jsx";
 
 function App() {
   return (
@@ -45,8 +44,6 @@ function App() {
         <Route path="/faqs" element={<Faq />} />
         <Route path="/forgotpassword" element={<ForgotP />} />
         <Route path="/passwordconfirmed" element={<ConfirmP />} />
-        <Route path="/adminprofile" element={AdminProfile} />
-        <Route path="/adminprofile" element={AdminProf}></Route>
 
         {/* RedirectAuthenticated Routes */}
 
@@ -98,6 +95,15 @@ function App() {
           element={
             <ProtectedRoute role="admin">
               <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/adminprofile"
+          element={
+            <ProtectedRoute role="admin">
+              <AdminProfile />
             </ProtectedRoute>
           }
         />
