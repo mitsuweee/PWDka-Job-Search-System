@@ -383,6 +383,7 @@ const viewJobsCreatedByCompanyNewestToOldest = async (req, res, next) => {
         "company.profile_picture as company_profile_picture",
         "company.email as company_email",
         "company.address as company_address",
+        "company.city as company_city",
         "company.contact_number as company_contact_number",
         "company.description as company_description",
         knex.raw(
