@@ -30,6 +30,7 @@ import ConfirmP from "./pages/ConfirmP.jsx";
 import ProtectedRoute from "./protectedroute.js";
 import RedirectAuthenticated from "./redirectauthenticated.js";
 import AdminProfile from "./pages/AdminProfile.jsx";
+import AdminSignups from "./pages/AdminSignups.jsx";
 
 function App() {
   return (
@@ -176,6 +177,14 @@ function App() {
           element={
             <ProtectedRoute role="admin">
               <AdminDelCompss />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/dashboard/AdminSignup"
+          element={
+            <ProtectedRoute role="admin">
+              <AdminSignups />
             </ProtectedRoute>
           }
         />
