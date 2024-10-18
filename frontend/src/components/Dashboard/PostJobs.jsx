@@ -187,16 +187,23 @@ const PostJob = () => {
       {/* Main Content */}
       <main className="flex-grow p-8 bg-custom-bg">
         {isSuccessCardVisible ? (
-          <div className="bg-green-100 p-6 rounded-xl shadow-lg text-center">
-            <h2 className="text-3xl font-bold text-green-700 mb-6">
-              JOB POSTED SUCCESSFULLY
-            </h2>
-            <button
-              onClick={resetForm}
-              className="bg-blue-500 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-blue-600 transition"
-            >
-              Post Job Again
-            </button>
+          <div className="max-w-4xl mx-auto mb-10 mt-10 p-10 bg-white rounded-xl shadow-lg space-y-8 transform transition-all hover:shadow-2xl">
+            <div className="text-center">
+              <h2 className="text-3xl font-bold text-custom-blue">
+                JOB POSTED SUCCESSFULLY
+              </h2>
+              <p className="text-lg mt-4 text-gray-700">
+                Your job post has been successfully submitted. Employers can now
+                view your listing. You can post another job or manage your
+                postings from your account.
+              </p>
+              <button
+                className="mt-8 py-3 px-6 bg-blue-600 text-white rounded-lg shadow-lg hover:bg-blue-700 transition duration-300"
+                onClick={resetForm}
+              >
+                Post Job Again
+              </button>
+            </div>
           </div>
         ) : (
           <form
