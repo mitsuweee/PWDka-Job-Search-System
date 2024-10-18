@@ -9,11 +9,14 @@ const AdminVerifyUsers = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false); // State for logout confirmation modal
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const usersPerPage = 10;
+
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    setIsLogoutModalOpen(true); // Open logout confirmation modal
+    setIsLogoutModalOpen(true);
   };
 
   const confirmLogout = () => {
@@ -22,11 +25,11 @@ const AdminVerifyUsers = () => {
     localStorage.removeItem("Token");
     toast.success("Logged out successfully", { position: "top-center" });
     navigate("/login");
-    setIsLogoutModalOpen(false); // Close the modal
+    setIsLogoutModalOpen(false);
   };
 
   const closeLogoutModal = () => {
-    setIsLogoutModalOpen(false); // Close the logout confirmation modal
+    setIsLogoutModalOpen(false);
   };
 
   const handleGoBack = () => {
@@ -129,6 +132,13 @@ const AdminVerifyUsers = () => {
     setSelectedUser(formatUserData(user));
     setShowModal(true);
   };
+
+  const indexOfLastUser = currentPage * usersPerPage;
+  const indexOfFirstUser = indexOfLastUser - usersPerPage;
+  const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
+  const totalPages = Math.ceil(users.length / usersPerPage);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-blue-100">
@@ -248,7 +258,7 @@ const AdminVerifyUsers = () => {
         </div>
 
         <div className="mt-4">
-          {users.length > 0 ? (
+          {currentUsers.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="min-w-full bg-white border rounded-lg">
                 <thead>
@@ -260,7 +270,7 @@ const AdminVerifyUsers = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {users.map((user) => (
+                  {currentUsers.map((user) => (
                     <tr key={user.id} className="hover:bg-gray-100">
                       <td className="py-2 px-4 border">{user.id}</td>
                       <td className="py-2 px-4">
@@ -427,6 +437,71 @@ const AdminVerifyUsers = () => {
               </div>
             </div>
           )}
+        </div>
+
+        <div className="flex justify-center mt-6">
+          <ol className="flex justify-center gap-1 text-xs font-medium">
+            <li>
+              <button
+                onClick={() => currentPage > 1 && paginate(currentPage - 1)}
+                className="inline-flex size-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900"
+                disabled={currentPage === 1}
+              >
+                <span className="sr-only">Prev Page</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-3 w-3"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M12.707 5.293a1 1 010 1.414L9.414 10l3.293 3.293a1 1 01-1.414 1.414l-4-4a1 1 010-1.414l4-4a1 1 011.414 0z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </button>
+            </li>
+
+            {Array.from({ length: totalPages }, (_, index) => (
+              <li key={index + 1}>
+                <button
+                  onClick={() => paginate(index + 1)}
+                  className={`block size-8 rounded border text-center leading-8 ${
+                    currentPage === index + 1
+                      ? "border-blue-600 bg-blue-600 text-white"
+                      : "border-gray-100 bg-white text-gray-900"
+                  }`}
+                >
+                  {index + 1}
+                </button>
+              </li>
+            ))}
+
+            <li>
+              <button
+                onClick={() =>
+                  currentPage < totalPages && paginate(currentPage + 1)
+                }
+                className="inline-flex size-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900"
+                disabled={currentPage === totalPages}
+              >
+                <span className="sr-only">Next Page</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-3 w-3"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M7.293 14.707a1 1 010-1.414L10.586 10 7.293 6.707a1 1 011.414-1.414l4 4a1 1 010 1.414l-4-4a1 1 01-1.414 0z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </button>
+            </li>
+          </ol>
         </div>
       </main>
 
