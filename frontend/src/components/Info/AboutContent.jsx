@@ -78,6 +78,13 @@ const AboutContent = () => {
               >
                 Developers
               </a>
+
+              <button
+                onClick={handleToggleVoice}
+                className="block w-full rounded bg-yellow-500 px-12 py-3 text-sm font-medium text-white shadow hover:bg-yellow-600 focus:outline-none focus:ring active:bg-yellow-400 sm:w-auto"
+              >
+                {isVoiceEnabled ? "Disable Voice" : "Enable Voice"}
+              </button>
             </div>
           </div>
         </div>
