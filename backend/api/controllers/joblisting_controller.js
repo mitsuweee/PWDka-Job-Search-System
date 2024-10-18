@@ -604,7 +604,17 @@ const viewCounts = async (req, res, next) => {
   const { id } = req.params;
 
   try {
-    // Query to count job listings for the given company_id
+    // Check if the company exists in the company table
+    const companyExists = await knex("company").where({ id }).first();
+
+    if (!companyExists) {
+      return res.status(404).json({
+        successful: false,
+        message: "Company not found",
+      });
+    }
+
+    // Query to count total job listings for the given company_id
     const jobListingsCount = await knex("job_listing")
       .where({ company_id: id }) // Filter by company_id
       .count("id as count")
@@ -622,13 +632,45 @@ const viewCounts = async (req, res, next) => {
       .count("job_application.id as count")
       .first();
 
-    // Combine the results into a single response
+    // Query to count full-time job listings
+    const fullTimeJobListingsCount = await knex("job_listing")
+      .join(
+        "position_type",
+        "job_listing.positiontype_id",
+        "=",
+        "position_type.id"
+      )
+      .where({
+        "job_listing.company_id": id,
+        "position_type.type": "Full-Time",
+      })
+      .count("job_listing.id as count")
+      .first();
+
+    // Query to count part-time job listings
+    const partTimeJobListingsCount = await knex("job_listing")
+      .join(
+        "position_type",
+        "job_listing.positiontype_id",
+        "=",
+        "position_type.id"
+      )
+      .where({
+        "job_listing.company_id": id,
+        "position_type.type": "Part-Time",
+      })
+      .count("job_listing.id as count")
+      .first();
+
+    // Combine all the results into a single response
     return res.status(200).json({
       successful: true,
       message: "Successfully Retrieved Counts",
       data: {
-        job_listings: jobListingsCount.count, // Count of job listings for the given company
-        job_applications: jobApplicationsCount.count, // Count of job applications for job listings under the given company
+        job_listings: jobListingsCount.count, // Total count of job listings for the given company
+        job_applications: jobApplicationsCount.count, // Total count of job applications for the company
+        full_time_job_listings: fullTimeJobListingsCount.count, // Count of full-time job listings
+        part_time_job_listings: partTimeJobListingsCount.count, // Count of part-time job listings
       },
     });
   } catch (err) {
