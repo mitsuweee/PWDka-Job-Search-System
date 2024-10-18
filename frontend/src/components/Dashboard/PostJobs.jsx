@@ -246,7 +246,7 @@ const PostJob = () => {
                 value={jobDetails.requirements}
                 onChange={handleChange}
                 className="p-3 w-full border-2 border-blue-300 rounded-lg shadow-sm h-28 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                placeholder="Requirement1, Requirement2, Requirement3"
+                placeholder="Requirement1/ Requirement2/ Requirement3"
                 required
               />
             </div>
@@ -260,7 +260,7 @@ const PostJob = () => {
                 value={jobDetails.qualifications}
                 onChange={handleChange}
                 className="p-3 w-full border-2 border-blue-300 rounded-lg shadow-sm h-28 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                placeholder="Qualification1, Qualification2, Qualification3"
+                placeholder="Qualification1/ Qualification2/ Qualification3"
                 required
               />
             </div>

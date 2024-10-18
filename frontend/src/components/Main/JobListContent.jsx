@@ -552,7 +552,7 @@ const JobListing = () => {
                 </p>
                 <ul className="text-gray-700 list-disc pl-4">
                   {selectedJob.qualifications
-                    .split(",")
+                    .split("/")
                     .map((qualification, index) => (
                       <li key={index}>
                         {toSentenceCase(qualification.trim())}
@@ -564,7 +564,7 @@ const JobListing = () => {
                 </p>
                 <ul className="text-gray-700 list-disc pl-4">
                   {selectedJob.requirements
-                    .split(",")
+                    .split("/")
                     .map((requirement, index) => (
                       <li key={index}>{toSentenceCase(requirement.trim())}</li>
                     ))}
