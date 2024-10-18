@@ -229,13 +229,22 @@ const AdminVerifyUsers = () => {
       </button>
 
       <main className="flex-grow p-8 bg-custom-bg">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center mb-4">
           <button
             onClick={handleGoBack}
             className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
           >
             Back
           </button>
+
+          <a
+            href="https://pwd.doh.gov.ph/tbl_pwd_id_verificationlist.php"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-blue-500 text-white rounded-xl py-2 px-4 shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-blue-600 transition-all duration-200 ease-in-out"
+          >
+            PWD ID Verification
+          </a>
         </div>
 
         <div className="mt-4">
