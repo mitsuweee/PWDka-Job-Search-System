@@ -10,6 +10,8 @@ const AdminViewJobs = () => {
   const [loading, setLoading] = useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false); // Logout confirmation modal state
+  const [currentPage, setCurrentPage] = useState(1);
+  const jobsPerPage = 10; // Number of job listings per page
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -77,12 +79,10 @@ const AdminViewJobs = () => {
     setJob(null);
   };
 
-  // Open logout confirmation modal
   const handleLogout = () => {
     setIsLogoutModalOpen(true);
   };
 
-  // Confirm logout
   const confirmLogout = () => {
     localStorage.removeItem("Id");
     localStorage.removeItem("Role");
@@ -95,6 +95,13 @@ const AdminViewJobs = () => {
   const closeLogoutModal = () => {
     setIsLogoutModalOpen(false);
   };
+
+  const indexOfLastJob = currentPage * jobsPerPage;
+  const indexOfFirstJob = indexOfLastJob - jobsPerPage;
+  const currentJobs = jobListings.slice(indexOfFirstJob, indexOfLastJob);
+  const totalPages = Math.ceil(jobListings.length / jobsPerPage);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   if (loading) {
     return (
@@ -191,7 +198,6 @@ const AdminViewJobs = () => {
         </button>
       </aside>
 
-      {/* Mobile Toggle Button */}
       <button
         className={`md:hidden bg-custom-blue text-white p-4 fixed top-4 left-4 z-50 rounded-xl mt-11 transition-transform ${
           isSidebarOpen ? "hidden" : ""
@@ -201,7 +207,6 @@ const AdminViewJobs = () => {
         &#9776;
       </button>
 
-      {/* Main Content */}
       <main className="flex-grow p-8">
         <h1 className="text-xl font-bold text-gray-700">
           View All Job Listings
@@ -217,7 +222,7 @@ const AdminViewJobs = () => {
               </tr>
             </thead>
             <tbody>
-              {jobListings.map((job) => (
+              {currentJobs.map((job) => (
                 <tr
                   key={job.id}
                   className="border-b hover:bg-gray-100 transition-all"
@@ -236,6 +241,72 @@ const AdminViewJobs = () => {
               ))}
             </tbody>
           </table>
+        </div>
+
+        {/* Pagination */}
+        <div className="flex justify-center mt-6">
+          <ol className="flex justify-center gap-1 text-xs font-medium">
+            <li>
+              <button
+                onClick={() => currentPage > 1 && paginate(currentPage - 1)}
+                className="inline-flex size-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900"
+                disabled={currentPage === 1}
+              >
+                <span className="sr-only">Prev Page</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-3 w-3"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M12.707 5.293a1 1 010 1.414L9.414 10l3.293 3.293a1 1 01-1.414 1.414l-4-4a1 1 010-1.414l4-4a1 1 011.414 0z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </button>
+            </li>
+
+            {Array.from({ length: totalPages }, (_, index) => (
+              <li key={index + 1}>
+                <button
+                  onClick={() => paginate(index + 1)}
+                  className={`block size-8 rounded border text-center leading-8 ${
+                    currentPage === index + 1
+                      ? "border-blue-600 bg-blue-600 text-white"
+                      : "border-gray-100 bg-white text-gray-900"
+                  }`}
+                >
+                  {index + 1}
+                </button>
+              </li>
+            ))}
+
+            <li>
+              <button
+                onClick={() =>
+                  currentPage < totalPages && paginate(currentPage + 1)
+                }
+                className="inline-flex size-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900"
+                disabled={currentPage === totalPages}
+              >
+                <span className="sr-only">Next Page</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-3 w-3"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M7.293 14.707a1 1 010-1.414L10.586 10 7.293 6.707a1 1 011.414-1.414l4 4a1 1 010 1.414l-4-4a1 1 01-1.414 0z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </button>
+            </li>
+          </ol>
         </div>
       </main>
 
