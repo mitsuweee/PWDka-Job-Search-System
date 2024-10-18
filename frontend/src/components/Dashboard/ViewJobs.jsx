@@ -415,13 +415,13 @@ const ViewJobs = () => {
                   <strong>Requirements:</strong>{" "}
                   {job?.requirement
                     ? job.requirement
-                        .split(",")
+                        .split("/")
                         .map(
                           (part) =>
                             part.trim().charAt(0).toUpperCase() +
                             part.trim().slice(1).toLowerCase()
                         )
-                        .join(", ")
+                        .join("/ ")
                     : ""}
                 </p>
               </div>
@@ -430,13 +430,13 @@ const ViewJobs = () => {
                   <strong>Qualification:</strong>{" "}
                   {job?.qualification
                     ? job.qualification
-                        .split(",")
+                        .split("/")
                         .map(
                           (part) =>
                             part.trim().charAt(0).toUpperCase() +
                             part.trim().slice(1).toLowerCase()
                         )
-                        .join(", ")
+                        .join("/ ")
                     : ""}
                 </p>
               </div>
