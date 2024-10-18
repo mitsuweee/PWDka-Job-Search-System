@@ -506,199 +506,179 @@ const ViewJobs = () => {
       )}
       {/* Modal for editing job details */}
       {isUpdateModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 overflow-y-auto">
-          <div className="relative max-w-5xl w-full mx-auto mb-6 mt-6 p-6 bg-white rounded-xl shadow-lg space-y-6 transform transition-all hover:shadow-2xl">
-            {/* Close Button */}
-            <button
-              className="absolute top-3 right-4 text-gray-500 hover:text-gray-700 transition"
-              onClick={closeUpdateModal}
-            >
-              <span className="text-2xl font-bold">&times;</span>
-            </button>
-
-            <div className="text-center">
-              <h2 className="text-2xl font-bold text-custom-blue">
-                Update Job Details
-              </h2>
-              <form
-                onSubmit={handleSubmitUpdate}
-                className="bg-white p-4 rounded-xl shadow-lg text-left grid grid-cols-2 gap-6 border border-gray-200"
-              >
-                <div className="col-span-2">
-                  <label className="block mb-1 text-gray-700 font-semibold">
-                    Position Name <span className="text-red-500">*</span>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white w-full max-w-2xl p-8 rounded-lg shadow-xl mx-4 max-h-[90vh] overflow-y-auto">
+            {" "}
+            {/* Increased max-width and padding */}
+            <h2 className="text-3xl font-bold mb-6 text-gray-800 text-center">
+              Update Job
+            </h2>
+            <form onSubmit={handleSubmitUpdate} className="space-y-6">
+              <div>
+                <label className="block text-lg font-medium text-gray-700 mb-2">
+                  Job Title
+                </label>
+                <input
+                  type="text"
+                  name="jobName"
+                  value={jobUpdate.jobName}
+                  onChange={handleChange}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div>
+                <label className="block text-lg font-medium text-gray-700 mb-2">
+                  Description
+                </label>
+                <textarea
+                  name="description"
+                  value={jobUpdate.description}
+                  onChange={handleChange}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div>
+                <label className="block text-lg font-medium text-gray-700 mb-2">
+                  Requirements
+                </label>
+                <input
+                  type="text"
+                  name="requirements"
+                  value={jobUpdate.requirements} // Bind to the jobUpdate requirements
+                  onChange={handleChange}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div>
+                <label className="block text-lg font-medium text-gray-700 mb-2">
+                  Qualification
+                </label>
+                <input
+                  type="text"
+                  name="qualification"
+                  value={jobUpdate.qualification}
+                  onChange={handleChange}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div className="flex space-x-4">
+                <div className="w-1/2">
+                  <label className="block text-lg font-medium text-gray-700 mb-2">
+                    Minimum Salary
                   </label>
                   <input
-                    type="text"
-                    name="jobName"
-                    value={jobUpdate.jobName}
+                    type="number"
+                    name="minimumSalary"
+                    value={jobUpdate.minimumSalary}
                     onChange={handleChange}
-                    className="p-2 w-full border-2 border-blue-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    required
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
-
-                <div className="col-span-2">
-                  <label className="block mb-1 text-gray-700 font-semibold">
-                    Job Description <span className="text-red-500">*</span>
+                <div className="w-1/2">
+                  <label className="block text-lg font-medium text-gray-700 mb-2">
+                    Maximum Salary
                   </label>
-                  <textarea
-                    name="description"
-                    value={jobUpdate.description}
+                  <input
+                    type="number"
+                    name="maximumSalary"
+                    value={jobUpdate.maximumSalary}
                     onChange={handleChange}
-                    className="p-2 w-full border-2 border-blue-300 rounded-lg shadow-sm h-20 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    required
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
+              </div>
+              <div>
+                <label className="block text-lg font-medium text-gray-700 mb-2">
+                  Salary Visibility
+                </label>
+                <select
+                  name="salaryVisibility"
+                  value={jobUpdate.salaryVisibility}
+                  onChange={handleChange}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="SHOW">Show</option>
+                  <option value="HIDE">Hide</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-lg font-medium text-gray-700 mb-2">
+                  Position Type
+                </label>
+                <select
+                  name="positionType"
+                  value={jobUpdate.positionType}
+                  onChange={handleChange}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Select Position Type</option>
+                  <option value="fulltime">Full-Time</option>
+                  <option value="parttime">Part-Time</option>
+                </select>
+              </div>
+              <div className="mt-4">
+                <button
+                  type="button"
+                  onClick={toggleDisabilityOptions}
+                  className="text-blue-500 underline"
+                >
+                  {showDisabilityOptions
+                    ? "Hide Disability Categories"
+                    : "Show Disability Categories"}
+                </button>
+              </div>
 
-                <div className="col-span-2">
-                  <label className="block mb-1 text-gray-700 font-semibold">
-                    Requirements <span className="text-red-500">*</span>
+              {showDisabilityOptions && (
+                <div className="bg-gray-100 p-4 rounded-lg shadow-md border border-gray-300">
+                  <label className="block mb-2 text-gray-700 font-bold">
+                    Disability Categories
                   </label>
-                  <textarea
-                    name="requirements"
-                    value={jobUpdate.requirements}
-                    onChange={handleChange}
-                    className="p-2 w-full border-2 border-blue-300 rounded-lg shadow-sm h-20 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    placeholder="Requirement1, Requirement2, Requirement3"
-                    required
-                  />
-                </div>
-
-                <div className="col-span-2">
-                  <label className="block mb-1 text-gray-700 font-semibold">
-                    Qualifications <span className="text-red-500">*</span>
-                  </label>
-                  <textarea
-                    name="qualification"
-                    value={jobUpdate.qualification}
-                    onChange={handleChange}
-                    className="p-2 w-full border-2 border-blue-300 rounded-lg shadow-sm h-20 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    placeholder="Qualification1, Qualification2, Qualification3"
-                    required
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-6">
-                  <div>
-                    <label className="block mb-1 text-gray-700 font-semibold">
-                      Min-Salary <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="number"
-                      name="minimumSalary"
-                      value={jobUpdate.minimumSalary}
-                      onChange={handleChange}
-                      className="p-2 w-full border-2 border-blue-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-                      required
-                    />
+                  <div className="flex flex-col space-y-2">
+                    {[
+                      "Visual Disability",
+                      "Deaf or Hard of Hearing",
+                      "Learning Disability",
+                      "Mental Disability",
+                      "Physical Disability (Orthopedic)",
+                      "Psychosocial Disability",
+                      "Speech and Language Impairment",
+                      "Intellectual Disability",
+                      "Cancer (RA11215)",
+                      "Rare Disease (RA10747)",
+                    ].map((category) => (
+                      <label key={category} className="flex items-center">
+                        <input
+                          type="checkbox"
+                          value={category}
+                          checked={selectedDisabilityCategories.includes(
+                            category
+                          )}
+                          onChange={handleCheckboxChange}
+                          className="mr-2"
+                        />
+                        {category}
+                      </label>
+                    ))}
                   </div>
-
-                  <div>
-                    <label className="block mb-1 text-gray-700 font-semibold">
-                      Max-Salary <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="number"
-                      name="maximumSalary"
-                      value={jobUpdate.maximumSalary}
-                      onChange={handleChange}
-                      className="p-2 w-full border-2 border-blue-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-                      required
-                    />
-                  </div>
                 </div>
+              )}
 
-                <div className="col-span-1">
-                  <label className="block mb-1 text-gray-700 font-semibold">
-                    Salary Visibility <span className="text-red-500">*</span>
-                  </label>
-                  <select
-                    name="salaryVisibility"
-                    value={jobUpdate.salaryVisibility}
-                    onChange={handleChange}
-                    className="p-2 w-full border-2 border-blue-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    required
-                  >
-                    <option value="SHOW">Show</option>
-                    <option value="HIDE">Hide</option>
-                  </select>
-                </div>
-
-                <div className="col-span-1">
-                  <label className="block mb-1 text-gray-700 font-semibold">
-                    Position Type <span className="text-red-500">*</span>
-                  </label>
-                  <select
-                    name="positionType"
-                    value={jobUpdate.positionType}
-                    onChange={handleChange}
-                    className="p-2 w-full border-2 border-blue-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    required
-                  >
-                    <option value="">Select Position Type</option>
-                    <option value="fulltime">Full-time</option>
-                    <option value="parttime">Part-time</option>
-                  </select>
-                </div>
-
-                <div className="col-span-2">
-                  <button
-                    type="button"
-                    onClick={toggleDisabilityOptions}
-                    className="bg-blue-600 text-white px-3 py-2 rounded shadow-lg hover:bg-blue-700 transition"
-                  >
-                    {showDisabilityOptions
-                      ? "Hide Disability Options"
-                      : "Show Disability Options"}
-                  </button>
-                </div>
-
-                {showDisabilityOptions && (
-                  <div className="col-span-2 bg-gray-100 p-3 rounded-lg shadow-md border border-gray-300">
-                    <label className="block mb-1 text-gray-700 font-bold">
-                      Disability Categories
-                    </label>
-                    <div className="flex flex-wrap gap-4">
-                      {[
-                        "Visual Disability",
-                        "Deaf or Hard of Hearing",
-                        "Learning Disability",
-                        "Mental Disability",
-                        "Physical Disability (Orthopedic)",
-                        "Psychosocial Disability",
-                        "Speech and Language Impairment",
-                        "Intellectual Disability",
-                        "Cancer (RA11215)",
-                        "Rare Disease (RA10747)",
-                      ].map((category) => (
-                        <label key={category} className="flex items-center">
-                          <input
-                            type="checkbox"
-                            value={category}
-                            checked={selectedDisabilityCategories.includes(
-                              category
-                            )}
-                            onChange={handleCheckboxChange}
-                            className="mr-2"
-                          />
-                          {category}
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                <div className="col-span-2 flex justify-end">
-                  <button
-                    type="submit"
-                    className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-green-600 transition"
-                  >
-                    Update Job
-                  </button>
-                </div>
-              </form>
-            </div>
+              <div className="mt-6 text-center">
+                <button
+                  type="submit"
+                  className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition"
+                >
+                  Update Job
+                </button>
+                <button
+                  type="button"
+                  className="ml-4 bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition"
+                  onClick={closeUpdateModal}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
