@@ -27,6 +27,8 @@ const CompanyDashboard = () => {
   const [companyCounts, setCompanyCounts] = useState({
     job_listings: 0,
     job_applications: 0,
+    full_time_job_listings: 0,
+    part_time_job_listings: 0,
   });
 
   const navigate = useNavigate();
@@ -60,8 +62,8 @@ const CompanyDashboard = () => {
     }
   }, []);
 
-  // Data for the bar chart
-  const barChartData = {
+  // Data for the main bar chart (Job Listings and Job Applications)
+  const mainBarChartData = {
     labels: ["Job Listings", "Job Applications"],
     datasets: [
       {
@@ -77,7 +79,28 @@ const CompanyDashboard = () => {
     ],
   };
 
-  const barChartOptions = {
+  // Data for the full-time and part-time bar chart
+  const jobTypeBarChartData = {
+    labels: ["Full-Time", "Part-Time"],
+    datasets: [
+      {
+        label: "Job Listings",
+        data: [
+          companyCounts.full_time_job_listings,
+          companyCounts.part_time_job_listings,
+        ],
+        backgroundColor: [
+          "rgba(54, 162, 235, 1)", // Blue color
+          "rgba(255, 159, 64, 1)", // Orange color
+        ],
+        borderColor: ["rgba(54, 162, 235, 1)", "rgba(255, 159, 64, 1)"],
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  // Options for the first bar chart (Job Listings and Applications)
+  const jobActivityChartOptions = {
     scales: {
       y: {
         beginAtZero: true,
@@ -90,7 +113,26 @@ const CompanyDashboard = () => {
       },
       title: {
         display: true,
-        text: "Company Dashboard Statistics",
+        text: "Company Job Activity Summary", // Custom title for the first chart
+      },
+    },
+  };
+
+  // Options for the second bar chart (Full-Time and Part-Time)
+  const jobTypeChartOptions = {
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top",
+      },
+      title: {
+        display: true,
+        text: "Full-Time and Part-Time Job Distribution", // Custom title for the second chart
       },
     },
   };
@@ -168,11 +210,17 @@ const CompanyDashboard = () => {
           </h1>
         </div>
 
-        {/* Bar Chart */}
-        <div className="mt-8 w-full md:w-3/4 lg:w-2/3 mx-auto h-72 md:h-80">
-          {" "}
-          {/* Adjust width and height as needed */}
-          <Bar data={barChartData} options={barChartOptions} />
+        {/* Flexbox container to hold both charts side by side */}
+        <div className="flex flex-col md:flex-row justify-between items-center mt-8 space-y-8 md:space-y-0 md:space-x-8">
+          {/* Bar Chart for Job Listings and Job Applications */}
+          <div className="w-full md:w-1/2 h-72 md:h-80">
+            <Bar data={mainBarChartData} options={jobActivityChartOptions} />
+          </div>
+
+          {/* Bar Chart for Full-Time and Part-Time Job Listings */}
+          <div className="w-full md:w-1/2 h-72 md:h-80">
+            <Bar data={jobTypeBarChartData} options={jobTypeChartOptions} />
+          </div>
         </div>
 
         {/* Dashboard Stats Cards */}
