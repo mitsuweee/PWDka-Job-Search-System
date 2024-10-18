@@ -507,7 +507,7 @@ const ViewJobs = () => {
       {/* Modal for editing job details */}
       {isUpdateModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white w-full max-w-2xl p-8 rounded-lg shadow-xl mx-4">
+          <div className="bg-white w-full max-w-2xl p-8 rounded-lg shadow-xl mx-4 max-h-[90vh] overflow-y-auto">
             {" "}
             {/* Increased max-width and padding */}
             <h2 className="text-3xl font-bold mb-6 text-gray-800 text-center">
