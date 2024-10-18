@@ -411,34 +411,39 @@ const ViewJobs = () => {
                 </p>
               </div>
               <div className="bg-gray-200 p-3 rounded-md">
-                <p>
-                  <strong>Requirements:</strong>{" "}
+                <p className="text-lg font-medium text-gray-800 mt-6">
+                  Requirements
+                </p>
+                <ul className="text-gray-700 list-disc pl-4">
                   {job?.requirement
                     ? job.requirement
-                        .split(",")
-                        .map(
-                          (part) =>
-                            part.trim().charAt(0).toUpperCase() +
-                            part.trim().slice(1).toLowerCase()
-                        )
-                        .join(", ")
+                        .split("/")
+                        .map((part, index) => (
+                          <li key={index}>
+                            {part.trim().charAt(0).toUpperCase() +
+                              part.trim().slice(1).toLowerCase()}
+                          </li>
+                        ))
                     : ""}
-                </p>
+                </ul>
               </div>
+
               <div className="bg-gray-200 p-3 rounded-md">
-                <p>
-                  <strong>Qualification:</strong>{" "}
+                <p className="text-lg font-medium text-gray-800 mt-6">
+                  Qualifications
+                </p>
+                <ul className="text-gray-700 list-disc pl-4">
                   {job?.qualification
                     ? job.qualification
-                        .split(",")
-                        .map(
-                          (part) =>
-                            part.trim().charAt(0).toUpperCase() +
-                            part.trim().slice(1).toLowerCase()
-                        )
-                        .join(", ")
+                        .split("/")
+                        .map((part, index) => (
+                          <li key={index}>
+                            {part.trim().charAt(0).toUpperCase() +
+                              part.trim().slice(1).toLowerCase()}
+                          </li>
+                        ))
                     : ""}
-                </p>
+                </ul>
               </div>
 
               <div className="flex justify-between bg-gray-200 p-3 rounded-md">
