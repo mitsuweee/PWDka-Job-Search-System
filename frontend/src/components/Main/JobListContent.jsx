@@ -505,10 +505,16 @@ const JobListing = () => {
           </div>
         </div>
 
-        <div className={`lg:w-1/2 p-4 hidden lg:block`}>
+        <div className={`lg:w-1/2 p-4 hidden lg:block relative`}>
           {selectedJob ? (
             <div key={selectedJob.id}>
-              <div className="p-6 bg-white rounded-lg shadow-2xl">
+              <div className="p-6 bg-white rounded-lg shadow-2xl relative">
+                <button
+                  className="absolute -top-4 -right-4 bg-transparent border-2 border-gray-600 text-gray-600 text-2xl font-bold py-1 px-3 rounded-full shadow-lg hover:bg-gray-600 hover:text-white hover:shadow-2xl transition transform hover:scale-105"
+                  onClick={() => setSelectedJobId(null)} // Close the card
+                >
+                  &times;
+                </button>
                 <h2 className="text-2xl font-semibold mb-4 text-blue-600">
                   {toSentenceCase(selectedJob.jobName)}
                 </h2>
