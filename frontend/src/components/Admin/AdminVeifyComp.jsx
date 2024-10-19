@@ -42,6 +42,7 @@ const AdminVerifyComp = () => {
       method: "get",
       url: "/verification/view/companies",
       headers: {
+        "User-Agent": "Apidog/1.0.0 (https://apidog.com)",
         "Content-Type": "application/json",
       },
     };
