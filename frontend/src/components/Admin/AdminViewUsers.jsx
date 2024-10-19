@@ -114,10 +114,10 @@ const AdminViewUsers = () => {
       });
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setUser(null);
-  };
+  // const closeModal = () => {
+  //   setIsModalOpen(false);
+  //   setUser(null);
+  // };
 
   const closeDeleteModal = () => {
     setIsDeleteModalOpen(false);

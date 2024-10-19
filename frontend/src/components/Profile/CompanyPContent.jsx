@@ -30,7 +30,7 @@ const CompanyProf = () => {
     confirmNewPassword: "",
   });
 
-  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false); // State for logout modal
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -224,6 +224,10 @@ const CompanyProf = () => {
     localStorage.removeItem("Token");
     navigate("/login");
     toast.success("Logged out successfully!");
+  };
+
+  const closeLogoutModal = () => {
+    setIsLogoutModalOpen(false);
   };
 
   return (
@@ -630,6 +634,7 @@ const CompanyProf = () => {
       {isLogoutModalOpen && (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
+            {/* Modal Header */}
             <div className="flex justify-between items-center border-b pb-3 mb-4">
               <h2 className="text-2xl font-semibold text-gray-800">
                 Logout Confirmation
@@ -654,12 +659,16 @@ const CompanyProf = () => {
                 </svg>
               </button>
             </div>
+
+            {/* Modal Body */}
             <div className="mb-6">
               <p className="text-lg text-gray-600">
                 Are you sure you want to logout? You will need to log back in to
-                manage your account.
+                view or manage your company profile.
               </p>
             </div>
+
+            {/* Modal Actions */}
             <div className="flex justify-end space-x-4">
               <button
                 onClick={closeLogoutModal}
