@@ -511,7 +511,12 @@ const JobListing = () => {
               <div className="p-6 bg-white rounded-lg shadow-2xl relative">
                 <button
                   className="absolute -top-4 -right-4 bg-transparent border-2 border-gray-600 text-gray-600 text-2xl font-bold py-1 px-3 rounded-full shadow-lg hover:bg-gray-600 hover:text-white hover:shadow-2xl transition transform hover:scale-105"
-                  onClick={() => setSelectedJobId(null)} // Close the card
+                  onClick={() => {
+                    if (isVoiceEnabled) {
+                      handleToggleVoice(null); // Stop the voice first
+                    }
+                    setSelectedJobId(null); // Close the card
+                  }}
                 >
                   &times;
                 </button>
