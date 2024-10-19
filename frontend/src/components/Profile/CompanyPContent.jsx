@@ -30,7 +30,7 @@ const CompanyProf = () => {
     confirmNewPassword: "",
   });
 
-  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false); // State for logout modal
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -224,10 +224,6 @@ const CompanyProf = () => {
     localStorage.removeItem("Token");
     navigate("/login");
     toast.success("Logged out successfully!");
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false); // Close modal without logging out
   };
 
   return (
@@ -634,13 +630,12 @@ const CompanyProf = () => {
       {isLogoutModalOpen && (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
-            {/* Modal Header */}
             <div className="flex justify-between items-center border-b pb-3 mb-4">
               <h2 className="text-2xl font-semibold text-gray-800">
                 Logout Confirmation
               </h2>
               <button
-                onClick={closeModal}
+                onClick={closeLogoutModal}
                 className="text-gray-500 hover:text-gray-800 transition duration-200"
               >
                 <svg
@@ -659,19 +654,15 @@ const CompanyProf = () => {
                 </svg>
               </button>
             </div>
-
-            {/* Modal Body */}
             <div className="mb-6">
               <p className="text-lg text-gray-600">
                 Are you sure you want to logout? You will need to log back in to
-                view or manage your company profile.
+                manage your account.
               </p>
             </div>
-
-            {/* Modal Actions */}
             <div className="flex justify-end space-x-4">
               <button
-                onClick={closeModal}
+                onClick={closeLogoutModal}
                 className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-200"
               >
                 Cancel
