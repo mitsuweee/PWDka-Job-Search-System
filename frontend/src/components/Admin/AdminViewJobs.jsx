@@ -17,7 +17,7 @@ const AdminViewJobs = () => {
   useEffect(() => {
     const config = {
       method: "get",
-      url: "http://localhost:8080/admin/view/all/joblisting/newesttooldest",
+      url: "/admin/view/all/joblisting/newesttooldest",
       headers: {
         "Content-Type": "application/json",
       },
@@ -41,7 +41,7 @@ const AdminViewJobs = () => {
   const handleViewJob = (jobId) => {
     const config = {
       method: "get",
-      url: `http://localhost:8080/admin/view/joblisting/${jobId}`,
+      url: `/admin/view/joblisting/${jobId}`,
       headers: {
         "Content-Type": "application/json",
       },

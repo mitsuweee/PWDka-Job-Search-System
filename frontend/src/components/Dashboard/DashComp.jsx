@@ -40,7 +40,7 @@ const CompanyDashboard = () => {
       const fetchCompanyCounts = async () => {
         try {
           const response = await axios.get(
-            `http://localhost:8080/joblisting/view/count/${Id}` // Use Id here
+            `/joblisting/view/count/${Id}` // Use Id here
           );
 
           if (response.data.successful) {

@@ -39,7 +39,7 @@ const AdminVerifyUsers = () => {
   useEffect(() => {
     const config = {
       method: "get",
-      url: "http://localhost:8080/verification/view/users",
+      url: "/verification/view/users",
       headers: {
         "User-Agent": "Apidog/1.0.0 (https://apidog.com)",
         "Content-Type": "application/json",
@@ -81,7 +81,7 @@ const AdminVerifyUsers = () => {
   const handleApprove = (userId) => {
     const config = {
       method: "put",
-      url: `http://localhost:8080/verification/user/${userId}`,
+      url: `/verification/user/${userId}`,
       headers: {
         "Content-Type": "application/json",
       },
@@ -106,7 +106,7 @@ const AdminVerifyUsers = () => {
   const handleDecline = (userId) => {
     const config = {
       method: "delete",
-      url: `http://localhost:8080/verification/user/${userId}`,
+      url: `/verification/user/${userId}`,
       headers: {
         "Content-Type": "application/json",
       },

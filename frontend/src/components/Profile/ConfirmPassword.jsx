@@ -43,7 +43,7 @@ const ConfirmPassword = () => {
 
     const config = {
       method: "put",
-      url: "http://localhost:8080/password/resetpassword",
+      url: "/password/resetpassword",
       headers: {
         "Content-Type": "application/json",
       },

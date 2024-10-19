@@ -19,7 +19,7 @@ const AdminViewComp = () => {
   useEffect(() => {
     const config = {
       method: "get",
-      url: "http://localhost:8080/admin/view/companies",
+      url: "/admin/view/companies",
       headers: {
         "Content-Type": "application/json",
       },
@@ -43,7 +43,7 @@ const AdminViewComp = () => {
   const handleViewCompany = (companyId) => {
     const config = {
       method: "get",
-      url: `http://localhost:8080/company/view/${companyId}`,
+      url: `/company/view/${companyId}`,
       headers: {
         "Content-Type": "application/json",
       },
@@ -85,7 +85,7 @@ const AdminViewComp = () => {
   const confirmDelete = () => {
     const config = {
       method: "delete",
-      url: `http://localhost:8080/admin/delete/company/${deleteCompanyId}`,
+      url: `/admin/delete/company/${deleteCompanyId}`,
       headers: {
         "Content-Type": "application/json",
       },

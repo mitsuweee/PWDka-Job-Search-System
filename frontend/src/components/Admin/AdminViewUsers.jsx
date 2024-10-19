@@ -19,7 +19,7 @@ const AdminViewUsers = () => {
   useEffect(() => {
     const config = {
       method: "get",
-      url: "http://localhost:8080/admin/view/users",
+      url: "/admin/view/users",
       headers: {
         "Content-Type": "application/json",
       },
@@ -43,7 +43,7 @@ const AdminViewUsers = () => {
   const handleViewUser = (userId) => {
     const config = {
       method: "get",
-      url: `http://localhost:8080/user/view/${userId}`,
+      url: `/user/view/${userId}`,
       headers: {
         "Content-Type": "application/json",
       },
@@ -88,7 +88,7 @@ const AdminViewUsers = () => {
   const confirmDelete = () => {
     const config = {
       method: "delete",
-      url: `http://localhost:8080/admin/delete/user/${deleteUserId}`,
+      url: `/admin/delete/user/${deleteUserId}`,
       headers: {
         "Content-Type": "application/json",
       },

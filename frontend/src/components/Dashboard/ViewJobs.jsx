@@ -110,7 +110,7 @@ const ViewJobs = () => {
     e.preventDefault();
     const config = {
       method: "put",
-      url: `http://localhost:8080/joblisting/update/${jobUpdate.id}`,
+      url: `/joblisting/update/${jobUpdate.id}`,
       headers: {
         "Content-Type": "application/json",
       },

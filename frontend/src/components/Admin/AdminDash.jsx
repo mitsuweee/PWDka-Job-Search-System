@@ -40,9 +40,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchDashboardCounts = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:8080/admin/view/count"
-        );
+        const response = await axios.get("/admin/view/count");
         if (response.data.successful) {
           setDashboardCounts(response.data.data); // Set the counts from API
         } else {

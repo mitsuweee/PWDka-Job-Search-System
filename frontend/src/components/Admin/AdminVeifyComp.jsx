@@ -40,7 +40,7 @@ const AdminVerifyComp = () => {
   useEffect(() => {
     const config = {
       method: "get",
-      url: "http://localhost:8080/verification/view/companies",
+      url: "/verification/view/companies",
       headers: {
         "Content-Type": "application/json",
       },
@@ -79,7 +79,7 @@ const AdminVerifyComp = () => {
     setActionInProgress(true);
     const config = {
       method: "put",
-      url: `http://localhost:8080/verification/company/${companyId}`,
+      url: `/verification/company/${companyId}`,
       headers: {
         "Content-Type": "application/json",
       },
@@ -110,7 +110,7 @@ const AdminVerifyComp = () => {
     setActionInProgress(true);
     const config = {
       method: "delete",
-      url: `http://localhost:8080/verification/company/${companyId}`,
+      url: `/verification/company/${companyId}`,
       headers: {
         "Content-Type": "application/json",
       },

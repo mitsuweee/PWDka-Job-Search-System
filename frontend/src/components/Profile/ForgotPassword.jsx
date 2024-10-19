@@ -19,7 +19,7 @@ const ForgotPassword = () => {
     // Create the Axios configuration
     const config = {
       method: "post",
-      url: "http://localhost:8080/password/forgotpassword/email", // Replace with your backend URL
+      url: "/password/forgotpassword/email", // Replace with your backend URL
       headers: {
         "Content-Type": "application/json",
       },

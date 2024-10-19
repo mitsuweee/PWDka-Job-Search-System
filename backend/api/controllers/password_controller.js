@@ -39,7 +39,7 @@ const emailForgotPassword = async (req, res, next) => {
       });
 
       // Prepare the reset password URL
-      const resetUrl = `http://127.0.0.1:8080/passwordconfirmed?token=${resetToken}`;
+      const resetUrl = `/passwordconfirmed?token=${resetToken}`;
 
       const transporter = nodemailer.createTransport({
         service: "Gmail",

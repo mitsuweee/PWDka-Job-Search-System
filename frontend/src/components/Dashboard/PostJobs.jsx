@@ -71,7 +71,7 @@ const PostJob = () => {
 
     const config = {
       method: "post",
-      url: "http://localhost:8080/joblisting/post/job",
+      url: "/joblisting/post/job",
       headers: {
         "Content-Type": "application/json",
       },
