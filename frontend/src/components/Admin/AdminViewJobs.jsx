@@ -313,7 +313,7 @@ const AdminViewJobs = () => {
       {/* Modal for viewing job details */}
       {isModalOpen && job && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg p-6 w-[600px] shadow-lg hover:shadow-2xl transition-shadow duration-300">
+          <div className="bg-white rounded-lg p-6 w-[700px] shadow-lg hover:shadow-2xl transition-shadow duration-300">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-xl font-bold">Job Details</h3>
               <button
@@ -323,7 +323,9 @@ const AdminViewJobs = () => {
                 &times;
               </button>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-gray-100 p-4 rounded-lg">
+
+            {/* First Div: Company Details */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-gray-100 p-4 rounded-lg mb-4">
               <div>
                 <strong>Company:</strong>
                 <p className="shadow-lg p-1">{job.companyName}</p>
@@ -332,7 +334,7 @@ const AdminViewJobs = () => {
                 <strong>Job Title:</strong>
                 <p className="shadow-lg p-1">{job.jobName}</p>
               </div>
-              <div>
+              <div className="col-span-2">
                 <strong>Description:</strong>
                 <p className="shadow-lg p-1">
                   {job.description
@@ -346,6 +348,10 @@ const AdminViewJobs = () => {
                     .join(" ")}
                 </p>
               </div>
+            </div>
+
+            {/* Second Div: Job Information */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-gray-100 p-4 rounded-lg mb-4">
               <div>
                 <strong>Requirements:</strong>
                 <p className="shadow-lg p-1">
@@ -390,11 +396,17 @@ const AdminViewJobs = () => {
                     .join(" - ")}
                 </p>
               </div>
+            </div>
+
+            {/* Third Div: Additional Information */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-gray-100 p-4 rounded-lg">
               <div>
                 <strong>Disabilities:</strong>
                 <p className="shadow-lg p-1">{job.disabilityTypes}</p>
               </div>
             </div>
+
+            {/* Buttons */}
             <div className="flex justify-end mt-4 space-x-2">
               <button
                 className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
