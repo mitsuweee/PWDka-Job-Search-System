@@ -271,12 +271,13 @@ const PostJob = () => {
                   Min-Salary <span className="text-red-500">*</span>
                 </label>
                 <input
-                  type="text"
+                  type="number"
                   name="minSalary"
                   value={jobDetails.minSalary}
                   onChange={handleChange}
                   className="p-3 w-full border-2 border-blue-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                   required
+                  step="1" // Ensures only whole numbers
                 />
               </div>
 
@@ -285,12 +286,13 @@ const PostJob = () => {
                   Max-Salary <span className="text-red-500">*</span>
                 </label>
                 <input
-                  type="text"
+                  type="number"
                   name="maxSalary"
                   value={jobDetails.maxSalary}
                   onChange={handleChange}
                   className="p-3 w-full border-2 border-blue-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                   required
+                  step="1" // Ensures only whole numbers
                 />
               </div>
             </div>
