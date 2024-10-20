@@ -1,20 +1,22 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast"; // Import react-hot-toast
+import toast, { Toaster } from "react-hot-toast";
 
 const ViewApplicants = () => {
   const [sortOption, setSortOption] = useState("newest");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [applicants, setApplicants] = useState([]);
+  const [reviewedApplicants, setReviewedApplicants] = useState([]);
   const [jobName, setJobName] = useState("");
   const [selectedResume, setSelectedResume] = useState(null);
   const [selectedProfile, setSelectedProfile] = useState(null);
   const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
-  const [loading, setLoading] = useState(true); // Loading state
-  const [isLoading, setIsLoading] = useState(false); // New loader state
+  const [isReviewedModalOpen, setIsReviewedModalOpen] = useState(false); // New state for reviewed applicants modal
+  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -27,7 +29,6 @@ const ViewApplicants = () => {
     }
   };
 
-  // Fetch job listings and applicants
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const joblistingId = params.get("id");
@@ -45,7 +46,7 @@ const ViewApplicants = () => {
       },
     };
 
-    setIsLoading(true); // Show loader while fetching applicants
+    setIsLoading(true);
     axios(config)
       .then(async (response) => {
         const fetchedJobApplicants = await Promise.all(
@@ -53,7 +54,7 @@ const ViewApplicants = () => {
             id: applicant.id,
             fullName: applicant.full_name,
             email: applicant.email,
-            resume: applicant.resume, // URL for PDF preview
+            resume: applicant.resume,
             jobAppliedFor: applicant.position_name,
             profile: {
               fullName: applicant.full_name,
@@ -67,6 +68,7 @@ const ViewApplicants = () => {
               ),
               profilePicture: `data:image/png;base64,${applicant.formal_picture}`,
             },
+            reviewed: false, // Adding the reviewed status
           }))
         );
 
@@ -77,15 +79,15 @@ const ViewApplicants = () => {
         }
 
         setApplicants(fetchedJobApplicants);
-        toast.success("Applicants loaded successfully!"); // Show success toast
+        toast.success("Applicants loaded successfully!");
       })
       .catch((error) => {
         const errorMessage =
           error.response?.data?.message || "An error occurred";
-        toast.error(errorMessage); // Show error toast
+        toast.error(errorMessage);
       })
       .finally(() => {
-        setIsLoading(false); // Hide loader
+        setIsLoading(false);
         setLoading(false);
       });
   }, []);
@@ -119,6 +121,26 @@ const ViewApplicants = () => {
     setSelectedProfile(null);
   };
 
+  const openReviewedModal = () => {
+    setIsReviewedModalOpen(true);
+  };
+
+  const closeReviewedModal = () => {
+    setIsReviewedModalOpen(false);
+  };
+
+  const handleReviewToggle = (applicantId) => {
+    const updatedApplicants = applicants.filter(
+      (applicant) => applicant.id !== applicantId
+    );
+    const reviewedApplicant = applicants.find(
+      (applicant) => applicant.id === applicantId
+    );
+    reviewedApplicant.reviewed = true;
+    setReviewedApplicants([...reviewedApplicants, reviewedApplicant]);
+    setApplicants(updatedApplicants);
+  };
+
   const sortedApplicants = applicants.sort((a, b) => {
     if (sortOption === "newest") {
       return b.id - a.id;
@@ -132,9 +154,7 @@ const ViewApplicants = () => {
 
   return (
     <div className="flex">
-      <Toaster position="top-center" reverseOrder={false} />{" "}
-      {/* Toast notifications */}
-      {/* Loader */}
+      <Toaster position="top-center" reverseOrder={false} />
       {isLoading && (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
           <div className="text-white text-2xl">Loading...</div>
@@ -226,6 +246,14 @@ const ViewApplicants = () => {
           </div>
         </div>
 
+        {/* Reviewed Applicants Button */}
+        <button
+          className="mb-6 py-2 px-4 bg-green-600 text-white rounded-lg"
+          onClick={openReviewedModal}
+        >
+          Reviewed Applicants
+        </button>
+
         {/* Applicants Table */}
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white shadow-md rounded-lg">
@@ -261,10 +289,10 @@ const ViewApplicants = () => {
                         View Profile
                       </button>
                       <button
-                        className="py-1 px-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                        onClick={() => openResumeModal(applicant.resume)}
+                        className="py-1 px-2 bg-yellow-500 text-white rounded hover:bg-yellow-600"
+                        onClick={() => handleReviewToggle(applicant.id)}
                       >
-                        Reviewed
+                        Review
                       </button>
                     </td>
                   </tr>
@@ -381,6 +409,59 @@ const ViewApplicants = () => {
                     {selectedProfile?.birthdate}
                   </p>
                 </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Reviewed Applicants Modal */}
+        {isReviewedModalOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg relative w-full max-w-2xl">
+              <button
+                onClick={closeReviewedModal}
+                className="absolute top-2 right-2 text-2xl font-bold text-gray-700 hover:text-gray-900"
+              >
+                &times;
+              </button>
+              <h3 className="text-xl font-bold text-gray-800 mb-6 text-center">
+                Reviewed Applicants
+              </h3>
+              <div className="overflow-x-auto">
+                <table className="min-w-full bg-white shadow-md rounded-lg">
+                  <thead>
+                    <tr className="bg-gray-200 text-gray-700">
+                      <th className="py-3 px-6 text-left">Full Name</th>
+                      <th className="py-3 px-6 text-left">Email</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {reviewedApplicants.length > 0 ? (
+                      reviewedApplicants.map((applicant) => (
+                        <tr
+                          key={applicant.id}
+                          className="border-b border-gray-200 hover:bg-gray-100 transition duration-200"
+                        >
+                          <td className="py-3 px-6 text-left">
+                            {applicant.fullName}
+                          </td>
+                          <td className="py-3 px-6 text-left">
+                            {applicant.email}
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td
+                          colSpan={2}
+                          className="py-4 text-center text-gray-500"
+                        >
+                          No reviewed applicants.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
