@@ -240,19 +240,20 @@ const UserProf = () => {
     <div className="max-w-4xl mx-auto mb-10 mt-10 p-8 bg-white rounded-lg shadow-lg">
       <Toaster position="top-center" reverseOrder={false} />
       <div className="flex flex-col md:flex-row items-center justify-between">
-        <div className="relative">
+        <div className="relative w-24 h-24">
           <img
             src={user.profilePicture}
             alt="Profile"
-            className="w-24 h-25 rounded-full border-4 border-blue-700 shadow-lg object-cover"
+            className="w-full h-full rounded-full border-4 border-blue-700 shadow-lg object-cover"
           />
           <button
             onClick={handleProfilePictureEdit}
-            className="absolute bottom-0 right-0 bg-white border border-gray-300 rounded-full p-1 shadow-md"
+            className="absolute bottom-0 right-0 transform translate-x-1/2 translate-y-1/2 bg-white border border-gray-300 rounded-full p-2 shadow-md"
           >
             <span className="material-symbols-outlined">edit</span>
           </button>
         </div>
+
         <div className="ml-6">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
             {user.fullName}
