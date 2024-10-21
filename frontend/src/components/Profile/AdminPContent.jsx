@@ -10,8 +10,10 @@ const AdminProf = () => {
     email: "",
   });
 
-  const [isModalOpen, setIsModalOpen] = useState(false); // Single modal state for both edit and password
-  const [isEditing, setIsEditing] = useState(true); // Toggle between edit profile and change password
+  const [newEmail, setNewEmail] = useState(""); // New state for email update
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false); // Separate modal for email
+  const [isEditing, setIsEditing] = useState(true);
   const [passwords, setPasswords] = useState({
     currentPassword: "",
     newPassword: "",
@@ -45,6 +47,7 @@ const AdminProf = () => {
           lastName: adminData.last_name,
           email: adminData.email,
         });
+        setNewEmail(adminData.email); // Set email separately
       })
       .catch(function (error) {
         const errorMessage =
@@ -117,7 +120,7 @@ const AdminProf = () => {
     const updateAdminProfile = JSON.stringify({
       first_name: admin.firstName,
       last_name: admin.lastName,
-      email: admin.email,
+      email: admin.email, // Keep email in profile update (if needed)
     });
 
     const adminId = localStorage.getItem("Id");
@@ -143,6 +146,32 @@ const AdminProf = () => {
     setTimeout(() => {
       window.location.reload();
     }, 2000); // Reload the page after 2 seconds
+  };
+
+  const handleEmailUpdate = () => {
+    const adminId = localStorage.getItem("Id");
+
+    const data = JSON.stringify({
+      email: newEmail, // Update email
+    });
+
+    const config = {
+      method: "put",
+      url: `/admin/update/email/${adminId}`,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
+
+    axios(config)
+      .then(function () {
+        toast.success("Email updated successfully.");
+        setIsEmailModalOpen(false);
+      })
+      .catch(function () {
+        toast.error("Failed to update email.");
+      });
   };
 
   const handleLogout = () => {
@@ -183,6 +212,16 @@ const AdminProf = () => {
           >
             <span className="material-symbols-outlined text-xl mr-2">edit</span>
             Edit Profile
+          </button>
+
+          <button
+            onClick={() => setIsEmailModalOpen(true)} // Open email modal
+            className="w-full md:w-auto px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300 flex items-center justify-center mb-4 md:mb-0 md:mr-4"
+          >
+            <span className="material-symbols-outlined text-xl mr-2">
+              email
+            </span>
+            Change Email
           </button>
 
           <button
@@ -283,18 +322,6 @@ const AdminProf = () => {
                     type="text"
                     name="lastName"
                     value={admin.lastName}
-                    onChange={handleChange}
-                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-600 font-semibold">
-                    Email:
-                  </label>
-                  <input
-                    type="text"
-                    name="email"
-                    value={admin.email}
                     onChange={handleChange}
                     className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
                   />
@@ -404,6 +431,63 @@ const AdminProf = () => {
                 className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
               >
                 {isEditing ? "Update Profile" : "Save New Password"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Change Email Modal */}
+      {isEmailModalOpen && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
+            <div className="flex justify-between items-center border-b pb-3 mb-4">
+              <h2 className="text-2xl font-semibold text-gray-800">
+                Change Email
+              </h2>
+              <button
+                onClick={() => setIsEmailModalOpen(false)}
+                className="text-gray-500 hover:text-gray-800 transition duration-200"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-600 font-semibold">
+                New Email:
+              </label>
+              <input
+                type="email"
+                value={newEmail}
+                onChange={(e) => setNewEmail(e.target.value)}
+                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+              />
+            </div>
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={() => setIsEmailModalOpen(false)}
+                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-200"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleEmailUpdate}
+                className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
+              >
+                Update Email
               </button>
             </div>
           </div>
