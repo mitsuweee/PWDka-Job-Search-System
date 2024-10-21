@@ -204,18 +204,10 @@ const loginCompany = async (req, res, next) => {
 
 const updateCompany = async (req, res, next) => {
   const { id } = req.params;
-  const { name, address, city, description, contact_number, email } = req.body;
+  const { name, address, city, description, contact_number } = req.body;
 
   // Check for missing details
-  if (
-    !id ||
-    !name ||
-    !address ||
-    !city ||
-    !description ||
-    !contact_number ||
-    !email
-  ) {
+  if (!id || !name || !address || !city || !description || !contact_number) {
     return res.status(400).json({
       successful: false,
       message: "One or more details are missing",
@@ -235,34 +227,14 @@ const updateCompany = async (req, res, next) => {
       successful: false,
       message: "Invalid Contact Number Format",
     });
-  } else if (!util.checkEmail(email)) {
-    return res.status(400).json({
-      successful: false,
-      message: "Invalid Email Format",
-    });
   } else {
     try {
-      // Check if email exists in user, company, or admin tables
-      const emailExistsInUser = await knex("user").where({ email }).first();
-      const emailExistsInAdmin = await knex("admin").where({ email }).first();
-      const emailExistsInCompany = await knex("company")
-        .where({ email })
-        .first();
-
-      if (emailExistsInUser || emailExistsInAdmin || emailExistsInCompany) {
-        return res.status(400).json({
-          successful: false,
-          message: "Email already exists in the system",
-        });
-      }
-
       const result = await knex("company").where({ id }).update({
         name,
         address,
         city,
         description,
         contact_number,
-        email,
       });
 
       if (result === 0) {
@@ -445,6 +417,64 @@ const viewCompanyViaId = async (req, res, next) => {
   }
 };
 
+const updateCompanyEmail = async (req, res, next) => {
+  const id = req.params.id;
+  const email = req.body.email.toLowerCase();
+
+  // Validate input
+  if (!id || !email) {
+    return res.status(400).json({
+      successful: false,
+      message: "ID or Email is missing",
+    });
+  }
+
+  // Check if email format is valid
+  if (!util.checkEmail(email)) {
+    return res.status(400).json({
+      successful: false,
+      message: "Invalid Email Format",
+    });
+  }
+
+  try {
+    // Check if email exists in other tables (excluding current company)
+    const adminWithEmail = await knex("admin").where({ email }).first();
+    const userWithEmail = await knex("user").where({ email }).first();
+    const companyWithEmail = await knex("company")
+      .where({ email })
+      .andWhereNot({ id })
+      .first();
+
+    if (adminWithEmail || userWithEmail || companyWithEmail) {
+      return res.status(400).json({
+        successful: false,
+        message: "Email already exists in the system",
+      });
+    }
+
+    // Update the email for the specific company
+    const result = await knex("company").where({ id }).update({ email });
+
+    if (result === 0) {
+      return res.status(404).json({
+        successful: false,
+        message: "Company not found",
+      });
+    }
+
+    return res.status(200).json({
+      successful: true,
+      message: "Company email updated successfully",
+    });
+  } catch (err) {
+    return res.status(500).json({
+      successful: false,
+      message: err.message,
+    });
+  }
+};
+
 module.exports = {
   registerCompany,
   loginCompany,
@@ -452,4 +482,5 @@ module.exports = {
   updateCompanyProfilePicture,
   companyChangePassword,
   viewCompanyViaId,
+  updateCompanyEmail,
 };

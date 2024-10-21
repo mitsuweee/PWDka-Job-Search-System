@@ -568,9 +568,8 @@ const updateAdmin = async (req, res, next) => {
   const id = req.params.id;
   const firstName = req.body.first_name.toLowerCase();
   const lastName = req.body.last_name.toLowerCase();
-  const email = req.body.email.toLowerCase();
 
-  if (!id || !firstName || !lastName || !email) {
+  if (!id || !firstName || !lastName) {
     return res.status(404).json({
       successful: false,
       message: "One or more details are missing",
@@ -590,25 +589,9 @@ const updateAdmin = async (req, res, next) => {
     });
   } else {
     try {
-      // Check if email exists in other tables (excluding current admin)
-      const adminWithEmail = await knex("admin")
-        .where({ email })
-        .andWhereNot({ id })
-        .first();
-      const userWithEmail = await knex("user").where({ email }).first();
-      const companyWithEmail = await knex("company").where({ email }).first();
-
-      if (adminWithEmail || userWithEmail || companyWithEmail) {
-        return res.status(400).json({
-          successful: false,
-          message: "Email already exists",
-        });
-      }
-
       const result = await knex("admin").where({ id }).update({
         first_name: firstName,
         last_name: lastName,
-        email: email,
       });
 
       if (result === 0) {
@@ -983,6 +966,65 @@ const sendEmailConcern = async (req, res) => {
     }
   }
 };
+
+const updateAdminEmail = async (req, res, next) => {
+  const id = req.params.id;
+  const email = req.body.email.toLowerCase();
+
+  // Validate input
+  if (!id || !email) {
+    return res.status(400).json({
+      successful: false,
+      message: "ID or Email is missing",
+    });
+  }
+
+  // Check if email format is valid
+  if (!util.checkEmail(email)) {
+    return res.status(400).json({
+      successful: false,
+      message: "Invalid Email Format",
+    });
+  }
+
+  try {
+    // Check if email exists in other tables (excluding current admin)
+    const adminWithEmail = await knex("admin")
+      .where({ email })
+      .andWhereNot({ id })
+      .first();
+    const userWithEmail = await knex("user").where({ email }).first();
+    const companyWithEmail = await knex("company").where({ email }).first();
+
+    if (adminWithEmail || userWithEmail || companyWithEmail) {
+      return res.status(400).json({
+        successful: false,
+        message: "Email already exists in the system",
+      });
+    }
+
+    // Update the email for the specific admin
+    const result = await knex("admin").where({ id }).update({ email });
+
+    if (result === 0) {
+      return res.status(404).json({
+        successful: false,
+        message: "Admin not found",
+      });
+    }
+
+    return res.status(200).json({
+      successful: true,
+      message: "Admin email updated successfully",
+    });
+  } catch (err) {
+    return res.status(500).json({
+      successful: false,
+      message: err.message,
+    });
+  }
+};
+
 module.exports = {
   registerAdmin,
   loginAdmin,
@@ -1001,4 +1043,5 @@ module.exports = {
   viewAdminViaId,
   updateJobListing,
   sendEmailConcern,
+  updateAdminEmail,
 };
