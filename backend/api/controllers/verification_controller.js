@@ -56,16 +56,16 @@ const viewPendingCompany = async (req, res, next) => {
   try {
     const rows = await knex("company")
       .select(
-        "Company.id",
-        "Company.name",
-        "Company.description",
-        "Company.address",
-        "Company.city",
-        "Company.contact_number",
-        "Company.profile_picture",
-        "Company.email"
+        "company.id",
+        "company.name",
+        "company.description",
+        "company.address",
+        "company.city",
+        "company.contact_number",
+        "company.profile_picture",
+        "company.email"
       )
-      .where("Company.status", "PENDING");
+      .where("company.status", "PENDING");
 
     // Convert BLOB data to base64
     const processedRows = rows.map((row) => ({
