@@ -122,6 +122,7 @@ const ViewJobs = () => {
         minimum_salary: jobUpdate.minimumSalary,
         maximum_salary: jobUpdate.maximumSalary,
         salary_visibility: jobUpdate.salaryVisibility, // Include salary visibility
+        status: jobUpdate.compStatus, // added status
         positiontype_id:
           jobUpdate.positionType === "fulltime"
             ? 1
@@ -622,6 +623,22 @@ const ViewJobs = () => {
                   >
                     <option value="SHOW">Show</option>
                     <option value="HIDE">Hide</option>
+                  </select>
+                </div>
+
+                <div className="col-span-1">
+                  <label className="block mb-1 text-gray-700 font-semibold">
+                    Joblisting Status <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    name="salaryVisibility"
+                    value={jobUpdate.compStatus}
+                    onChange={handleChange}
+                    className="p-2 w-full border-2 border-blue-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    required
+                  >
+                    <option value="ACTIVE">Active</option>
+                    <option value="INACTIVE">Inactive</option>
                   </select>
                 </div>
 
