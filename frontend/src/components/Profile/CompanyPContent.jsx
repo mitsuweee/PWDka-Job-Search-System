@@ -20,17 +20,19 @@ const CompanyProf = () => {
     confirmNewPassword: false,
   });
 
-  const [isModalOpen, setIsModalOpen] = useState(false); // Single modal state for both edit and password
-  const [isEditing, setIsEditing] = useState(true); // Toggle between edit profile and change password
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(true);
   const [isProfilePictureModalOpen, setIsProfilePictureModalOpen] =
-    useState(false); // Profile picture modal state
+    useState(false);
   const [passwords, setPasswords] = useState({
     currentPassword: "",
     newPassword: "",
     confirmNewPassword: "",
   });
 
-  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false); // State for logout modal
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
+  const [newEmail, setNewEmail] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -47,13 +49,13 @@ const CompanyProf = () => {
       .then(function (response) {
         const companyData = response.data.data;
         setCompany({
-          logo: companyData.profile_picture, // Assuming the logo is returned as a base64 string
+          logo: companyData.profile_picture,
           name: companyData.name,
           description: companyData.description,
           address: companyData.address,
           city: companyData.city,
           contactNumber: companyData.contact_number,
-          companyEmail: companyData.email,
+          email: companyData.email,
         });
       })
       .catch(function (error) {
@@ -63,7 +65,7 @@ const CompanyProf = () => {
       });
   }, []);
 
-  const MAX_FILE_SIZE = 16777215; // 16MB
+  const MAX_FILE_SIZE = 16777215;
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -132,12 +134,12 @@ const CompanyProf = () => {
 
   const handleEdit = () => {
     setIsEditing(true);
-    setIsModalOpen(true); // Open the modal in edit mode
+    setIsModalOpen(true);
   };
 
   const handlePasswordToggle = () => {
     setIsEditing(false);
-    setIsModalOpen(true); // Open the modal in password change mode
+    setIsModalOpen(true);
   };
 
   const handleUpdate = () => {
@@ -149,7 +151,6 @@ const CompanyProf = () => {
       city: company.city,
       description: company.description,
       contact_number: company.contactNumber,
-      email: company.companyEmail,
     });
 
     const companyId = localStorage.getItem("Id");
@@ -172,7 +173,7 @@ const CompanyProf = () => {
 
     setTimeout(() => {
       window.location.reload();
-    }, 2000); // Reload the page after 2 seconds
+    }, 2000);
   };
 
   const handlePasswordUpdate = () => {
@@ -210,12 +211,38 @@ const CompanyProf = () => {
       });
   };
 
+  const handleEmailUpdate = () => {
+    const companyId = localStorage.getItem("Id");
+
+    const data = JSON.stringify({
+      new_email: newEmail,
+    });
+
+    const config = {
+      method: "put",
+      url: `/company/update/email/${companyId}`,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
+
+    axios(config)
+      .then(function () {
+        toast.success("Email updated successfully.");
+        setIsEmailModalOpen(false);
+      })
+      .catch(function () {
+        toast.error("Failed to update email.");
+      });
+  };
+
   const handleGoBack = () => {
-    navigate(-1); // Navigate to the previous page
+    navigate(-1);
   };
 
   const handleLogout = () => {
-    setIsLogoutModalOpen(true); // Open the modal when logout is clicked
+    setIsLogoutModalOpen(true);
   };
 
   const confirmLogout = () => {
@@ -253,7 +280,7 @@ const CompanyProf = () => {
             {company.name}
           </h2>
           <h4 className="text-sm md:text-lg font-bold text-gray-400">
-            {company.companyEmail}
+            {company.email}
           </h4>
           <div className="flex flex-col md:flex-row mt-4">
             <button
@@ -435,43 +462,40 @@ const CompanyProf = () => {
                 </svg>
               </button>
             </div>
-            <div className="flex justify-between mb-4">
+            <div className="flex flex-col md:flex-row mt-4 justify-center">
               <button
-                className={`py-2 px-4 ${
-                  isEditing
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-200 text-gray-700"
-                } rounded-lg`}
-                onClick={() => setIsEditing(true)}
+                onClick={handleEdit}
+                className="w-full md:w-auto px-2 py-1 bg-blue-600 text-white text-sm font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300 flex items-center justify-center mb-2 md:mb-0 md:mr-2"
               >
+                <span className="material-symbols-outlined text-base mr-1">
+                  edit
+                </span>
                 Edit Profile
               </button>
+
               <button
-                className={`py-2 px-4 ${
-                  !isEditing
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-200 text-gray-700"
-                } rounded-lg`}
-                onClick={() => setIsEditing(false)}
+                className="w-full md:w-auto px-2 py-1 bg-green-500 text-white text-sm font-semibold rounded-lg shadow-md hover:bg-green-600 transition duration-300 flex items-center justify-center mb-2 md:mb-0 md:mr-2"
+                onClick={() => setIsEmailModalOpen(true)}
               >
+                <span className="material-symbols-outlined text-base mr-1">
+                  mail
+                </span>
+                Change Email
+              </button>
+
+              <button
+                onClick={handlePasswordToggle}
+                className="w-full md:w-auto px-2 py-1 bg-custom-blue text-white text-sm font-semibold rounded-lg shadow-md hover:bg-yellow-600 transition duration-300 flex items-center justify-center"
+              >
+                <span className="material-symbols-outlined text-base mr-1">
+                  lock
+                </span>
                 Change Password
               </button>
             </div>
 
             {isEditing ? (
               <div className="grid grid-cols-1 gap-6">
-                <div>
-                  <label className="block text-gray-600 font-semibold">
-                    Email:
-                  </label>
-                  <input
-                    type="text"
-                    name="companyEmail"
-                    value={company.companyEmail}
-                    onChange={handleChange}
-                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                  />
-                </div>
                 <div>
                   <label className="block text-gray-600 font-semibold">
                     Address:
@@ -631,11 +655,67 @@ const CompanyProf = () => {
         </div>
       )}
 
+      {/* Change Email Modal */}
+      {isEmailModalOpen && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
+            <div className="flex justify-between items-center border-b pb-3 mb-4">
+              <h2 className="text-2xl font-semibold text-gray-800">
+                Change Email
+              </h2>
+              <button
+                onClick={() => setIsEmailModalOpen(false)}
+                className="text-gray-500 hover:text-gray-800 transition duration-200"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-600 font-semibold">
+                New Email:
+              </label>
+              <input
+                type="email"
+                value={newEmail}
+                onChange={(e) => setNewEmail(e.target.value)}
+                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+              />
+            </div>
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={() => setIsEmailModalOpen(false)}
+                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-200"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleEmailUpdate}
+                className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
+              >
+                Update Email
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Logout Modal */}
       {isLogoutModalOpen && (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
-            {/* Modal Header */}
             <div className="flex justify-between items-center border-b pb-3 mb-4">
               <h2 className="text-2xl font-semibold text-gray-800">
                 Logout Confirmation
@@ -661,7 +741,6 @@ const CompanyProf = () => {
               </button>
             </div>
 
-            {/* Modal Body */}
             <div className="mb-6">
               <p className="text-lg text-gray-600">
                 Are you sure you want to logout? You will need to log back in to
@@ -669,7 +748,6 @@ const CompanyProf = () => {
               </p>
             </div>
 
-            {/* Modal Actions */}
             <div className="flex justify-end space-x-4">
               <button
                 onClick={closeLogoutModal}
