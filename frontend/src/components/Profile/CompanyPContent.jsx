@@ -215,7 +215,7 @@ const CompanyProf = () => {
     const companyId = localStorage.getItem("Id");
 
     const data = JSON.stringify({
-      new_email: newEmail,
+      email: newEmail,
     });
 
     const config = {
