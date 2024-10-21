@@ -269,18 +269,18 @@ const AdminVerifyComp = () => {
         <div className="mt-4">
           {currentCompanies.length > 0 ? (
             <div className="overflow-x-auto">
-              <table className="min-w-full bg-white border rounded-lg">
+              <table className="min-w-full bg-white rounded-lg">
                 <thead>
                   <tr className="bg-blue-500 text-white">
-                    <th className="py-2 px-4 border">Company Name</th>
-                    <th className="py-2 px-4 border">City</th>
-                    <th className="py-2 px-4 border">Actions</th>
+                    <th className="py-2 px-4 text-left">Company Name</th>
+                    <th className="py-2 px-4 text-left">City</th>
+                    <th className="py-2 px-4 text-left">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {currentCompanies.map((company) => (
                     <tr key={company.id} className="hover:bg-gray-100">
-                      <td className="py-2 px-4 border">
+                      <td className="py-2 px-4 text-left">
                         {company.name
                           ? company.name
                               .split(" ")
@@ -292,7 +292,7 @@ const AdminVerifyComp = () => {
                               .join(" ")
                           : ""}
                       </td>
-                      <td className="py-2 px-4 border">
+                      <td className="py-2 px-4 text-left">
                         {company.city
                           ? company.city
                               .split(" ")
@@ -304,8 +304,7 @@ const AdminVerifyComp = () => {
                               .join(" ")
                           : ""}
                       </td>
-
-                      <td className="py-2 px-4 border text-center">
+                      <td className="py-2 px-4 text-center">
                         <button
                           disabled={actionInProgress}
                           className={`bg-blue-500 text-white px-4 py-2 rounded-md mr-2 hover:bg-blue-600 ${
