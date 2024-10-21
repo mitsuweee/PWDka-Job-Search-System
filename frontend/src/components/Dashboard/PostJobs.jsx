@@ -245,12 +245,18 @@ const PostJob = () => {
                 name="requirements"
                 value={jobDetails.requirements}
                 onChange={handleChange}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    const value = jobDetails.requirements + "/\n";
+                    handleChange({ target: { name: "requirements", value } });
+                  }
+                }}
                 className="p-3 w-full border-2 border-blue-300 rounded-lg shadow-sm h-28 focus:outline-none focus:ring-2 focus:ring-blue-400"
                 placeholder="Requirement1/ Requirement2/ Requirement3"
                 required
               />
             </div>
-
             <div className="col-span-1">
               <label className="block mb-2 text-gray-700 font-semibold">
                 Qualifications <span className="text-red-500">*</span>
@@ -259,6 +265,13 @@ const PostJob = () => {
                 name="qualifications"
                 value={jobDetails.qualifications}
                 onChange={handleChange}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault(); // Prevents the default "Enter" key behavior (new line)
+                    const value = jobDetails.qualifications + "/\n"; // Append "/" and new line
+                    handleChange({ target: { name: "qualifications", value } });
+                  }
+                }}
                 className="p-3 w-full border-2 border-blue-300 rounded-lg shadow-sm h-28 focus:outline-none focus:ring-2 focus:ring-blue-400"
                 placeholder="Qualification1/ Qualification2/ Qualification3"
                 required
