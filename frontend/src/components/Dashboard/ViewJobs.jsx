@@ -122,7 +122,7 @@ const ViewJobs = () => {
         minimum_salary: jobUpdate.minimumSalary,
         maximum_salary: jobUpdate.maximumSalary,
         salary_visibility: jobUpdate.salaryVisibility, // Include salary visibility
-        status: jobUpdate.compStatus, // added status
+        status: jobUpdate.Status, // added status
         positiontype_id:
           jobUpdate.positionType === "fulltime"
             ? 1
@@ -632,7 +632,7 @@ const ViewJobs = () => {
                   </label>
                   <select
                     name="salaryVisibility"
-                    value={jobUpdate.compStatus}
+                    value={jobUpdate.Status}
                     onChange={handleChange}
                     className="p-2 w-full border-2 border-blue-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                     required
