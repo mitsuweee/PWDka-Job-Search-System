@@ -380,7 +380,7 @@ const ViewJobs = () => {
       {/* Modal for viewing job details */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white w-full max-w-lg p-6 rounded-lg shadow-xl mx-4 max-h-screen overflow-y-auto">
+          <div className="bg-white w-full max-w-lg p-6 rounded-lg shadow-xl mx-4 max-h-[90vh] overflow-y-auto">
             <h2 className="text-3xl font-bold mb-6 text-gray-800 text-center">
               Job Details
             </h2>
@@ -509,7 +509,7 @@ const ViewJobs = () => {
       {/* Modal for editing job details */}
       {isUpdateModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 overflow-y-auto">
-          <div className="relative max-w-5xl w-full mx-auto mb-6 mt-6 p-6 bg-white rounded-xl shadow-lg space-y-6 transform transition-all hover:shadow-2xl">
+          <div className="relative max-w-5xl w-full mx-auto mb-6 mt-6 p-6 bg-white rounded-xl shadow-lg space-y-6 transform transition-all hover:shadow-2xl max-h-[90vh] overflow-y-auto">
             {/* Close Button */}
             <button
               className="absolute top-3 right-4 text-gray-500 hover:text-gray-700 transition"

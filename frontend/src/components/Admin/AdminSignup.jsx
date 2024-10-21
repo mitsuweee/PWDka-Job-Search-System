@@ -86,7 +86,7 @@ const AdminSignup = () => {
   const renderAdminSignupForm = () => (
     <form className="mt-8 grid grid-cols-12 gap-6" onSubmit={handleSubmit}>
       <div className="col-span-12">
-        <h2 className="text-3xl font-bold text-custom-blue">Admin Signup</h2>
+        <h1 className="text-3xl font-bold text-custom-blue">Admin Signup</h1>
       </div>
 
       <div className="col-span-12 md:col-span-6">
@@ -314,9 +314,7 @@ const AdminSignup = () => {
 
       {/* Main Content */}
       <main className="flex-grow p-8 bg-custom-bg">
-        <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-blue-900">Admin Signup</h1>
-        </div>
+        <div className="flex justify-between items-center"></div>
         <div className="mt-4">{renderAdminSignupForm()}</div>
       </main>
     </div>
