@@ -83,8 +83,9 @@ const ViewJobs = () => {
       minimumSalary: jobData.minimum_salary,
       maximumSalary: jobData.maximum_salary,
       salaryVisibility: jobData.salary_visibility || "HIDE", // Capture salary visibility
+      status: jobData.status || "ACTIVE", // Capture job status
       positionType: jobData.positiontype_id === 1 ? "fulltime" : "parttime",
-      disabilityCategories: jobData.disability_ids || [], // Add this line to capture disability categories
+      disabilityCategories: jobData.disability_ids || [], // Capture disability categories
     });
     setSelectedDisabilityCategories(jobData.disability_ids || []); // Initialize the selected disabilities
     setIsUpdateModalOpen(true);
@@ -115,20 +116,20 @@ const ViewJobs = () => {
         "Content-Type": "application/json",
       },
       data: {
-        position_name: jobUpdate.jobName,
+        position_name: jobUpdate.jobName, // Match the backend field naming convention
         description: jobUpdate.description,
         qualification: jobUpdate.qualification,
-        requirement: jobUpdate.requirements,
-        minimum_salary: jobUpdate.minimumSalary,
-        maximum_salary: jobUpdate.maximumSalary,
-        salary_visibility: jobUpdate.salaryVisibility, // Include salary visibility
-        status: jobUpdate.Status, // added status
+        requirement: jobUpdate.requirements, // Ensure the key matches the state
+        minimum_salary: jobUpdate.minimumSalary, // Match backend naming
+        maximum_salary: jobUpdate.maximumSalary, // Match backend naming
+        salary_visibility: jobUpdate.salaryVisibility, // Correct field naming
+        status: jobUpdate.status, // Make sure this matches your data field naming
         positiontype_id:
           jobUpdate.positionType === "fulltime"
             ? 1
             : jobUpdate.positionType === "parttime"
             ? 2
-            : null, // Ensure this value is either 1 (Full-Time) or 2 (Part-Time)
+            : null,
         disability_ids: selectedDisabilityCategories, // Include selected disabilities
       },
     };
@@ -631,9 +632,9 @@ const ViewJobs = () => {
                     Joblisting Status <span className="text-red-500">*</span>
                   </label>
                   <select
-                    name="salaryVisibility"
-                    value={jobUpdate.Status}
-                    onChange={handleChange}
+                    name="status" // Ensure 'name' matches the jobUpdate field
+                    value={jobUpdate.status} // Ensure this reflects the state field 'status'
+                    onChange={handleChange} // Handle change correctly
                     className="p-2 w-full border-2 border-blue-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                     required
                   >
