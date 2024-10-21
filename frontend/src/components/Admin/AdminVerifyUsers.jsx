@@ -260,20 +260,20 @@ const AdminVerifyUsers = () => {
         <div className="mt-4">
           {currentUsers.length > 0 ? (
             <div className="overflow-x-auto">
-              <table className="min-w-full bg-white border rounded-lg">
+              <table className="min-w-full bg-white rounded-lg">
                 <thead>
                   <tr className="bg-blue-500 text-white">
-                    <th className="py-2 px-4 border">ID</th>
-                    <th className="py-2 px-4 border">User</th>
-                    <th className="py-2 px-4 border">Disability</th>
-                    <th className="py-2 px-4 border">Actions</th>
+                    <th className="py-2 px-4 text-left">ID</th>
+                    <th className="py-2 px-4 text-left">User</th>
+                    <th className="py-2 px-4 text-left">Disability</th>
+                    <th className="py-2 px-4 text-left">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {currentUsers.map((user) => (
                     <tr key={user.id} className="hover:bg-gray-100">
-                      <td className="py-2 px-4 border">{user.id}</td>
-                      <td className="py-2 px-4">
+                      <td className="py-2 px-4 text-left">{user.id}</td>
+                      <td className="py-2 px-4 text-left">
                         {user.full_name
                           ? user.full_name
                               .split(" ")
@@ -285,9 +285,8 @@ const AdminVerifyUsers = () => {
                               .join(" ")
                           : ""}
                       </td>
-
-                      <td className="py-2 px-4 border">{user.type}</td>
-                      <td className="py-2 px-4 border text-center">
+                      <td className="py-2 px-4 text-left">{user.type}</td>
+                      <td className="py-2 px-4 text-center">
                         <button
                           className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2 hover:bg-blue-600"
                           onClick={() => handleView(user)}
