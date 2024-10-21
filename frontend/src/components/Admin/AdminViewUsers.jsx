@@ -255,17 +255,17 @@ const AdminViewUsers = () => {
           <table className="min-w-full bg-white mt-4 rounded-lg shadow-lg">
             <thead>
               <tr className="w-full bg-blue-500 text-white">
-                <th className="py-2 px-4">ID</th>
-                <th className="py-2 px-4">User</th>
-                <th className="py-2 px-4">Disability</th>
-                <th className="py-2 px-4">Actions</th>
+                <th className="py-2 px-4 text-left">ID</th>
+                <th className="py-2 px-4 text-left">User</th>
+                <th className="py-2 px-4 text-left">Disability</th>
+                <th className="py-2 px-4 text-left">Actions</th>
               </tr>
             </thead>
             <tbody>
               {currentUsers.map((user) => (
-                <tr key={user.id} className="border-b hover:bg-gray-100">
-                  <td className="py-2 px-4">{user.id}</td>
-                  <td className="py-2 px-4">
+                <tr key={user.id} className="hover:bg-gray-100">
+                  <td className="py-2 px-4 text-left">{user.id}</td>
+                  <td className="py-2 px-4 text-left">
                     {user.full_name
                       .split(" ")
                       .map(
@@ -275,8 +275,8 @@ const AdminViewUsers = () => {
                       )
                       .join(" ")}
                   </td>
-                  <td className="py-2 px-4">{user.type}</td>
-                  <td className="py-2 px-4 flex">
+                  <td className="py-2 px-4 text-left">{user.type}</td>
+                  <td className="py-2 px-4 flex text-left">
                     <button
                       onClick={() => handleViewUser(user.id)}
                       className="bg-blue-500 text-white px-2 py-1 rounded mr-2 hover:bg-blue-700"
