@@ -224,10 +224,7 @@ const AdminViewJobs = () => {
             </thead>
             <tbody>
               {currentJobs.map((job) => (
-                <tr
-                  key={job.id}
-                  className="border-b hover:bg-gray-100 transition-all"
-                >
+                <tr key={job.id} className="hover:bg-gray-100 transition-all">
                   <td className="py-2 px-4 text-left">{job.company_name}</td>
                   <td className="py-2 px-4 text-left">{job.position_name}</td>
                   <td className="py-2 px-4 flex text-left">
