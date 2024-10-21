@@ -240,7 +240,8 @@ const viewJobListingViaUserNewestToOldest = async (req, res, next) => {
           "disability.id"
         )
         .join("user", "user.disability_id", "disability.id")
-        .where("user.id", id);
+        .where("user.id", id)
+        .andWhere("job_listing.status", "ACTIVE"); // Add status filter for ACTIVE jobs
 
       // Count job listings with applied filters
       const totalJobListings = await baseQuery.clone().count({ count: "*" });
@@ -268,6 +269,7 @@ const viewJobListingViaUserNewestToOldest = async (req, res, next) => {
       const rows = await baseQuery
         .select(
           "job_listing.id",
+          "job_listing.status",
           "job_listing.position_name",
           "job_listing.description",
           "job_listing.qualification",
@@ -358,6 +360,7 @@ const viewJobsCreatedByCompanyNewestToOldest = async (req, res, next) => {
       .where("company.id", id)
       .groupBy(
         "job_listing.id",
+        "job_listing.status",
         "job_listing.position_name",
         "job_listing.description",
         "job_listing.qualification",
@@ -371,6 +374,7 @@ const viewJobsCreatedByCompanyNewestToOldest = async (req, res, next) => {
       .orderBy("job_listing.date_created", "desc")
       .select(
         "job_listing.id",
+        "job_listing.status",
         "job_listing.position_name",
         "job_listing.description",
         "job_listing.qualification",
@@ -424,6 +428,7 @@ const viewJobsCreatedByCompanyNewestToOldest = async (req, res, next) => {
 const updateJobListing = async (req, res, next) => {
   const id = req.params.id;
   const {
+    status,
     position_name,
     description,
     qualification,
@@ -432,11 +437,12 @@ const updateJobListing = async (req, res, next) => {
     maximum_salary,
     salary_visibility,
     positiontype_id,
-    disability_ids, // These are now disability "types", not IDs
+    disability_ids,
   } = req.body;
 
   if (
     !id ||
+    !status ||
     !position_name ||
     !description ||
     !qualification ||
@@ -491,6 +497,7 @@ const updateJobListing = async (req, res, next) => {
     await knex.transaction(async (trx) => {
       // Update the job listing
       const result = await trx("job_listing").where("id", id).update({
+        status,
         position_name,
         description,
         qualification,
