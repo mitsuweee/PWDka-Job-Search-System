@@ -12,6 +12,16 @@ jobApplicationRouter.post(
 jobApplicationRouter.get(
   "/applications/:id",
   jobApplicationController.viewAllUsersApplicationsViaJobListingId
-); // View All APPLICATION VIA COMPANY ID
+); // View All APPLICATION VIA Job Listing ID
+
+jobApplicationRouter.get(
+  "/reviewed/:id",
+  jobApplicationController.viewAllReviewedUsers
+); // View Reviewed Applications VIA Job Listing ID
+
+jobApplicationRouter.put(
+  "/status/reviewed/:id",
+  jobApplicationController.updateJobApplicationStatus
+); //Upload Resume
 
 module.exports = jobApplicationRouter;
