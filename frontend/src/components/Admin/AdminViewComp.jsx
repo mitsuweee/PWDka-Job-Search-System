@@ -254,20 +254,20 @@ const AdminViewComp = () => {
           <table className="min-w-full bg-white mt-4 rounded-lg shadow-lg">
             <thead>
               <tr className="w-full bg-blue-500 text-white">
-                <th className="py-2 px-4">Company Name</th>
-                <th className="py-2 px-4">City</th>
-                <th className="py-2 px-4">Actions</th>
+                <th className="py-2 px-4 text-left">Company Name</th>
+                <th className="py-2 px-4 text-left">City</th>
+                <th className="py-2 px-4 text-left">Actions</th>
               </tr>
             </thead>
             <tbody>
               {currentCompanies.map((company) => (
                 <tr key={company.id} className="border-b hover:bg-gray-100">
-                  <td className="py-2 px-4">{company.name}</td>
-                  <td className="py-2 px-4">
+                  <td className="py-2 px-4 text-left">{company.name}</td>
+                  <td className="py-2 px-4 text-left">
                     {company.city.charAt(0).toUpperCase() +
                       company.city.slice(1).toLowerCase()}
                   </td>
-                  <td className="py-2 px-4 flex">
+                  <td className="py-2 px-4 flex text-left">
                     <button
                       onClick={() => handleViewCompany(company.id)}
                       className="bg-blue-500 text-white px-2 py-1 rounded mr-2 hover:bg-blue-700"
