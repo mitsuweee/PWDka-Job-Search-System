@@ -193,10 +193,19 @@ const Signup = () => {
         window.location.reload();
       })
       .catch((error) => {
-        const errorMessage =
-          error.response?.data?.message || "An error occurred";
-        toast.error(errorMessage); // Show error toast
         setLoading(false); // Hide loader on error
+
+        // Check if the error response exists
+        if (error.response) {
+          const { data } = error.response;
+
+          // Use the dynamic error message from the backend
+          const errorMessage = data.message || "An unexpected error occurred.";
+          toast.error(errorMessage); // Show error toast with the message
+        } else {
+          // If there's no response (network error, etc.)
+          toast.error("Network error. Please check your connection.");
+        }
       });
   };
 
