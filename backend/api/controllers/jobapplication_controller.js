@@ -88,6 +88,7 @@ const viewAllUsersApplicationsViaJobListingId = async (req, res, next) => {
     // Retrieve job applications
     const applications = await knex("job_application")
       .select(
+        "job_application.id",
         "disability.type",
         knex.raw(
           "CONCAT(user.first_name, ' ', user.middle_initial, '. ', user.last_name) AS full_name"
