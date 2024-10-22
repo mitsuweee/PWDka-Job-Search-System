@@ -6,6 +6,7 @@ import MainPage from "./pages/MainPage.jsx";
 import DashboardCompany from "./pages/DashboardC.jsx";
 import Dashboard from "./pages/DashboardAdmin.jsx";
 import PrivacyPol from "./pages/PrivacyPol.jsx";
+import Terms from "./pages/Terms.jsx";
 import Contact from "./pages/Contact.jsx";
 import About from "./pages/About.jsx";
 import SignUp from "./pages/SignUp.jsx";
@@ -39,6 +40,7 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/main" element={<MainPage />} />
         <Route path="/privacypolicy" element={<PrivacyPol />} />
+        <Route path="/terms" element={<Terms />} />
         <Route path="/contactpage" element={<Contact />} />
         <Route path="/about" element={<About />} />
         <Route path="/profile" element={<Profile />} />
