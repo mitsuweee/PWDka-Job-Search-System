@@ -222,7 +222,7 @@ const Signup = () => {
               htmlFor="firstName"
               className="block text-lg font-medium text-gray-700"
             >
-              First Name
+              First Name <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -240,7 +240,7 @@ const Signup = () => {
               htmlFor="middleInitial"
               className="block text-lg font-medium text-gray-700"
             >
-              Middle Initial
+              Middle Initial <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -258,7 +258,7 @@ const Signup = () => {
               htmlFor="lastName"
               className="block text-lg font-medium text-gray-700"
             >
-              Last Name
+              Last Name <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -276,7 +276,7 @@ const Signup = () => {
               htmlFor="gender"
               className="block text-lg font-medium text-gray-700"
             >
-              Gender
+              Gender <span className="text-red-500">*</span>
             </label>
             <select
               id="gender"
@@ -299,7 +299,7 @@ const Signup = () => {
               htmlFor="birthdate"
               className="block text-lg font-medium text-gray-700"
             >
-              Birthdate
+              Birthdate <span className="text-red-500">*</span>
             </label>
             <input
               type="date"
@@ -317,12 +317,13 @@ const Signup = () => {
               htmlFor="address"
               className="block text-lg font-medium text-gray-700"
             >
-              Address
+              Address <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
               id="address"
               name="address"
+              placeholder="No Special Characters"
               value={userFormValues.address}
               onChange={handleInputChange}
               className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
@@ -335,7 +336,7 @@ const Signup = () => {
               htmlFor="city"
               className="block text-lg font-medium text-gray-700"
             >
-              City
+              City <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -353,7 +354,7 @@ const Signup = () => {
               htmlFor="contactNumber"
               className="block text-lg font-medium text-gray-700"
             >
-              Contact Number
+              Contact Number <span className="text-red-500">*</span>
             </label>
             <input
               type="tel"
@@ -372,7 +373,7 @@ const Signup = () => {
               htmlFor="disability"
               className="block text-lg font-medium text-gray-700"
             >
-              Disability
+              Disability <span className="text-red-500">*</span>
             </label>
             <select
               id="disability"
@@ -415,7 +416,7 @@ const Signup = () => {
               htmlFor="email"
               className="block text-lg font-medium text-gray-700"
             >
-              Email
+              Email <span className="text-red-500">*</span>
             </label>
             <input
               type="email"
@@ -433,7 +434,7 @@ const Signup = () => {
               htmlFor="password"
               className="block text-lg font-medium text-gray-700"
             >
-              Password
+              Password <span className="text-red-500">*</span>
             </label>
             <div className="relative">
               <input
@@ -462,7 +463,7 @@ const Signup = () => {
               htmlFor="reEnterPassword"
               className="block text-lg font-medium text-gray-700"
             >
-              Re-Enter Password
+              Re-Enter Password <span className="text-red-500">*</span>
             </label>
             <div className="relative">
               <input
@@ -494,12 +495,13 @@ const Signup = () => {
             htmlFor="pwdID"
             className="block text-lg font-medium text-gray-700"
           >
-            PWD ID
+            PWD ID <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
             id="pwdID"
             name="pwdID"
+            placeholder="00-0000-000-0000000"
             value={userFormValues.pwdID}
             onChange={handleInputChange}
             className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
@@ -512,7 +514,7 @@ const Signup = () => {
             htmlFor="idPicture"
             className="block text-lg font-medium text-gray-700"
           >
-            PWD ID Picture
+            PWD ID Picture <span className="text-red-500">*</span>
           </label>
           <input
             type="file"
@@ -530,7 +532,7 @@ const Signup = () => {
             htmlFor="profilePicture"
             className="block text-lg font-medium text-gray-700"
           >
-            Profile Picture
+            Profile Picture <span className="text-red-500">*</span>
           </label>
           <input
             type="file"
@@ -548,7 +550,7 @@ const Signup = () => {
             htmlFor="selfieWithID"
             className="block text-lg font-medium text-gray-700"
           >
-            Selfie with PWD ID
+            Selfie with PWD ID <span className="text-red-500">*</span>
           </label>
           <input
             type="file"
@@ -638,7 +640,7 @@ const Signup = () => {
             htmlFor="companyName"
             className="block text-lg font-medium text-gray-700"
           >
-            Company Name
+            Company Name <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
@@ -656,7 +658,7 @@ const Signup = () => {
             htmlFor="companyDescription"
             className="block text-lg font-medium text-gray-700"
           >
-            Company Description
+            Company Description <span className="text-red-500">*</span>
           </label>
           <textarea
             id="companyDescription"
@@ -673,12 +675,13 @@ const Signup = () => {
             htmlFor="companyAddress"
             className="block text-lg font-medium text-gray-700"
           >
-            Address
+            Address <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
             id="companyAddress"
             name="companyAddress"
+            placeholder="No Special Characters"
             value={companyFormValues.companyAddress}
             onChange={handleInputChange}
             className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
@@ -691,7 +694,7 @@ const Signup = () => {
             htmlFor="companyContactNumber"
             className="block text-lg font-medium text-gray-700"
           >
-            Contact Number
+            Contact Number <span className="text-red-500">*</span>
           </label>
           <input
             type="tel"
@@ -713,7 +716,7 @@ const Signup = () => {
             htmlFor="companyCity"
             className="block text-lg font-medium text-gray-700"
           >
-            City
+            City <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
@@ -731,7 +734,7 @@ const Signup = () => {
             htmlFor="companyEmail"
             className="block text-lg font-medium text-gray-700"
           >
-            Email
+            Email <span className="text-red-500">*</span>
           </label>
           <input
             type="email"
@@ -749,7 +752,7 @@ const Signup = () => {
             htmlFor="companyPassword"
             className="block text-lg font-medium text-gray-700"
           >
-            Password
+            Password <span className="text-red-500">*</span>
           </label>
           <div className="relative">
             <input
@@ -778,7 +781,7 @@ const Signup = () => {
             htmlFor="companyReEnterPassword"
             className="block text-lg font-medium text-gray-700"
           >
-            Re-Enter Password
+            Re-Enter Password <span className="text-red-500">*</span>
           </label>
           <div className="relative">
             <input
@@ -807,7 +810,7 @@ const Signup = () => {
             htmlFor="companyLogo"
             className="block text-lg font-medium text-gray-700"
           >
-            Company Logo
+            Company Logo <span className="text-red-500">*</span>
           </label>
           <input
             type="file"
