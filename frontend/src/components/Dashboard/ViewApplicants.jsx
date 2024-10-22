@@ -8,13 +8,13 @@ const ViewApplicants = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [applicants, setApplicants] = useState([]);
-  const [reviewedApplicants, setReviewedApplicants] = useState([]);
+  const [reviewedApplicants, setReviewedApplicants] = useState([]); // Reviewed applicants state
   const [jobName, setJobName] = useState("");
   const [selectedResume, setSelectedResume] = useState(null);
   const [selectedProfile, setSelectedProfile] = useState(null);
   const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
-  const [isReviewedModalOpen, setIsReviewedModalOpen] = useState(false); // New state for reviewed applicants modal
+  const [isReviewedModalOpen, setIsReviewedModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -52,12 +52,12 @@ const ViewApplicants = () => {
         const fetchedJobApplicants = await Promise.all(
           response.data.data.map((applicant) => ({
             id: applicant.id,
-            fullName: applicant.full_name,
+            fullName: `${applicant.first_name} ${applicant.middle_initial}. ${applicant.last_name}`, // Constructing full name
             email: applicant.email,
             resume: applicant.resume,
             jobAppliedFor: applicant.position_name,
             profile: {
-              fullName: applicant.full_name,
+              fullName: `${applicant.first_name} ${applicant.middle_initial}. ${applicant.last_name}`,
               email: applicant.email,
               disability: applicant.type,
               location: applicant.Location,
@@ -122,7 +122,40 @@ const ViewApplicants = () => {
   };
 
   const openReviewedModal = () => {
-    setIsReviewedModalOpen(true);
+    const params = new URLSearchParams(window.location.search);
+    const joblistingId = params.get("id");
+
+    const config = {
+      method: "get",
+      url: `/jobapplication/reviewed/${joblistingId}`, // API endpoint to get reviewed applicants
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    setIsLoading(true);
+    axios(config)
+      .then((response) => {
+        const fetchedReviewedApplicants = response.data.data.map(
+          (applicant) => ({
+            id: applicant.id,
+            fullName: applicant.full_name,
+            email: applicant.email,
+          })
+        );
+
+        setReviewedApplicants(fetchedReviewedApplicants); // Set reviewed applicants with full names
+        setIsReviewedModalOpen(true); // Open the modal after data is loaded
+        toast.success("Reviewed applicants loaded successfully!");
+      })
+      .catch((error) => {
+        const errorMessage =
+          error.response?.data?.message || "Failed to load reviewed applicants";
+        toast.error(errorMessage);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   const closeReviewedModal = () => {
@@ -130,15 +163,34 @@ const ViewApplicants = () => {
   };
 
   const handleReviewToggle = (applicantId) => {
-    const updatedApplicants = applicants.filter(
-      (applicant) => applicant.id !== applicantId
-    );
-    const reviewedApplicant = applicants.find(
-      (applicant) => applicant.id === applicantId
-    );
-    reviewedApplicant.reviewed = true;
-    setReviewedApplicants([...reviewedApplicants, reviewedApplicant]);
-    setApplicants(updatedApplicants);
+    const config = {
+      method: "put",
+      url: `/jobapplication/status/reviewed/${applicantId}`,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    axios(config)
+      .then((response) => {
+        toast.success("Applicant status updated to Reviewed");
+
+        // Move the reviewed applicant to the reviewed list
+        const updatedApplicants = applicants.filter(
+          (applicant) => applicant.id !== applicantId
+        );
+        const reviewedApplicant = applicants.find(
+          (applicant) => applicant.id === applicantId
+        );
+        reviewedApplicant.reviewed = true;
+        setReviewedApplicants([...reviewedApplicants, reviewedApplicant]);
+        setApplicants(updatedApplicants);
+      })
+      .catch((error) => {
+        const errorMessage =
+          error.response?.data?.message || "Failed to update status";
+        toast.error(errorMessage);
+      });
   };
 
   const sortedApplicants = applicants.sort((a, b) => {
@@ -248,7 +300,7 @@ const ViewApplicants = () => {
           </div>
         </div>
 
-        {/* Reviewed Applicants Button */}
+        {/* Button for reviewing applicants */}
         <button
           className="mb-6 py-2 px-4 bg-green-600 text-white rounded-lg"
           onClick={openReviewedModal}
@@ -274,8 +326,16 @@ const ViewApplicants = () => {
                     className="border-b border-gray-200 hover:bg-gray-100 transition duration-200"
                   >
                     <td className="py-3 px-6 text-left">
-                      {applicant.fullName}
+                      {applicant.fullName
+                        .split(" ")
+                        .map(
+                          (word) =>
+                            word.charAt(0).toUpperCase() +
+                            word.slice(1).toLowerCase()
+                        )
+                        .join(" ")}
                     </td>
+
                     <td className="py-3 px-6 text-left">{applicant.email}</td>
                     <td className="py-3 px-6 text-center space-x-2">
                       <button
@@ -445,7 +505,14 @@ const ViewApplicants = () => {
                           className="border-b border-gray-200 hover:bg-gray-100 transition duration-200"
                         >
                           <td className="py-3 px-6 text-left">
-                            {applicant.fullName}
+                            {applicant.fullName
+                              .split(" ")
+                              .map(
+                                (word) =>
+                                  word.charAt(0).toUpperCase() +
+                                  word.slice(1).toLowerCase()
+                              )
+                              .join(" ")}
                           </td>
                           <td className="py-3 px-6 text-left">
                             {applicant.email}
