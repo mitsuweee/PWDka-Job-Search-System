@@ -41,6 +41,26 @@ const ViewApplicants = () => {
       return;
     }
 
+    // Fetch the Job Name separately using joblistingId
+    const fetchJobName = () => {
+      axios
+        .get(`/joblisting/view/${joblistingId}`)
+        .then((response) => {
+          const jobData = response.data.data;
+          if (jobData && jobData.position_name) {
+            setJobName(jobData.position_name);
+          } else {
+            setJobName("Job Name Not Found");
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching job name:", error);
+          setJobName("Error Fetching Job Name");
+        });
+    };
+
+    fetchJobName(); // Call the function to fetch job name
+
     const config = {
       method: "get",
       url: `/jobapplication/applications/${joblistingId}`,
@@ -58,7 +78,6 @@ const ViewApplicants = () => {
             fullName: applicant.full_name,
             email: applicant.email,
             resume: applicant.resume,
-            jobAppliedFor: applicant.position_name,
             profile: {
               fullName: applicant.full_name,
               email: applicant.email,
@@ -74,12 +93,6 @@ const ViewApplicants = () => {
             reviewed: false,
           }))
         );
-
-        if (fetchedJobApplicants.length > 0) {
-          setJobName(fetchedJobApplicants[0].jobAppliedFor);
-        } else {
-          setJobName("No Job Found");
-        }
 
         setApplicants(fetchedJobApplicants);
         toast.success("Applicants loaded successfully!");
