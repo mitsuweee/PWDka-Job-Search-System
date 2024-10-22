@@ -477,7 +477,7 @@ const viewUserViaId = async (req, res, next) => {
           message: "ID is Invalid",
         });
       } else {
-        // Convert BLOBs to Base64 for formal_picture, picture_with_id, and picture_of_pwd_id
+        // Convert BLOBs to String for formal_picture, picture_with_id, and picture_of_pwd_id
         const user = {
           ...rows[0],
           formal_picture: rows[0].formal_picture
