@@ -17,6 +17,7 @@ const ViewJobs = () => {
   const [showDisabilityOptions, setShowDisabilityOptions] = useState(false); // Toggle state for disability options
   const [selectedDisabilityCategories, setSelectedDisabilityCategories] =
     useState([]); // State to handle selected disability categories
+  const [applicantCounts, setApplicantCounts] = useState({}); // Store counts of applicants for each job
 
   const navigate = useNavigate();
 
@@ -30,23 +31,50 @@ const ViewJobs = () => {
       },
     };
 
-    setIsLoading(true); // Show loader while fetching jobs
+    setIsLoading(true);
     axios(config)
       .then((response) => {
         const jobDataArray = response.data.data;
         setJobListings(jobDataArray);
-        setFilteredJobListings(jobDataArray); // Set filtered job listings initially
+        setFilteredJobListings(jobDataArray);
         setLoading(false);
+        const jobIds = jobDataArray.map((job) => job.id); // Collect job IDs
+        fetchApplicantCounts(jobIds); // Fetch applicant counts
       })
       .catch((error) => {
         console.error(error);
-        toast.error("Error loading jobs."); // Show toast for error
+        toast.error("Error loading jobs.");
         setLoading(false);
       })
       .finally(() => {
-        setIsLoading(false); // Hide loader
+        setIsLoading(false);
       });
   }, []);
+
+  const fetchApplicantCounts = (jobIds) => {
+    const config = {
+      method: "post",
+      url: `/jobapplication/counts`,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: {
+        job_ids: jobIds,
+      },
+    };
+
+    axios(config)
+      .then((response) => {
+        const counts = response.data.data.reduce((acc, job) => {
+          acc[job.joblisting_id] = job.applicant_count;
+          return acc;
+        }, {});
+        setApplicantCounts(counts); // Store the counts in state
+      })
+      .catch((error) => {
+        console.error("Error fetching applicant counts", error);
+      });
+  };
 
   const handleViewJob = (jobId) => {
     const config = {
@@ -308,6 +336,9 @@ const ViewJobs = () => {
                   Job Title
                 </th>
                 <th className="py-2 px-2 md:px-4 text-sm md:text-base">
+                  Applicants
+                </th>
+                <th className="py-2 px-2 md:px-4 text-sm md:text-base">
                   Actions
                 </th>
               </tr>
@@ -327,6 +358,13 @@ const ViewJobs = () => {
                           .join(" ")
                       : ""}
                   </td>
+                  <td className="py-2 px-2 md:px-4 text-sm md:text-base">
+                    {applicantCounts[job.id] !== undefined
+                      ? applicantCounts[job.id]
+                      : 0}{" "}
+                    Applicants
+                  </td>
+
                   <td className="py-2 px-2 md:px-4">
                     <div className="flex space-x-1 md:space-x-2 justify-center md:justify-end">
                       <button
