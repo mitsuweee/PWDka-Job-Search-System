@@ -491,6 +491,7 @@ const Signup = () => {
             type="text"
             id="pwdID"
             name="pwdID"
+            placeholder="00-0000-000-0000000"
             value={userFormValues.pwdID}
             onChange={handleInputChange}
             className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
