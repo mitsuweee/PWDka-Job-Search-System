@@ -4,17 +4,15 @@ const { jobListingModel } = require("../models/joblisting_model");
 const util = require("./util");
 
 const postJobs = async (req, res, next) => {
-  const {
-    position_name,
-    description,
-    qualification,
-    requirement,
-    minimum_salary,
-    maximum_salary,
-    positiontype_id,
-    company_id,
-    disability_ids,
-  } = req.body;
+  let position_name = req.body.position_name;
+  let description = req.body.description;
+  let qualification = req.body.qualification;
+  let requirement = req.body.requirement;
+  let minimum_salary = req.body.minimum_salary;
+  let maximum_salary = req.body.maximum_salary;
+  let positiontype_id = req.body.positiontype_id;
+  let company_id = req.body.company_id;
+  let disability_ids = req.body.disability_ids;
 
   if (
     !position_name ||
@@ -115,7 +113,7 @@ const postJobs = async (req, res, next) => {
 };
 
 const viewJobListing = async (req, res, next) => {
-  const { id } = req.params;
+  let id = req.params.id;
 
   if (!id) {
     return res.status(404).json({
@@ -182,7 +180,7 @@ const viewJobListing = async (req, res, next) => {
           message: "Job Listing not found",
         });
       } else {
-        // Convert company_profile_picture BLOB to Base64 string for each row
+        // Convert company_profile_picture BLOB to string for each row
         const processedRows = rows.map((row) => ({
           ...row,
           company_profile_picture: row.company_profile_picture
@@ -206,7 +204,7 @@ const viewJobListing = async (req, res, next) => {
 };
 
 const viewJobListingViaUserNewestToOldest = async (req, res, next) => {
-  const { id } = req.params;
+  const id = req.params.id;
   const city = req.body.city;
   const position_name = req.body.position_name;
   const position_type = req.body.position_type; // Get filters from query parameters
@@ -221,7 +219,6 @@ const viewJobListingViaUserNewestToOldest = async (req, res, next) => {
     });
   } else {
     try {
-      // Get the total count of job listings for the user
       const baseQuery = knex("job_listing")
         .join(
           "position_type",
@@ -241,7 +238,7 @@ const viewJobListingViaUserNewestToOldest = async (req, res, next) => {
         )
         .join("user", "user.disability_id", "disability.id")
         .where("user.id", id)
-        .andWhere("job_listing.status", "ACTIVE"); // Add status filter for ACTIVE jobs
+        .andWhere("job_listing.status", "ACTIVE");
 
       // Count job listings with applied filters
       const totalJobListings = await baseQuery.clone().count({ count: "*" });
@@ -427,19 +424,16 @@ const viewJobsCreatedByCompanyNewestToOldest = async (req, res, next) => {
 
 const updateJobListing = async (req, res, next) => {
   const id = req.params.id;
-  const {
-    status,
-    position_name,
-    description,
-    qualification,
-    requirement,
-    minimum_salary,
-    maximum_salary,
-    salary_visibility,
-    positiontype_id,
-    disability_ids,
-  } = req.body;
-
+  const status = req.body.status;
+  const position_name = req.body.position_name;
+  const description = req.body.description;
+  const qualification = req.body.qualification;
+  const requirement = req.body.requirement;
+  const minimum_salary = req.body.minimum_salary;
+  const maximum_salary = req.body.maximum_salary;
+  const salary_visibility = req.body.salary_visibility;
+  const positiontype_id = req.body.positiontype_id;
+  const disability_ids = req.body.disability_ids;
   if (
     !id ||
     !status ||
@@ -478,98 +472,98 @@ const updateJobListing = async (req, res, next) => {
       message:
         "Maximum Salary must only contain numbers that are equal or greater than Minimum Salary",
     });
-  }
+  } else {
+    try {
+      // Check if position type exists
+      const positionTypeExists = await knex("position_type")
+        .where("id", positiontype_id)
+        .first();
 
-  try {
-    // Check if position type exists
-    const positionTypeExists = await knex("position_type")
-      .where("id", positiontype_id)
-      .first();
-
-    if (!positionTypeExists) {
-      return res.status(400).json({
-        successful: false,
-        message: "Position Type Id is invalid",
-      });
-    }
-
-    // Begin transaction for updating the job listing and disabilities
-    await knex.transaction(async (trx) => {
-      // Update the job listing
-      const result = await trx("job_listing").where("id", id).update({
-        status,
-        position_name,
-        description,
-        qualification,
-        requirement,
-        minimum_salary,
-        maximum_salary,
-        salary_visibility,
-        positiontype_id,
-      });
-
-      if (result === 0) {
-        return res.status(404).json({
-          successful: false,
-          message: "Job Listing not found",
-        });
-      }
-
-      // Fetch existing disabilities for the job listing
-      const existingDisabilities = await trx("disability_job_listing")
-        .where("joblisting_id", id)
-        .pluck("disability_id");
-
-      // Fetch the IDs corresponding to the provided disability types
-      const disabilities = await trx("disability")
-        .select("id", "type")
-        .whereIn("type", disability_ids);
-
-      const disabilityIds = disabilities.map((disability) => disability.id);
-
-      if (disabilityIds.length !== disability_ids.length) {
+      if (!positionTypeExists) {
         return res.status(400).json({
           successful: false,
-          message: "One or more provided disability types are invalid",
+          message: "Position Type Id is invalid",
         });
       }
 
-      // Find new disabilities to add
-      const disabilitiesToAdd = disabilityIds.filter(
-        (disability_id) => !existingDisabilities.includes(disability_id)
-      );
-
-      // Find disabilities to remove (optional)
-      const disabilitiesToRemove = existingDisabilities.filter(
-        (disability_id) => !disabilityIds.includes(disability_id)
-      );
-
-      // Insert new disabilities that are not already associated with the job listing
-      for (const disability_id of disabilitiesToAdd) {
-        await trx("disability_job_listing").insert({
-          disability_id: disability_id,
-          joblisting_id: id,
+      // Begin transaction for updating the job listing and disabilities
+      await knex.transaction(async (trx) => {
+        // Update the job listing
+        const result = await trx("job_listing").where("id", id).update({
+          status,
+          position_name,
+          description,
+          qualification,
+          requirement,
+          minimum_salary,
+          maximum_salary,
+          salary_visibility,
+          positiontype_id,
         });
-      }
 
-      // Optionally remove disabilities that are no longer associated (if needed)
-      if (disabilitiesToRemove.length > 0) {
-        await trx("disability_job_listing")
+        if (result === 0) {
+          return res.status(404).json({
+            successful: false,
+            message: "Job Listing not found",
+          });
+        }
+
+        // Fetch existing disabilities for the job listing
+        const existingDisabilities = await trx("disability_job_listing")
           .where("joblisting_id", id)
-          .whereIn("disability_id", disabilitiesToRemove)
-          .del();
-      }
-    });
+          .pluck("disability_id");
 
-    return res.status(200).json({
-      successful: true,
-      message: "Job Listing updated successfully",
-    });
-  } catch (err) {
-    return res.status(500).json({
-      successful: false,
-      message: err.message,
-    });
+        // Fetch the IDs corresponding to the provided disability types
+        const disabilities = await trx("disability")
+          .select("id", "type")
+          .whereIn("type", disability_ids);
+
+        const disabilityIds = disabilities.map((disability) => disability.id);
+
+        if (disabilityIds.length !== disability_ids.length) {
+          return res.status(400).json({
+            successful: false,
+            message: "One or more provided disability types are invalid",
+          });
+        }
+
+        // Find new disabilities to add
+        const disabilitiesToAdd = disabilityIds.filter(
+          (disability_id) => !existingDisabilities.includes(disability_id)
+        );
+
+        // Find disabilities to remove (optional)
+        const disabilitiesToRemove = existingDisabilities.filter(
+          (disability_id) => !disabilityIds.includes(disability_id)
+        );
+
+        // Insert new disabilities that are not already associated with the job listing
+        for (const disability_id of disabilitiesToAdd) {
+          await trx("disability_job_listing").insert({
+            disability_id: disability_id,
+            joblisting_id: id,
+          });
+        }
+
+        // Optionally remove disabilities that are no longer associated (if needed)
+        if (disabilitiesToRemove.length > 0) {
+          await trx("disability_job_listing")
+            .where("joblisting_id", id)
+            .whereIn("disability_id", disabilitiesToRemove)
+            .del();
+        }
+      });
+
+      return res.status(200).json({
+        successful: true,
+        message: "Job Listing updated successfully",
+      });
+    } catch (err) {
+      return res.status(500).json({
+        successful: false,
+        message: err.message,
+      });
+    }
   }
 };
 
@@ -608,7 +602,7 @@ const deleteJob = async (req, res, next) => {
 };
 
 const viewCounts = async (req, res, next) => {
-  const { id } = req.params;
+  const id = req.params.id;
 
   try {
     // Check if the company exists in the company table
@@ -695,5 +689,6 @@ module.exports = {
   viewJobsCreatedByCompanyNewestToOldest,
   updateJobListing,
   deleteJob,
+  viewCounts,
   viewCounts,
 };
