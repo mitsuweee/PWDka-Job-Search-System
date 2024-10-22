@@ -111,9 +111,37 @@ const ViewApplicants = () => {
     setSelectedResume(null);
   };
 
-  const openProfileModal = (profile) => {
+  const openProfileModal = (applicant) => {
+    const profile = {
+      fullName: applicant.fullName || "N/A",
+      email: applicant.email || "N/A",
+      disability:
+        applicant.profile?.disability ||
+        applicant.disability ||
+        "Not specified",
+      location:
+        applicant.profile?.location || applicant.location || "Not specified",
+      contactNumber:
+        applicant.profile?.contactNumber ||
+        applicant.contactNumber ||
+        "Not specified",
+      gender: applicant.profile?.gender || applicant.gender || "Not specified",
+      birthdate:
+        applicant.profile?.birthdate || applicant.birthdate || "Not specified",
+      profilePicture:
+        applicant.profile?.profilePicture ||
+        applicant.profilePicture ||
+        "/default.png", // Fallback image
+    };
+
     setSelectedProfile(profile);
     setIsProfileModalOpen(true);
+    setIsReviewedModalOpen(false); // Close the reviewed modal if open
+  };
+
+  const goBackToReviewedModal = () => {
+    setIsReviewedModalOpen(true); // Open the reviewed modal
+    setIsProfileModalOpen(false); // Close the profile modal
   };
 
   const closeProfileModal = () => {
@@ -434,16 +462,7 @@ const ViewApplicants = () => {
                     Location:
                   </p>
                   <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
-                    {selectedProfile?.location
-                      ? selectedProfile.location
-                          .split(" ")
-                          .map(
-                            (word) =>
-                              word.charAt(0).toUpperCase() +
-                              word.slice(1).toLowerCase()
-                          )
-                          .join(" ")
-                      : "Not specified"}
+                    {selectedProfile?.location || "Not specified"}
                   </p>
                 </div>
                 <div>
@@ -457,10 +476,7 @@ const ViewApplicants = () => {
                 <div>
                   <p className="text-lg font-semibold text-gray-800">Gender:</p>
                   <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
-                    {selectedProfile?.gender
-                      ? selectedProfile.gender.charAt(0).toUpperCase() +
-                        selectedProfile.gender.slice(1).toLowerCase()
-                      : "Not specified"}
+                    {selectedProfile?.gender || "Not specified"}
                   </p>
                 </div>
                 <div>
@@ -472,6 +488,14 @@ const ViewApplicants = () => {
                   </p>
                 </div>
               </div>
+
+              {/* Back Button */}
+              <button
+                onClick={goBackToReviewedModal}
+                className="mt-4 py-2 px-4 bg-gray-600 text-white rounded hover:bg-gray-700"
+              >
+                Back to Reviewed Applicants
+              </button>
             </div>
           </div>
         )}
@@ -495,6 +519,7 @@ const ViewApplicants = () => {
                     <tr className="bg-gray-200 text-gray-700">
                       <th className="py-3 px-6 text-left">Full Name</th>
                       <th className="py-3 px-6 text-left">Email</th>
+                      <th className="py-3 px-6 text-center">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -517,12 +542,20 @@ const ViewApplicants = () => {
                           <td className="py-3 px-6 text-left">
                             {applicant.email}
                           </td>
+                          <td className="py-3 px-6 text-center space-x-2">
+                            <button
+                              className="py-1 px-2 bg-green-500 text-white rounded hover:bg-green-600"
+                              onClick={() => openProfileModal(applicant)}
+                            >
+                              View Profile
+                            </button>
+                          </td>
                         </tr>
                       ))
                     ) : (
                       <tr>
                         <td
-                          colSpan={2}
+                          colSpan={3}
                           className="py-4 text-center text-gray-500"
                         >
                           No reviewed applicants.
