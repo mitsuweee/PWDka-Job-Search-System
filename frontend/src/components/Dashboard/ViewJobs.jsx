@@ -6,6 +6,8 @@ import toast, { Toaster } from "react-hot-toast"; // Import react-hot-toast
 const ViewJobs = () => {
   const [jobListings, setJobListings] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedJobId, setSelectedJobId] = useState(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [job, setJob] = useState(null);
   const [jobUpdate, setJobUpdate] = useState({});
@@ -151,38 +153,42 @@ const ViewJobs = () => {
   };
 
   const handleDeleteJobListing = (id) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this job listing?"
-    );
-    if (confirmed) {
+    setSelectedJobId(id); // Store the selected job ID
+    setIsDeleteModalOpen(true); // Open the delete confirmation modal
+  };
+
+  const confirmDelete = () => {
+    if (selectedJobId) {
       const config = {
         method: "delete",
-        url: `/joblisting/delete/${id}`,
+        url: `/joblisting/delete/${selectedJobId}`,
         headers: {
           "Content-Type": "application/json",
         },
       };
 
-      setIsLoading(true); // Show loader while deleting job
+      setIsLoading(true); // Show loader during deletion
       axios(config)
         .then(() => {
-          toast.success("Job listing deleted successfully!"); // Show success toast
+          toast.success("Job listing deleted successfully!"); // Success notification
           setJobListings((prevListings) =>
-            prevListings.filter((job) => job.id !== id)
+            prevListings.filter((job) => job.id !== selectedJobId)
           );
           setFilteredJobListings((prevListings) =>
-            prevListings.filter((job) => job.id !== id)
+            prevListings.filter((job) => job.id !== selectedJobId)
           );
         })
         .catch(() => {
-          toast.error("An error occurred while deleting the job listing."); // Show error toast
+          toast.error("An error occurred while deleting the job listing.");
         })
         .finally(() => {
           setIsLoading(false); // Hide loader
         });
+
+      setIsDeleteModalOpen(false); // Close the delete confirmation modal
+      setSelectedJobId(null); // Clear the selected job ID
     }
   };
-
   const toggleDisabilityOptions = () => {
     setShowDisabilityOptions(!showDisabilityOptions); // Toggle visibility of disability options
   };
@@ -190,6 +196,11 @@ const ViewJobs = () => {
   const closeModal = () => {
     setIsModalOpen(false);
     setJob(null);
+  };
+
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false); // Close modal
+    setSelectedJobId(null); // Reset the selected job ID
   };
 
   const closeUpdateModal = () => {
@@ -716,6 +727,34 @@ const ViewJobs = () => {
                   </button>
                 </div>
               </form>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* Delete Confirmation Modal */}
+      {isDeleteModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+            <h3 className="text-xl font-semibold mb-4 text-center">
+              Confirm Deletion
+            </h3>
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to delete this job listing? This will also
+              delete all job applications for this listing.
+            </p>
+            <div className="flex justify-center space-x-4">
+              <button
+                onClick={confirmDelete}
+                className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors"
+              >
+                Confirm
+              </button>
+              <button
+                onClick={closeDeleteModal}
+                className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400 transition-colors"
+              >
+                Cancel
+              </button>
             </div>
           </div>
         </div>
