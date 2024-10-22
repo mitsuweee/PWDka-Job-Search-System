@@ -13,6 +13,7 @@ const ViewJobs = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredJobListings, setFilteredJobListings] = useState([]);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false); // State for logout modal
   const [isLoading, setIsLoading] = useState(false); // New loader state
   const [showDisabilityOptions, setShowDisabilityOptions] = useState(false); // Toggle state for disability options
   const [selectedDisabilityCategories, setSelectedDisabilityCategories] =
@@ -284,12 +285,7 @@ const ViewJobs = () => {
 
         <button
           className="bg-red-600 text-white rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-red-500 transition-all duration-200 ease-in-out mt-6"
-          onClick={() => {
-            localStorage.removeItem("Id");
-            localStorage.removeItem("Role");
-            localStorage.removeItem("Token");
-            navigate("/login");
-          }}
+          onClick={() => setIsLogoutModalOpen(true)} // Open logout modal
         >
           Logout
         </button>
@@ -415,6 +411,61 @@ const ViewJobs = () => {
           </table>
         </div>
       </main>
+      {isLogoutModalOpen && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
+            <div className="flex justify-between items-center border-b pb-3 mb-4">
+              <h2 className="text-2xl font-semibold text-gray-800">
+                Logout Confirmation
+              </h2>
+              <button
+                onClick={() => setIsLogoutModalOpen(false)} // Close the modal
+                className="text-gray-500 hover:text-gray-800 transition duration-200"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div className="mb-6">
+              <p className="text-lg text-gray-600">
+                Are you sure you want to log out?
+              </p>
+            </div>
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={() => setIsLogoutModalOpen(false)} // Close the modal
+                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-200"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  localStorage.removeItem("Id");
+                  localStorage.removeItem("Role");
+                  localStorage.removeItem("Token");
+                  navigate("/login");
+                  setIsLogoutModalOpen(false); // Close the modal
+                }}
+                className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {/* Modal for viewing job details */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">

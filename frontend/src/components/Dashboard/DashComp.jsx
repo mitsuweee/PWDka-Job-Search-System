@@ -30,21 +30,17 @@ const CompanyDashboard = () => {
     full_time_job_listings: 0,
     part_time_job_listings: 0,
   });
-
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false); // State for logout confirmation modal
   const navigate = useNavigate();
 
-  // Fetch counts from the backend using Id from localStorage
   useEffect(() => {
-    const Id = localStorage.getItem("Id"); // Retrieve Id from localStorage
+    const Id = localStorage.getItem("Id");
     if (Id) {
       const fetchCompanyCounts = async () => {
         try {
-          const response = await axios.get(
-            `/joblisting/view/count/${Id}` // Use Id here
-          );
-
+          const response = await axios.get(`/joblisting/view/count/${Id}`);
           if (response.data.successful) {
-            setCompanyCounts(response.data.data); // Set the counts from API
+            setCompanyCounts(response.data.data);
           } else {
             console.error(
               "Error fetching company counts:",
@@ -55,31 +51,41 @@ const CompanyDashboard = () => {
           console.error("Error fetching company counts:", error);
         }
       };
-
       fetchCompanyCounts();
     } else {
       console.error("Company ID is not available in session storage");
     }
   }, []);
 
-  // Data for the main bar chart (Job Listings and Job Applications)
+  const handleLogout = () => {
+    setIsLogoutModalOpen(true); // Open logout confirmation modal
+  };
+
+  const confirmLogout = () => {
+    localStorage.removeItem("Id");
+    localStorage.removeItem("Role");
+    localStorage.removeItem("Token");
+    navigate("/login");
+    setIsLogoutModalOpen(false); // Close the modal
+  };
+
+  const closeLogoutModal = () => {
+    setIsLogoutModalOpen(false); // Close logout confirmation modal
+  };
+
   const mainBarChartData = {
     labels: ["Job Listings", "Job Applications"],
     datasets: [
       {
         label: "Counts",
         data: [companyCounts.job_listings, companyCounts.job_applications],
-        backgroundColor: [
-          "rgba(75, 192, 192, 1)", // Solid teal color
-          "rgba(153, 102, 255, 1)", // Solid purple color
-        ],
+        backgroundColor: ["rgba(75, 192, 192, 1)", "rgba(153, 102, 255, 1)"],
         borderColor: ["rgba(75, 192, 192, 1)", "rgba(153, 102, 255, 1)"],
         borderWidth: 1,
       },
     ],
   };
 
-  // Data for the full-time and part-time bar chart
   const jobTypeBarChartData = {
     labels: ["Full-Time", "Part-Time"],
     datasets: [
@@ -89,64 +95,32 @@ const CompanyDashboard = () => {
           companyCounts.full_time_job_listings,
           companyCounts.part_time_job_listings,
         ],
-        backgroundColor: [
-          "rgba(54, 162, 235, 1)", // Blue color
-          "rgba(255, 159, 64, 1)", // Orange color
-        ],
+        backgroundColor: ["rgba(54, 162, 235, 1)", "rgba(255, 159, 64, 1)"],
         borderColor: ["rgba(54, 162, 235, 1)", "rgba(255, 159, 64, 1)"],
         borderWidth: 1,
       },
     ],
   };
 
-  // Options for the first bar chart (Job Listings and Applications)
   const jobActivityChartOptions = {
-    scales: {
-      y: {
-        beginAtZero: true,
-      },
-    },
+    scales: { y: { beginAtZero: true } },
     responsive: true,
     plugins: {
-      legend: {
-        position: "top",
-      },
-      title: {
-        display: true,
-        text: "Company Job Activity Summary", // Custom title for the first chart
-      },
+      legend: { position: "top" },
+      title: { display: true, text: "Company Job Activity Summary" },
     },
   };
 
-  // Options for the second bar chart (Full-Time and Part-Time)
   const jobTypeChartOptions = {
-    scales: {
-      y: {
-        beginAtZero: true,
-      },
-    },
+    scales: { y: { beginAtZero: true } },
     responsive: true,
     plugins: {
-      legend: {
-        position: "top",
-      },
+      legend: { position: "top" },
       title: {
         display: true,
-        text: "Full-Time and Part-Time Job Distribution", // Custom title for the second chart
+        text: "Full-Time and Part-Time Job Distribution",
       },
     },
-  };
-
-  const handleLogout = () => {
-    const confirmed = window.confirm("Are you sure you want to logout?");
-    if (confirmed) {
-      // Clear session storage and redirect to the login route
-      localStorage.removeItem("Id");
-      localStorage.removeItem("Role");
-      localStorage.removeItem("Token");
-
-      navigate("/login");
-    }
   };
 
   return (
@@ -167,7 +141,7 @@ const CompanyDashboard = () => {
           href="/dashboard/postjob"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
           style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
+            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
           }}
         >
           <span className="material-symbols-outlined text-xl mr-4">work</span>
@@ -177,7 +151,7 @@ const CompanyDashboard = () => {
           href="/dashboard/ViewJobs"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
           style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
+            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
           }}
         >
           <span className="material-symbols-outlined text-xl mr-4">list</span>
@@ -223,32 +197,57 @@ const CompanyDashboard = () => {
           </div>
         </div>
 
-        {/* Dashboard Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
-          <div
-            className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl hover:translate-y-1 transition-all duration-200 ease-in-out cursor-pointer"
-            onClick={() => navigate("/dashboard/ViewJobs")} // Navigate to ViewJobs on card click
-          >
-            <h2 className="text-xl font-bold text-gray-800">Job Listings</h2>
-            <p className="text-3xl text-blue-900 font-semibold">
-              {companyCounts.job_listings}
-            </p>
-          </div>
+        {/* Logout Confirmation Modal */}
+        {isLogoutModalOpen && (
+          <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
+              <div className="flex justify-between items-center border-b pb-3 mb-4">
+                <h2 className="text-2xl font-semibold text-gray-800">
+                  Logout Confirmation
+                </h2>
+                <button
+                  onClick={closeLogoutModal}
+                  className="text-gray-500 hover:text-gray-800 transition duration-200"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2}
+                    stroke="currentColor"
+                    className="w-6 h-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div className="mb-6">
+                <p className="text-lg text-gray-600">
+                  Are you sure you want to log out?
+                </p>
+              </div>
 
-          <div
-            className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl hover:translate-y-1 transition-all duration-200 ease-in-out cursor-pointer"
-            onClick={() => navigate("/dashboard/ViewJobs")} // Navigate to ViewJobs on card click
-          >
-            <h2 className="text-xl font-bold text-gray-800">
-              Job Applications
-            </h2>
-            <p className="text-3xl text-blue-900 font-semibold">
-              {companyCounts.job_applications}
-            </p>
+              <div className="flex justify-end space-x-4">
+                <button
+                  onClick={closeLogoutModal}
+                  className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-200"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={confirmLogout}
+                  className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
+                >
+                  Logout
+                </button>
+              </div>
+            </div>
           </div>
-        </div>
-
-        <div className="mt-4">{/* Render additional content here */}</div>
+        )}
       </main>
     </div>
   );
