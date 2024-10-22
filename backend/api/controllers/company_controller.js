@@ -7,21 +7,15 @@ const nodemailer = require("nodemailer");
 require("dotenv").config();
 
 const registerCompany = async (req, res, next) => {
-  let {
-    name,
-    address,
-    city,
-    description,
-    contact_number,
-    email,
-    password,
-    confirm_password,
-    profile_picture,
-  } = req.body;
-
-  address = address.toLowerCase();
-  city = city.toLowerCase();
-  email = email.toLowerCase();
+  let name = req.body.name;
+  let address = req.body.address.toLowerCase();
+  let city = req.body.city.toLowerCase();
+  let description = req.body.description;
+  let contact_number = req.body.contact_number;
+  let email = req.body.email.toLowerCase();
+  let password = req.body.password;
+  let confirm_password = req.body.confirm_password;
+  let profile_picture = req.body.profile_picture;
 
   if (
     !name ||
@@ -37,88 +31,75 @@ const registerCompany = async (req, res, next) => {
       successful: false,
       message: "One or more details are missing",
     });
-  }
-
-  if (util.checkSpecialChar(address)) {
+  } else if (util.checkSpecialChar(address)) {
     return res.status(400).json({
       successful: false,
       message: "Invalid Address Format",
     });
-  }
-
-  if (util.checkNumbersAndSpecialChar(city)) {
+  } else if (util.checkNumbersAndSpecialChar(city)) {
     return res.status(400).json({
       successful: false,
       message: "Invalid City Format",
     });
-  }
-
-  if (!util.checkContactNumber(contact_number)) {
+  } else if (!util.checkContactNumber(contact_number)) {
     return res.status(400).json({
       successful: false,
       message: "Invalid Contact Number Format",
     });
-  }
-
-  if (!util.checkEmail(email)) {
+  } else if (!util.checkEmail(email)) {
     return res.status(400).json({
       successful: false,
       message: "Invalid Email",
     });
-  }
-
-  if (!util.checkPassword(password)) {
+  } else if (!util.checkPassword(password)) {
     return res.status(400).json({
       successful: false,
       message: "Invalid Password Format",
     });
-  }
-
-  if (password !== confirm_password) {
+  } else if (password !== confirm_password) {
     return res.status(400).json({
       successful: false,
       message: "Passwords do not match",
     });
-  }
+  } else {
+    try {
+      const existingCompany = await knex("company").where({ email }).first();
+      const existingAdmin = await knex("admin").where({ email }).first();
+      const existingUser = await knex("user").where({ email }).first();
 
-  try {
-    const existingCompany = await knex("company").where({ email }).first();
-    const existingAdmin = await knex("admin").where({ email }).first();
-    const existingUser = await knex("user").where({ email }).first();
+      if (existingCompany || existingAdmin || existingUser) {
+        return res.status(400).json({
+          successful: false,
+          message: "Email already exists",
+        });
+      }
 
-    if (existingCompany || existingAdmin || existingUser) {
-      return res.status(400).json({
-        successful: false,
-        message: "Email already exists",
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      await knex("company").insert({
+        name,
+        address,
+        city,
+        description,
+        contact_number,
+        email,
+        password: hashedPassword,
+        profile_picture,
       });
-    }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+      const transporter = nodemailer.createTransport({
+        service: "Gmail",
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASSWORD,
+        },
+      });
 
-    await knex("company").insert({
-      name,
-      address,
-      city,
-      description,
-      contact_number,
-      email,
-      password: hashedPassword,
-      profile_picture,
-    });
-
-    const transporter = nodemailer.createTransport({
-      service: "Gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD,
-      },
-    });
-
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: "Account Verification",
-      text: `Dear ${name},
+      const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: email,
+        subject: "Account Verification",
+        text: `Dear ${name},
 
 Thank you for registering. Your Company's account is under review and will be activated once verified. We will notify you once the verification process is complete.
 
@@ -132,79 +113,85 @@ Here are the details you provided:
 
 Best regards,
 PWDKA TEAM`,
-    };
+      };
 
-    await transporter.sendMail(mailOptions);
+      await transporter.sendMail(mailOptions);
 
-    return res.status(200).json({
-      successful: true,
-      message:
-        "Successfully Registered Company! We will update you via email once the company is verified.",
-    });
-  } catch (err) {
-    return res.status(500).json({
-      successful: false,
-      message: err.message,
-    });
+      return res.status(200).json({
+        successful: true,
+        message:
+          "Successfully Registered Company! We will update you via email once the company is verified.",
+      });
+    } catch (err) {
+      return res.status(500).json({
+        successful: false,
+        message: err.message,
+      });
+    }
   }
 };
 
 const loginCompany = async (req, res, next) => {
-  const { email, password } = req.body;
+  let email = req.body.email;
+  let password = req.body.password;
 
   if (!email || !password) {
     return res.status(400).json({
       successful: false,
       message: "Email or Password is missing",
     });
-  }
+  } else {
+    try {
+      const company = await knex("company").where({ email }).first();
 
-  try {
-    const company = await knex("company").where({ email }).first();
+      if (!company) {
+        return res.status(400).json({
+          successful: false,
+          message: "Invalid Credentials",
+        });
+      }
 
-    if (!company) {
-      return res.status(400).json({
+      const passwordMatch = await bcrypt.compare(password, company.password);
+
+      if (!passwordMatch) {
+        return res.status(400).json({
+          successful: false,
+          message: "Invalid Credentials",
+        });
+      }
+
+      if (company.status === "PENDING") {
+        return res.status(400).json({
+          successful: false,
+          message:
+            "The Company's Account is under Verification. Please wait for the email confirmation.",
+        });
+      }
+
+      if (company.status === "VERIFIED") {
+        return res.status(200).json({
+          successful: true,
+          id: company.id,
+          role: company.role,
+          message: "Successfully Logged In.",
+        });
+      }
+    } catch (err) {
+      return res.status(500).json({
         successful: false,
-        message: "Invalid Credentials",
+        message: err.message,
       });
     }
-
-    const passwordMatch = await bcrypt.compare(password, company.password);
-
-    if (!passwordMatch) {
-      return res.status(400).json({
-        successful: false,
-        message: "Invalid Credentials",
-      });
-    }
-
-    if (company.status === "PENDING") {
-      return res.status(400).json({
-        successful: false,
-        message:
-          "The Company's Account is under Verification. Please wait for the email confirmation.",
-      });
-    }
-
-    if (company.status === "VERIFIED") {
-      return res.status(200).json({
-        successful: true,
-        id: company.id,
-        role: company.role,
-        message: "Successfully Logged In.",
-      });
-    }
-  } catch (err) {
-    return res.status(500).json({
-      successful: false,
-      message: err.message,
-    });
   }
 };
 
 const updateCompany = async (req, res, next) => {
-  const { id } = req.params;
-  const { name, address, city, description, contact_number } = req.body;
+  let id = req.params.id;
+  let name = req.body.name;
+  let address = req.body.address;
+  let city = req.body.city;
+  let description = req.body.description;
+  let contact_number = req.body.contact_number;
 
   // Check for missing details
   if (!id || !name || !address || !city || !description || !contact_number) {
@@ -293,8 +280,10 @@ const updateCompanyProfilePicture = async (req, res, next) => {
 };
 
 const companyChangePassword = async (req, res, next) => {
-  const { id } = req.params;
-  const { password, new_password, confirm_password } = req.body;
+  let id = req.params.id;
+  let password = req.body.password;
+  let new_password = req.body.new_password;
+  let confirm_password = req.body.confirm_password;
 
   if (!id || !password || !new_password || !confirm_password) {
     return res.status(400).json({
@@ -365,7 +354,7 @@ const companyChangePassword = async (req, res, next) => {
 };
 
 const viewCompanyViaId = async (req, res, next) => {
-  const { id } = req.params;
+  let id = req.params.id;
 
   if (!id) {
     return res.status(400).json({
@@ -430,48 +419,45 @@ const updateCompanyEmail = async (req, res, next) => {
   }
 
   // Check if email format is valid
-  if (!util.checkEmail(email)) {
+  else if (!util.checkEmail(email)) {
     return res.status(400).json({
       successful: false,
       message: "Invalid Email Format",
     });
-  }
+  } else {
+    try {
+      // Check if email exists in other tables (excluding current company)
+      const adminWithEmail = await knex("admin").where({ email }).first();
+      const userWithEmail = await knex("user").where({ email }).first();
+      const companyWithEmail = await knex("company").where({ email }).first();
 
-  try {
-    // Check if email exists in other tables (excluding current company)
-    const adminWithEmail = await knex("admin").where({ email }).first();
-    const userWithEmail = await knex("user").where({ email }).first();
-    const companyWithEmail = await knex("company")
-      .where({ email })
-      .andWhereNot({ id })
-      .first();
+      if (adminWithEmail || userWithEmail || companyWithEmail) {
+        return res.status(400).json({
+          successful: false,
+          message: "Email already exists in the system",
+        });
+      }
 
-    if (adminWithEmail || userWithEmail || companyWithEmail) {
-      return res.status(400).json({
+      // Update the email
+      const result = await knex("company").where({ id }).update({ email });
+
+      if (result === 0) {
+        return res.status(404).json({
+          successful: false,
+          message: "Company not found",
+        });
+      }
+
+      return res.status(200).json({
+        successful: true,
+        message: "Company email updated successfully",
+      });
+    } catch (err) {
+      return res.status(500).json({
         successful: false,
-        message: "Email already exists in the system",
+        message: err.message,
       });
     }
-
-    // Update the email for the specific company
-    const result = await knex("company").where({ id }).update({ email });
-
-    if (result === 0) {
-      return res.status(404).json({
-        successful: false,
-        message: "Company not found",
-      });
-    }
-
-    return res.status(200).json({
-      successful: true,
-      message: "Company email updated successfully",
-    });
-  } catch (err) {
-    return res.status(500).json({
-      successful: false,
-      message: err.message,
-    });
   }
 };
 
