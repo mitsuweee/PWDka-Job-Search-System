@@ -373,9 +373,16 @@ const CompanyProf = () => {
               City:
             </p>
             <p className="text-gray-600 bg-gray-200 p-5 rounded-lg">
-              {company.city}
+              {company.city
+                .split(" ")
+                .map(
+                  (word) =>
+                    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+                )
+                .join(" ")}
             </p>
           </div>
+
           <div className="mb-4">
             <p className="text-lg font-semibold text-gray-800 flex items-center">
               <span className="material-symbols-outlined text-xl mr-2">

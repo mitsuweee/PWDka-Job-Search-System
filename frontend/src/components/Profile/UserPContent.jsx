@@ -320,14 +320,20 @@ const UserProf = () => {
             </p>
           </div>
           <div className="mb-4">
-            <p className="text-lg font-semibold text-gray-800 flex items-center capitalize">
+            <p className="text-lg font-semibold text-gray-800 flex items-center">
               <span className="material-symbols-outlined text-2xl mr-2">
                 location_city
               </span>
               City:
             </p>
-            <p className="text-gray-600 bg-gray-200 p-5 rounded-lg capitalize">
-              {user.city}
+            <p className="text-gray-600 bg-gray-200 p-5 rounded-lg">
+              {user.city
+                .split(" ")
+                .map(
+                  (word) =>
+                    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+                )
+                .join(" ")}
             </p>
           </div>
           <div className="mb-4">
