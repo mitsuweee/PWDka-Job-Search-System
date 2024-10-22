@@ -968,10 +968,7 @@ const updateAdminEmail = async (req, res, next) => {
   } else {
     try {
       // Check if email exists in other tables (excluding current admin)
-      const adminWithEmail = await knex("admin")
-        .where({ email })
-        .andWhereNot({ id })
-        .first();
+      const adminWithEmail = await knex("admin").where({ email }).first();
       const userWithEmail = await knex("user").where({ email }).first();
       const companyWithEmail = await knex("company").where({ email }).first();
 
