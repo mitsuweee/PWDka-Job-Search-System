@@ -197,8 +197,10 @@ const ViewApplicants = () => {
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold text-custom-blue">
             Applicants for{" "}
-            <span className="font-extrabold text-blue-900">{jobName}</span>
+            <span className="font-extrabold text-blue-900">{jobName}</span> (
+            {applicants.length})
           </h2>
+
           <div className="relative">
             <button
               className="py-2 px-4 mb-3 rounded-lg bg-blue-600 text-white"
