@@ -14,10 +14,13 @@ const ViewApplicants = () => {
   const [selectedProfile, setSelectedProfile] = useState(null);
   const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
-  const [isReviewedModalOpen, setIsReviewedModalOpen] = useState(false); // New state for reviewed applicants modal
+  const [isReviewedModalOpen, setIsReviewedModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
+  // Calculate applicant count based on the length of the applicants array
+  const applicantCount = applicants.length;
 
   const handleLogout = () => {
     const confirmed = window.confirm("Are you sure you want to logout?");
@@ -68,7 +71,7 @@ const ViewApplicants = () => {
               ),
               profilePicture: `data:image/png;base64,${applicant.formal_picture}`,
             },
-            reviewed: false, // Adding the reviewed status
+            reviewed: false,
           }))
         );
 
@@ -198,6 +201,9 @@ const ViewApplicants = () => {
           <h2 className="text-2xl font-bold text-custom-blue">
             Applicants for{" "}
             <span className="font-extrabold text-blue-900">{jobName}</span>
+            <span className="text-lg font-medium text-gray-600 ml-2">
+              ({applicantCount} applicants)
+            </span>
           </h2>
           <div className="relative">
             <button
