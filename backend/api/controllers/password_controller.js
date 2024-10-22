@@ -76,7 +76,9 @@ If you did not request this, please ignore this email and your password will rem
 };
 
 const resetPassword = async (req, res, next) => {
-  const { token, new_password, confirm_password } = req.body;
+  let token = req.body.token;
+  let new_password = req.body.new_password;
+  let confirm_password = req.body.confirm_password;
 
   if (!token || !new_password || !confirm_password) {
     return res.status(400).json({
