@@ -190,6 +190,7 @@ const Signup = () => {
       .then((response) => {
         toast.success(response.data.message); // Show success toast
         setLoading(false); // Hide loader when success
+        window.location.reload();
       })
       .catch((error) => {
         const errorMessage =
