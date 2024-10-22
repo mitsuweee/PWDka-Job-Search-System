@@ -140,7 +140,7 @@ const viewAllUsersApplicationsViaJobListingId = async (req, res, next) => {
 };
 
 const viewAllReviewedUsers = async (req, res, next) => {
-  const id = req.params.id;
+  let id = req.params.id;
 
   if (!id) {
     return res.status(400).json({
@@ -212,7 +212,7 @@ const viewAllReviewedUsers = async (req, res, next) => {
 };
 
 const deleteJobApplication = async (req, res, next) => {
-  const id = req.params.id;
+  let id = req.params.id;
 
   if (!id) {
     return res.status(400).json({
@@ -249,7 +249,7 @@ const deleteJobApplication = async (req, res, next) => {
 };
 
 const updateJobApplicationStatus = async (req, res, next) => {
-  const id = req.params.id;
+  let id = req.params.id;
 
   if (!id) {
     return res.status(400).json({
