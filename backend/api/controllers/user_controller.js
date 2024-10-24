@@ -4,6 +4,7 @@ const { userModel } = require("../models/user_model");
 const util = require("./util");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
+const sharp = require("sharp");
 require("dotenv").config();
 
 const registerUser = async (req, res, next) => {
@@ -153,6 +154,24 @@ const registerUser = async (req, res, next) => {
         });
       }
 
+      // Compress the profile picture
+      const compressedformalPicture = await sharp(
+        Buffer.from(formal_picture, "base64")
+      );
+      const compressedPictureWithId = await sharp(
+        Buffer.from(picture_with_id, "base64")
+      );
+      const compressedPictureOfPwdId = await sharp(
+        Buffer.from(picture_of_pwd_id, "base64")
+      )
+        .resize(300, 300, {
+          // Adjust size as necessary
+          fit: sharp.fit.inside,
+          withoutEnlargement: true,
+        })
+        .png({ quality: 80 }) // Set desired format and quality
+        .toBuffer();
+
       // Insert new user
       const hashedPassword = await bcrypt.hash(password, 10);
       await knex("user").insert({
@@ -168,9 +187,9 @@ const registerUser = async (req, res, next) => {
         password: hashedPassword,
         contact_number,
         disability_id: disability.id,
-        formal_picture,
-        picture_with_id,
-        picture_of_pwd_id,
+        formal_picture: compressedformalPicture.toString("base64"),
+        picture_with_id: compressedPictureWithId.toString("base64"),
+        picture_of_pwd_id: compressedPictureOfPwdId.toString("base64"),
       });
 
       // Send verification email
@@ -345,9 +364,24 @@ const updateUserProfilePicture = async (req, res, next) => {
     });
   } else {
     try {
-      const result = await knex("user").where({ id }).update({
-        formal_picture: formalPicture,
-      });
+      // Compress the profile picture
+      const compressedformalPicture = await sharp(
+        Buffer.from(formalPicture, "base64")
+      )
+        .resize(300, 300, {
+          // Adjust size as necessary
+          fit: sharp.fit.inside,
+          withoutEnlargement: true,
+        })
+        .png({ quality: 80 }) // Set desired format and quality
+        .toBuffer();
+
+      // Update the user's profile picture in the database
+      const result = await knex("user")
+        .where({ id })
+        .update({
+          formal_picture: compressedformalPicture.toString("base64"), // Store as base64 or binary based on your DB
+        });
 
       if (result === 0) {
         return res.status(404).json({
