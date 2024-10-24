@@ -501,9 +501,9 @@ const viewUserViaId = async (req, res, next) => {
         .select(
           "user.id",
           "disability.type",
-          knex.raw(
-            "CONCAT(UPPER(SUBSTRING(user.first_name, 1, 1)),LOWER(SUBSTRING(user.first_name, 2)),' ',UPPER(user.middle_initial),'. ',UPPER(SUBSTRING(user.last_name, 1, 1)),LOWER(SUBSTRING(user.last_name, 2))) AS full_name"
-          ),
+          "user.first_name",
+          "user.middle_initial",
+          "user.last_name",
           "user.email",
           "user.address",
           "user.city",

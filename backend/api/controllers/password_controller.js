@@ -39,7 +39,7 @@ const emailForgotPassword = async (req, res, next) => {
       });
 
       // Prepare the reset password URL
-      const resetUrl = `/passwordconfirmed?token=${resetToken}`;
+      const resetUrl = `pwdka.com.ph/passwordconfirmed?token=${resetToken}`;
 
       const transporter = nodemailer.createTransport({
         service: "Gmail",

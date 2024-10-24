@@ -9,7 +9,6 @@ const AdminViewComp = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [deleteCompanyId, setDeleteCompanyId] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -75,42 +74,6 @@ const AdminViewComp = () => {
       companyEmail: companyData.email,
       companyProfile: `data:image/png;base64,${companyData.profile_picture}`,
     };
-  };
-
-  const handleDeleteCompany = (companyId) => {
-    setDeleteCompanyId(companyId);
-    setIsDeleteModalOpen(true);
-  };
-
-  const confirmDelete = () => {
-    const config = {
-      method: "delete",
-      url: `/admin/delete/company/${deleteCompanyId}`,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-
-    setLoading(true);
-    axios(config)
-      .then(() => {
-        toast.success("Company deleted successfully", {
-          position: "top-center",
-        });
-        setCompanies((prevCompanies) =>
-          prevCompanies.filter((company) => company.id !== deleteCompanyId)
-        );
-        setLoading(false);
-        setIsDeleteModalOpen(false);
-      })
-      .catch((error) => {
-        setLoading(false);
-        toast.error("An error occurred while deleting the company", {
-          position: "top-center",
-        });
-        setIsDeleteModalOpen(false);
-        console.error(error);
-      });
   };
 
   const closeModal = () => {
@@ -273,12 +236,6 @@ const AdminViewComp = () => {
                       className="bg-blue-500 text-white px-2 py-1 rounded mr-2 hover:bg-blue-700"
                     >
                       View
-                    </button>
-                    <button
-                      onClick={() => handleDeleteCompany(company.id)}
-                      className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-700"
-                    >
-                      Delete
                     </button>
                   </td>
                 </tr>
@@ -450,12 +407,6 @@ const AdminViewComp = () => {
                 className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-200"
               >
                 Cancel
-              </button>
-              <button
-                onClick={confirmDelete}
-                className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
-              >
-                Delete
               </button>
             </div>
           </div>
