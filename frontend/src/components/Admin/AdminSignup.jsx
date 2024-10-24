@@ -5,6 +5,7 @@ import axios from "axios";
 
 const AdminSignup = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false); // Logout confirmation modal state
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -72,15 +73,20 @@ const AdminSignup = () => {
   };
 
   const handleLogout = () => {
-    const confirmed = window.confirm("Are you sure you want to logout?");
-    if (confirmed) {
-      // Clear session storage and redirect to the login route
-      localStorage.removeItem("Id");
-      localStorage.removeItem("Role");
-      localStorage.removeItem("Token");
+    setIsLogoutModalOpen(true);
+  };
 
-      navigate("/login");
-    }
+  const confirmLogout = () => {
+    localStorage.removeItem("Id");
+    localStorage.removeItem("Role");
+    localStorage.removeItem("Token");
+    toast.success("Logged out successfully", { position: "top-center" });
+    navigate("/login");
+    setIsLogoutModalOpen(false);
+  };
+
+  const closeLogoutModal = () => {
+    setIsLogoutModalOpen(false);
   };
 
   const renderAdminSignupForm = () => (
@@ -301,7 +307,57 @@ const AdminSignup = () => {
           Logout
         </button>
       </aside>
+      {/* Logout Confirmation Modal */}
+      {isLogoutModalOpen && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
+            <div className="flex justify-between items-center border-b pb-3 mb-4">
+              <h2 className="text-2xl font-semibold text-gray-800">
+                Logout Confirmation
+              </h2>
+              <button
+                onClick={closeLogoutModal}
+                className="text-gray-500 hover:text-gray-800 transition duration-200"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div className="mb-6">
+              <p className="text-lg text-gray-600">
+                Are you sure you want to log out?
+              </p>
+            </div>
 
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={closeLogoutModal}
+                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-200"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmLogout}
+                className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {/* Mobile Toggle Button */}
       <button
         className={`md:hidden bg-custom-blue text-white p-4 fixed top-4 left-4 z-50 rounded-xl mt-11 transition-transform ${
