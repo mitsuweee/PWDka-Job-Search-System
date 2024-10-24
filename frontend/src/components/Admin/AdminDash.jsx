@@ -145,85 +145,80 @@ const AdminDashboard = () => {
         } md:translate-x-0 z-50 md:z-auto`}
       >
         <button
-          className="text-white md:hidden self-end text-2xl"
+          className="text-white md:hidden self-end size-10"
           onClick={() => setIsSidebarOpen(false)}
         >
           &times;
         </button>
+        <a
+          href="/admin/dashboard"
+          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
+          style={{
+            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
+          }}
+        >
+          <span className="material-symbols-outlined text-xl mr-4">home</span>
+          <span className="flex-grow text-center">Home</span>
+        </a>
 
-        <nav className="w-full flex flex-col items-center space-y-4">
-          <a
-            href="/admin/dashboard"
-            className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center justify-center"
-            style={{
-              boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
-            }}
-          >
-            <span className="material-symbols-outlined text-xl mr-2">home</span>
-            <span>Home</span>
-          </a>
+        <a
+          href="/admin/dashboard/VerifyUsers"
+          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
+        >
+          <span className="material-symbols-outlined text-xl mr-4">draw</span>
+          <span className="flex-grow text-center">Verify Applicants</span>
+        </a>
 
-          <a
-            href="/admin/dashboard/VerifyUsers"
-            className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center justify-center"
-          >
-            <span className="material-symbols-outlined text-xl mr-2">draw</span>
-            <span>Verify Applicants</span>
-          </a>
+        <a
+          href="/admin/dashboard/VerifyComps"
+          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
+        >
+          <span className="material-symbols-outlined text-xl mr-4">
+            apartment
+          </span>
+          <span className="flex-grow text-center">Verify Companies</span>
+        </a>
 
-          <a
-            href="/admin/dashboard/VerifyComps"
-            className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center justify-center"
-          >
-            <span className="material-symbols-outlined text-xl mr-2">
-              apartment
-            </span>
-            <span>Verify Companies</span>
-          </a>
+        <a
+          href="/admin/dashboard/ViewUsers"
+          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
+        >
+          <span className="material-symbols-outlined text-xl mr-4">group</span>
+          <span className="flex-grow text-center">View All Applicants</span>
+        </a>
 
-          <a
-            href="/admin/dashboard/ViewUsers"
-            className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center justify-center"
-          >
-            <span className="material-symbols-outlined text-xl mr-2">
-              group
-            </span>
-            <span>View All Applicants</span>
-          </a>
+        <a
+          href="/admin/dashboard/ViewCompany"
+          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
+        >
+          <span className="material-symbols-outlined text-xl mr-4">
+            source_environment
+          </span>
+          <span className="flex-grow text-center">View All Companies</span>
+        </a>
 
-          <a
-            href="/admin/dashboard/ViewCompany"
-            className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center justify-center"
-          >
-            <span className="material-symbols-outlined text-xl mr-2">
-              source_environment
-            </span>
-            <span>View All Companies</span>
-          </a>
+        <a
+          href="/admin/dashboard/ViewJobs"
+          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
+        >
+          <span className="material-symbols-outlined text-xl mr-4">work</span>
+          <span className="flex-grow text-center">View All Job Listings</span>
+        </a>
 
-          <a
-            href="/admin/dashboard/ViewJobs"
-            className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center justify-center"
-          >
-            <span className="material-symbols-outlined text-xl mr-2">work</span>
-            <span>View All Job Listings</span>
-          </a>
+        <a
+          href="/admin/dashboard/AdminSignup"
+          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
+        >
+          <span className="material-symbols-outlined text-xl mr-4">draw</span>
+          <span className="flex-grow text-center">Sign Up</span>
+        </a>
 
-          <a
-            href="/admin/dashboard/AdminSignup"
-            className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center justify-center"
-          >
-            <span className="material-symbols-outlined text-xl mr-2">draw</span>
-            <span>Sign Up</span>
-          </a>
-
-          <button
-            className="bg-red-600 text-white rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-red-500 transition-all duration-200 ease-in-out"
-            onClick={handleLogout}
-          >
-            Logout
-          </button>
-        </nav>
+        <button
+          className="bg-red-600 text-white rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-red-500 transition-all duration-200 ease-in-out mt-6"
+          onClick={handleLogout}
+        >
+          Logout
+        </button>
       </aside>
 
       {/* Mobile Toggle Button */}
@@ -237,81 +232,76 @@ const AdminDashboard = () => {
       </button>
 
       {/* Main Content */}
-      <main className="flex-grow p-8 bg-custom-bg">
-        <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-blue-900">Admin Dashboard</h1>
+      {/* Main Content */}
+      <main className="flex-grow p-8 bg-gradient-to-b from-gray-100 to-gray-200 w-full max-w-3xl mx-auto">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold text-blue-900 tracking-wide">
+            Admin Dashboard
+          </h1>
           <div className="flex items-center">
             <button
               onClick={() => navigate("/adminprofile")}
-              className="flex items-center focus:outline-none"
+              className="flex items-center focus:outline-none hover:opacity-80 transition-opacity duration-200"
             >
-              <span className="material-symbols-outlined text-4xl text-gray-700">
+              <span className="material-symbols-outlined text-4xl text-gray-700 hover:text-blue-900">
                 account_circle
               </span>
             </button>
           </div>
         </div>
 
-        {/* Bar Chart */}
-        <div className="mt-8">
+        {/* Bar Chart Section */}
+        <div className="bg-white p-6 rounded-lg shadow-lg mt-6 hover:shadow-2xl transition-shadow duration-300 ease-in-out">
           <Bar data={barChartData} options={barChartOptions} />
         </div>
 
         {/* Dashboard Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
-          <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl hover:translate-y-1 transition-all duration-200 ease-in-out">
-            <h2 className="text-xl font-bold text-gray-800">
-              Total Verified Applicants
-            </h2>
-            <p className="text-3xl text-blue-900 font-semibold">
-              {dashboardCounts.verified_users}
-            </p>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl hover:translate-y-1 transition-all duration-200 ease-in-out">
-            <h2 className="text-xl font-bold text-gray-800">
-              Total Pending Applicants
-            </h2>
-            <p className="text-3xl text-blue-900 font-semibold">
-              {dashboardCounts.pending_users}
-            </p>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl hover:translate-y-1 transition-all duration-200 ease-in-out">
-            <h2 className="text-xl font-bold text-gray-800">
-              Total Verified Companies
-            </h2>
-            <p className="text-3xl text-blue-900 font-semibold">
-              {dashboardCounts.verified_companies}
-            </p>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl hover:translate-y-1 transition-all duration-200 ease-in-out">
-            <h2 className="text-xl font-bold text-gray-800">
-              Total Pending Companies
-            </h2>
-            <p className="text-3xl text-blue-900 font-semibold">
-              {dashboardCounts.pending_companies}
-            </p>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl hover:translate-y-1 transition-all duration-200 ease-in-out">
-            <h2 className="text-xl font-bold text-gray-800">
-              Total Job Listings
-            </h2>
-            <p className="text-3xl text-blue-900 font-semibold">
-              {dashboardCounts.total_job_listings}
-            </p>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl hover:translate-y-1 transition-all duration-200 ease-in-out">
-            <h2 className="text-xl font-bold text-gray-800">
-              Total Job Applications
-            </h2>
-            <p className="text-3xl text-blue-900 font-semibold">
-              {dashboardCounts.total_job_application}
-            </p>
-          </div>
+          {[
+            {
+              title: "Total Verified Applicants",
+              count: dashboardCounts.verified_users,
+              icon: "verified",
+            },
+            {
+              title: "Total Pending Applicants",
+              count: dashboardCounts.pending_users,
+              icon: "hourglass_empty",
+            },
+            {
+              title: "Total Verified Companies",
+              count: dashboardCounts.verified_companies,
+              icon: "business",
+            },
+            {
+              title: "Total Pending Companies",
+              count: dashboardCounts.pending_companies,
+              icon: "pending_actions",
+            },
+            {
+              title: "Total Job Listings",
+              count: dashboardCounts.total_job_listings,
+              icon: "work_outline",
+            },
+            {
+              title: "Total Job Applications",
+              count: dashboardCounts.total_job_application,
+              icon: "description",
+            },
+          ].map((stat, index) => (
+            <div
+              key={index}
+              className="bg-gradient-to-br from-blue-50 to-white rounded-lg shadow-md p-6 hover:shadow-xl transition-shadow duration-300 ease-in-out relative border-t-2 border-blue-600"
+            >
+              <span className="material-symbols-outlined absolute top-3 right-3 text-2xl text-blue-600">
+                {stat.icon}
+              </span>
+              <h2 className="text-xl font-semibold text-gray-800 mb-2">
+                {stat.title}
+              </h2>
+              <p className="text-3xl text-blue-900 font-bold">{stat.count}</p>
+            </div>
+          ))}
         </div>
       </main>
 
