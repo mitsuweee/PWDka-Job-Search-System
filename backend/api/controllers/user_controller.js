@@ -161,7 +161,7 @@ const registerUser = async (req, res, next) => {
           fit: sharp.fit.inside,
           withoutEnlargement: true,
         })
-        .png({ quality: 80 }) // Set desired format and quality
+        .png({ quality: 80 })
         .toBuffer();
 
       const compressedPictureWithId = await sharp(
@@ -171,7 +171,7 @@ const registerUser = async (req, res, next) => {
           fit: sharp.fit.inside,
           withoutEnlargement: true,
         })
-        .png({ quality: 80 }) // Set desired format and quality
+        .png({ quality: 80 })
         .toBuffer();
 
       const compressedPictureOfPwdId = await sharp(
@@ -181,7 +181,7 @@ const registerUser = async (req, res, next) => {
           fit: sharp.fit.inside,
           withoutEnlargement: true,
         })
-        .png({ quality: 80 }) // Set desired format and quality
+        .png({ quality: 80 })
         .toBuffer();
       // Insert new user
       const hashedPassword = await bcrypt.hash(password, 10);
@@ -380,18 +380,16 @@ const updateUserProfilePicture = async (req, res, next) => {
         Buffer.from(formalPicture, "base64")
       )
         .resize(300, 300, {
-          // Adjust size as necessary
           fit: sharp.fit.inside,
           withoutEnlargement: true,
         })
-        .png({ quality: 80 }) // Set desired format and quality
+        .png({ quality: 80 })
         .toBuffer();
 
-      // Update the user's profile picture in the database
       const result = await knex("user")
         .where({ id })
         .update({
-          formal_picture: compressedformalPicture.toString("base64"), // Store as base64 or binary based on your DB
+          formal_picture: compressedformalPicture.toString("base64"),
         });
 
       if (result === 0) {
