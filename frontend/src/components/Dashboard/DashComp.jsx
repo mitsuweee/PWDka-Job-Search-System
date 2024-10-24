@@ -162,11 +162,27 @@ const CompanyDashboard = () => {
         } md:translate-x-0 z-50 md:z-auto`}
       >
         <button
-          className="text-white md:hidden self-end size-10"
+          className="text-white md:hidden self-end text-3xl"
           onClick={() => setIsSidebarOpen(false)}
         >
           &times;
         </button>
+
+        {/* Dashboard Button */}
+        <a
+          href="/dashc"
+          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
+          style={{
+            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
+          }}
+        >
+          <span className="material-symbols-outlined text-xl mr-4">
+            dashboard
+          </span>
+          <span className="flex-grow text-center">Dashboard</span>
+        </a>
+
+        {/* Post Job Button */}
         <a
           href="/dashboard/postjob"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
@@ -177,6 +193,8 @@ const CompanyDashboard = () => {
           <span className="material-symbols-outlined text-xl mr-4">work</span>
           <span className="flex-grow text-center">Post Job</span>
         </a>
+
+        {/* View Jobs Button */}
         <a
           href="/dashboard/ViewJobs"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
@@ -188,6 +206,7 @@ const CompanyDashboard = () => {
           <span className="flex-grow text-center">View All Job Listings</span>
         </a>
 
+        {/* Logout Button */}
         <button
           className="bg-red-600 text-white rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-red-500 transition-all duration-200 ease-in-out mt-6 flex items-center justify-center"
           onClick={handleLogout}
@@ -208,51 +227,65 @@ const CompanyDashboard = () => {
 
       {/* Main Content */}
       <main className="flex-grow p-8 bg-custom-bg">
-        <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-blue-900">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-4xl font-bold text-blue-900">
             Company Dashboard
           </h1>
         </div>
 
         {/* Flexbox container to hold both charts side by side */}
-        <div className="flex flex-col md:flex-row justify-between items-center mt-8 space-y-8 md:space-y-0 md:space-x-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Bar Chart for Job Listings and Job Applications */}
-          <div className="w-full md:w-1/2 h-72 md:h-80">
+          <div className="bg-white rounded-lg shadow-md p-6 h-80">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">
+              Job Activities
+            </h2>
             <Bar data={mainBarChartData} options={jobActivityChartOptions} />
           </div>
 
           {/* Bar Chart for Full-Time and Part-Time Job Listings */}
-          <div className="w-full md:w-1/2 h-72 md:h-80">
+          <div className="bg-white rounded-lg shadow-md p-6 h-80">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">
+              Job Types
+            </h2>
             <Bar data={jobTypeBarChartData} options={jobTypeChartOptions} />
           </div>
         </div>
 
         {/* Dashboard Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
           <div
-            className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl hover:translate-y-1 transition-all duration-200 ease-in-out cursor-pointer"
-            onClick={() => navigate("/dashboard/ViewJobs")} // Navigate to ViewJobs on card click
+            className="bg-gradient-to-br from-blue-50 to-white rounded-lg shadow-md p-6 hover:shadow-xl transition-shadow duration-300 ease-in-out relative border-t-2 border-blue-600 cursor-pointer"
+            onClick={() => navigate("/dashboard/ViewJobs")}
           >
-            <h2 className="text-xl font-bold text-gray-800">Job Listings</h2>
-            <p className="text-3xl text-blue-900 font-semibold">
+            <span className="material-symbols-outlined absolute top-3 right-3 text-2xl text-blue-600">
+              work
+            </span>
+            <h2 className="text-xl font-semibold text-gray-800 mb-2">
+              Job Listings
+            </h2>
+            <p className="text-3xl text-blue-900 font-bold mt-2">
               {companyCounts.job_listings}
             </p>
           </div>
 
           <div
-            className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl hover:translate-y-1 transition-all duration-200 ease-in-out cursor-pointer"
-            onClick={() => navigate("/dashboard/ViewJobs")} // Navigate to ViewJobs on card click
+            className="bg-gradient-to-br from-blue-50 to-white rounded-lg shadow-md p-6 hover:shadow-xl transition-shadow duration-300 ease-in-out relative border-t-2 border-blue-600 cursor-pointer"
+            onClick={() => navigate("/dashboard/ViewJobs")}
           >
-            <h2 className="text-xl font-bold text-gray-800">
+            <span className="material-symbols-outlined absolute top-3 right-3 text-2xl text-blue-600">
+              description
+            </span>
+            <h2 className="text-xl font-semibold text-gray-800 mb-2">
               Job Applications
             </h2>
-            <p className="text-3xl text-blue-900 font-semibold">
+            <p className="text-3xl text-blue-900 font-bold mt-2">
               {companyCounts.job_applications}
             </p>
           </div>
         </div>
 
-        <div className="mt-4">{/* Render additional content here */}</div>
+        {/* Logout Modal */}
         {isLogoutModalOpen && (
           <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
             <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
@@ -281,11 +314,9 @@ const CompanyDashboard = () => {
                 </button>
               </div>
 
-              <div className="mb-6">
-                <p className="text-lg text-gray-600">
-                  Are you sure you want to logout?
-                </p>
-              </div>
+              <p className="text-lg text-gray-600 mb-6">
+                Are you sure you want to logout?
+              </p>
 
               <div className="flex justify-end space-x-4">
                 <button

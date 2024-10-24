@@ -258,30 +258,53 @@ const ViewJobs = () => {
         } md:translate-x-0 z-50 md:z-auto`}
       >
         <button
-          className="text-white md:hidden self-end text-2xl"
+          className="text-white md:hidden self-end text-3xl"
           onClick={() => setIsSidebarOpen(false)}
         >
           &times;
         </button>
 
+        {/* Dashboard Button */}
+        <a
+          href="/dashc"
+          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
+          style={{
+            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
+          }}
+        >
+          <span className="material-symbols-outlined text-xl mr-4">
+            dashboard
+          </span>
+          <span className="flex-grow text-center">Dashboard</span>
+        </a>
+
+        {/* Post Job Button */}
         <a
           href="/dashboard/postjob"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
+          style={{
+            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
+          }}
         >
           <span className="material-symbols-outlined text-xl mr-4">work</span>
           <span className="flex-grow text-center">Post Job</span>
         </a>
 
+        {/* View Jobs Button */}
         <a
           href="/dashboard/ViewJobs"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
+          style={{
+            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
+          }}
         >
           <span className="material-symbols-outlined text-xl mr-4">list</span>
           <span className="flex-grow text-center">View All Job Listings</span>
         </a>
 
+        {/* Logout Button */}
         <button
-          className="bg-red-600 text-white rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-red-500 transition-all duration-200 ease-in-out mt-6"
+          className="bg-red-600 text-white rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-red-500 transition-all duration-200 ease-in-out mt-6 flex items-center justify-center"
           onClick={handleLogout}
         >
           Logout
