@@ -34,6 +34,7 @@ const registerUser = async (req, res, next) => {
     !birth_date ||
     !email ||
     !password ||
+    !confirmPassword ||
     !contact_number ||
     !disability_id ||
     !formal_picture ||
