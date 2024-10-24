@@ -260,7 +260,7 @@ const PostJob = () => {
                 }
               }}
               className="p-3 w-full border-2 border-blue-300 rounded-lg shadow-sm h-28 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="Requirement1/ Requirement2/ Requirement3"
+              placeholder="Requirement1/ Requirement2/ Requirement3 *Enter Every Requirement*"
               required
             />
 
@@ -291,7 +291,7 @@ const PostJob = () => {
                   }
                 }}
                 className="p-3 w-full border-2 border-blue-300 rounded-lg shadow-sm h-28 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                placeholder="Qualification1/ Qualification2/ Qualification3"
+                placeholder="Qualification1/ Qualification2/ Qualification3 *Enter Every Qualification*"
                 required
               />
             </div>
