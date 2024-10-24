@@ -127,79 +127,85 @@ const AdminDeleteComp = () => {
         } md:translate-x-0 z-50 md:z-auto`}
       >
         <button
-          className="text-white md:hidden self-end size-10"
+          className="text-white md:hidden self-end text-2xl"
           onClick={() => setIsSidebarOpen(false)}
         >
           &times;
         </button>
-        <a
-          href="/admin/dashboard"
-          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
-          }}
-        >
-          Home
-        </a>
-        <a
-          href="/admin/dashboard/VerifyUsers"
-          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
-          }}
-        >
-          Verify Applicants
-        </a>
-        <a
-          href="/admin/dashboard/VerifyComps"
-          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
-          }}
-        >
-          Verify Company
-        </a>
-        <a
-          href="/admin/dashboard/ViewUsers"
-          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
-          }}
-        >
-          View All Applicants
-        </a>
-        <a
-          href="/admin/dashboard/ViewCompany"
-          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
-          }}
-        >
-          View All Companies
-        </a>
-        <a
-          href="/admin/dashboard/ViewJobs"
-          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
-          }}
-        >
-          View All Job Listings
-        </a>
 
-        <a
-          href="/admin/dashboard/AdminSignup"
-          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
-        >
-          <span className="material-symbols-outlined text-xl mr-4">draw</span>
-          <span className="flex-grow text-center">Sign Up</span>
-        </a>
-        <button
-          className="bg-red-600 text-white rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-red-500 transition-all duration-200 ease-in-out mt-6"
-          onClick={handleLogout}
-        >
-          Logout
-        </button>
+        <nav className="w-full flex flex-col items-center space-y-4">
+          <a
+            href="/admin/dashboard"
+            className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center justify-center"
+            style={{
+              boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
+            }}
+          >
+            <span className="material-symbols-outlined text-xl mr-2">home</span>
+            <span>Home</span>
+          </a>
+
+          <a
+            href="/admin/dashboard/VerifyUsers"
+            className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center justify-center"
+          >
+            <span className="material-symbols-outlined text-xl mr-2">draw</span>
+            <span>Verify Applicants</span>
+          </a>
+
+          <a
+            href="/admin/dashboard/VerifyComps"
+            className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center justify-center"
+          >
+            <span className="material-symbols-outlined text-xl mr-2">
+              apartment
+            </span>
+            <span>Verify Companies</span>
+          </a>
+
+          <a
+            href="/admin/dashboard/ViewUsers"
+            className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center justify-center"
+          >
+            <span className="material-symbols-outlined text-xl mr-2">
+              group
+            </span>
+            <span>View All Applicants</span>
+          </a>
+
+          <a
+            href="/admin/dashboard/ViewCompany"
+            className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center justify-center"
+          >
+            <span className="material-symbols-outlined text-xl mr-2">
+              source_environment
+            </span>
+            <span>View All Companies</span>
+          </a>
+
+          <a
+            href="/admin/dashboard/ViewJobs"
+            className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center justify-center"
+          >
+            <span className="material-symbols-outlined text-xl mr-2">work</span>
+            <span>View All Job Listings</span>
+          </a>
+
+          <a
+            href="/admin/dashboard/AdminSignup"
+            className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center justify-center"
+          >
+            <span className="material-symbols-outlined text-xl mr-2">draw</span>
+            <span>Sign Up</span>
+          </a>
+
+          <button
+            className="bg-red-600 text-white rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-red-500 transition-all duration-200 ease-in-out"
+            onClick={handleLogout}
+          >
+            Logout
+          </button>
+        </nav>
       </aside>
 
       {/* Mobile Toggle Button */}
