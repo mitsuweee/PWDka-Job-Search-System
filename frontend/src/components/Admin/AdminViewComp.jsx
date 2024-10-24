@@ -227,9 +227,16 @@ const AdminViewComp = () => {
                 <tr key={company.id} className="border-b hover:bg-gray-100">
                   <td className="py-2 px-4 text-left">{company.name}</td>
                   <td className="py-2 px-4 text-left">
-                    {company.city.charAt(0).toUpperCase() +
-                      company.city.slice(1).toLowerCase()}
+                    {company.city
+                      .split(" ")
+                      .map(
+                        (word) =>
+                          word.charAt(0).toUpperCase() +
+                          word.slice(1).toLowerCase()
+                      )
+                      .join(" ")}
                   </td>
+
                   <td className="py-2 px-4 flex text-left">
                     <button
                       onClick={() => handleViewCompany(company.id)}
