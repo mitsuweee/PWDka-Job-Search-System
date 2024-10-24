@@ -240,7 +240,7 @@ const Signup = () => {
               htmlFor="middleInitial"
               className="block text-lg font-medium text-gray-700"
             >
-              Middle Initial <span className="text-red-500">*</span>
+              Middle Initial
             </label>
             <input
               type="text"
