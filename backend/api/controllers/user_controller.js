@@ -154,24 +154,35 @@ const registerUser = async (req, res, next) => {
         });
       }
 
-      // Compress the profile picture
-      const compressedformalPicture = await sharp(
+      const compressedFormalPicture = await sharp(
         Buffer.from(formal_picture, "base64")
-      );
-      const compressedPictureWithId = await sharp(
-        Buffer.from(picture_with_id, "base64")
-      );
-      const compressedPictureOfPwdId = await sharp(
-        Buffer.from(picture_of_pwd_id, "base64")
       )
         .resize(300, 300, {
-          // Adjust size as necessary
           fit: sharp.fit.inside,
           withoutEnlargement: true,
         })
         .png({ quality: 80 }) // Set desired format and quality
         .toBuffer();
 
+      const compressedPictureWithId = await sharp(
+        Buffer.from(picture_with_id, "base64")
+      )
+        .resize(300, 300, {
+          fit: sharp.fit.inside,
+          withoutEnlargement: true,
+        })
+        .png({ quality: 80 }) // Set desired format and quality
+        .toBuffer();
+
+      const compressedPictureOfPwdId = await sharp(
+        Buffer.from(picture_of_pwd_id, "base64")
+      )
+        .resize(300, 300, {
+          fit: sharp.fit.inside,
+          withoutEnlargement: true,
+        })
+        .png({ quality: 80 }) // Set desired format and quality
+        .toBuffer();
       // Insert new user
       const hashedPassword = await bcrypt.hash(password, 10);
       await knex("user").insert({
@@ -187,7 +198,7 @@ const registerUser = async (req, res, next) => {
         password: hashedPassword,
         contact_number,
         disability_id: disability.id,
-        formal_picture: compressedformalPicture.toString("base64"),
+        formal_picture: compressedFormalPicture.toString("base64"),
         picture_with_id: compressedPictureWithId.toString("base64"),
         picture_of_pwd_id: compressedPictureOfPwdId.toString("base64"),
       });
