@@ -39,7 +39,8 @@ const JobListing = () => {
         .get(`/user/view/${userId}`)
         .then((response) => {
           const userData = response.data.data;
-          setUserFullName(userData.full_name);
+          // Set the first name instead of the full name
+          setUserFullName(userData.first_name);
           const userDisabilityType = userData.type;
           setUserDisabilityType(userDisabilityType);
           setLoading(false);
@@ -346,6 +347,7 @@ const JobListing = () => {
             </span>
             Jobs for You, {userFullName}
           </h1>
+
           <div className="space-y-4">
             {currentJobs.length > 0 ? (
               currentJobs.map((job) => (
