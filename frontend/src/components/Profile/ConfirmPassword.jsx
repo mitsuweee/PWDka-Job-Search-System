@@ -63,9 +63,14 @@ const ConfirmPassword = () => {
       setConfirmPassword("");
     } catch (error) {
       console.error("Error resetting password:", error);
-      toast.error(
-        "Passwords do not match, or the old password cannot be reused."
-      );
+
+      // Check if the error has a response and a message
+      const errorMessage =
+        error.response && error.response.data && error.response.data.message
+          ? error.response.data.message
+          : "An error occurred while resetting the password.";
+
+      toast.error(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
