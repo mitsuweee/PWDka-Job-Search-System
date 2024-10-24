@@ -74,6 +74,17 @@ const registerCompany = async (req, res, next) => {
         });
       }
 
+      // Compress the profile picture
+      const compressedProfilePicture = await sharp(
+        Buffer.from(profile_picture, "base64")
+      )
+        .resize(300, 300, {
+          fit: sharp.fit.inside,
+          withoutEnlargement: true,
+        })
+        .png({ quality: 80 })
+        .toBuffer();
+
       const hashedPassword = await bcrypt.hash(password, 10);
 
       await knex("company").insert({
@@ -84,7 +95,7 @@ const registerCompany = async (req, res, next) => {
         contact_number,
         email,
         password: hashedPassword,
-        profile_picture,
+        profile_picture: compressedProfilePicture.toString("base64"),
       });
 
       const transporter = nodemailer.createTransport({
@@ -255,9 +266,22 @@ const updateCompanyProfilePicture = async (req, res, next) => {
     });
   } else {
     try {
-      const result = await knex("company").where({ id }).update({
-        profile_picture,
-      });
+      const compressedProfilePicture = await sharp(
+        Buffer.from(profile_picture, "base64")
+      )
+        .resize(300, 300, {
+          fit: sharp.fit.inside,
+          withoutEnlargement: true,
+        })
+        .png({ quality: 80 })
+        .toBuffer();
+
+      profile_picture;
+      const result = await knex("company")
+        .where({ id })
+        .update({
+          profile_picture: compressedProfilePicture.toString("base64"),
+        });
 
       if (result === 0) {
         return res.status(404).json({
