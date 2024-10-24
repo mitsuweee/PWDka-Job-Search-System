@@ -1,6 +1,7 @@
 const { json } = require("body-parser");
 const knex = require("../models/connection_db");
 const { companyModel } = require("../models/company_model");
+const sharp = require("sharp")
 const util = require("./util");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");

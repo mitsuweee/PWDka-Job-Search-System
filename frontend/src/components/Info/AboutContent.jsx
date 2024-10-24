@@ -201,7 +201,7 @@ const AboutContent = () => {
           {[
             {
               name: "Kyle Anakin Aguas",
-              role: "Frontend Developer / Full stack Developer",
+              role: "Full stack Developer",
               img: "/imgs/kyle.jpg",
             },
             {
