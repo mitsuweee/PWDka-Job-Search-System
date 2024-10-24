@@ -345,7 +345,8 @@ const JobListing = () => {
             <span className="material-symbols-outlined text-2xl mr-2">
               work_update
             </span>
-            Jobs for You, {userFullName}
+            Jobs for You,{" "}
+            {userFullName.charAt(0).toUpperCase() + userFullName.slice(1)}
           </h1>
 
           <div className="space-y-4">
