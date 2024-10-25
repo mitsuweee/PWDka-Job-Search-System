@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
-import toast, { Toaster } from "react-hot-toast"; // Import toast
-import { useNavigate } from "react-router-dom"; // Add this import
+import toast, { Toaster } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const MAX_FILE_SIZE = 16777215; // 16MB
 
@@ -9,7 +9,7 @@ const Signup = () => {
   const [formType, setFormType] = useState("user");
   const [showPassword, setShowPassword] = useState(false);
   const [showReEnterPassword, setShowReEnterPassword] = useState(false);
-  const [loading, setLoading] = useState(false); // Add this state
+  const [loading, setLoading] = useState(false);
 
   const [userFormValues, setUserFormValues] = useState({
     firstName: "",
@@ -49,7 +49,7 @@ const Signup = () => {
       if (file.size <= MAX_FILE_SIZE) {
         const reader = new FileReader();
         reader.onloadend = () => {
-          const base64Data = reader.result.split(",")[1]; // Remove the prefix
+          const base64Data = reader.result.split(",")[1];
           if (type === "userProfile") {
             setUserFormValues((prevState) => ({
               ...prevState,
@@ -73,12 +73,12 @@ const Signup = () => {
           }
         };
         reader.readAsDataURL(file);
-        toast.success("File uploaded successfully!"); // Show success toast for file upload
+        toast.success("File uploaded successfully!");
       } else {
-        toast.error("File size exceeds 16MB. Please upload a smaller file."); // Error toast for large files
+        toast.error("File size exceeds 16MB. Please upload a smaller file.");
       }
     } else {
-      toast.error("Please upload a jpeg/png file."); // Error toast for incorrect file type
+      toast.error("Please upload a jpeg/png file.");
     }
   };
 
@@ -131,16 +131,16 @@ const Signup = () => {
         companyLogo: "",
       });
     }
-    toast.success("Form reset successfully!"); // Toast on reset
+    toast.success("Form reset successfully!");
   };
   const navigate = useNavigate();
   const handleLogin = () => {
-    navigate("/login"); // Adjust the route if needed
+    navigate("/login");
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setLoading(true); // Show loader when submitting
+    setLoading(true);
 
     const isCompany = formType === "company";
 
@@ -188,22 +188,19 @@ const Signup = () => {
 
     axios(config)
       .then((response) => {
-        toast.success(response.data.message); // Show success toast
-        setLoading(false); // Hide loader when success
+        toast.success(response.data.message);
+        setLoading(false);
         window.location.reload();
       })
       .catch((error) => {
-        setLoading(false); // Hide loader on error
+        setLoading(false);
 
-        // Check if the error response exists
         if (error.response) {
           const { data } = error.response;
 
-          // Use the dynamic error message from the backend
           const errorMessage = data.message || "An unexpected error occurred.";
-          toast.error(errorMessage); // Show error toast with the message
+          toast.error(errorMessage);
         } else {
-          // If there's no response (network error, etc.)
           toast.error("Network error. Please check your connection.");
         }
       });
@@ -362,7 +359,7 @@ const Signup = () => {
               name="contactNumber"
               value={userFormValues.contactNumber}
               onChange={handleInputChange}
-              pattern="[0-9]{10,11}" // Optional: Ensures 10-11 digits
+              pattern="[0-9]{10,11}"
               className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
               required
             />
@@ -911,9 +908,7 @@ const Signup = () => {
                 viewBox="0 0 28 24"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
-              >
-                {/* SVG content here */}
-              </svg>
+              ></svg>
             </a>
 
             <h2 className="mt-6 text-2xl font-bold text-white sm:text-3xl md:text-4xl">

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 
 const termsContainerStyle = {
@@ -65,7 +65,7 @@ function TermsAndConditions() {
         .get(`/user/view/${userId}`)
         .then((response) => {
           const userData = response.data.data;
-          setUserDisabilityType(userData.type); // Assuming 'type' is the disability type in the response
+          setUserDisabilityType(userData.type);
         })
         .catch((error) => {
           console.error("Error fetching user data:", error.response?.data);

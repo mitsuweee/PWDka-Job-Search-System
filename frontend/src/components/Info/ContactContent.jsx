@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 
 const ContactUs = () => {
   const [isVoiceEnabled, setIsVoiceEnabled] = useState(false);
   const [userDisabilityType, setUserDisabilityType] = useState("");
-  const [email, setEmail] = useState(""); // State for user's email
-  const [subject, setSubject] = useState(""); // State for subject
-  const [body, setBody] = useState(""); // State for message body
-  const [formError, setFormError] = useState(""); // State for form validation errors
-  const [formSuccess, setFormSuccess] = useState(""); // State for form success message
+  const [email, setEmail] = useState("");
+  const [subject, setSubject] = useState("");
+  const [body, setBody] = useState("");
+  const [formError, setFormError] = useState("");
+  const [formSuccess, setFormSuccess] = useState("");
 
   useEffect(() => {
     const userId = localStorage.getItem("Id");
@@ -19,9 +19,8 @@ const ContactUs = () => {
         .then((response) => {
           const userData = response.data.data;
           setUserDisabilityType(userData.type);
-          setEmail(userData.email); // Assuming 'email' is part of the user's data
-          // Optionally set a default subject or let the user enter their own
-          setSubject(""); // Allow user to enter their subject
+          setEmail(userData.email);
+          setSubject("");
         })
         .catch((error) => {
           console.error("Error fetching user data:", error.response?.data);
@@ -36,7 +35,7 @@ const ContactUs = () => {
     const message = new SpeechSynthesisUtterance(
       "This is the Contact Us page where we’re ready to connect. Reach out through the channels below. Click the email for any queries, and let’s build a more inclusive job market together."
     );
-    message.lang = "en-US"; // Set the language to English (US)
+    message.lang = "en-US";
     speechSynthesis.speak(message);
   };
 
@@ -46,7 +45,7 @@ const ContactUs = () => {
     if (!isVoiceEnabled) {
       playContactMessage();
     } else {
-      speechSynthesis.cancel(); // Stop any ongoing speech
+      speechSynthesis.cancel();
     }
   };
 
@@ -54,7 +53,6 @@ const ContactUs = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Basic validation for body
     if (!body) {
       setFormError("Message body is required.");
       return;
@@ -62,16 +60,16 @@ const ContactUs = () => {
 
     // Send email data to the backend
     axios
-      .post("/admin/email", { email, subject, body }) // Sending email, subject, and body to the backend
+      .post("/admin/email", { email, subject, body })
       .then((response) => {
         setFormSuccess("Your message has been sent successfully!");
-        setFormError(""); // Clear any previous error
-        setBody(""); // Clear the form
-        setSubject(""); // Clear subject after submission
+        setFormError("");
+        setBody("");
+        setSubject("");
       })
       .catch((error) => {
         setFormError("Failed to send your message. Please try again.");
-        setFormSuccess(""); // Clear any success message
+        setFormSuccess("");
       });
   };
 
@@ -133,7 +131,7 @@ const ContactUs = () => {
                     value={subject}
                     onChange={(e) => setSubject(e.target.value)} // Allow input in subject
                     className="w-full px-3 py-2 mt-1 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    placeholder="Enter your subject" // Updated placeholder
+                    placeholder="Enter your subject"
                     required
                   />
                 </div>

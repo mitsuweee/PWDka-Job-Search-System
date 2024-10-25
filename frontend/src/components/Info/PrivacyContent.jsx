@@ -1,55 +1,55 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 
 const privacyPolicyContainerStyle = {
-  maxWidth: "900px", // Increased width for more content space
+  maxWidth: "900px",
   margin: "0 auto",
-  padding: "30px", // Increased padding for better spacing
-  fontFamily: "sfprobold", // Updated font for a more modern look
+  padding: "30px",
+  fontFamily: "sfprobold",
   color: "#333",
-  lineHeight: "1.6", // Enhanced line spacing for readability
+  lineHeight: "1.6",
 };
 
 const headerStyle = {
   textAlign: "center",
-  marginBottom: "30px", // Increased margin for better separation
-  fontSize: "45px", // Increased font size for prominence
-  fontWeight: "bold", // Bold for emphasis
-  color: "#007bff", // Slightly darker shade for the header
+  marginBottom: "30px",
+  fontSize: "45px",
+  fontWeight: "bold",
+  color: "#007bff",
   fontFamily: "sfprobold",
 };
 
 const commitmentStyle = {
-  backgroundColor: "#e3edf7", // Matches the background color from the header
-  padding: "25px", // Padding for comfortable reading
-  borderRadius: "20px", // Rounded corners for a modern look
-  marginBottom: "30px", // Margin for better section separation
-  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)", // Subtle shadow for depth
-  fontSize: "18px", // Font size for readability
-  textShadow: "0 1px 3px rgba(0, 0, 0, 0.1)", // Slight shadow for text emphasis (optional)
-  border: "1px solid rgba(0, 0, 0, 0.1)", // Optional border similar to shadow for emphasis
-  color: "#333", // Text color
-  textAlign: "center", // Centered text to match the header style
-  width: "100%", // Full width, similar to header'
+  backgroundColor: "#e3edf7",
+  padding: "25px",
+  borderRadius: "20px",
+  marginBottom: "30px",
+  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+  fontSize: "18px",
+  textShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+  border: "1px solid rgba(0, 0, 0, 0.1)",
+  color: "#333",
+  textAlign: "center",
+  width: "100%",
 };
 
 const collapsibleSectionStyle = {
-  borderBottom: "2px solid #ddd", // Increased border thickness for clearer separation
-  padding: "15px 0", // Increased padding for better clickable area
+  borderBottom: "2px solid #ddd",
+  padding: "15px 0",
   cursor: "pointer",
-  fontSize: "20px", // Larger font for section titles
-  fontWeight: "bold", // Bold for emphasis on section titles
-  color: "#0056b3", // Changed color for a more engaging look
-  transition: "color 0.3s ease", // Smooth transition for hover effect
+  fontSize: "20px",
+  fontWeight: "bold",
+  color: "#0056b3",
+  transition: "color 0.3s ease",
 };
 
 const collapsibleContentStyle = {
-  paddingLeft: "25px", // Increased padding for indentation
+  paddingLeft: "25px",
   display: "none",
-  marginTop: "15px", // Increased margin for better separation
-  fontSize: "17px", // Slightly larger font for content readability
-  color: "#555", // Slightly lighter color for content to distinguish from titles
-  lineHeight: "1.7", // Enhanced line height for better readability
+  marginTop: "15px",
+  fontSize: "17px",
+  color: "#555",
+  lineHeight: "1.7",
 };
 
 function PrivacyPolicy() {
@@ -65,7 +65,7 @@ function PrivacyPolicy() {
         .get(`/user/view/${userId}`)
         .then((response) => {
           const userData = response.data.data;
-          setUserDisabilityType(userData.type); // Assuming 'type' is the disability type in the response
+          setUserDisabilityType(userData.type);
         })
         .catch((error) => {
           console.error("Error fetching user data:", error.response?.data);
@@ -87,7 +87,7 @@ function PrivacyPolicy() {
       "This is the Privacy Policy page where we protect your information. Your privacy is important to us. Here, you’ll find details on how we collect, use, and safeguard your data as you interact with our platform.";
 
     const message = new SpeechSynthesisUtterance(messageText);
-    message.lang = "en-US"; // Set language and accent
+    message.lang = "en-US";
     speechSynthesis.speak(message);
   };
 
@@ -96,7 +96,7 @@ function PrivacyPolicy() {
     if (!isVoiceEnabled) {
       playPrivacyPolicyMessage();
     } else {
-      speechSynthesis.cancel(); // Stop any ongoing speech
+      speechSynthesis.cancel();
     }
   };
 
