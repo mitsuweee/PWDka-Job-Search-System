@@ -90,135 +90,138 @@ const AdminSignup = () => {
   };
 
   const renderAdminSignupForm = () => (
-    <form className="mt-8 grid grid-cols-12 gap-6" onSubmit={handleSubmit}>
-      <div className="col-span-12">
-        <h1 className="text-3xl font-bold text-custom-blue">Admin Signup</h1>
-      </div>
+    <div className="flex justify-center items-start min-h-screen pt-10 bg-gray-100">
+      <div className="bg-white p-8 shadow-2xl rounded-2xl w-full max-w-3xl">
+        <h1 className="text-4xl font-bold text-center text-custom-blue mb-8">
+          Admin Signup
+        </h1>
+        <form className="grid grid-cols-12 gap-6" onSubmit={handleSubmit}>
+          <div className="col-span-12 md:col-span-6">
+            <label
+              htmlFor="firstName"
+              className="block text-lg font-semibold text-gray-700"
+            >
+              First Name
+            </label>
+            <input
+              type="text"
+              id="firstName"
+              name="firstName"
+              value={formData.firstName}
+              onChange={handleInputChange}
+              className="mt-2 w-full h-12 text-gray-600 bg-gray-200 p-3 rounded-lg shadow-md border border-gray-300 focus:border-blue-500 focus:outline-none transition duration-300"
+              required
+            />
+          </div>
 
-      <div className="col-span-12 md:col-span-6">
-        <label
-          htmlFor="firstName"
-          className="block text-lg font-medium text-gray-700"
-        >
-          First Name
-        </label>
-        <input
-          type="text"
-          id="firstName"
-          name="firstName"
-          value={formData.firstName}
-          onChange={handleInputChange}
-          className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-2.5 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
-          required
-        />
-      </div>
+          <div className="col-span-12 md:col-span-6">
+            <label
+              htmlFor="lastName"
+              className="block text-lg font-semibold text-gray-700"
+            >
+              Last Name
+            </label>
+            <input
+              type="text"
+              id="lastName"
+              name="lastName"
+              value={formData.lastName}
+              onChange={handleInputChange}
+              className="mt-2 w-full h-12 text-gray-600 bg-gray-200 p-3 rounded-lg shadow-md border border-gray-300 focus:border-blue-500 focus:outline-none transition duration-300"
+              required
+            />
+          </div>
 
-      <div className="col-span-12 md:col-span-6">
-        <label
-          htmlFor="lastName"
-          className="block text-lg font-medium text-gray-700"
-        >
-          Last Name
-        </label>
-        <input
-          type="text"
-          id="lastName"
-          name="lastName"
-          value={formData.lastName}
-          onChange={handleInputChange}
-          className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-2.5 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
-          required
-        />
-      </div>
+          <div className="col-span-12 md:col-span-6">
+            <label
+              htmlFor="email"
+              className="block text-lg font-semibold text-gray-700"
+            >
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              className="mt-2 w-full h-12 text-gray-600 bg-gray-200 p-3 rounded-lg shadow-md border border-gray-300 focus:border-blue-500 focus:outline-none transition duration-300"
+              required
+            />
+          </div>
 
-      <div className="col-span-12 md:col-span-6">
-        <label
-          htmlFor="email"
-          className="block text-lg font-medium text-gray-700"
-        >
-          Email
-        </label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          value={formData.email}
-          onChange={handleInputChange}
-          className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-2.5 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
-          required
-        />
-      </div>
+          <div className="col-span-12 md:col-span-6">
+            <label
+              htmlFor="password"
+              className="block text-lg font-semibold text-gray-700"
+            >
+              Password
+            </label>
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleInputChange}
+                className="mt-2 w-full h-12 text-gray-600 bg-gray-200 p-3 rounded-lg shadow-md border border-gray-300 focus:border-blue-500 focus:outline-none transition duration-300"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-600 hover:text-blue-500"
+              >
+                <span className="material-symbols-outlined">
+                  {showPassword ? "visibility_off" : "visibility"}
+                </span>
+              </button>
+            </div>
+          </div>
 
-      <div className="col-span-12 md:col-span-6">
-        <label
-          htmlFor="password"
-          className="block text-lg font-medium text-gray-700"
-        >
-          Password
-        </label>
-        <div className="relative">
-          <input
-            type={showPassword ? "text" : "password"}
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleInputChange}
-            className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-2.5 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
-            required
-          />
-          <button
-            type="button"
-            onClick={() => setShowPassword(!showPassword)}
-            className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-600 hover:text-blue-500"
-          >
-            <span className="material-symbols-outlined">
-              {showPassword ? "visibility_off" : "visibility"}
-            </span>
-          </button>
-        </div>
-      </div>
+          <div className="col-span-12 md:col-span-6">
+            <label
+              htmlFor="confirm_password"
+              className="block text-lg font-semibold text-gray-700"
+            >
+              Confirm Password
+            </label>
+            <div className="relative">
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                id="confirm_password"
+                name="confirm_password"
+                value={formData.confirm_password}
+                onChange={handleInputChange}
+                className="mt-2 w-full h-12 text-gray-600 bg-gray-200 p-3 rounded-lg shadow-md border border-gray-300 focus:border-blue-500 focus:outline-none transition duration-300"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-600 hover:text-blue-500"
+              >
+                <span className="material-symbols-outlined">
+                  {showConfirmPassword ? "visibility_off" : "visibility"}
+                </span>
+              </button>
+            </div>
+          </div>
 
-      <div className="col-span-12 md:col-span-6">
-        <label
-          htmlFor="confirm_password"
-          className="block text-lg font-medium text-gray-700"
-        >
-          Confirm Password
-        </label>
-        <div className="relative">
-          <input
-            type={showConfirmPassword ? "text" : "password"}
-            id="confirm_password"
-            name="confirm_password"
-            value={formData.confirm_password}
-            onChange={handleInputChange}
-            className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-2.5 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
-            required
-          />
-          <button
-            type="button"
-            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-            className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-600 hover:text-blue-500"
-          >
-            <span className="material-symbols-outlined">
-              {showConfirmPassword ? "visibility_off" : "visibility"}
-            </span>
-          </button>
-        </div>
+          <div className="col-span-12">
+            <button
+              type="submit"
+              className={`w-full py-3 text-lg font-semibold text-white bg-blue-600 rounded-lg shadow-lg hover:bg-blue-700 transition-all focus:outline-none ${
+                loading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              disabled={loading}
+            >
+              {loading ? "Signing up..." : "Sign Up"}
+            </button>
+          </div>
+        </form>
       </div>
-
-      <div className="col-span-12">
-        <button
-          type="submit"
-          className={`w-full py-1.5 px-3 text-lg font-medium text-white bg-blue-600 rounded-md shadow-lg hover:bg-blue-700 transition-all focus:outline-none ${
-            loading ? "opacity-50 cursor-not-allowed" : ""
-          }`}
-          disabled={loading}
-        >
-          {loading ? "Signing up..." : "Sign Up"}
-        </button>
-      </div>
-    </form>
+    </div>
   );
 
   return (
