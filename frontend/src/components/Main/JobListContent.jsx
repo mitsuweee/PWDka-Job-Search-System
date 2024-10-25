@@ -368,20 +368,43 @@ const JobListing = () => {
                         <span className="material-symbols-outlined mr-2">
                           work
                         </span>
-                        {toSentenceCase(job.jobName)}
+                        {job.jobName
+                          .split(" ")
+                          .map(
+                            (word) =>
+                              word.charAt(0).toUpperCase() +
+                              word.slice(1).toLowerCase()
+                          )
+                          .join(" ")}
                       </h2>
                       <p className="text-white">
                         <span className="material-symbols-outlined mr-2">
                           location_on
                         </span>
-                        {toSentenceCase(job.companyLocation)}
+                        {job.companyLocation
+                          .split(" ")
+                          .map(
+                            (word) =>
+                              word.charAt(0).toUpperCase() +
+                              word.slice(1).toLowerCase()
+                          )
+                          .join(" ")}
                       </p>
+
                       <p className="text-white">
                         <span className="material-symbols-outlined mr-2">
                           location_on
                         </span>
-                        {toSentenceCase(job.companyCity)}
+                        {job.companyCity
+                          .split(" ")
+                          .map(
+                            (word) =>
+                              word.charAt(0).toUpperCase() +
+                              word.slice(1).toLowerCase()
+                          )
+                          .join(" ")}
                       </p>
+
                       <p className="font-semibold text-white">
                         <span className="material-symbols-outlined mr-2">
                           schedule
@@ -521,18 +544,40 @@ const JobListing = () => {
                   &times;
                 </button>
                 <h2 className="text-2xl font-semibold mb-4 text-blue-600">
-                  {toSentenceCase(selectedJob.jobName)}
+                  {selectedJob.jobName
+                    .split(" ")
+                    .map(
+                      (word) =>
+                        word.charAt(0).toUpperCase() +
+                        word.slice(1).toLowerCase()
+                    )
+                    .join(" ")}
                 </h2>
+
                 <p className="text-lg mb-2 text-gray-700 flex items-center">
                   <span className="material-symbols-outlined mr-2">work</span>
-                  {toSentenceCase(selectedJob.companyName)}
+                  {selectedJob.companyName
+                    .split(" ")
+                    .map(
+                      (word) =>
+                        word.charAt(0).toUpperCase() +
+                        word.slice(1).toLowerCase()
+                    )
+                    .join(" ")}
                 </p>
 
                 <p className="text-lg mb-4 text-gray-500 flex items-center">
                   <span className="material-symbols-outlined mr-2">
                     location_on
                   </span>
-                  {toSentenceCase(selectedJob.companyLocation)}
+                  {selectedJob.companyLocation
+                    .split(" ")
+                    .map(
+                      (word) =>
+                        word.charAt(0).toUpperCase() +
+                        word.slice(1).toLowerCase()
+                    )
+                    .join(" ")}
                 </p>
 
                 <p className="text-lg mb-2 text-gray-700 flex items-center">
@@ -608,8 +653,16 @@ const JobListing = () => {
                   </h3>
                   <p className="text-black">
                     <span className="font-medium">Company name:</span>{" "}
-                    {toSentenceCase(selectedJob.companyName)}
+                    {selectedJob.companyName
+                      .split(" ")
+                      .map(
+                        (word) =>
+                          word.charAt(0).toUpperCase() +
+                          word.slice(1).toLowerCase()
+                      )
+                      .join(" ")}
                   </p>
+
                   <p className="text-black">
                     <span className="font-medium">Email:</span>{" "}
                     {toSentenceCase(selectedJob.companyEmail)}
@@ -620,14 +673,30 @@ const JobListing = () => {
                   </p>
                   <p className="text-black">
                     <span className="font-medium">Address:</span>{" "}
-                    {toSentenceCase(selectedJob.companyLocation)}
+                    {selectedJob.companyLocation
+                      .split(" ")
+                      .map(
+                        (word) =>
+                          word.charAt(0).toUpperCase() +
+                          word.slice(1).toLowerCase()
+                      )
+                      .join(" ")}
                   </p>
                   <p className="text-black">
                     <span className="font-medium">City:</span>{" "}
-                    {toSentenceCase(selectedJob.companyCity)}
+                    {selectedJob.companyCity
+                      .split(" ")
+                      .map(
+                        (word) =>
+                          word.charAt(0).toUpperCase() +
+                          word.slice(1).toLowerCase()
+                      )
+                      .join(" ")}
                   </p>
+
                   <p className="text-black mt-4 text-sm leading-relaxed">
-                    {toSentenceCase(selectedJob.companyDescription)}
+                    {selectedJob.companyDescription.charAt(0).toUpperCase() +
+                      selectedJob.companyDescription.slice(1).toLowerCase()}
                   </p>
                 </div>
               )}
