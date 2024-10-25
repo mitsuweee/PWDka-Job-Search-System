@@ -49,7 +49,9 @@ const UserProf = () => {
       .then(function (response) {
         const userData = response.data.data;
         setUser({
-          fullName: userData.full_name,
+          firstName: userData.first_name,
+          middleInitial: userData.middle_initial || "",
+          lastName: userData.last_name,
           disability: userData.type,
           city: userData.city,
           address: userData.address,
@@ -256,7 +258,19 @@ const UserProf = () => {
 
         <div className="ml-6">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
-            {user.fullName}
+            {user.firstName &&
+              user.lastName &&
+              `${
+                user.firstName.charAt(0).toUpperCase() +
+                user.firstName.slice(1).toLowerCase()
+              } ${
+                user.middleInitial
+                  ? user.middleInitial.charAt(0).toUpperCase() + ". "
+                  : ""
+              }${
+                user.lastName.charAt(0).toUpperCase() +
+                user.lastName.slice(1).toLowerCase()
+              }`}
           </h2>
           <div className="flex mt-2">
             <p className="bg-blue-100 text-blue-700 text-sm font-semibold mr-2 px-2.5 py-0.5 rounded">
