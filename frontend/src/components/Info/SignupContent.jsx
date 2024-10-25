@@ -323,6 +323,17 @@ const Signup = () => {
               placeholder="No Special Characters"
               value={userFormValues.address}
               onChange={handleInputChange}
+              onKeyDown={(e) => {
+                // Allow only letters, numbers, and spaces
+                const regex = /^[a-zA-Z0-9\s]*$/;
+                if (
+                  !regex.test(e.key) &&
+                  e.key !== "Backspace" &&
+                  e.key !== "Delete"
+                ) {
+                  e.preventDefault();
+                }
+              }}
               className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
               required
             />
@@ -681,6 +692,17 @@ const Signup = () => {
             placeholder="No Special Characters"
             value={companyFormValues.companyAddress}
             onChange={handleInputChange}
+            onKeyDown={(e) => {
+              // Allow only letters, numbers, and spaces
+              const regex = /^[a-zA-Z0-9\s]*$/;
+              if (
+                !regex.test(e.key) &&
+                e.key !== "Backspace" &&
+                e.key !== "Delete"
+              ) {
+                e.preventDefault();
+              }
+            }}
             className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
             required
           />

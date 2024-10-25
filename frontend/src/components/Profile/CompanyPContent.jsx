@@ -538,6 +538,17 @@ const CompanyProf = () => {
                     name="address"
                     value={company.address}
                     onChange={handleChange}
+                    onKeyDown={(e) => {
+                      // Allow only letters, numbers, and spaces
+                      const regex = /^[a-zA-Z0-9\s]*$/;
+                      if (
+                        !regex.test(e.key) &&
+                        e.key !== "Backspace" &&
+                        e.key !== "Delete"
+                      ) {
+                        e.preventDefault();
+                      }
+                    }}
                     className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
                   />
                 </div>
