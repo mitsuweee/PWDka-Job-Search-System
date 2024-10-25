@@ -263,13 +263,8 @@ const AdminVerifyComp = () => {
       </button>
 
       <main className="flex-grow p-8 bg-custom-bg">
-        <div className="flex justify-between items-center">
-          <button
-            onClick={handleGoBack}
-            className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out"
-          >
-            Back
-          </button>
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-xl font-bold text-gray-700">Verify Companies</h1>
         </div>
 
         <div className="mt-4">
