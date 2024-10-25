@@ -345,21 +345,24 @@ const ViewJobs = () => {
 
         {/* Table */}
         <div className="w-full">
-          <table className="table-auto w-full bg-white mt-4 rounded-xl">
+          <table className="table-auto w-full bg-white mt-4 rounded-xl shadow-lg">
             <thead>
               <tr className="bg-blue-500 text-white">
-                <th className="py-2 px-2 md:px-4 text-sm md:text-base">
+                <th className="py-3 px-4 text-left text-sm md:text-base">
                   Job Title
                 </th>
-                <th className="py-2 px-2 md:px-4 text-sm md:text-base">
+                <th className="py-3 px-4 text-center text-sm md:text-base">
                   Actions
                 </th>
               </tr>
             </thead>
             <tbody>
               {filteredJobListings.map((job) => (
-                <tr key={job.id} className="border-b">
-                  <td className="py-2 px-2 md:px-4 text-sm md:text-base break-words">
+                <tr
+                  key={job.id}
+                  className="border-b hover:bg-gray-100 transition-colors"
+                >
+                  <td className="py-3 px-4 text-sm md:text-base break-words">
                     {job.position_name
                       ? job.position_name
                           .split(" ")
@@ -371,47 +374,45 @@ const ViewJobs = () => {
                           .join(" ")
                       : ""}
                   </td>
-                  <td className="py-2 px-2 md:px-4">
-                    <div className="flex space-x-1 md:space-x-2 justify-center md:justify-end">
+                  <td className="py-3 px-4">
+                    <div className="flex justify-center items-center space-x-2">
                       <button
                         onClick={() => handleViewJob(job.id)}
-                        className="bg-blue-500 text-white p-1 md:px-2 md:py-1 rounded hover:bg-blue-700 transition-colors flex items-center"
+                        className="bg-blue-500 text-white flex items-center px-2 py-1 rounded hover:bg-blue-700 transition duration-200"
                       >
                         <span className="material-symbols-outlined text-base md:text-xl">
                           visibility
                         </span>
-                        <span className="ml-1 md:block hidden">View</span>{" "}
-                        {/* Hide on mobile */}
+                        <span className="ml-1 hidden md:inline">View</span>
                       </button>
                       <button
                         onClick={() => handleDeleteJobListing(job.id)}
-                        className="bg-red-500 text-white p-1 md:px-2 md:py-1 rounded hover:bg-red-700 transition-colors flex items-center"
+                        className="bg-red-500 text-white flex items-center px-2 py-1 rounded hover:bg-red-700 transition duration-200"
                       >
                         <span className="material-symbols-outlined text-base md:text-xl">
                           delete
                         </span>
-                        <span className="ml-1 md:block hidden">Delete</span>{" "}
-                        {/* Hide on mobile */}
+                        <span className="ml-1 hidden md:inline">Delete</span>
                       </button>
                       <button
                         onClick={() => handleUpdateJob(job)}
-                        className="bg-yellow-500 text-white p-1 md:px-2 md:py-1 rounded hover:bg-yellow-700 transition-colors flex items-center"
+                        className="bg-yellow-500 text-white flex items-center px-2 py-1 rounded hover:bg-yellow-700 transition duration-200"
                       >
                         <span className="material-symbols-outlined text-base md:text-xl">
                           edit
                         </span>
-                        <span className="ml-1 md:block hidden">Edit</span>{" "}
-                        {/* Hide on mobile */}
+                        <span className="ml-1 hidden md:inline">Edit</span>
                       </button>
                       <button
                         onClick={() => handleViewApplicants(job.id)}
-                        className="bg-green-500 text-white p-1 md:px-2 md:py-1 rounded hover:bg-green-700 transition-colors flex items-center"
+                        className="bg-green-500 text-white flex items-center px-2 py-1 rounded hover:bg-green-700 transition duration-200"
                       >
                         <span className="material-symbols-outlined text-base md:text-xl">
                           group_add
                         </span>
-                        <span className="ml-1 md:block hidden">Applicants</span>{" "}
-                        {/* Hide on mobile */}
+                        <span className="ml-1 hidden md:inline">
+                          Applicants
+                        </span>
                       </button>
                     </div>
                   </td>
