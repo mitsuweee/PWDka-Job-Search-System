@@ -257,7 +257,7 @@ const JobListing = () => {
               onChange={(e) => setJobType(e.target.value)}
             >
               <option value="" className="text-gray-400">
-                Job Type
+                All
               </option>
               <option value="full-time">Full-Time</option>
               <option value="part-time">Part-Time</option>
