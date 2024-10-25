@@ -248,7 +248,7 @@ const ViewJobs = () => {
       {/* Loader */}
       {isLoading && (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
-          <div className="text-white text-2xl">Loading...</div>
+          <div className="animate-spin rounded-full h-32 w-32 border-t-4 border-blue-500"></div>
         </div>
       )}
       {/* Sidebar */}
