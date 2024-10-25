@@ -262,32 +262,37 @@ const PostJob = () => {
               />
             </div>
 
-            <textarea
-              name="requirements"
-              value={jobDetails.requirements}
-              onChange={(e) => {
-                let value = e.target.value;
-                // If the last character is a slash, remove it
-                if (value.endsWith("/")) {
-                  value = value.slice(0, -1);
-                }
-                handleChange({ target: { name: "requirements", value } });
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  let value = jobDetails.requirements;
-                  if (!value.endsWith("/")) {
-                    value += "/";
+            <div className="col-span-1">
+              <label className="block mb-2 text-gray-700 font-semibold">
+                Requirements <span className="text-red-500">*</span>
+              </label>
+              <textarea
+                name="requirements"
+                value={jobDetails.requirements}
+                onChange={(e) => {
+                  let value = e.target.value;
+                  // If the last character is a slash, remove it
+                  if (value.endsWith("/")) {
+                    value = value.slice(0, -1);
                   }
-                  value += "\n";
                   handleChange({ target: { name: "requirements", value } });
-                }
-              }}
-              className="p-3 w-full border-2 border-blue-300 rounded-lg shadow-sm h-28 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="Requirement1/ Requirement2/ Requirement3 *Enter Every Requirement*"
-              required
-            />
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    let value = jobDetails.requirements;
+                    if (!value.endsWith("/")) {
+                      value += "/";
+                    }
+                    value += "\n";
+                    handleChange({ target: { name: "requirements", value } });
+                  }
+                }}
+                className="p-3 w-full border-2 border-blue-300 rounded-lg shadow-sm h-28 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                placeholder="Requirement1/ Requirement2/ Requirement3 *Enter Every Requirement*"
+                required
+              />
+            </div>
 
             <div className="col-span-1">
               <label className="block mb-2 text-gray-700 font-semibold">
