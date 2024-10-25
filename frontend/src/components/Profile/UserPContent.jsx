@@ -605,6 +605,23 @@ const UserProf = () => {
                     name="contactNumber"
                     value={user.contactNumber}
                     onChange={handleChange}
+                    pattern="[0-9]{10,11}"
+                    onKeyDown={(e) => {
+                      // Allow numbers and basic navigation keys
+                      const allowedKeys = [
+                        "Backspace",
+                        "Delete",
+                        "ArrowLeft",
+                        "ArrowRight",
+                        "Tab",
+                      ];
+                      if (
+                        !/[0-9]/.test(e.key) &&
+                        !allowedKeys.includes(e.key)
+                      ) {
+                        e.preventDefault();
+                      }
+                    }}
                     className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
                   />
                 </div>
