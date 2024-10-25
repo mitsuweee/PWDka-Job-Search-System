@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
@@ -273,6 +273,7 @@ const AdminVerifyComp = () => {
         </div>
 
         <div className="mt-4">
+          {/* Table */}
           {currentCompanies.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="min-w-full bg-white rounded-lg">
@@ -356,6 +357,7 @@ const AdminVerifyComp = () => {
             </p>
           )}
 
+          {/* View company functionality */}
           {selectedCompany && showModal && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
               <div className="bg-white rounded-lg p-6 w-[600px] h-[700px] shadow-lg hover:shadow-2xl transition-shadow duration-300 max-h-[90vh] overflow-y-auto">
@@ -440,6 +442,8 @@ const AdminVerifyComp = () => {
                     </p>
                   </div>
                 </div>
+
+                {/* Accept or Decline functionality */}
                 <div className="flex justify-end mt-4 space-x-2">
                   <button
                     className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
@@ -9,9 +9,9 @@ const AdminViewJobs = () => {
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false); // Logout confirmation modal state
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const jobsPerPage = 10; // Number of job listings per page
+  const jobsPerPage = 10;
   const navigate = useNavigate();
 
   useEffect(() => {

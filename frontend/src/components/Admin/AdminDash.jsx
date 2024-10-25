@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Bar } from "react-chartjs-2";
@@ -231,7 +231,6 @@ const AdminDashboard = () => {
         &#9776;
       </button>
 
-      {/* Main Content */}
       {/* Main Content */}
       <main className="flex-grow p-8 bg-gradient-to-b from-gray-100 to-gray-200 w-full max-w-3xl mx-auto">
         <div className="flex justify-between items-center mb-8">

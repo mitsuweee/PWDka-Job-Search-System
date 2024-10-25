@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
@@ -33,7 +33,7 @@ const AdminSignup = () => {
 
     setLoading(true); // Show loading state
 
-    // Prepare Axios request config
+    // Axios request config
     const config = {
       method: "POST",
       url: "/admin/register", // Adjust to your actual endpoint
@@ -307,6 +307,7 @@ const AdminSignup = () => {
           Logout
         </button>
       </aside>
+
       {/* Logout Confirmation Modal */}
       {isLogoutModalOpen && (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
@@ -358,6 +359,7 @@ const AdminSignup = () => {
           </div>
         </div>
       )}
+
       {/* Mobile Toggle Button */}
       <button
         className={`md:hidden bg-custom-blue text-white p-4 fixed top-4 left-4 z-50 rounded-xl mt-11 transition-transform ${
