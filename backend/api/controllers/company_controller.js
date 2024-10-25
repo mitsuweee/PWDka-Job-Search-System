@@ -431,11 +431,12 @@ const viewCompanyViaId = async (req, res, next) => {
 const updateCompanyEmail = async (req, res, next) => {
   const id = req.params.id;
   const email = req.body.email.toLowerCase();
+  const password = req.body.password;
 
-  if (!id || !email) {
+  if (!id || !email || !password) {
     return res.status(400).json({
       successful: false,
-      message: "ID or Email is missing",
+      message: "ID, Email, or Password is missing",
     });
   } else if (!util.checkEmail(email)) {
     return res.status(400).json({
@@ -444,6 +445,24 @@ const updateCompanyEmail = async (req, res, next) => {
     });
   } else {
     try {
+      // Check if the company exists
+      const company = await knex("company").where({ id }).first();
+      if (!company) {
+        return res.status(404).json({
+          successful: false,
+          message: "Company not found",
+        });
+      }
+
+      // Verify the provided password
+      const passwordMatch = await bcrypt.compare(password, company.password);
+      if (!passwordMatch) {
+        return res.status(400).json({
+          successful: false,
+          message: "Invalid Credentials",
+        });
+      }
+
       // Check if email exists in other tables
       const adminWithEmail = await knex("admin").where({ email }).first();
       const userWithEmail = await knex("user").where({ email }).first();
@@ -456,13 +475,6 @@ const updateCompanyEmail = async (req, res, next) => {
         });
       } else {
         const result = await knex("company").where({ id }).update({ email });
-
-        if (result === 0) {
-          return res.status(404).json({
-            successful: false,
-            message: "Company not found",
-          });
-        }
 
         return res.status(200).json({
           successful: true,
