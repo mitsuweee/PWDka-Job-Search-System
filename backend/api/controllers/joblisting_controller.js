@@ -61,48 +61,48 @@ const postJobs = async (req, res, next) => {
           successful: false,
           message: "Position Type Id is invalid",
         });
-      }
+      } else {
+        // Insert the job listing
+        const [jobListingId] = await knex("job_listing")
+          .insert({
+            position_name,
+            description,
+            qualification,
+            requirement,
+            minimum_salary,
+            maximum_salary,
+            positiontype_id: positionType.id,
+            company_id,
+          })
+          .returning("id");
 
-      // Insert the job listing
-      const [jobListingId] = await knex("job_listing")
-        .insert({
-          position_name,
-          description,
-          qualification,
-          requirement,
-          minimum_salary,
-          maximum_salary,
-          positiontype_id: positionType.id,
-          company_id,
-        })
-        .returning("id");
+        // Validate and insert disability job listings
+        for (const disability_id of disability_ids) {
+          const disability = await knex("disability")
+            .select("id")
+            .where("type", disability_id)
+            .first();
 
-      // Validate and insert disability job listings
-      for (const disability_id of disability_ids) {
-        const disability = await knex("disability")
-          .select("id")
-          .where("type", disability_id)
-          .first();
+          if (!disability) {
+            // Rollback job listing creation if disability_id is invalid
+            await knex("job_listing").where("id", jobListingId).del();
+            return res.status(400).json({
+              successful: false,
+              message: "Disability Id does not exist",
+            });
+          } else {
+            await knex("disability_job_listing").insert({
+              disability_id: disability.id,
+              joblisting_id: jobListingId,
+            });
+          }
 
-        if (!disability) {
-          // Rollback job listing creation if disability_id is invalid
-          await knex("job_listing").where("id", jobListingId).del();
-          return res.status(400).json({
-            successful: false,
-            message: "Disability Id does not exist",
+          return res.status(200).json({
+            successful: true,
+            message: "Job listing posted successfully!",
           });
         }
-
-        await knex("disability_job_listing").insert({
-          disability_id: disability.id,
-          joblisting_id: jobListingId,
-        });
       }
-
-      return res.status(200).json({
-        successful: true,
-        message: "Job listing posted successfully!",
-      });
     } catch (err) {
       return res.status(500).json({
         successful: false,
@@ -207,7 +207,7 @@ const viewJobListingViaUserNewestToOldest = async (req, res, next) => {
   const id = req.params.id;
   const city = req.body.city;
   const position_name = req.body.position_name;
-  const position_type = req.body.position_type; // Get filters from query parameters
+  const position_type = req.body.position_type;
   const page = 1; // Default to page 1 if not provided
   const limit = 1000; // Default to 1000 listings per page if not provided
   const offset = (page - 1) * limit; // Calculate offset for pagination
@@ -248,71 +248,67 @@ const viewJobListingViaUserNewestToOldest = async (req, res, next) => {
       // Add filtering conditions to the base query
       if (city) {
         baseQuery.where("company.city", "like", `%${city}%`);
-      }
-
-      if (position_name) {
+      } else if (position_name) {
         baseQuery.where(
           "job_listing.position_name",
           "like",
           `%${position_name}%`
         );
-      }
-
-      if (position_type) {
+      } else if (position_type) {
         baseQuery.where("position_type.type", "like", `%${position_type}%`);
-      }
-
-      // Retrieve paginated job listings with applied filters
-      const rows = await baseQuery
-        .select(
-          "job_listing.id",
-          "job_listing.status",
-          "job_listing.position_name",
-          "job_listing.description",
-          "job_listing.qualification",
-          "job_listing.requirement",
-          "job_listing.minimum_salary",
-          "job_listing.maximum_salary",
-          "job_listing.salary_visibility",
-          "position_type.type AS position_type",
-          "company.name AS company_name",
-          "company.profile_picture AS company_profile_picture",
-          "company.email AS company_email",
-          "company.address AS company_address",
-          "company.city AS company_city",
-          "company.contact_number AS company_contact_number",
-          "company.description AS company_description"
-        )
-        .orderBy("job_listing.date_created", "desc")
-        .limit(limit)
-        .offset(offset);
-
-      if (rows.length === 0) {
-        return res.status(404).json({
-          successful: false,
-          message:
-            "No job listings are available at the moment. We are committed to bringing you new opportunities tailored to your skills and abilities. Please stay hopeful, more listings will be available soon.",
-        });
       } else {
-        // Convert company_profile_picture BLOB to Base64 string for each row
-        const processedRows = rows.map((row) => ({
-          ...row,
-          company_profile_picture: row.company_profile_picture
-            ? row.company_profile_picture.toString()
-            : null,
-        }));
+        // Retrieve paginated job listings with applied filters
+        const rows = await baseQuery
+          .select(
+            "job_listing.id",
+            "job_listing.status",
+            "job_listing.position_name",
+            "job_listing.description",
+            "job_listing.qualification",
+            "job_listing.requirement",
+            "job_listing.minimum_salary",
+            "job_listing.maximum_salary",
+            "job_listing.salary_visibility",
+            "position_type.type AS position_type",
+            "company.name AS company_name",
+            "company.profile_picture AS company_profile_picture",
+            "company.email AS company_email",
+            "company.address AS company_address",
+            "company.city AS company_city",
+            "company.contact_number AS company_contact_number",
+            "company.description AS company_description"
+          )
+          .orderBy("job_listing.date_created", "desc")
+          .limit(limit)
+          .offset(offset);
 
-        return res.status(200).json({
-          successful: true,
-          message: "Successfully Retrieved Job Listing",
-          data: processedRows,
-          pagination: {
-            totalCount,
-            totalPages: Math.ceil(totalCount / limit),
-            currentPage: page,
-            perPage: limit,
-          },
-        });
+        if (rows.length === 0) {
+          return res.status(404).json({
+            successful: false,
+            message:
+              "No job listings are available at the moment. We are committed to bringing you new opportunities tailored to your skills and abilities. Please stay hopeful, more listings will be available soon.",
+          });
+        } else {
+          // Convert company_profile_picture BLOB to Base64 string for each row
+          const processedRows = rows.map((row) => ({
+            ...row,
+            company_profile_picture: row.company_profile_picture
+              ? row.company_profile_picture.toString()
+              : null,
+          }));
+
+          return res.status(200).json({
+            successful: true,
+            message: "Successfully Retrieved Job Listing",
+            data: processedRows,
+            pagination: {
+              totalCount,
+              totalPages: Math.ceil(totalCount / limit),
+              currentPage: page,
+              perPage: limit,
+            },
+          });
+        }
       }
     } catch (err) {
       return res.status(500).json({
@@ -398,22 +394,22 @@ const viewJobsCreatedByCompanyNewestToOldest = async (req, res, next) => {
         successful: false,
         message: "Company's Job Listings not found",
       });
+    } else {
+      // Convert company_profile_picture BLOB to string for each row
+      const processedRows = rows.map((row) => ({
+        ...row,
+        company_profile_picture: row.company_profile_picture
+          ? row.company_profile_picture.toString()
+          : null,
+      }));
+
+      return res.status(200).json({
+        successful: true,
+        message: "Successfully Retrieved Company's Job Listings",
+        data: processedRows,
+        count: processedRows.length,
+      });
     }
-
-    // Convert company_profile_picture BLOB to Base64 string for each row
-    const processedRows = rows.map((row) => ({
-      ...row,
-      company_profile_picture: row.company_profile_picture
-        ? row.company_profile_picture.toString()
-        : null,
-    }));
-
-    return res.status(200).json({
-      successful: true,
-      message: "Successfully Retrieved Company's Job Listings",
-      data: processedRows,
-      count: processedRows.length,
-    });
   } catch (err) {
     return res.status(500).json({
       successful: false,
@@ -484,80 +480,79 @@ const updateJobListing = async (req, res, next) => {
           successful: false,
           message: "Position Type Id is invalid",
         });
-      }
+      } else {
+        // Begin transaction
+        await knex.transaction(async (trx) => {
+          const result = await trx("job_listing").where("id", id).update({
+            status,
+            position_name,
+            description,
+            qualification,
+            requirement,
+            minimum_salary,
+            maximum_salary,
+            salary_visibility,
+            positiontype_id,
+          });
 
-      // Begin transaction for updating the job listing and disabilities
-      await knex.transaction(async (trx) => {
-        // Update the job listing
-        const result = await trx("job_listing").where("id", id).update({
-          status,
-          position_name,
-          description,
-          qualification,
-          requirement,
-          minimum_salary,
-          maximum_salary,
-          salary_visibility,
-          positiontype_id,
+          if (result === 0) {
+            return res.status(404).json({
+              successful: false,
+              message: "Job Listing not found",
+            });
+          } else {
+            // Fetch existing disabilities for the job listing
+            const existingDisabilities = await trx("disability_job_listing")
+              .where("joblisting_id", id)
+              .pluck("disability_id");
+
+            // Fetch the IDs corresponding to the provided disability types
+            const disabilities = await trx("disability")
+              .select("id", "type")
+              .whereIn("type", disability_ids);
+
+            const disabilityIds = disabilities.map(
+              (disability) => disability.id
+            );
+
+            if (disabilityIds.length !== disability_ids.length) {
+              return res.status(400).json({
+                successful: false,
+                message: "One or more provided disability types are invalid",
+              });
+            }
+
+            // Find new disabilities to add
+            const disabilitiesToAdd = disabilityIds.filter(
+              (disability_id) => !existingDisabilities.includes(disability_id)
+            );
+
+            // Find disabilities to remove (optional)
+            const disabilitiesToRemove = existingDisabilities.filter(
+              (disability_id) => !disabilityIds.includes(disability_id)
+            );
+
+            // Insert new disabilities that are not already associated with the job listing
+            for (const disability_id of disabilitiesToAdd) {
+              await trx("disability_job_listing").insert({
+                disability_id: disability_id,
+                joblisting_id: id,
+              });
+            }
+
+            if (disabilitiesToRemove.length > 0) {
+              await trx("disability_job_listing")
+                .where("joblisting_id", id)
+                .whereIn("disability_id", disabilitiesToRemove)
+                .del();
+            }
+          }
         });
-
-        if (result === 0) {
-          return res.status(404).json({
-            successful: false,
-            message: "Job Listing not found",
-          });
-        }
-
-        // Fetch existing disabilities for the job listing
-        const existingDisabilities = await trx("disability_job_listing")
-          .where("joblisting_id", id)
-          .pluck("disability_id");
-
-        // Fetch the IDs corresponding to the provided disability types
-        const disabilities = await trx("disability")
-          .select("id", "type")
-          .whereIn("type", disability_ids);
-
-        const disabilityIds = disabilities.map((disability) => disability.id);
-
-        if (disabilityIds.length !== disability_ids.length) {
-          return res.status(400).json({
-            successful: false,
-            message: "One or more provided disability types are invalid",
-          });
-        }
-
-        // Find new disabilities to add
-        const disabilitiesToAdd = disabilityIds.filter(
-          (disability_id) => !existingDisabilities.includes(disability_id)
-        );
-
-        // Find disabilities to remove (optional)
-        const disabilitiesToRemove = existingDisabilities.filter(
-          (disability_id) => !disabilityIds.includes(disability_id)
-        );
-
-        // Insert new disabilities that are not already associated with the job listing
-        for (const disability_id of disabilitiesToAdd) {
-          await trx("disability_job_listing").insert({
-            disability_id: disability_id,
-            joblisting_id: id,
-          });
-        }
-
-        // Optionally remove disabilities that are no longer associated (if needed)
-        if (disabilitiesToRemove.length > 0) {
-          await trx("disability_job_listing")
-            .where("joblisting_id", id)
-            .whereIn("disability_id", disabilitiesToRemove)
-            .del();
-        }
-      });
-
-      return res.status(200).json({
-        successful: true,
-        message: "Job Listing updated successfully",
-      });
+        return res.status(200).json({
+          successful: true,
+          message: "Job Listing updated successfully",
+        });
+      }
     } catch (err) {
       return res.status(500).json({
         successful: false,
@@ -575,29 +570,29 @@ const deleteJob = async (req, res, next) => {
       successful: false,
       message: "Id is missing",
     });
-  }
+  } else {
+    try {
+      const jobListing = await knex("job_listing").where("id", id).first();
 
-  try {
-    const jobListing = await knex("job_listing").where("id", id).first();
+      if (!jobListing) {
+        return res.status(404).json({
+          successful: false,
+          message: "Job listing not found",
+        });
+      } else {
+        await knex("job_listing").where("id", id).del();
 
-    if (!jobListing) {
-      return res.status(404).json({
+        return res.status(200).json({
+          successful: true,
+          message: "Successfully Deleted Job Listing",
+        });
+      }
+    } catch (err) {
+      return res.status(500).json({
         successful: false,
-        message: "Job listing not found",
+        message: err.message,
       });
     }
-
-    await knex("job_listing").where("id", id).del();
-
-    return res.status(200).json({
-      successful: true,
-      message: "Successfully Deleted Job Listing",
-    });
-  } catch (err) {
-    return res.status(500).json({
-      successful: false,
-      message: err.message,
-    });
   }
 };
 
@@ -613,67 +608,67 @@ const viewCounts = async (req, res, next) => {
         successful: false,
         message: "Company not found",
       });
+    } else {
+      // Query to count total job listings for the given company_id
+      const jobListingsCount = await knex("job_listing")
+        .where({ company_id: id }) // Filter by company_id
+        .count("id as count")
+        .first();
+
+      // Query to count job applications for job listings under the given company_id
+      const jobApplicationsCount = await knex("job_application")
+        .join(
+          "job_listing",
+          "job_application.joblisting_id",
+          "=",
+          "job_listing.id"
+        )
+        .where({ "job_listing.company_id": id })
+        .count("job_application.id as count")
+        .first();
+
+      // Query to count full-time job listings
+      const fullTimeJobListingsCount = await knex("job_listing")
+        .join(
+          "position_type",
+          "job_listing.positiontype_id",
+          "=",
+          "position_type.id"
+        )
+        .where({
+          "job_listing.company_id": id,
+          "position_type.type": "Full-Time",
+        })
+        .count("job_listing.id as count")
+        .first();
+
+      // Query to count part-time job listings
+      const partTimeJobListingsCount = await knex("job_listing")
+        .join(
+          "position_type",
+          "job_listing.positiontype_id",
+          "=",
+          "position_type.id"
+        )
+        .where({
+          "job_listing.company_id": id,
+          "position_type.type": "Part-Time",
+        })
+        .count("job_listing.id as count")
+        .first();
+
+      // Combine all the results into a single response
+      return res.status(200).json({
+        successful: true,
+        message: "Successfully Retrieved Counts",
+        data: {
+          job_listings: jobListingsCount.count, // Total count of job listings for the given company
+          job_applications: jobApplicationsCount.count, // Total count of job applications for the company
+          full_time_job_listings: fullTimeJobListingsCount.count, // Count of full-time job listings
+          part_time_job_listings: partTimeJobListingsCount.count, // Count of part-time job listings
+        },
+      });
     }
-
-    // Query to count total job listings for the given company_id
-    const jobListingsCount = await knex("job_listing")
-      .where({ company_id: id }) // Filter by company_id
-      .count("id as count")
-      .first();
-
-    // Query to count job applications for job listings under the given company_id
-    const jobApplicationsCount = await knex("job_application")
-      .join(
-        "job_listing",
-        "job_application.joblisting_id",
-        "=",
-        "job_listing.id"
-      )
-      .where({ "job_listing.company_id": id })
-      .count("job_application.id as count")
-      .first();
-
-    // Query to count full-time job listings
-    const fullTimeJobListingsCount = await knex("job_listing")
-      .join(
-        "position_type",
-        "job_listing.positiontype_id",
-        "=",
-        "position_type.id"
-      )
-      .where({
-        "job_listing.company_id": id,
-        "position_type.type": "Full-Time",
-      })
-      .count("job_listing.id as count")
-      .first();
-
-    // Query to count part-time job listings
-    const partTimeJobListingsCount = await knex("job_listing")
-      .join(
-        "position_type",
-        "job_listing.positiontype_id",
-        "=",
-        "position_type.id"
-      )
-      .where({
-        "job_listing.company_id": id,
-        "position_type.type": "Part-Time",
-      })
-      .count("job_listing.id as count")
-      .first();
-
-    // Combine all the results into a single response
-    return res.status(200).json({
-      successful: true,
-      message: "Successfully Retrieved Counts",
-      data: {
-        job_listings: jobListingsCount.count, // Total count of job listings for the given company
-        job_applications: jobApplicationsCount.count, // Total count of job applications for the company
-        full_time_job_listings: fullTimeJobListingsCount.count, // Count of full-time job listings
-        part_time_job_listings: partTimeJobListingsCount.count, // Count of part-time job listings
-      },
-    });
   } catch (err) {
     return res.status(500).json({
       successful: false,

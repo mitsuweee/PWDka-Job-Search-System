@@ -39,7 +39,7 @@ const uploadResume = async (req, res, next) => {
             .first();
 
           if (existingApplication) {
-            return res.status(409).json({
+            return res.status(400).json({
               successful: false,
               message: "User has already applied for this job listing",
             });
