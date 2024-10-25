@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Bar } from "react-chartjs-2";
@@ -36,16 +36,14 @@ const CompanyDashboard = () => {
 
   // Fetch counts from the backend using Id from localStorage
   useEffect(() => {
-    const Id = localStorage.getItem("Id"); // Retrieve Id from localStorage
+    const Id = localStorage.getItem("Id");
     if (Id) {
       const fetchCompanyCounts = async () => {
         try {
-          const response = await axios.get(
-            `/joblisting/view/count/${Id}` // Use Id here
-          );
+          const response = await axios.get(`/joblisting/view/count/${Id}`);
 
           if (response.data.successful) {
-            setCompanyCounts(response.data.data); // Set the counts from API
+            setCompanyCounts(response.data.data);
           } else {
             console.error(
               "Error fetching company counts:",
@@ -70,10 +68,7 @@ const CompanyDashboard = () => {
       {
         label: "Counts",
         data: [companyCounts.job_listings, companyCounts.job_applications],
-        backgroundColor: [
-          "rgba(75, 192, 192, 1)", // Solid teal color
-          "rgba(153, 102, 255, 1)", // Solid purple color
-        ],
+        backgroundColor: ["rgba(75, 192, 192, 1)", "rgba(153, 102, 255, 1)"],
         borderColor: ["rgba(75, 192, 192, 1)", "rgba(153, 102, 255, 1)"],
         borderWidth: 1,
       },
@@ -90,10 +85,7 @@ const CompanyDashboard = () => {
           companyCounts.full_time_job_listings,
           companyCounts.part_time_job_listings,
         ],
-        backgroundColor: [
-          "rgba(54, 162, 235, 1)", // Blue color
-          "rgba(255, 159, 64, 1)", // Orange color
-        ],
+        backgroundColor: ["rgba(54, 162, 235, 1)", "rgba(255, 159, 64, 1)"],
         borderColor: ["rgba(54, 162, 235, 1)", "rgba(255, 159, 64, 1)"],
         borderWidth: 1,
       },
@@ -114,7 +106,7 @@ const CompanyDashboard = () => {
       },
       title: {
         display: true,
-        text: "Company Job Activity Summary", // Custom title for the first chart
+        text: "Company Job Activity Summary",
       },
     },
   };
@@ -133,7 +125,7 @@ const CompanyDashboard = () => {
       },
       title: {
         display: true,
-        text: "Full-Time and Part-Time Job Distribution", // Custom title for the second chart
+        text: "Full-Time and Part-Time Job Distribution",
       },
     },
   };

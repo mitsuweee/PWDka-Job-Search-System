@@ -17,10 +17,10 @@ const PostJob = () => {
     disabilityCategories: [],
   });
   const [showDisabilityOptions, setShowDisabilityOptions] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false); // Logout modal
-  const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false); // Submit confirmation modal
-  const [isLoading, setIsLoading] = useState(false); // Loader state
-  const [isSuccessCardVisible, setIsSuccessCardVisible] = useState(false); // Success card visibility
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSuccessCardVisible, setIsSuccessCardVisible] = useState(false);
   const [showSalaryDetails, setShowSalaryDetails] = useState(false);
 
   const navigate = useNavigate();
@@ -50,12 +50,12 @@ const PostJob = () => {
       return;
     }
 
-    setIsSubmitModalOpen(true); // Open the submit confirmation modal
+    setIsSubmitModalOpen(true);
   };
 
   const confirmSubmit = () => {
     setIsSubmitModalOpen(false);
-    setIsLoading(true); // Show loader
+    setIsLoading(true);
 
     const data = JSON.stringify({
       company_id: parseFloat(localStorage.getItem("Id")),
@@ -80,12 +80,12 @@ const PostJob = () => {
 
     axios(config)
       .then(() => {
-        setIsLoading(false); // Hide loader
-        setIsSuccessCardVisible(true); // Show success card
+        setIsLoading(false);
+        setIsSuccessCardVisible(true);
         toast.success("Job posted successfully!");
       })
       .catch((error) => {
-        setIsLoading(false); // Hide loader
+        setIsLoading(false);
         const errorMessage =
           error.response?.data?.message || "An error occurred";
         toast.error(errorMessage);
@@ -109,7 +109,7 @@ const PostJob = () => {
       disabilityCategories: [],
     });
     setShowDisabilityOptions(false);
-    setIsSuccessCardVisible(false); // Show form again
+    setIsSuccessCardVisible(false);
   };
 
   const handleChange = (e) => {
@@ -167,7 +167,7 @@ const PostJob = () => {
           href="/dashc"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
           style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
+            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
           }}
         >
           <span className="material-symbols-outlined text-xl mr-4">
@@ -181,7 +181,7 @@ const PostJob = () => {
           href="/dashboard/postjob"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
           style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
+            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
           }}
         >
           <span className="material-symbols-outlined text-xl mr-4">work</span>
@@ -193,7 +193,7 @@ const PostJob = () => {
           href="/dashboard/ViewJobs"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
           style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
+            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
           }}
         >
           <span className="material-symbols-outlined text-xl mr-4">list</span>
@@ -333,7 +333,7 @@ const PostJob = () => {
                   onChange={handleChange}
                   className="p-3 w-full border-2 border-blue-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                   required
-                  step="1" // Ensures only whole numbers
+                  step="1"
                 />
               </div>
 
@@ -348,7 +348,7 @@ const PostJob = () => {
                   onChange={handleChange}
                   className="p-3 w-full border-2 border-blue-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                   required
-                  step="1" // Ensures only whole numbers
+                  step="1"
                 />
               </div>
             </div>

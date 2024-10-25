@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import toast, { Toaster } from "react-hot-toast"; // Import react-hot-toast
+import toast, { Toaster } from "react-hot-toast";
 
 const ViewJobs = () => {
   const [jobListings, setJobListings] = useState([]);
@@ -16,10 +16,10 @@ const ViewJobs = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredJobListings, setFilteredJobListings] = useState([]);
-  const [isLoading, setIsLoading] = useState(false); // New loader state
-  const [showDisabilityOptions, setShowDisabilityOptions] = useState(false); // Toggle state for disability options
+  const [isLoading, setIsLoading] = useState(false);
+  const [showDisabilityOptions, setShowDisabilityOptions] = useState(false);
   const [selectedDisabilityCategories, setSelectedDisabilityCategories] =
-    useState([]); // State to handle selected disability categories
+    useState([]);
 
   const navigate = useNavigate();
 
@@ -33,21 +33,21 @@ const ViewJobs = () => {
       },
     };
 
-    setIsLoading(true); // Show loader while fetching jobs
+    setIsLoading(true);
     axios(config)
       .then((response) => {
         const jobDataArray = response.data.data;
         setJobListings(jobDataArray);
-        setFilteredJobListings(jobDataArray); // Set filtered job listings initially
+        setFilteredJobListings(jobDataArray);
         setLoading(false);
       })
       .catch((error) => {
         console.error(error);
-        toast.error("Error loading jobs."); // Show toast for error
+        toast.error("Error loading jobs.");
         setLoading(false);
       })
       .finally(() => {
-        setIsLoading(false); // Hide loader
+        setIsLoading(false);
       });
   }, []);
 
@@ -60,7 +60,7 @@ const ViewJobs = () => {
       },
     };
 
-    setIsLoading(true); // Show loader while fetching job details
+    setIsLoading(true);
     axios(config)
       .then((response) => {
         const jobData = response.data.data[0];
@@ -69,10 +69,10 @@ const ViewJobs = () => {
       })
       .catch((error) => {
         console.error(error);
-        toast.error("Error fetching job details."); // Show toast for error
+        toast.error("Error fetching job details.");
       })
       .finally(() => {
-        setIsLoading(false); // Hide loader
+        setIsLoading(false);
       });
   };
 
@@ -85,12 +85,12 @@ const ViewJobs = () => {
       qualification: jobData.qualification,
       minimumSalary: jobData.minimum_salary,
       maximumSalary: jobData.maximum_salary,
-      salaryVisibility: jobData.salary_visibility || "HIDE", // Capture salary visibility
-      status: jobData.status || "ACTIVE", // Capture job status
+      salaryVisibility: jobData.salary_visibility || "HIDE",
+      status: jobData.status || "ACTIVE",
       positionType: jobData.positiontype_id === 1 ? "fulltime" : "parttime",
-      disabilityCategories: jobData.disability_ids || [], // Capture disability categories
+      disabilityCategories: jobData.disability_ids || [],
     });
-    setSelectedDisabilityCategories(jobData.disability_ids || []); // Initialize the selected disabilities
+    setSelectedDisabilityCategories(jobData.disability_ids || []);
     setIsUpdateModalOpen(true);
   };
 
@@ -119,21 +119,21 @@ const ViewJobs = () => {
         "Content-Type": "application/json",
       },
       data: {
-        position_name: jobUpdate.jobName, // Match the backend field naming convention
+        position_name: jobUpdate.jobName,
         description: jobUpdate.description,
         qualification: jobUpdate.qualification,
-        requirement: jobUpdate.requirements, // Ensure the key matches the state
-        minimum_salary: jobUpdate.minimumSalary, // Match backend naming
-        maximum_salary: jobUpdate.maximumSalary, // Match backend naming
-        salary_visibility: jobUpdate.salaryVisibility, // Correct field naming
-        status: jobUpdate.status, // Make sure this matches your data field naming
+        requirement: jobUpdate.requirements,
+        minimum_salary: jobUpdate.minimumSalary,
+        maximum_salary: jobUpdate.maximumSalary,
+        salary_visibility: jobUpdate.salaryVisibility,
+        status: jobUpdate.status,
         positiontype_id:
           jobUpdate.positionType === "fulltime"
             ? 1
             : jobUpdate.positionType === "parttime"
             ? 2
             : null,
-        disability_ids: selectedDisabilityCategories, // Include selected disabilities
+        disability_ids: selectedDisabilityCategories,
       },
     };
 
@@ -154,8 +154,8 @@ const ViewJobs = () => {
   };
 
   const handleDeleteJobListing = (id) => {
-    setSelectedJobId(id); // Store the selected job ID
-    setIsDeleteModalOpen(true); // Open the delete confirmation modal
+    setSelectedJobId(id);
+    setIsDeleteModalOpen(true);
   };
 
   const confirmDelete = () => {
@@ -168,10 +168,10 @@ const ViewJobs = () => {
         },
       };
 
-      setIsLoading(true); // Show loader during deletion
+      setIsLoading(true);
       axios(config)
         .then(() => {
-          toast.success("Job listing deleted successfully!"); // Success notification
+          toast.success("Job listing deleted successfully!");
           setJobListings((prevListings) =>
             prevListings.filter((job) => job.id !== selectedJobId)
           );
@@ -183,15 +183,15 @@ const ViewJobs = () => {
           toast.error("An error occurred while deleting the job listing.");
         })
         .finally(() => {
-          setIsLoading(false); // Hide loader
+          setIsLoading(false);
         });
 
-      setIsDeleteModalOpen(false); // Close the delete confirmation modal
-      setSelectedJobId(null); // Clear the selected job ID
+      setIsDeleteModalOpen(false);
+      setSelectedJobId(null);
     }
   };
   const toggleDisabilityOptions = () => {
-    setShowDisabilityOptions(!showDisabilityOptions); // Toggle visibility of disability options
+    setShowDisabilityOptions(!showDisabilityOptions);
   };
 
   const confirmLogout = () => {
@@ -214,8 +214,8 @@ const ViewJobs = () => {
   };
 
   const closeDeleteModal = () => {
-    setIsDeleteModalOpen(false); // Close modal
-    setSelectedJobId(null); // Reset the selected job ID
+    setIsDeleteModalOpen(false);
+    setSelectedJobId(null);
   };
 
   const closeUpdateModal = () => {
@@ -269,7 +269,7 @@ const ViewJobs = () => {
           href="/dashc"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
           style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
+            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
           }}
         >
           <span className="material-symbols-outlined text-xl mr-4">
@@ -283,7 +283,7 @@ const ViewJobs = () => {
           href="/dashboard/postjob"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
           style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
+            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
           }}
         >
           <span className="material-symbols-outlined text-xl mr-4">work</span>
@@ -295,7 +295,7 @@ const ViewJobs = () => {
           href="/dashboard/ViewJobs"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
           style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
+            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
           }}
         >
           <span className="material-symbols-outlined text-xl mr-4">list</span>
@@ -323,7 +323,7 @@ const ViewJobs = () => {
       <main className="flex-grow p-4 md:p-8">
         {/* Back Button */}
         <button
-          onClick={() => navigate(-1)} // Go back to the previous page
+          onClick={() => navigate(-1)}
           className="bg-blue-500 text-white px-4 py-2 mb-6 rounded-lg shadow-lg hover:bg-blue-600 transition"
         >
           ← Back
@@ -676,9 +676,9 @@ const ViewJobs = () => {
                     Joblisting Status <span className="text-red-500">*</span>
                   </label>
                   <select
-                    name="status" // Ensure 'name' matches the jobUpdate field
-                    value={jobUpdate.status} // Ensure this reflects the state field 'status'
-                    onChange={handleChange} // Handle change correctly
+                    name="status"
+                    value={jobUpdate.status}
+                    onChange={handleChange}
                     className="p-2 w-full border-2 border-blue-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                     required
                   >

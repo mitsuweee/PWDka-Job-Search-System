@@ -52,7 +52,7 @@ const ViewApplicants = () => {
         const fetchedJobApplicants = await Promise.all(
           response.data.data.map((applicant) => ({
             id: applicant.id,
-            fullName: `${applicant.first_name} ${applicant.middle_initial}. ${applicant.last_name}`, // Constructing full name
+            fullName: `${applicant.first_name} ${applicant.middle_initial}. ${applicant.last_name}`,
             email: applicant.email,
             resume: applicant.resume,
             jobAppliedFor: applicant.position_name,
@@ -68,7 +68,7 @@ const ViewApplicants = () => {
               ),
               profilePicture: `data:image/png;base64,${applicant.formal_picture}`,
             },
-            reviewed: false, // Adding the reviewed status
+            reviewed: false,
           }))
         );
 
@@ -131,17 +131,17 @@ const ViewApplicants = () => {
       profilePicture:
         applicant.profile?.profilePicture ||
         applicant.profilePicture ||
-        "/default.png", // Fallback image
+        "/default.png",
     };
 
     setSelectedProfile(profile);
     setIsProfileModalOpen(true);
-    setIsReviewedModalOpen(false); // Close the reviewed modal if open
+    setIsReviewedModalOpen(false);
   };
 
   const goBackToReviewedModal = () => {
-    setIsReviewedModalOpen(true); // Open the reviewed modal
-    setIsProfileModalOpen(false); // Close the profile modal
+    setIsReviewedModalOpen(true);
+    setIsProfileModalOpen(false);
   };
 
   const closeProfileModal = () => {
@@ -155,7 +155,7 @@ const ViewApplicants = () => {
 
     const config = {
       method: "get",
-      url: `/jobapplication/reviewed/${joblistingId}`, // API endpoint to get reviewed applicants
+      url: `/jobapplication/reviewed/${joblistingId}`,
       headers: {
         "Content-Type": "application/json",
       },
@@ -172,8 +172,8 @@ const ViewApplicants = () => {
           })
         );
 
-        setReviewedApplicants(fetchedReviewedApplicants); // Set reviewed applicants with full names
-        setIsReviewedModalOpen(true); // Open the modal after data is loaded
+        setReviewedApplicants(fetchedReviewedApplicants);
+        setIsReviewedModalOpen(true);
         toast.success("Reviewed applicants loaded successfully!");
       })
       .catch((error) => {
@@ -257,7 +257,7 @@ const ViewApplicants = () => {
           href="/dashc"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
           style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
+            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
           }}
         >
           <span className="material-symbols-outlined text-xl mr-4">
@@ -271,7 +271,7 @@ const ViewApplicants = () => {
           href="/dashboard/postjob"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
           style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
+            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
           }}
         >
           <span className="material-symbols-outlined text-xl mr-4">work</span>
@@ -283,7 +283,7 @@ const ViewApplicants = () => {
           href="/dashboard/ViewJobs"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
           style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)", // Blue-ish shadow
+            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
           }}
         >
           <span className="material-symbols-outlined text-xl mr-4">list</span>
