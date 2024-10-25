@@ -169,8 +169,10 @@ const AdminVerifyUsers = () => {
             boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
           }}
         >
-          <span className="material-symbols-outlined text-xl mr-4">home</span>
-          <span className="flex-grow text-center">Home</span>
+          <span className="material-symbols-outlined text-xl mr-4">
+            dashboard
+          </span>
+          <span className="flex-grow text-center">Dashboard</span>
         </a>
 
         <a
