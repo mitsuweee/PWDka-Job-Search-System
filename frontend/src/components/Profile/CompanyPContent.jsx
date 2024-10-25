@@ -584,6 +584,23 @@ const CompanyProf = () => {
                     name="contactNumber"
                     value={company.contactNumber}
                     onChange={handleChange}
+                    pattern="[0-9]{10,11}"
+                    onKeyDown={(e) => {
+                      // Allow only numbers and basic navigation keys
+                      const allowedKeys = [
+                        "Backspace",
+                        "Delete",
+                        "ArrowLeft",
+                        "ArrowRight",
+                        "Tab",
+                      ];
+                      if (
+                        !/[0-9]/.test(e.key) &&
+                        !allowedKeys.includes(e.key)
+                      ) {
+                        e.preventDefault();
+                      }
+                    }}
                     className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
                   />
                 </div>

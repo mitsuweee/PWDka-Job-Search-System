@@ -320,7 +320,6 @@ const Signup = () => {
               type="text"
               id="address"
               name="address"
-              placeholder="No Special Characters"
               value={userFormValues.address}
               onChange={handleInputChange}
               onKeyDown={(e) => {
@@ -371,6 +370,17 @@ const Signup = () => {
               value={userFormValues.contactNumber}
               onChange={handleInputChange}
               pattern="[0-9]{10,11}"
+              onKeyDown={(e) => {
+                if (
+                  !/[0-9]/.test(e.key) &&
+                  e.key !== "Backspace" &&
+                  e.key !== "Delete" &&
+                  e.key !== "ArrowLeft" &&
+                  e.key !== "ArrowRight"
+                ) {
+                  e.preventDefault();
+                }
+              }}
               className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
               required
             />
@@ -512,6 +522,20 @@ const Signup = () => {
             placeholder="00-0000-000-0000000"
             value={userFormValues.pwdID}
             onChange={handleInputChange}
+            pattern="[0-9]{2}-[0-9]{4}-[0-9]{3}-[0-9]{7}"
+            onKeyDown={(e) => {
+              const allowedKeys = [
+                "Backspace",
+                "Delete",
+                "ArrowLeft",
+                "ArrowRight",
+                "Tab",
+                "-",
+              ];
+              if (!/[0-9]/.test(e.key) && !allowedKeys.includes(e.key)) {
+                e.preventDefault();
+              }
+            }}
             className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
             required
           />
@@ -689,11 +713,9 @@ const Signup = () => {
             type="text"
             id="companyAddress"
             name="companyAddress"
-            placeholder="No Special Characters"
             value={companyFormValues.companyAddress}
             onChange={handleInputChange}
             onKeyDown={(e) => {
-              // Allow only letters, numbers, and spaces
               const regex = /^[a-zA-Z0-9\s]*$/;
               if (
                 !regex.test(e.key) &&
@@ -721,7 +743,20 @@ const Signup = () => {
             name="companyContactNumber"
             value={companyFormValues.companyContactNumber}
             onChange={handleInputChange}
-            pattern="[0-9]{10,11}" // Optional: Ensures 10-11 digits
+            pattern="[0-9]{10,11}"
+            onKeyDown={(e) => {
+              // Allow numbers and basic navigation keys
+              const allowedKeys = [
+                "Backspace",
+                "Delete",
+                "ArrowLeft",
+                "ArrowRight",
+                "Tab",
+              ];
+              if (!/[0-9]/.test(e.key) && !allowedKeys.includes(e.key)) {
+                e.preventDefault();
+              }
+            }}
             className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
             required
           />
