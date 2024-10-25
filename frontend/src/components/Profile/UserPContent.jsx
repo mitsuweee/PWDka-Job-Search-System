@@ -219,6 +219,41 @@ const UserProf = () => {
     }, 2000);
   };
 
+  const [newEmail, setNewEmail] = useState("");
+  const [currentPasswordForEmail, setCurrentPasswordForEmail] = useState("");
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
+
+  const handleUserEmailUpdate = () => {
+    const userId = localStorage.getItem("Id");
+
+    const data = JSON.stringify({
+      email: newEmail,
+      password: currentPasswordForEmail,
+    });
+
+    const config = {
+      method: "put",
+      url: `/user/update/email/${userId}`,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
+
+    axios(config)
+      .then(function () {
+        toast.success("Email updated successfully.");
+        setIsEmailModalOpen(false);
+        window.location.reload();
+      })
+      .catch(function (error) {
+        // Display the specific error message from the backend
+        const errorMessage =
+          error.response?.data?.message || "Failed to update email.";
+        toast.error(errorMessage);
+      });
+  };
+
   const handleGoBack = () => {
     navigate(-1);
   };
@@ -510,126 +545,285 @@ const UserProf = () => {
         </div>
       )}
 
-      {/* Edit Profile & Change Password Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
-            <div className="flex justify-between items-center border-b pb-3 mb-4">
-              <h2 className="text-2xl font-semibold text-gray-800">
-                {isEditing ? "Edit Profile" : "Change Password"}
-              </h2>
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="text-gray-500 hover:text-gray-800 transition duration-200"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  stroke="currentColor"
-                  className="w-6 h-6"
+      <div>
+        {/* Modal for Profile Update and Password Change */}
+        {isModalOpen && (
+          <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
+              <div className="flex justify-between items-center border-b pb-3 mb-4">
+                <h2 className="text-2xl font-semibold text-gray-800">
+                  {isEditing ? "Edit Profile" : "Change Password"}
+                </h2>
+                <button
+                  onClick={() => setIsModalOpen(false)}
+                  className="text-gray-500 hover:text-gray-800 transition duration-200"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-            </div>
-            <div className="flex justify-between mb-4">
-              <button
-                className={`py-2 px-4 ${
-                  isEditing
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-200 text-gray-700"
-                } rounded-lg`}
-                onClick={() => setIsEditing(true)}
-              >
-                Edit Profile
-              </button>
-              <button
-                className={`py-2 px-4 ${
-                  !isEditing
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-200 text-gray-700"
-                } rounded-lg`}
-                onClick={() => setIsEditing(false)}
-              >
-                Change Password
-              </button>
-            </div>
-
-            {isEditing ? (
-              <div className="grid grid-cols-1 gap-6">
-                <div>
-                  <label className="block text-gray-600 font-semibold">
-                    Address:
-                  </label>
-                  <input
-                    type="text"
-                    name="address"
-                    value={user.address}
-                    onChange={handleChange}
-                    onKeyDown={(e) => {
-                      // Allow only letters, numbers, and spaces
-                      const regex = /^[a-zA-Z0-9\s]*$/;
-                      if (
-                        !regex.test(e.key) &&
-                        e.key !== "Backspace" &&
-                        e.key !== "Delete"
-                      ) {
-                        e.preventDefault();
-                      }
-                    }}
-                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-600 font-semibold">
-                    City:
-                  </label>
-                  <input
-                    type="text"
-                    name="city"
-                    value={user.city}
-                    onChange={handleChange}
-                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-600 font-semibold">
-                    Contact Number:
-                  </label>
-                  <input
-                    type="text"
-                    name="contactNumber"
-                    value={user.contactNumber}
-                    onChange={handleChange}
-                    pattern="[0-9]{10,11}"
-                    onKeyDown={(e) => {
-                      // Allow numbers and basic navigation keys
-                      const allowedKeys = [
-                        "Backspace",
-                        "Delete",
-                        "ArrowLeft",
-                        "ArrowRight",
-                        "Tab",
-                      ];
-                      if (
-                        !/[0-9]/.test(e.key) &&
-                        !allowedKeys.includes(e.key)
-                      ) {
-                        e.preventDefault();
-                      }
-                    }}
-                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                  />
-                </div>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2}
+                    stroke="currentColor"
+                    className="w-6 h-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
               </div>
-            ) : (
+              <div className="flex justify-between mb-4">
+                <button
+                  className={`py-2 px-4 ${
+                    isEditing
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-200 text-gray-700"
+                  } rounded-lg`}
+                  onClick={() => setIsEditing(true)}
+                >
+                  Edit Profile
+                </button>
+
+                <button
+                  className="py-2 px-4 bg-blue-500 text-white rounded-lg"
+                  onClick={() => setIsEmailModalOpen(true)}
+                >
+                  Change Email
+                </button>
+
+                <button
+                  className={`py-2 px-4 ${
+                    !isEditing
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-200 text-gray-700"
+                  } rounded-lg`}
+                  onClick={() => setIsEditing(false)}
+                >
+                  Change Password
+                </button>
+              </div>
+
+              {isEditing ? (
+                <div className="grid grid-cols-1 gap-6">
+                  <div>
+                    <label className="block text-gray-600 font-semibold">
+                      Address:
+                    </label>
+                    <input
+                      type="text"
+                      name="address"
+                      value={user.address}
+                      onChange={handleChange}
+                      onKeyDown={(e) => {
+                        const regex = /^[a-zA-Z0-9\s]*$/;
+                        if (
+                          !regex.test(e.key) &&
+                          e.key !== "Backspace" &&
+                          e.key !== "Delete"
+                        ) {
+                          e.preventDefault();
+                        }
+                      }}
+                      className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-600 font-semibold">
+                      City:
+                    </label>
+                    <input
+                      type="text"
+                      name="city"
+                      value={user.city}
+                      onChange={handleChange}
+                      className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-600 font-semibold">
+                      Contact Number:
+                    </label>
+                    <input
+                      type="text"
+                      name="contactNumber"
+                      value={user.contactNumber}
+                      onChange={handleChange}
+                      pattern="[0-9]{10,11}"
+                      onKeyDown={(e) => {
+                        const allowedKeys = [
+                          "Backspace",
+                          "Delete",
+                          "ArrowLeft",
+                          "ArrowRight",
+                          "Tab",
+                        ];
+                        if (
+                          !/[0-9]/.test(e.key) &&
+                          !allowedKeys.includes(e.key)
+                        ) {
+                          e.preventDefault();
+                        }
+                      }}
+                      className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 gap-6">
+                  <div>
+                    <label className="block text-gray-600 font-semibold">
+                      Current Password:
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={
+                          passwordVisibility.currentPassword
+                            ? "text"
+                            : "password"
+                        }
+                        name="currentPassword"
+                        value={passwords.currentPassword}
+                        onChange={handlePasswordChange}
+                        className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                      />
+                      <button
+                        type="button"
+                        className="absolute inset-y-0 right-3 flex items-center"
+                        onClick={() =>
+                          togglePasswordVisibility("currentPassword")
+                        }
+                      >
+                        <span className="material-symbols-outlined">
+                          {passwordVisibility.currentPassword
+                            ? "visibility"
+                            : "visibility_off"}
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-gray-600 font-semibold">
+                      New Password:
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={
+                          passwordVisibility.newPassword ? "text" : "password"
+                        }
+                        name="newPassword"
+                        value={passwords.newPassword}
+                        onChange={handlePasswordChange}
+                        className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                      />
+                      <button
+                        type="button"
+                        className="absolute inset-y-0 right-3 flex items-center"
+                        onClick={() => togglePasswordVisibility("newPassword")}
+                      >
+                        <span className="material-symbols-outlined">
+                          {passwordVisibility.newPassword
+                            ? "visibility"
+                            : "visibility_off"}
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-gray-600 font-semibold">
+                      Confirm New Password:
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={
+                          passwordVisibility.confirmNewPassword
+                            ? "text"
+                            : "password"
+                        }
+                        name="confirmNewPassword"
+                        value={passwords.confirmNewPassword}
+                        onChange={handlePasswordChange}
+                        className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                      />
+                      <button
+                        type="button"
+                        className="absolute inset-y-0 right-3 flex items-center"
+                        onClick={() =>
+                          togglePasswordVisibility("confirmNewPassword")
+                        }
+                      >
+                        <span className="material-symbols-outlined">
+                          {passwordVisibility.confirmNewPassword
+                            ? "visibility"
+                            : "visibility_off"}
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div className="flex justify-end mt-6 space-x-4">
+                <button
+                  onClick={() => setIsModalOpen(false)}
+                  className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-200"
+                >
+                  Back
+                </button>
+                <button
+                  onClick={isEditing ? handleUpdate : handlePasswordUpdate}
+                  className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
+                >
+                  {isEditing ? "Update Profile" : "Save New Password"}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Modal for Changing Email */}
+        {isEmailModalOpen && (
+          <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
+              <div className="flex justify-between items-center border-b pb-3 mb-4">
+                <h2 className="text-2xl font-semibold text-gray-800">
+                  Change Email
+                </h2>
+                <button
+                  onClick={() => setIsEmailModalOpen(false)}
+                  className="text-gray-500 hover:text-gray-800 transition duration-200"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2}
+                    stroke="currentColor"
+                    className="w-6 h-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
+
               <div className="grid grid-cols-1 gap-6">
+                {/* Email and Password fields */}
+                <div>
+                  <label className="block text-gray-600 font-semibold">
+                    New Email:
+                  </label>
+                  <input
+                    type="email"
+                    value={newEmail}
+                    onChange={(e) => setNewEmail(e.target.value)}
+                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                  />
+                </div>
                 <div>
                   <label className="block text-gray-600 font-semibold">
                     Current Password:
@@ -639,16 +833,20 @@ const UserProf = () => {
                       type={
                         passwordVisibility.currentPassword ? "text" : "password"
                       }
-                      name="currentPassword"
-                      value={passwords.currentPassword}
-                      onChange={handlePasswordChange}
+                      value={currentPasswordForEmail}
+                      onChange={(e) =>
+                        setCurrentPasswordForEmail(e.target.value)
+                      }
                       className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
                     />
                     <button
                       type="button"
                       className="absolute inset-y-0 right-3 flex items-center"
                       onClick={() =>
-                        togglePasswordVisibility("currentPassword")
+                        setPasswordVisibility({
+                          ...passwordVisibility,
+                          currentPassword: !passwordVisibility.currentPassword,
+                        })
                       }
                     >
                       <span className="material-symbols-outlined">
@@ -659,84 +857,26 @@ const UserProf = () => {
                     </button>
                   </div>
                 </div>
-                <div>
-                  <label className="block text-gray-600 font-semibold">
-                    New Password:
-                  </label>
-                  <div className="relative">
-                    <input
-                      type={
-                        passwordVisibility.newPassword ? "text" : "password"
-                      }
-                      name="newPassword"
-                      value={passwords.newPassword}
-                      onChange={handlePasswordChange}
-                      className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                    />
-                    <button
-                      type="button"
-                      className="absolute inset-y-0 right-3 flex items-center"
-                      onClick={() => togglePasswordVisibility("newPassword")}
-                    >
-                      <span className="material-symbols-outlined">
-                        {passwordVisibility.newPassword
-                          ? "visibility"
-                          : "visibility_off"}
-                      </span>
-                    </button>
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-gray-600 font-semibold">
-                    Confirm New Password:
-                  </label>
-                  <div className="relative">
-                    <input
-                      type={
-                        passwordVisibility.confirmNewPassword
-                          ? "text"
-                          : "password"
-                      }
-                      name="confirmNewPassword"
-                      value={passwords.confirmNewPassword}
-                      onChange={handlePasswordChange}
-                      className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                    />
-                    <button
-                      type="button"
-                      className="absolute inset-y-0 right-3 flex items-center"
-                      onClick={() =>
-                        togglePasswordVisibility("confirmNewPassword")
-                      }
-                    >
-                      <span className="material-symbols-outlined">
-                        {passwordVisibility.confirmNewPassword
-                          ? "visibility"
-                          : "visibility_off"}
-                      </span>
-                    </button>
-                  </div>
-                </div>
               </div>
-            )}
 
-            <div className="flex justify-end mt-6 space-x-4">
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-200"
-              >
-                Back
-              </button>
-              <button
-                onClick={isEditing ? handleUpdate : handlePasswordUpdate}
-                className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
-              >
-                {isEditing ? "Update Profile" : "Save New Password"}
-              </button>
+              <div className="flex justify-end mt-6 space-x-4">
+                <button
+                  onClick={() => setIsEmailModalOpen(false)}
+                  className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-200"
+                >
+                  Back
+                </button>
+                <button
+                  onClick={handleUserEmailUpdate}
+                  className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
+                >
+                  Save New Email
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
