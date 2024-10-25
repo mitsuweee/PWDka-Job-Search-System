@@ -447,7 +447,7 @@ const updateCompanyEmail = async (req, res, next) => {
     try {
       // Check if the company exists
       const company = await knex("company")
-        .select(id, email, password)
+        .select("id", "email", "password")
         .where({ id })
         .first();
       if (!company) {
