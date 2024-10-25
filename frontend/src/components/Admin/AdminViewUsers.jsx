@@ -13,6 +13,8 @@ const AdminViewUsers = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortOrder, setSortOrder] = useState("A-Z");
   const usersPerPage = 10;
   const navigate = useNavigate();
 
@@ -64,23 +66,21 @@ const AdminViewUsers = () => {
       });
   };
 
-  const formatUserData = (userData) => {
-    return {
-      id: userData.id,
-      fullName: `${userData.first_name} ${
-        userData.middle_initial ? userData.middle_initial + ". " : ""
-      }${userData.last_name}`,
-      disability: userData.type,
-      address: userData.address,
-      city: userData.city,
-      birthdate: new Date(userData.birth_date).toLocaleDateString("en-US"),
-      contactNumber: userData.contact_number,
-      email: userData.email,
-      profilePicture: `data:image/png;base64,${userData.formal_picture}`,
-      pictureWithId: `data:image/png;base64,${userData.picture_with_id}`,
-      pictureOfPwdId: `data:image/png;base64,${userData.picture_of_pwd_id}`,
-    };
-  };
+  const formatUserData = (userData) => ({
+    id: userData.id,
+    fullName: `${userData.first_name} ${
+      userData.middle_initial ? userData.middle_initial + ". " : ""
+    }${userData.last_name}`,
+    disability: userData.type,
+    address: userData.address,
+    city: userData.city,
+    birthdate: new Date(userData.birth_date).toLocaleDateString("en-US"),
+    contactNumber: userData.contact_number,
+    email: userData.email,
+    profilePicture: `data:image/png;base64,${userData.formal_picture}`,
+    pictureWithId: `data:image/png;base64,${userData.picture_with_id}`,
+    pictureOfPwdId: `data:image/png;base64,${userData.picture_of_pwd_id}`,
+  });
 
   const handleDeleteUser = (userId) => {
     setDeleteUserId(userId);
@@ -116,13 +116,9 @@ const AdminViewUsers = () => {
       });
   };
 
-  const closeDeleteModal = () => {
-    setIsDeleteModalOpen(false);
-  };
+  const closeDeleteModal = () => setIsDeleteModalOpen(false);
 
-  const handleLogout = () => {
-    setIsLogoutModalOpen(true);
-  };
+  const handleLogout = () => setIsLogoutModalOpen(true);
 
   const confirmLogout = () => {
     localStorage.removeItem("Id");
@@ -133,14 +129,24 @@ const AdminViewUsers = () => {
     setIsLogoutModalOpen(false);
   };
 
-  const closeLogoutModal = () => {
-    setIsLogoutModalOpen(false);
-  };
+  const closeLogoutModal = () => setIsLogoutModalOpen(false);
 
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
-  const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
-  const totalPages = Math.ceil(users.length / usersPerPage);
+  const filteredUsers = users
+    .filter((user) =>
+      user.full_name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .sort((a, b) => {
+      if (sortOrder === "A-Z") return a.full_name.localeCompare(b.full_name);
+      if (sortOrder === "Z-A") return b.full_name.localeCompare(a.full_name);
+      if (sortOrder === "Newest")
+        return new Date(b.created_at) - new Date(a.created_at);
+      return new Date(a.created_at) - new Date(b.created_at);
+    });
+
+  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
+  const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -254,6 +260,26 @@ const AdminViewUsers = () => {
           View All Verified Users
         </h1>
 
+        <div className="flex items-center justify-center mt-6 mb-4 p-4 bg-white rounded-lg shadow-md space-x-4">
+          <input
+            type="text"
+            placeholder="Search"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-1/3 px-4 py-2 border border-gray-300 bg-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
+          />
+          <select
+            value={sortOrder}
+            onChange={(e) => setSortOrder(e.target.value)}
+            className="px-3 py-2 w-[130px] border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+          >
+            <option value="A-Z">A-Z</option>
+            <option value="Z-A">Z-A</option>
+            <option value="Newest">Newest</option>
+            <option value="Oldest">Oldest</option>
+          </select>
+        </div>
+
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white mt-4 rounded-lg shadow-lg">
             <thead>
@@ -268,16 +294,7 @@ const AdminViewUsers = () => {
               {currentUsers.map((user) => (
                 <tr key={user.id} className="border-b hover:bg-gray-100">
                   <td className="py-3 px-6">{user.id}</td>
-                  <td className="py-3 px-6">
-                    {user.full_name
-                      .split(" ")
-                      .map(
-                        (word) =>
-                          word.charAt(0).toUpperCase() +
-                          word.slice(1).toLowerCase()
-                      )
-                      .join(" ")}
-                  </td>
+                  <td className="py-3 px-6">{user.full_name}</td>
                   <td className="py-3 px-6">{user.type}</td>
                   <td className="py-3 px-6 text-center">
                     <div className="flex justify-center space-x-2">
@@ -309,19 +326,7 @@ const AdminViewUsers = () => {
                 className="inline-flex size-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900"
                 disabled={currentPage === 1}
               >
-                <span className="sr-only">Prev Page</span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-3 w-3"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M12.707 5.293a1 1 010 1.414L9.414 10l3.293 3.293a1 1 01-1.414 1.414l-4-4a1 1 010-1.414l4-4a1 1 011.414 0z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+                Prev
               </button>
             </li>
 
@@ -348,19 +353,7 @@ const AdminViewUsers = () => {
                 className="inline-flex size-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900"
                 disabled={currentPage === totalPages}
               >
-                <span className="sr-only">Next Page</span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-3 w-3"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M7.293 14.707a1 1 010-1.414L10.586 10 7.293 6.707a1 1 011.414-1.414l4 4a1 1 010 1.414l-4-4a1 1 01-1.414 0z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+                Next
               </button>
             </li>
           </ol>

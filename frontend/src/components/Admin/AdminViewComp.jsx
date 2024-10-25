@@ -12,6 +12,8 @@ const AdminViewComp = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortOrder, setSortOrder] = useState("A-Z");
   const companiesPerPage = 10;
   const navigate = useNavigate();
 
@@ -63,18 +65,16 @@ const AdminViewComp = () => {
       });
   };
 
-  const formatCompanyData = (companyData) => {
-    return {
-      id: companyData.id,
-      companyName: companyData.name,
-      address: companyData.address,
-      city: companyData.city,
-      description: companyData.description,
-      contactNumber: companyData.contact_number,
-      companyEmail: companyData.email,
-      companyProfile: `data:image/png;base64,${companyData.profile_picture}`,
-    };
-  };
+  const formatCompanyData = (companyData) => ({
+    id: companyData.id,
+    companyName: companyData.name,
+    address: companyData.address,
+    city: companyData.city,
+    description: companyData.description,
+    contactNumber: companyData.contact_number,
+    companyEmail: companyData.email,
+    companyProfile: `data:image/png;base64,${companyData.profile_picture}`,
+  });
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -104,11 +104,24 @@ const AdminViewComp = () => {
 
   const indexOfLastCompany = currentPage * companiesPerPage;
   const indexOfFirstCompany = indexOfLastCompany - companiesPerPage;
-  const currentCompanies = companies.slice(
+
+  const filteredCompanies = companies
+    .filter((company) =>
+      company.name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .sort((a, b) => {
+      if (sortOrder === "A-Z") return a.name.localeCompare(b.name);
+      if (sortOrder === "Z-A") return b.name.localeCompare(a.name);
+      if (sortOrder === "Newest")
+        return new Date(b.created_at) - new Date(a.created_at);
+      return new Date(a.created_at) - new Date(b.created_at);
+    });
+
+  const currentCompanies = filteredCompanies.slice(
     indexOfFirstCompany,
     indexOfLastCompany
   );
-  const totalPages = Math.ceil(companies.length / companiesPerPage);
+  const totalPages = Math.ceil(filteredCompanies.length / companiesPerPage);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -220,6 +233,27 @@ const AdminViewComp = () => {
       <main className="flex-grow p-8">
         <h1 className="text-xl font-bold text-gray-700">View All Companies</h1>
 
+        {/* Search and Filter Bar */}
+        <div className="flex items-center justify-center mt-6 mb-4 p-4 bg-white rounded-lg shadow-md space-x-4">
+          <input
+            type="text"
+            placeholder="Search companies"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-1/3 px-4 py-2 border border-gray-300 bg-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
+          />
+          <select
+            value={sortOrder}
+            onChange={(e) => setSortOrder(e.target.value)}
+            className="px-3 py-2 w-[130px] border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+          >
+            <option value="A-Z">A-Z</option>
+            <option value="Z-A">Z-A</option>
+            <option value="Newest">Newest</option>
+            <option value="Oldest">Oldest</option>
+          </select>
+        </div>
+
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white mt-4 rounded-lg shadow-lg">
             <thead>
@@ -265,19 +299,7 @@ const AdminViewComp = () => {
                 className="inline-flex size-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900"
                 disabled={currentPage === 1}
               >
-                <span className="sr-only">Prev Page</span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-3 w-3"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M12.707 5.293a1 1 010 1.414L9.414 10l3.293 3.293a1 1 01-1.414 1.414l-4-4a1 1 010-1.414l4-4a1 1 011.414 0z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+                Prev
               </button>
             </li>
 
@@ -304,19 +326,7 @@ const AdminViewComp = () => {
                 className="inline-flex size-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900"
                 disabled={currentPage === totalPages}
               >
-                <span className="sr-only">Next Page</span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-3 w-3"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M7.293 14.707a1 1 010-1.414L10.586 10 7.293 6.707a1 1 011.414-1.414l4 4a1 1 010 1.414l-4-4a1 1 01-1.414 0z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+                Next
               </button>
             </li>
           </ol>
@@ -325,7 +335,7 @@ const AdminViewComp = () => {
 
       {isModalOpen && company && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg p-6 w-[600px] shadow-lg hover:shadow-2xl transition-shadow duration-300 max-h-[90vh] overflow-y-auto ">
+          <div className="bg-white rounded-lg p-6 w-[600px] shadow-lg hover:shadow-2xl transition-shadow duration-300 max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-xl font-bold">Company Details</h3>
               <button
