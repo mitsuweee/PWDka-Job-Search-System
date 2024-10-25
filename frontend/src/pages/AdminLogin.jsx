@@ -1,20 +1,15 @@
-import React from 'react'
-import AdminLogin from '../components/Admin/AdminLoginCont'
+import React from "react";
+import AdminLogin from "../components/Admin/AdminLoginCont";
 
-const AdminLog= () => {
+const AdminLog = () => {
   return (
     <div>
       <div className="bg-[#E3EDF7] min-h-screen flex flex-col">
-      <header>
-        {/* <Navbar /> */}
-      </header>
-        <AdminLogin/>
-      <footer>
-        {/* <Footer /> */}
-      </footer>
+        <header>{/* <Navbar /> */}</header>
+        <AdminLogin />
+      </div>
     </div>
-    </div>
-  )
-}
+  );
+};
 
-export default AdminLog
+export default AdminLog;

@@ -7,9 +7,6 @@ const AdminVerUsers = () => {
   return (
     <div className="bg-[#E3EDF7] min-h-screen flex flex-col">
       <AdminVerifyUsers />
-      <footer>
-        <Footer />
-      </footer>
     </div>
   );
 };

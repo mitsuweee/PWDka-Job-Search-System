@@ -6,9 +6,6 @@ const AdminDelCompss = () => {
   return (
     <div className="bg-[#E3EDF7] min-h-screen flex flex-col">
       <AdminDeleteComp />
-      <footer>
-        <Footer />
-      </footer>
     </div>
   );
 };

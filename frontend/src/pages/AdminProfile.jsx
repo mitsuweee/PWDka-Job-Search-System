@@ -7,9 +7,6 @@ const AdminProfile = () => {
     <div className="bg-[#E3EDF7] min-h-screen flex flex-col">
       <header></header>
       <AdminProf />
-      <footer>
-        <Footer />
-      </footer>
     </div>
   );
 };

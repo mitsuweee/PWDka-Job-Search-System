@@ -6,9 +6,6 @@ const AdminViewJobss = () => {
   return (
     <div className="bg-[#E3EDF7] min-h-screen flex flex-col">
       <AdminViewJobs />
-      <footer>
-        <Footer />
-      </footer>
     </div>
   );
 };
