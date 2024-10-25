@@ -325,34 +325,37 @@ const AdminViewJobs = () => {
             </div>
 
             {/* First Div: Company Details */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-gray-100 p-4 rounded-lg mb-4">
-              <div>
-                <strong>Company:</strong>
-                <p className="shadow-lg p-1">{job.companyName}</p>
+            <div className="grid gap-4 bg-gray-100 p-4 rounded-lg">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <strong>Company:</strong>
+                  <p className="shadow-lg p-1">{job.companyName}</p>
+                </div>
+                <div>
+                  <strong>Job Title:</strong>
+                  <p className="shadow-lg p-1">{job.jobName}</p>
+                </div>
               </div>
               <div>
-                <strong>Job Title:</strong>
-                <p className="shadow-lg p-1">{job.jobName}</p>
+                <div className="w-full">
+                  <strong>Description:</strong>
+                  <p className="shadow-lg p-1">
+                    {job.description
+                      .split(".")
+                      .map(
+                        (sentence) =>
+                          sentence.trim().charAt(0).toUpperCase() +
+                          sentence.trim().slice(1).toLowerCase() +
+                          "."
+                      )
+                      .join(" ")}
+                  </p>
+                </div>
               </div>
-              <div className="col-span-2">
-                <strong>Description:</strong>
-                <p className="shadow-lg p-1">
-                  {job.description
-                    .split(".")
-                    .map(
-                      (sentence) =>
-                        sentence.trim().charAt(0).toUpperCase() +
-                        sentence.trim().slice(1).toLowerCase() +
-                        "."
-                    )
-                    .join(" ")}
-                </p>
-              </div>
-            </div>
 
-            {/* Second Div: Job Information */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-gray-100 p-4 rounded-lg mb-4">
-              <div>
+              {/* Second Div: Job Information */}
+
+              <div className="w-full">
                 <strong>Requirements:</strong>
                 <p className="shadow-lg p-1">
                   {job.requirements
@@ -365,7 +368,7 @@ const AdminViewJobs = () => {
                     .join(", ")}
                 </p>
               </div>
-              <div>
+              <div className="w-full">
                 <strong>Qualification:</strong>
                 <p className="shadow-lg p-1">
                   {job.qualification
@@ -378,34 +381,35 @@ const AdminViewJobs = () => {
                     .join(", ")}
                 </p>
               </div>
-              <div>
-                <strong>Salary:</strong>
-                <p className="shadow-lg p-1">
-                  ₱ {job.minimumSalary} - ₱ {job.maximumSalary}
-                </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <strong>Salary:</strong>
+                  <p className="shadow-lg p-1">
+                    ₱ {job.minimumSalary} - ₱ {job.maximumSalary}
+                  </p>
+                </div>
+                <div>
+                  <strong>Position Type:</strong>
+                  <p className="shadow-lg p-1">
+                    {job.positionType
+                      .split("-")
+                      .map(
+                        (part) =>
+                          part.charAt(0).toUpperCase() + part.slice(1).trim()
+                      )
+                      .join(" - ")}
+                  </p>
+                </div>
               </div>
-              <div>
-                <strong>Position Type:</strong>
-                <p className="shadow-lg p-1">
-                  {job.positionType
-                    .split("-")
-                    .map(
-                      (part) =>
-                        part.charAt(0).toUpperCase() + part.slice(1).trim()
-                    )
-                    .join(" - ")}
-                </p>
+
+              {/* Third Div: Additional Information */}
+              <div className="w-full">
+                <div>
+                  <strong>Disabilities:</strong>
+                  <p className="shadow-lg p-1">{job.disabilityTypes}</p>
+                </div>
               </div>
             </div>
-
-            {/* Third Div: Additional Information */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-gray-100 p-4 rounded-lg">
-              <div>
-                <strong>Disabilities:</strong>
-                <p className="shadow-lg p-1">{job.disabilityTypes}</p>
-              </div>
-            </div>
-
             {/* Buttons */}
             <div className="flex justify-end mt-4 space-x-2">
               <button

@@ -375,29 +375,31 @@ const AdminVerifyComp = () => {
                     className="w-32 h-32 rounded-full border-2 border-gray-300 hover:shadow-lg transition-shadow duration-300 object-cover"
                   />
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-gray-100 p-4 rounded-lg">
-                  <div>
-                    <strong>Company Name:</strong>
-                    <p className="shadow-lg p-1">
-                      {selectedCompany.companyName}
-                    </p>
+                <div className="grid gap-4 bg-gray-100 p-4 rounded-lg">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <strong>Company Name:</strong>
+                      <p className="shadow-lg p-1">
+                        {selectedCompany.companyName}
+                      </p>
+                    </div>
+                    <div>
+                      <strong>City:</strong>
+                      <p className="shadow-lg p-1">
+                        {selectedCompany.city
+                          ? selectedCompany.city
+                              .split(" ")
+                              .map(
+                                (word) =>
+                                  word.charAt(0).toUpperCase() +
+                                  word.slice(1).toLowerCase()
+                              )
+                              .join(" ")
+                          : ""}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <strong>City:</strong>
-                    <p className="shadow-lg p-1">
-                      {selectedCompany.city
-                        ? selectedCompany.city
-                            .split(" ")
-                            .map(
-                              (word) =>
-                                word.charAt(0).toUpperCase() +
-                                word.slice(1).toLowerCase()
-                            )
-                            .join(" ")
-                        : ""}
-                    </p>
-                  </div>
-                  <div>
+                  <div className="w-full">
                     <strong>Company Description:</strong>
                     <p className="shadow-lg p-1">
                       {selectedCompany.companyDescription
@@ -412,7 +414,7 @@ const AdminVerifyComp = () => {
                         : ""}
                     </p>
                   </div>
-                  <div>
+                  <div className="w-full">
                     <strong>Address:</strong>
                     <p className="shadow-lg p-1">
                       {selectedCompany.address
@@ -427,17 +429,19 @@ const AdminVerifyComp = () => {
                         : ""}
                     </p>
                   </div>
-                  <div>
-                    <strong>Contact Number:</strong>
-                    <p className="shadow-lg p-1">
-                      {selectedCompany.contactNumber}
-                    </p>
-                  </div>
-                  <div>
-                    <strong>Email:</strong>
-                    <p className="shadow-lg p-1">
-                      {selectedCompany.companyEmail}
-                    </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <strong>Contact Number:</strong>
+                      <p className="shadow-lg p-1">
+                        {selectedCompany.contactNumber}
+                      </p>
+                    </div>
+                    <div>
+                      <strong>Email:</strong>
+                      <p className="shadow-lg p-1">
+                        {selectedCompany.companyEmail}
+                      </p>
+                    </div>
                   </div>
                 </div>
 
