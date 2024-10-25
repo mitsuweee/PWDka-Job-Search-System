@@ -110,7 +110,6 @@ const registerUser = async (req, res, next) => {
     });
   } else {
     try {
-      // Check if ID or Email already exists
       const existingId = await knex("user").where({ id }).first();
       const existingEmail = await knex("user").where({ email }).first();
       const emailInAdmin = await knex("admin").where({ email }).first();
@@ -136,7 +135,6 @@ const registerUser = async (req, res, next) => {
           message: "Email already exists",
         });
       } else {
-        // Check if disability ID exists
         const disability = await knex("disability")
           .where({ type: disability_id })
           .first();
@@ -175,7 +173,7 @@ const registerUser = async (req, res, next) => {
             })
             .png({ quality: 80 })
             .toBuffer();
-          // Insert new user
+
           const hashedPassword = await bcrypt.hash(password, 10);
           await knex("user").insert({
             id,
@@ -403,7 +401,6 @@ const updateUserProfilePicture = async (req, res, next) => {
   }
 };
 
-// Change User Password Function
 const userChangePassword = async (req, res, next) => {
   const id = req.params.id;
   const password = req.body.password;
@@ -475,7 +472,6 @@ const userChangePassword = async (req, res, next) => {
   }
 };
 
-// View User via ID Function
 const viewUserViaId = async (req, res, next) => {
   const id = req.params.id;
 
@@ -512,7 +508,7 @@ const viewUserViaId = async (req, res, next) => {
           message: "ID is Invalid",
         });
       } else {
-        // Convert BLOBs to String for formal_picture, picture_with_id, and picture_of_pwd_id
+        // Convert BLOBs to String
         const user = {
           ...rows[0],
           formal_picture: rows[0].formal_picture

@@ -39,10 +39,10 @@ const checkContactNumber = (str) => {
 };
 const checkMiddleInitial = (str) => {
   if (str === null || str === "") {
-    return true; // Accept null or empty string
+    return true;
   }
   var re = /^[a-zA-Z]$/;
-  return re.test(str); // Only check the regex if str is not null/empty
+  return re.test(str);
 };
 const checkNumbersWithHyphen = (str) => {
   var re = /^[0-9-]+$/;

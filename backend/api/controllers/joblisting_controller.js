@@ -180,7 +180,7 @@ const viewJobListing = async (req, res, next) => {
           message: "Job Listing not found",
         });
       } else {
-        // Convert company_profile_picture BLOB to string for each row
+        // Convert company_profile_picture BLOB to string
         const processedRows = rows.map((row) => ({
           ...row,
           company_profile_picture: row.company_profile_picture
@@ -257,7 +257,6 @@ const viewJobListingViaUserNewestToOldest = async (req, res, next) => {
       } else if (position_type) {
         baseQuery.where("position_type.type", "like", `%${position_type}%`);
       } else {
-        // Retrieve paginated job listings with applied filters
         const rows = await baseQuery
           .select(
             "job_listing.id",
@@ -289,7 +288,7 @@ const viewJobListingViaUserNewestToOldest = async (req, res, next) => {
               "No job listings are available at the moment. We are committed to bringing you new opportunities tailored to your skills and abilities. Please stay hopeful, more listings will be available soon.",
           });
         } else {
-          // Convert company_profile_picture BLOB to Base64 string for each row
+          // Convert company_profile_picture BLOB to String
           const processedRows = rows.map((row) => ({
             ...row,
             company_profile_picture: row.company_profile_picture
@@ -395,7 +394,7 @@ const viewJobsCreatedByCompanyNewestToOldest = async (req, res, next) => {
         message: "Company's Job Listings not found",
       });
     } else {
-      // Convert company_profile_picture BLOB to string for each row
+      // Convert company_profile_picture BLOB to string
       const processedRows = rows.map((row) => ({
         ...row,
         company_profile_picture: row.company_profile_picture
@@ -611,11 +610,11 @@ const viewCounts = async (req, res, next) => {
     } else {
       // Query to count total job listings for the given company_id
       const jobListingsCount = await knex("job_listing")
-        .where({ company_id: id }) // Filter by company_id
+        .where({ company_id: id })
         .count("id as count")
         .first();
 
-      // Query to count job applications for job listings under the given company_id
+      // Query to count job applications for job listings
       const jobApplicationsCount = await knex("job_application")
         .join(
           "job_listing",
@@ -662,10 +661,10 @@ const viewCounts = async (req, res, next) => {
         successful: true,
         message: "Successfully Retrieved Counts",
         data: {
-          job_listings: jobListingsCount.count, // Total count of job listings for the given company
-          job_applications: jobApplicationsCount.count, // Total count of job applications for the company
-          full_time_job_listings: fullTimeJobListingsCount.count, // Count of full-time job listings
-          part_time_job_listings: partTimeJobListingsCount.count, // Count of part-time job listings
+          job_listings: jobListingsCount.count,
+          job_applications: jobApplicationsCount.count,
+          full_time_job_listings: fullTimeJobListingsCount.count,
+          part_time_job_listings: partTimeJobListingsCount.count,
         },
       });
     }

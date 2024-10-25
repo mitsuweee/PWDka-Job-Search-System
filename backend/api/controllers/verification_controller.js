@@ -25,7 +25,7 @@ const viewPendingUsers = async (req, res, next) => {
       )
       .where("user.status", "PENDING");
 
-    // Convert BLOBs to Base64 strings
+    // Convert BLOBs to  string
     const users = rows.map((user) => ({
       ...user,
       formal_picture: user.formal_picture
@@ -67,7 +67,7 @@ const viewPendingCompany = async (req, res, next) => {
       )
       .where("company.status", "PENDING");
 
-    // Convert BLOB data to base64
+    // Convert BLOB data to String
     const processedRows = rows.map((row) => ({
       ...row,
       profile_picture: row.profile_picture
@@ -78,7 +78,7 @@ const viewPendingCompany = async (req, res, next) => {
     return res.status(200).json({
       successful: true,
       message: "Successfully Retrieved Companies",
-      data: processedRows, // Use processedRows instead of users
+      data: processedRows,
     });
   } catch (err) {
     return res.status(500).json({
@@ -88,7 +88,6 @@ const viewPendingCompany = async (req, res, next) => {
   }
 };
 
-// Verify company
 const verifyCompany = async (req, res, next) => {
   const id = req.params.id;
 
@@ -140,7 +139,6 @@ const verifyCompany = async (req, res, next) => {
   }
 };
 
-// Decline company
 const declineCompany = async (req, res, next) => {
   const id = req.params.id;
 
@@ -192,7 +190,6 @@ const declineCompany = async (req, res, next) => {
   }
 };
 
-// Verify user
 const verifyUser = async (req, res, next) => {
   const id = req.params.id;
 
@@ -244,7 +241,6 @@ const verifyUser = async (req, res, next) => {
   }
 };
 
-// Decline user
 const declineUser = async (req, res, next) => {
   const id = req.params.id;
 
