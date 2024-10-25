@@ -135,7 +135,7 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen bg-blue-100">
+    <>
       <Toaster position="top-center" reverseOrder={false} />
 
       {/* Sidebar */}
@@ -235,7 +235,7 @@ const AdminDashboard = () => {
       </button>
 
       {/* Main Content */}
-      <main className="flex-grow p-8 bg-gradient-to-b from-gray-100 to-gray-200 w-full max-w-3xl mx-auto">
+      <main className="flex-grow p-8 w-full max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-blue-900 tracking-wide">
             Admin Dashboard
@@ -253,8 +253,11 @@ const AdminDashboard = () => {
         </div>
 
         {/* Bar Chart Section */}
-        <div className="bg-white p-6 rounded-lg shadow-lg mt-6 hover:shadow-2xl transition-shadow duration-300 ease-in-out">
-          <Bar data={barChartData} options={barChartOptions} />
+        <div className="bg-white p-6 rounded-lg shadow-lg mt-6 hover:shadow-2xl transition-shadow duration-300 ease-in-out w-full  md:h-[550px]">
+          <Bar
+            data={barChartData}
+            options={{ ...barChartOptions, maintainAspectRatio: false }}
+          />
         </div>
 
         {/* Dashboard Stats Cards */}
@@ -358,7 +361,7 @@ const AdminDashboard = () => {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 
