@@ -209,7 +209,9 @@ const AdminDashboard = () => {
           href="/admin/dashboard/AdminSignup"
           className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
         >
-          <span className="material-symbols-outlined text-xl mr-4">draw</span>
+          <span className="material-symbols-outlined text-xl mr-4">
+            app_registration
+          </span>
           <span className="flex-grow text-center">Sign Up</span>
         </a>
 
