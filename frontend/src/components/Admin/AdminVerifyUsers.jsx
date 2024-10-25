@@ -12,6 +12,8 @@ const AdminVerifyUsers = () => {
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 10;
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+  const [currentImage, setCurrentImage] = useState("");
 
   const navigate = useNavigate();
 
@@ -34,6 +36,16 @@ const AdminVerifyUsers = () => {
 
   const handleGoBack = () => {
     navigate(-1);
+  };
+
+  const openImageModal = (imageSrc) => {
+    setCurrentImage(imageSrc);
+    setIsImageModalOpen(true);
+  };
+
+  const closeImageModal = () => {
+    setIsImageModalOpen(false);
+    setCurrentImage("");
   };
 
   useEffect(() => {
@@ -328,7 +340,6 @@ const AdminVerifyUsers = () => {
           ) : (
             <p className="text-center text-gray-500">No users to verify yet.</p>
           )}
-
           {selectedUser && showModal && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
               <div className="bg-white rounded-lg p-6 w-[600px] h-[700px] shadow-lg hover:shadow-2xl transition-shadow duration-300 max-h-[90vh] overflow-y-auto">
@@ -422,14 +433,18 @@ const AdminVerifyUsers = () => {
                     <img
                       src={selectedUser.pictureWithId}
                       alt="Picture with ID"
-                      className="w-full h-40 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 object-cover"
+                      className="w-full h-40 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 object-cover cursor-pointer"
+                      onClick={() => openImageModal(selectedUser.pictureWithId)}
                     />
                   </div>
                   <div>
                     <img
                       src={selectedUser.pictureOfPwdId}
                       alt="Picture of PWD ID"
-                      className="w-full h-40 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 object-cover"
+                      className="w-full h-40 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 object-cover cursor-pointer"
+                      onClick={() =>
+                        openImageModal(selectedUser.pictureOfPwdId)
+                      }
                     />
                   </div>
                 </div>
@@ -447,6 +462,23 @@ const AdminVerifyUsers = () => {
                     Decline
                   </button>
                 </div>
+              </div>
+            </div>
+          )}
+          {isImageModalOpen && (
+            <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+              <div className="relative p-4 bg-white rounded-lg shadow-xl w-[90%] max-w-2xl h-[80%] flex items-center justify-center">
+                <button
+                  className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
+                  onClick={closeImageModal}
+                >
+                  ✕
+                </button>
+                <img
+                  src={currentImage}
+                  alt="Full View"
+                  className="w-full h-full object-contain rounded-md"
+                />
               </div>
             </div>
           )}
