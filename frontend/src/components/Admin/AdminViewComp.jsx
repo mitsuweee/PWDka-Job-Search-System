@@ -341,30 +341,35 @@ const AdminViewComp = () => {
                 className="w-32 h-32 rounded-full border-2 border-gray-300 hover:shadow-lg transition-shadow duration-300 object-cover"
               />
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-gray-100 p-4 rounded-lg">
-              <div>
-                <strong>Company Name:</strong>
-                <p className="shadow-lg p-1">{company.companyName}</p>
+            <div className="grid gap-4 bg-gray-100 p-4 rounded-lg">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <strong>Company Name:</strong>
+                  <p className="shadow-lg p-1">{company.companyName}</p>
+                </div>
+                <div>
+                  <strong>City:</strong>
+                  <p className="shadow-lg p-1">{company.city}</p>
+                </div>
               </div>
-              <div>
-                <strong>City:</strong>
-                <p className="shadow-lg p-1">{company.city}</p>
-              </div>
-              <div>
+
+              <div className="w-full">
                 <strong>Address:</strong>
                 <p className="shadow-lg p-1">{company.address}</p>
               </div>
-              <div>
+              <div className="w-full">
                 <strong>Description:</strong>
                 <p className="shadow-lg p-1">{company.description}</p>
               </div>
-              <div>
-                <strong>Contact Number:</strong>
-                <p className="shadow-lg p-1">{company.contactNumber}</p>
-              </div>
-              <div>
-                <strong>Email:</strong>
-                <p className="shadow-lg p-1">{company.companyEmail}</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <strong>Contact Number:</strong>
+                  <p className="shadow-lg p-1">{company.contactNumber}</p>
+                </div>
+                <div>
+                  <strong>Email:</strong>
+                  <p className="shadow-lg p-1">{company.companyEmail}</p>
+                </div>
               </div>
             </div>
             <div className="flex justify-end mt-4 space-x-2">
