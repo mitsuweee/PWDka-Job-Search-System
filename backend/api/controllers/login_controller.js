@@ -5,7 +5,6 @@ const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 
-// Generate a 256-bit (32-byte) secret key, encoded in hexadecimal
 const SECRET_KEY = crypto.randomBytes(32).toString("hex");
 
 const login = async (req, res, next) => {
@@ -19,11 +18,9 @@ const login = async (req, res, next) => {
     });
   } else {
     try {
-      // Query only the user, company, and admin tables
       const tables = ["user", "company"];
       let storedPassword, role, status, id;
 
-      // Check user and company tables
       for (let table of tables) {
         const rows = await knex(table)
           .select("id", "email", "password", "role", "status")
@@ -38,8 +35,6 @@ const login = async (req, res, next) => {
           break;
         }
       }
-
-      // If no match found, check the admin table separately (no status field for admin)
       if (!storedPassword) {
         const admin = await knex("admin")
           .select("id", "email", "password", "role")
