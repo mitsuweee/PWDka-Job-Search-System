@@ -67,7 +67,9 @@ const AdminViewUsers = () => {
   const formatUserData = (userData) => {
     return {
       id: userData.id,
-      fullName: userData.full_name,
+      fullName: `${userData.first_name} ${
+        userData.middle_initial ? userData.middle_initial + ". " : ""
+      }${userData.last_name}`,
       disability: userData.type,
       address: userData.address,
       city: userData.city,
