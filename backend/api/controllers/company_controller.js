@@ -446,7 +446,10 @@ const updateCompanyEmail = async (req, res, next) => {
   } else {
     try {
       // Check if the company exists
-      const company = await knex("company").where({ id }).first();
+      const company = await knex("company")
+        .select(id, email, password)
+        .where({ id })
+        .first();
       if (!company) {
         return res.status(404).json({
           successful: false,
@@ -462,8 +465,9 @@ const updateCompanyEmail = async (req, res, next) => {
           message: "Invalid Credentials",
         });
       }
+      const adminWithEmail = await knex("admin").where({ email }).first();
+      const userWithEmail = await knex("user").where({ email }).first();
       const companyWithEmail = await knex("company").where({ email }).first();
-
       if (adminWithEmail || userWithEmail || companyWithEmail) {
         return res.status(400).json({
           successful: false,
