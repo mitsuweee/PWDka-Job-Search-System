@@ -10,9 +10,9 @@ const AdminProf = () => {
     email: "",
   });
 
-  const [newEmail, setNewEmail] = useState(""); // New state for email update
+  const [newEmail, setNewEmail] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false); // Separate modal for email
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(true);
   const [passwords, setPasswords] = useState({
     currentPassword: "",
@@ -47,7 +47,7 @@ const AdminProf = () => {
           lastName: adminData.last_name,
           email: adminData.email,
         });
-        setNewEmail(adminData.email); // Set email separately
+        setNewEmail(adminData.email);
       })
       .catch(function (error) {
         const errorMessage =
@@ -73,12 +73,12 @@ const AdminProf = () => {
 
   const handleEdit = () => {
     setIsEditing(true);
-    setIsModalOpen(true); // Open the modal in edit mode
+    setIsModalOpen(true);
   };
 
   const handlePasswordToggle = () => {
     setIsEditing(false);
-    setIsModalOpen(true); // Open the modal in password change mode
+    setIsModalOpen(true);
   };
 
   const handlePasswordUpdate = () => {
@@ -120,7 +120,7 @@ const AdminProf = () => {
     const updateAdminProfile = JSON.stringify({
       first_name: admin.firstName,
       last_name: admin.lastName,
-      email: admin.email, // Keep email in profile update (if needed)
+      email: admin.email,
     });
 
     const adminId = localStorage.getItem("Id");
@@ -145,14 +145,14 @@ const AdminProf = () => {
 
     setTimeout(() => {
       window.location.reload();
-    }, 2000); // Reload the page after 2 seconds
+    }, 2000);
   };
 
   const handleEmailUpdate = () => {
     const adminId = localStorage.getItem("Id");
 
     const data = JSON.stringify({
-      email: newEmail, // Update email
+      email: newEmail,
     });
 
     const config = {
@@ -192,7 +192,7 @@ const AdminProf = () => {
   };
 
   const handleBack = () => {
-    navigate("/admin/dashboard"); // Adjust the path as needed
+    navigate("/admin/dashboard");
   };
 
   return (
@@ -215,7 +215,7 @@ const AdminProf = () => {
           </button>
 
           <button
-            onClick={() => setIsEmailModalOpen(true)} // Open email modal
+            onClick={() => setIsEmailModalOpen(true)}
             className="w-full md:w-auto px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300 flex items-center justify-center mb-4 md:mb-0 md:mr-4"
           >
             <span className="material-symbols-outlined text-xl mr-2">

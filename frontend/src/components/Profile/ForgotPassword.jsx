@@ -1,29 +1,29 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import toast, { Toaster } from "react-hot-toast"; // Import toast
+import toast, { Toaster } from "react-hot-toast";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false); // Track if request is being sent
-  const [isSuccessCardVisible, setIsSuccessCardVisible] = useState(false); // Track success card visibility
-  const [countdown, setCountdown] = useState(60); // 60s countdown for resending email
-  const [canResend, setCanResend] = useState(false); // To control when to enable resend
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccessCardVisible, setIsSuccessCardVisible] = useState(false);
+  const [countdown, setCountdown] = useState(60);
+  const [canResend, setCanResend] = useState(false);
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
 
   const sendResetEmail = async () => {
-    setIsSubmitting(true); // Disable the button during the request
+    setIsSubmitting(true);
 
     // Create the Axios configuration
     const config = {
       method: "post",
-      url: "/password/forgotpassword/email", // Replace with your backend URL
+      url: "/password/forgotpassword/email",
       headers: {
         "Content-Type": "application/json",
       },
-      data: { email }, // Send the email as JSON in the body
+      data: { email },
     };
 
     try {
@@ -33,36 +33,36 @@ const ForgotPassword = () => {
 
       // Display success toast
       toast.success("Password reset link has been sent to your email.");
-      setIsSuccessCardVisible(true); // Show success card
-      setCanResend(false); // Disable resend link initially
-      setCountdown(60); // Reset countdown
+      setIsSuccessCardVisible(true);
+      setCanResend(false);
+      setCountdown(60);
     } catch (error) {
       console.error("Error sending email:", error);
       // Display error toast
       toast.error("Error sending password reset email. Please try again.");
     } finally {
-      setIsSubmitting(false); // Re-enable the button after the request
+      setIsSubmitting(false);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    sendResetEmail(); // Call the reset email function
+    sendResetEmail();
   };
 
   const resendEmail = async () => {
-    setCountdown(60); // Reset countdown timer
-    sendResetEmail(); // Call the function to resend the email
+    setCountdown(60);
+    sendResetEmail();
   };
 
   // Countdown timer effect
   useEffect(() => {
     if (isSuccessCardVisible && countdown > 0) {
       const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
-      return () => clearTimeout(timer); // Clean up the timer
+      return () => clearTimeout(timer);
     }
     if (countdown === 0) {
-      setCanResend(true); // Enable resend when countdown reaches zero
+      setCanResend(true);
     }
   }, [countdown, isSuccessCardVisible]);
 
@@ -82,7 +82,7 @@ const ForgotPassword = () => {
             </p>
             <button
               className="mt-8 py-3 px-6 bg-blue-600 text-white rounded-lg shadow-lg hover:bg-blue-700 transition duration-300"
-              onClick={() => (window.location.href = "/login")} // Redirect to login page
+              onClick={() => (window.location.href = "/login")}
             >
               Go to Login
             </button>
@@ -137,7 +137,7 @@ const ForgotPassword = () => {
               className={`w-full py-3 mt-6 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition duration-300 ${
                 isSubmitting ? "opacity-50 cursor-not-allowed" : ""
               }`}
-              disabled={isSubmitting} // Disable the button while the request is being sent
+              disabled={isSubmitting}
             >
               {isSubmitting ? "Sending..." : "Send Reset Link"}
             </button>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
@@ -58,13 +58,12 @@ const ConfirmPassword = () => {
       const response = await axios(config);
       console.log(response.data);
       toast.success("Your password has been changed successfully!");
-      setIsSuccessCardVisible(true); // Show success card
+      setIsSuccessCardVisible(true);
       setNewPassword("");
       setConfirmPassword("");
     } catch (error) {
       console.error("Error resetting password:", error);
 
-      // Check if the error has a response and a message
       const errorMessage =
         error.response && error.response.data && error.response.data.message
           ? error.response.data.message
@@ -91,7 +90,7 @@ const ConfirmPassword = () => {
             </p>
             <button
               className="mt-8 py-3 px-6 bg-blue-600 text-white rounded-lg shadow-lg hover:bg-blue-700 transition duration-300"
-              onClick={() => (window.location.href = "/login")} // Redirect to login page
+              onClick={() => (window.location.href = "/login")}
             >
               Go to Login
             </button>

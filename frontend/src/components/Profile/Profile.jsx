@@ -5,8 +5,7 @@ import Footer from "../Footer";
 import Navbar from "../Navbar";
 
 const Profile = () => {
-  // Assume the user type is stored in localStorage
-  const userType = localStorage.getItem("Role"); // Could be 'user' or 'company'
+  const userType = localStorage.getItem("Role");
 
   return (
     <div className="bg-[#E3EDF7] min-h-screen flex flex-col">
