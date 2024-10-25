@@ -257,18 +257,18 @@ const AdminViewUsers = () => {
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white mt-4 rounded-lg shadow-lg">
             <thead>
-              <tr className="w-full bg-blue-500 text-white">
-                <th className="py-2 px-4 text-left">ID</th>
-                <th className="py-2 px-4 text-left">User</th>
-                <th className="py-2 px-4 text-left">Disability</th>
-                <th className="py-2 px-4 text-left">Actions</th>
+              <tr className="bg-blue-600 text-white text-left">
+                <th className="py-3 px-6">ID</th>
+                <th className="py-3 px-6">User</th>
+                <th className="py-3 px-6">Disability</th>
+                <th className="py-3 px-6 text-center">Actions</th>
               </tr>
             </thead>
             <tbody>
               {currentUsers.map((user) => (
-                <tr key={user.id} className="hover:bg-gray-100">
-                  <td className="py-2 px-4 text-left">{user.id}</td>
-                  <td className="py-2 px-4 text-left">
+                <tr key={user.id} className="border-b hover:bg-gray-100">
+                  <td className="py-3 px-6">{user.id}</td>
+                  <td className="py-3 px-6">
                     {user.full_name
                       .split(" ")
                       .map(
@@ -278,20 +278,22 @@ const AdminViewUsers = () => {
                       )
                       .join(" ")}
                   </td>
-                  <td className="py-2 px-4 text-left">{user.type}</td>
-                  <td className="py-2 px-4 flex text-left">
-                    <button
-                      onClick={() => handleViewUser(user.id)}
-                      className="bg-blue-500 text-white px-2 py-1 rounded mr-2 hover:bg-blue-700"
-                    >
-                      View
-                    </button>
-                    <button
-                      onClick={() => handleDeleteUser(user.id)}
-                      className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-700"
-                    >
-                      Delete
-                    </button>
+                  <td className="py-3 px-6">{user.type}</td>
+                  <td className="py-3 px-6 text-center">
+                    <div className="flex justify-center space-x-2">
+                      <button
+                        onClick={() => handleViewUser(user.id)}
+                        className="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-700 transition duration-200"
+                      >
+                        View
+                      </button>
+                      <button
+                        onClick={() => handleDeleteUser(user.id)}
+                        className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-700 transition duration-200"
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}

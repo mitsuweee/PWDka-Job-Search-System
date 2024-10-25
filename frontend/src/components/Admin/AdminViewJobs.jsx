@@ -220,21 +220,24 @@ const AdminViewJobs = () => {
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white mt-4 rounded-lg shadow-lg">
             <thead>
-              <tr className="bg-blue-500 text-white">
-                <th className="py-2 px-4 text-left">Company</th>
-                <th className="py-2 px-4 text-left">Job Title</th>
-                <th className="py-2 px-4 text-left">Actions</th>
+              <tr className="bg-blue-600 text-white text-left">
+                <th className="py-3 px-6">Company</th>
+                <th className="py-3 px-6">Job Title</th>
+                <th className="py-3 px-6 text-center">Actions</th>
               </tr>
             </thead>
             <tbody>
               {currentJobs.map((job) => (
-                <tr key={job.id} className="hover:bg-gray-100 transition-all">
-                  <td className="py-2 px-4 text-left">{job.company_name}</td>
-                  <td className="py-2 px-4 text-left">{job.position_name}</td>
-                  <td className="py-2 px-4 flex text-left">
+                <tr
+                  key={job.id}
+                  className="border-b hover:bg-gray-100 transition-colors"
+                >
+                  <td className="py-3 px-6">{job.company_name}</td>
+                  <td className="py-3 px-6">{job.position_name}</td>
+                  <td className="py-3 px-6 text-center">
                     <button
                       onClick={() => handleViewJob(job.id)}
-                      className="bg-blue-500 text-white px-2 py-1 rounded mr-2 hover:bg-blue-700 shadow-md"
+                      className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 shadow-md transition duration-200"
                     >
                       View
                     </button>

@@ -269,20 +269,20 @@ const AdminVerifyUsers = () => {
         <div className="mt-4">
           {currentUsers.length > 0 ? (
             <div className="overflow-x-auto">
-              <table className="min-w-full bg-white rounded-lg">
+              <table className="min-w-full bg-white rounded-lg shadow-md">
                 <thead>
-                  <tr className="bg-blue-500 text-white">
-                    <th className="py-2 px-4 text-left">ID</th>
-                    <th className="py-2 px-4 text-left">User</th>
-                    <th className="py-2 px-4 text-left">Disability</th>
-                    <th className="py-2 px-4 text-left">Actions</th>
+                  <tr className="bg-blue-600 text-white text-left">
+                    <th className="py-3 px-6">ID</th>
+                    <th className="py-3 px-6">User</th>
+                    <th className="py-3 px-6">Disability</th>
+                    <th className="py-3 px-6 text-center">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {currentUsers.map((user) => (
-                    <tr key={user.id} className="hover:bg-gray-100">
-                      <td className="py-2 px-4 text-left">{user.id}</td>
-                      <td className="py-2 px-4 text-left">
+                    <tr key={user.id} className="border-b hover:bg-gray-100">
+                      <td className="py-4 px-6">{user.id}</td>
+                      <td className="py-4 px-6">
                         {user.first_name && user.last_name
                           ? `${
                               user.first_name.charAt(0).toUpperCase() +
@@ -297,27 +297,28 @@ const AdminVerifyUsers = () => {
                             }`
                           : ""}
                       </td>
-
-                      <td className="py-2 px-4 text-left">{user.type}</td>
-                      <td className="py-2 px-4 text-center">
-                        <button
-                          className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2 hover:bg-blue-600"
-                          onClick={() => handleView(user)}
-                        >
-                          View
-                        </button>
-                        <button
-                          className="bg-green-500 text-white px-4 py-2 rounded-md mr-2 hover:bg-green-600"
-                          onClick={() => handleApprove(user.id)}
-                        >
-                          Approve
-                        </button>
-                        <button
-                          className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
-                          onClick={() => handleDecline(user.id)}
-                        >
-                          Decline
-                        </button>
+                      <td className="py-4 px-6">{user.type}</td>
+                      <td className="py-4 px-6 text-center">
+                        <div className="flex justify-center space-x-2">
+                          <button
+                            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200"
+                            onClick={() => handleView(user)}
+                          >
+                            View
+                          </button>
+                          <button
+                            className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-200"
+                            onClick={() => handleApprove(user.id)}
+                          >
+                            Approve
+                          </button>
+                          <button
+                            className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-200"
+                            onClick={() => handleDecline(user.id)}
+                          >
+                            Decline
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}

@@ -223,17 +223,17 @@ const AdminViewComp = () => {
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white mt-4 rounded-lg shadow-lg">
             <thead>
-              <tr className="w-full bg-blue-500 text-white">
-                <th className="py-2 px-4 text-left">Company Name</th>
-                <th className="py-2 px-4 text-left">City</th>
-                <th className="py-2 px-4 text-left">Actions</th>
+              <tr className="bg-blue-600 text-white text-left">
+                <th className="py-3 px-6">Company Name</th>
+                <th className="py-3 px-6">City</th>
+                <th className="py-3 px-6 text-center">Actions</th>
               </tr>
             </thead>
             <tbody>
               {currentCompanies.map((company) => (
                 <tr key={company.id} className="border-b hover:bg-gray-100">
-                  <td className="py-2 px-4 text-left">{company.name}</td>
-                  <td className="py-2 px-4 text-left">
+                  <td className="py-3 px-6">{company.name}</td>
+                  <td className="py-3 px-6">
                     {company.city
                       .split(" ")
                       .map(
@@ -243,11 +243,10 @@ const AdminViewComp = () => {
                       )
                       .join(" ")}
                   </td>
-
-                  <td className="py-2 px-4 flex text-left">
+                  <td className="py-3 px-6 text-center">
                     <button
                       onClick={() => handleViewCompany(company.id)}
-                      className="bg-blue-500 text-white px-2 py-1 rounded mr-2 hover:bg-blue-700"
+                      className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-200"
                     >
                       View
                     </button>

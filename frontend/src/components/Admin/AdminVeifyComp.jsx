@@ -276,18 +276,18 @@ const AdminVerifyComp = () => {
           {/* Table */}
           {currentCompanies.length > 0 ? (
             <div className="overflow-x-auto">
-              <table className="min-w-full bg-white rounded-lg">
+              <table className="min-w-full bg-white rounded-lg shadow-md">
                 <thead>
-                  <tr className="bg-blue-500 text-white">
-                    <th className="py-2 px-4 text-left">Company Name</th>
-                    <th className="py-2 px-4 text-left">City</th>
-                    <th className="py-2 px-4 text-left">Actions</th>
+                  <tr className="bg-blue-600 text-white text-left">
+                    <th className="py-3 px-6">Company Name</th>
+                    <th className="py-3 px-6">City</th>
+                    <th className="py-3 px-6 text-center">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {currentCompanies.map((company) => (
-                    <tr key={company.id} className="hover:bg-gray-100">
-                      <td className="py-2 px-4 text-left">
+                    <tr key={company.id} className="border-b hover:bg-gray-100">
+                      <td className="py-4 px-6">
                         {company.name
                           ? company.name
                               .split(" ")
@@ -299,7 +299,7 @@ const AdminVerifyComp = () => {
                               .join(" ")
                           : ""}
                       </td>
-                      <td className="py-2 px-4 text-left">
+                      <td className="py-4 px-6">
                         {company.city
                           ? company.city
                               .split(" ")
@@ -311,40 +311,42 @@ const AdminVerifyComp = () => {
                               .join(" ")
                           : ""}
                       </td>
-                      <td className="py-2 px-4 text-center">
-                        <button
-                          disabled={actionInProgress}
-                          className={`bg-blue-500 text-white px-4 py-2 rounded-md mr-2 hover:bg-blue-600 ${
-                            actionInProgress
-                              ? "opacity-50 cursor-not-allowed"
-                              : ""
-                          }`}
-                          onClick={() => handleView(company)}
-                        >
-                          View
-                        </button>
-                        <button
-                          disabled={actionInProgress}
-                          className={`bg-green-500 text-white px-4 py-2 rounded-md mr-2 hover:bg-green-600 ${
-                            actionInProgress
-                              ? "opacity-50 cursor-not-allowed"
-                              : ""
-                          }`}
-                          onClick={() => handleApprove(company.id)}
-                        >
-                          Approve
-                        </button>
-                        <button
-                          disabled={actionInProgress}
-                          className={`bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 ${
-                            actionInProgress
-                              ? "opacity-50 cursor-not-allowed"
-                              : ""
-                          }`}
-                          onClick={() => handleDecline(company.id)}
-                        >
-                          Decline
-                        </button>
+                      <td className="py-4 px-6 text-center">
+                        <div className="flex justify-center space-x-2">
+                          <button
+                            disabled={actionInProgress}
+                            className={`bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200 ${
+                              actionInProgress
+                                ? "opacity-50 cursor-not-allowed"
+                                : ""
+                            }`}
+                            onClick={() => handleView(company)}
+                          >
+                            View
+                          </button>
+                          <button
+                            disabled={actionInProgress}
+                            className={`bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-200 ${
+                              actionInProgress
+                                ? "opacity-50 cursor-not-allowed"
+                                : ""
+                            }`}
+                            onClick={() => handleApprove(company.id)}
+                          >
+                            Approve
+                          </button>
+                          <button
+                            disabled={actionInProgress}
+                            className={`bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-200 ${
+                              actionInProgress
+                                ? "opacity-50 cursor-not-allowed"
+                                : ""
+                            }`}
+                            onClick={() => handleDecline(company.id)}
+                          >
+                            Decline
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
