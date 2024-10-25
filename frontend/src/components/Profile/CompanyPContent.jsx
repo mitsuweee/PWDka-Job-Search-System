@@ -30,6 +30,8 @@ const CompanyProf = () => {
     confirmNewPassword: "",
   });
 
+  const [currentPasswordForEmail, setCurrentPasswordForEmail] = useState(""); // New state for email change
+
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(true);
   const [isEmailChanging, setIsEmailChanging] = useState(false);
@@ -229,6 +231,7 @@ const CompanyProf = () => {
 
     const data = JSON.stringify({
       email: newEmail,
+      password: currentPasswordForEmail, // Include password in the request
     });
 
     const config = {
@@ -244,9 +247,13 @@ const CompanyProf = () => {
       .then(function () {
         toast.success("Email updated successfully.");
         setIsEmailModalOpen(false);
+        window.location.reload();
       })
-      .catch(function () {
-        toast.error("Failed to update email.");
+      .catch(function (error) {
+        // Display the specific error message from the backend
+        const errorMessage =
+          error.response?.data?.message || "Failed to update email.";
+        toast.error(errorMessage);
       });
   };
 
@@ -713,6 +720,32 @@ const CompanyProf = () => {
                     onChange={(e) => setNewEmail(e.target.value)}
                     className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
                   />
+                </div>
+
+                <div>
+                  <label className="block text-gray-600 font-semibold">
+                    Current Password:
+                  </label>
+                  <input
+                    type={
+                      passwordVisibility.currentPassword ? "text" : "password"
+                    }
+                    value={currentPasswordForEmail}
+                    onChange={(e) => setCurrentPasswordForEmail(e.target.value)}
+                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                  />
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setPasswordVisibility((prev) => ({
+                        ...prev,
+                        currentPassword: !prev.currentPassword,
+                      }))
+                    }
+                    className="text-blue-500 mt-1"
+                  >
+                    {passwordVisibility.currentPassword ? "Hide" : "Show"}
+                  </button>
                 </div>
               </div>
             )}
