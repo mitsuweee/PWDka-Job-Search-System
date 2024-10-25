@@ -112,111 +112,103 @@ const registerUser = async (req, res, next) => {
     try {
       // Check if ID or Email already exists
       const existingId = await knex("user").where({ id }).first();
+      const existingEmail = await knex("user").where({ email }).first();
+      const emailInAdmin = await knex("admin").where({ email }).first();
+      const emailInCompany = await knex("company").where({ email }).first();
       if (existingId) {
         return res.status(400).json({
           successful: false,
           message: "ID already exists",
         });
-      }
-
-      const existingEmail = await knex("user").where({ email }).first();
-      if (existingEmail) {
+      } else if (existingEmail) {
         return res.status(400).json({
           successful: false,
           message: "Email already exists",
         });
-      }
-
-      const emailInAdmin = await knex("admin").where({ email }).first();
-      if (emailInAdmin) {
+      } else if (emailInAdmin) {
         return res.status(400).json({
           successful: false,
           message: "Email already exists",
         });
-      }
-
-      const emailInCompany = await knex("company").where({ email }).first();
-      if (emailInCompany) {
+      } else if (emailInCompany) {
         return res.status(400).json({
           successful: false,
           message: "Email already exists",
         });
-      }
+      } else {
+        // Check if disability ID exists
+        const disability = await knex("disability")
+          .where({ type: disability_id })
+          .first();
+        if (!disability) {
+          return res.status(400).json({
+            successful: false,
+            message: "Disability ID does not exist",
+          });
+        } else {
+          const compressedFormalPicture = await sharp(
+            Buffer.from(formal_picture, "base64")
+          )
+            .resize(300, 300, {
+              fit: sharp.fit.inside,
+              withoutEnlargement: true,
+            })
+            .png({ quality: 80 })
+            .toBuffer();
 
-      // Check if disability ID exists
-      const disability = await knex("disability")
-        .where({ type: disability_id })
-        .first();
-      if (!disability) {
-        return res.status(400).json({
-          successful: false,
-          message: "Disability ID does not exist",
-        });
-      }
+          const compressedPictureWithId = await sharp(
+            Buffer.from(picture_with_id, "base64")
+          )
+            .resize(300, 300, {
+              fit: sharp.fit.inside,
+              withoutEnlargement: true,
+            })
+            .png({ quality: 80 })
+            .toBuffer();
 
-      const compressedFormalPicture = await sharp(
-        Buffer.from(formal_picture, "base64")
-      )
-        .resize(300, 300, {
-          fit: sharp.fit.inside,
-          withoutEnlargement: true,
-        })
-        .png({ quality: 80 })
-        .toBuffer();
+          const compressedPictureOfPwdId = await sharp(
+            Buffer.from(picture_of_pwd_id, "base64")
+          )
+            .resize(300, 300, {
+              fit: sharp.fit.inside,
+              withoutEnlargement: true,
+            })
+            .png({ quality: 80 })
+            .toBuffer();
+          // Insert new user
+          const hashedPassword = await bcrypt.hash(password, 10);
+          await knex("user").insert({
+            id,
+            first_name,
+            middle_initial,
+            last_name,
+            address,
+            city,
+            gender,
+            birth_date,
+            email,
+            password: hashedPassword,
+            contact_number,
+            disability_id: disability.id,
+            formal_picture: compressedFormalPicture.toString("base64"),
+            picture_with_id: compressedPictureWithId.toString("base64"),
+            picture_of_pwd_id: compressedPictureOfPwdId.toString("base64"),
+          });
 
-      const compressedPictureWithId = await sharp(
-        Buffer.from(picture_with_id, "base64")
-      )
-        .resize(300, 300, {
-          fit: sharp.fit.inside,
-          withoutEnlargement: true,
-        })
-        .png({ quality: 80 })
-        .toBuffer();
+          // Send verification email
+          const transporter = nodemailer.createTransport({
+            service: "Gmail",
+            auth: {
+              user: process.env.EMAIL_USER,
+              pass: process.env.EMAIL_PASSWORD,
+            },
+          });
 
-      const compressedPictureOfPwdId = await sharp(
-        Buffer.from(picture_of_pwd_id, "base64")
-      )
-        .resize(300, 300, {
-          fit: sharp.fit.inside,
-          withoutEnlargement: true,
-        })
-        .png({ quality: 80 })
-        .toBuffer();
-      // Insert new user
-      const hashedPassword = await bcrypt.hash(password, 10);
-      await knex("user").insert({
-        id,
-        first_name,
-        middle_initial,
-        last_name,
-        address,
-        city,
-        gender,
-        birth_date,
-        email,
-        password: hashedPassword,
-        contact_number,
-        disability_id: disability.id,
-        formal_picture: compressedFormalPicture.toString("base64"),
-        picture_with_id: compressedPictureWithId.toString("base64"),
-        picture_of_pwd_id: compressedPictureOfPwdId.toString("base64"),
-      });
-
-      // Send verification email
-      const transporter = nodemailer.createTransport({
-        service: "Gmail",
-        auth: {
-          user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASSWORD,
-        },
-      });
-
-      const mailOptions = {
-        from: process.env.EMAIL_USER,
-        to: email,
-        subject: "Account Verification",
-        text: `
+          const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: "Account Verification",
+            text: `
                     Dear ${first_name},
 
                     Thank you for registering. Your account is under review and will be activated once verified. We will notify you once the verification process is complete.
@@ -235,15 +227,17 @@ const registerUser = async (req, res, next) => {
                     Best regards,
                     PWDKA Team
                 `,
-      };
+          };
 
-      await transporter.sendMail(mailOptions);
+          await transporter.sendMail(mailOptions);
 
-      return res.status(200).json({
-        successful: true,
-        message:
-          "Successfully Registered User! We will update you via email once the user's account is verified. Thank you!",
-      });
+          return res.status(200).json({
+            successful: true,
+            message:
+              "Successfully Registered User! We will update you via email once the user's account is verified. Thank you!",
+          });
+        }
+      }
     } catch (err) {
       return res.status(500).json({
         successful: false,
@@ -270,36 +264,32 @@ const loginUser = async (req, res, next) => {
           successful: false,
           message: "Invalid Credentials",
         });
-      }
-
-      const passwordMatch = await bcrypt.compare(password, user.password);
-      if (!passwordMatch) {
-        return res.status(400).json({
-          successful: false,
-          message: "Invalid Credentials",
-        });
-      }
-
-      if (user.status === "PENDING") {
-        return res.status(400).json({
-          successful: false,
-          message:
-            "The User's Account is under Verification. Please wait for the email confirmation.",
-        });
-      }
-
-      if (user.status === "VERIFIED") {
-        return res.status(200).json({
-          successful: true,
-          id: user.id,
-          role: user.role,
-          message: "Successfully Logged In.",
-        });
       } else {
-        return res.status(500).json({
-          successful: false,
-          message: "Unexpected status",
-        });
+        const passwordMatch = await bcrypt.compare(password, user.password);
+        if (!passwordMatch) {
+          return res.status(400).json({
+            successful: false,
+            message: "Invalid Credentials",
+          });
+        } else if (user.status === "PENDING") {
+          return res.status(400).json({
+            successful: false,
+            message:
+              "The User's Account is under Verification. Please wait for the email confirmation.",
+          });
+        } else if (user.status === "VERIFIED") {
+          return res.status(200).json({
+            successful: true,
+            id: user.id,
+            role: user.role,
+            message: "Successfully Logged In.",
+          });
+        } else {
+          return res.status(500).json({
+            successful: false,
+            message: "Unexpected status",
+          });
+        }
       }
     } catch (err) {
       return res.status(500).json({
