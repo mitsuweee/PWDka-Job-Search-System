@@ -63,7 +63,6 @@ const registerAdmin = async (req, res, next) => {
       // Hash the password
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      // Insert new admin
       const newAdmin = {
         first_name: firstName,
         last_name: lastName,
@@ -98,7 +97,6 @@ const loginAdmin = async (req, res, next) => {
   }
 
   try {
-    // Query only the admin table
     const admin = await knex("admin")
       .select("id", "email", "password", "role")
       .where({ email })
@@ -124,18 +122,13 @@ const loginAdmin = async (req, res, next) => {
     }
 
     // Create a JWT token
-    const token = jwt.sign(
-      { id, role }, // Payload with user id and role
-      SECRET_KEY, // Secret key for signing the token
-      { expiresIn: "1h" } // Token expiry (1 hour)
-    );
+    const token = jwt.sign({ id, role }, SECRET_KEY, { expiresIn: "1h" });
 
-    // Successful login response
     return res.status(200).json({
       successful: true,
       role: role,
       id: id,
-      token: token, // Return the generated token
+      token: token,
       message: `Successfully Logged In as Admin.`,
     });
   } catch (err) {
@@ -951,23 +944,19 @@ const updateAdminEmail = async (req, res, next) => {
   const id = req.params.id;
   const email = req.body.email.toLowerCase();
 
-  // Validate input
   if (!id || !email) {
     return res.status(400).json({
       successful: false,
       message: "ID or Email is missing",
     });
-  }
-
-  // Check if email format is valid
-  else if (!util.checkEmail(email)) {
+  } else if (!util.checkEmail(email)) {
     return res.status(400).json({
       successful: false,
       message: "Invalid Email Format",
     });
   } else {
     try {
-      // Check if email exists in other tables (excluding current admin)
+      // Check if email exists in other tables
       const adminWithEmail = await knex("admin").where({ email }).first();
       const userWithEmail = await knex("user").where({ email }).first();
       const companyWithEmail = await knex("company").where({ email }).first();
@@ -979,7 +968,6 @@ const updateAdminEmail = async (req, res, next) => {
         });
       }
 
-      // Update the email for the specific admin
       const result = await knex("admin").where({ id }).update({ email });
 
       if (result === 0) {

@@ -106,7 +106,7 @@ const registerUser = async (req, res, next) => {
   } else if (!util.checkContactNumber(contact_number)) {
     return res.status(400).json({
       successful: false,
-      message: "Invalid Contact Number Format",
+      message: "Invalid Contact Number Format. Ex(09123456789)",
     });
   } else {
     try {
@@ -329,12 +329,13 @@ const updateUser = async (req, res, next) => {
   } else if (!util.checkCharacters(city) || !city.endsWith("city")) {
     return res.status(400).json({
       successful: false,
-      message: "City Must only contain alphabetical characters",
+      message:
+        "City Must only contain alphabetical characters and it should end with the word 'city'",
     });
   } else if (!util.checkContactNumber(contactNumber)) {
     return res.status(400).json({
       successful: false,
-      message: "Invalid Contact Number Format",
+      message: "Invalid Contact Number Format. Ex(09123456789)",
     });
   } else {
     try {

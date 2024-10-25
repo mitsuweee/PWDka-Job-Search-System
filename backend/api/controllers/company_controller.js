@@ -35,17 +35,18 @@ const registerCompany = async (req, res, next) => {
   } else if (util.checkSpecialChar(address)) {
     return res.status(400).json({
       successful: false,
-      message: "Invalid Address Format",
+      message: "Special Characters are not allowed in Address",
     });
   } else if (util.checkNumbersAndSpecialChar(city) || !city.endsWith("city")) {
     return res.status(400).json({
       successful: false,
-      message: "Invalid City Format",
+      message:
+        "City Must only contain alphabetical characters and it should end with the word 'city'",
     });
   } else if (!util.checkContactNumber(contact_number)) {
     return res.status(400).json({
       successful: false,
-      message: "Invalid Contact Number Format",
+      message: "Invalid Contact Number Format. Ex(09123456789)",
     });
   } else if (!util.checkEmail(email)) {
     return res.status(400).json({
@@ -55,7 +56,8 @@ const registerCompany = async (req, res, next) => {
   } else if (!util.checkPassword(password)) {
     return res.status(400).json({
       successful: false,
-      message: "Invalid Password Format",
+      message:
+        "Invalid Password Format. It should have at least one digit, one uppercase, one lowercase, one special character, and be at least 8 characters in length",
     });
   } else if (password !== confirm_password) {
     return res.status(400).json({
@@ -73,45 +75,44 @@ const registerCompany = async (req, res, next) => {
           successful: false,
           message: "Email already exists",
         });
-      }
+      } else {
+        // Compress the profile picture
+        const compressedProfilePicture = await sharp(
+          Buffer.from(profile_picture, "base64")
+        )
+          .resize(300, 300, {
+            fit: sharp.fit.inside,
+            withoutEnlargement: true,
+          })
+          .png({ quality: 80 })
+          .toBuffer();
 
-      // Compress the profile picture
-      const compressedProfilePicture = await sharp(
-        Buffer.from(profile_picture, "base64")
-      )
-        .resize(300, 300, {
-          fit: sharp.fit.inside,
-          withoutEnlargement: true,
-        })
-        .png({ quality: 80 })
-        .toBuffer();
+        const hashedPassword = await bcrypt.hash(password, 10);
 
-      const hashedPassword = await bcrypt.hash(password, 10);
+        await knex("company").insert({
+          name,
+          address,
+          city,
+          description,
+          contact_number,
+          email,
+          password: hashedPassword,
+          profile_picture: compressedProfilePicture.toString("base64"),
+        });
 
-      await knex("company").insert({
-        name,
-        address,
-        city,
-        description,
-        contact_number,
-        email,
-        password: hashedPassword,
-        profile_picture: compressedProfilePicture.toString("base64"),
-      });
+        const transporter = nodemailer.createTransport({
+          service: "Gmail",
+          auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASSWORD,
+          },
+        });
 
-      const transporter = nodemailer.createTransport({
-        service: "Gmail",
-        auth: {
-          user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASSWORD,
-        },
-      });
-
-      const mailOptions = {
-        from: process.env.EMAIL_USER,
-        to: email,
-        subject: "Account Verification",
-        text: `Dear ${name},
+        const mailOptions = {
+          from: process.env.EMAIL_USER,
+          to: email,
+          subject: "Account Verification",
+          text: `Dear ${name},
 
 Thank you for registering. Your Company's account is under review and will be activated once verified. We will notify you once the verification process is complete.
 
@@ -125,15 +126,16 @@ Here are the details you provided:
 
 Best regards,
 PWDKA TEAM`,
-      };
+        };
 
-      await transporter.sendMail(mailOptions);
+        await transporter.sendMail(mailOptions);
 
-      return res.status(200).json({
-        successful: true,
-        message:
-          "Successfully Registered Company! We will update you via email once the company is verified.",
-      });
+        return res.status(200).json({
+          successful: true,
+          message:
+            "Successfully Registered Company! We will update you via email once the company is verified.",
+        });
+      }
     } catch (err) {
       return res.status(500).json({
         successful: false,
@@ -161,32 +163,28 @@ const loginCompany = async (req, res, next) => {
           successful: false,
           message: "Invalid Credentials",
         });
-      }
+      } else {
+        const passwordMatch = await bcrypt.compare(password, company.password);
 
-      const passwordMatch = await bcrypt.compare(password, company.password);
-
-      if (!passwordMatch) {
-        return res.status(400).json({
-          successful: false,
-          message: "Invalid Credentials",
-        });
-      }
-
-      if (company.status === "PENDING") {
-        return res.status(400).json({
-          successful: false,
-          message:
-            "The Company's Account is under Verification. Please wait for the email confirmation.",
-        });
-      }
-
-      if (company.status === "VERIFIED") {
-        return res.status(200).json({
-          successful: true,
-          id: company.id,
-          role: company.role,
-          message: "Successfully Logged In.",
-        });
+        if (!passwordMatch) {
+          return res.status(400).json({
+            successful: false,
+            message: "Invalid Credentials",
+          });
+        } else if (company.status === "PENDING") {
+          return res.status(400).json({
+            successful: false,
+            message:
+              "The Company's Account is under Verification. Please wait for the email confirmation.",
+          });
+        } else if (company.status === "VERIFIED") {
+          return res.status(200).json({
+            successful: true,
+            id: company.id,
+            role: company.role,
+            message: "Successfully Logged In.",
+          });
+        }
       }
     } catch (err) {
       return res.status(500).json({
@@ -205,7 +203,6 @@ const updateCompany = async (req, res, next) => {
   let description = req.body.description;
   let contact_number = req.body.contact_number;
 
-  // Check for missing details
   if (!id || !name || !address || !city || !description || !contact_number) {
     return res.status(400).json({
       successful: false,
@@ -214,17 +211,18 @@ const updateCompany = async (req, res, next) => {
   } else if (util.checkSpecialChar(address)) {
     return res.status(400).json({
       successful: false,
-      message: "Invalid Address Format",
+      message: "Special Characters are not allowed in Address",
     });
-  } else if (util.checkNumbersAndSpecialChar(city)) {
+  } else if (util.checkNumbersAndSpecialChar(city) || !city.endsWith("city")) {
     return res.status(400).json({
       successful: false,
-      message: "Invalid City Format",
+      message:
+        "City Must only contain alphabetical characters and it should end with the word 'city'",
     });
   } else if (!util.checkContactNumber(contact_number)) {
     return res.status(400).json({
       successful: false,
-      message: "Invalid Contact Number Format",
+      message: "Invalid Contact Number Format. Ex(09123456789)",
     });
   } else {
     try {
@@ -241,12 +239,12 @@ const updateCompany = async (req, res, next) => {
           successful: false,
           message: "Company not found",
         });
+      } else {
+        return res.status(200).json({
+          successful: true,
+          message: "Company Details updated successfully",
+        });
       }
-
-      return res.status(200).json({
-        successful: true,
-        message: "Company Details updated successfully",
-      });
     } catch (err) {
       return res.status(500).json({
         successful: false,
@@ -289,12 +287,12 @@ const updateCompanyProfilePicture = async (req, res, next) => {
           successful: false,
           message: "Company not found",
         });
+      } else {
+        return res.status(200).json({
+          successful: true,
+          message: "Company Profile Picture updated successfully",
+        });
       }
-
-      return res.status(200).json({
-        successful: true,
-        message: "Company Profile Picture updated successfully",
-      });
     } catch (err) {
       return res.status(500).json({
         successful: false,
@@ -315,66 +313,65 @@ const companyChangePassword = async (req, res, next) => {
       successful: false,
       message: "One or more details are missing",
     });
-  }
-
-  if (!util.checkPassword(new_password)) {
+  } else if (!util.checkPassword(new_password)) {
     return res.status(400).json({
       successful: false,
-      message: "Invalid Password Format",
+      message:
+        "Invalid Password Format. It should have at least one digit, one uppercase, one lowercase, one special character, and at least 8 in length",
     });
-  }
-
-  if (new_password !== confirm_password) {
+  } else if (new_password !== confirm_password) {
     return res.status(400).json({
       successful: false,
       message: "Password Does not match",
     });
-  }
+  } else {
+    try {
+      const company = await knex("company").where({ id }).first();
 
-  try {
-    const company = await knex("company").where({ id }).first();
+      if (!company) {
+        return res.status(400).json({
+          successful: false,
+          message: "Invalid company ID",
+        });
+      } else {
+        const passwordMatch = await bcrypt.compare(password, company.password);
 
-    if (!company) {
-      return res.status(400).json({
+        if (!passwordMatch) {
+          return res.status(400).json({
+            successful: false,
+            message: "Invalid Credentials",
+          });
+        } else {
+          const newPasswordMatch = await bcrypt.compare(
+            new_password,
+            company.password
+          );
+
+          if (newPasswordMatch) {
+            return res.status(400).json({
+              successful: false,
+              message: "New password must not be the same as the old password",
+            });
+          } else {
+            const hashedNewPassword = await bcrypt.hash(new_password, 10);
+
+            await knex("company")
+              .where({ id })
+              .update({ password: hashedNewPassword });
+
+            return res.status(200).json({
+              successful: true,
+              message: "Password updated successfully",
+            });
+          }
+        }
+      }
+    } catch (err) {
+      return res.status(500).json({
         successful: false,
-        message: "Invalid company ID",
+        message: err.message,
       });
     }
-
-    const passwordMatch = await bcrypt.compare(password, company.password);
-
-    if (!passwordMatch) {
-      return res.status(400).json({
-        successful: false,
-        message: "Invalid Credentials",
-      });
-    }
-
-    const newPasswordMatch = await bcrypt.compare(
-      new_password,
-      company.password
-    );
-
-    if (newPasswordMatch) {
-      return res.status(400).json({
-        successful: false,
-        message: "New password must not be the same as the old password",
-      });
-    }
-
-    const hashedNewPassword = await bcrypt.hash(new_password, 10);
-
-    await knex("company").where({ id }).update({ password: hashedNewPassword });
-
-    return res.status(200).json({
-      successful: true,
-      message: "Password updated successfully",
-    });
-  } catch (err) {
-    return res.status(500).json({
-      successful: false,
-      message: err.message,
-    });
   }
 };
 
@@ -408,21 +405,21 @@ const viewCompanyViaId = async (req, res, next) => {
         successful: false,
         message: "ID is Invalid",
       });
+    } else {
+      // Convert profile_picture BLOB to string
+      const processedCompany = {
+        ...company,
+        profile_picture: company.profile_picture
+          ? company.profile_picture.toString()
+          : null,
+      };
+
+      return res.status(200).json({
+        successful: true,
+        message: "Successfully Retrieved Company",
+        data: processedCompany,
+      });
     }
-
-    // Convert profile_picture BLOB to Base64 string
-    const processedCompany = {
-      ...company,
-      profile_picture: company.profile_picture
-        ? company.profile_picture.toString()
-        : null,
-    };
-
-    return res.status(200).json({
-      successful: true,
-      message: "Successfully Retrieved Company",
-      data: processedCompany,
-    });
   } catch (err) {
     return res.status(500).json({
       successful: false,
@@ -435,23 +432,19 @@ const updateCompanyEmail = async (req, res, next) => {
   const id = req.params.id;
   const email = req.body.email.toLowerCase();
 
-  // Validate input
   if (!id || !email) {
     return res.status(400).json({
       successful: false,
       message: "ID or Email is missing",
     });
-  }
-
-  // Check if email format is valid
-  else if (!util.checkEmail(email)) {
+  } else if (!util.checkEmail(email)) {
     return res.status(400).json({
       successful: false,
       message: "Invalid Email Format",
     });
   } else {
     try {
-      // Check if email exists in other tables (excluding current company)
+      // Check if email exists in other tables
       const adminWithEmail = await knex("admin").where({ email }).first();
       const userWithEmail = await knex("user").where({ email }).first();
       const companyWithEmail = await knex("company").where({ email }).first();
@@ -461,22 +454,21 @@ const updateCompanyEmail = async (req, res, next) => {
           successful: false,
           message: "Email already exists in the system",
         });
-      }
+      } else {
+        const result = await knex("company").where({ id }).update({ email });
 
-      // Update the email
-      const result = await knex("company").where({ id }).update({ email });
+        if (result === 0) {
+          return res.status(404).json({
+            successful: false,
+            message: "Company not found",
+          });
+        }
 
-      if (result === 0) {
-        return res.status(404).json({
-          successful: false,
-          message: "Company not found",
+        return res.status(200).json({
+          successful: true,
+          message: "Company email updated successfully",
         });
       }
-
-      return res.status(200).json({
-        successful: true,
-        message: "Company email updated successfully",
-      });
     } catch (err) {
       return res.status(500).json({
         successful: false,
