@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast"; // Import react-hot-toast
+import toast, { Toaster } from "react-hot-toast";
 
 const ApplyPage = () => {
   const [resume, setResume] = useState(null);
   const [pdfPreviewUrl, setPdfPreviewUrl] = useState(null);
   const [error, setError] = useState("");
   const [isVoiceEnabled, setIsVoiceEnabled] = useState(false);
-  const [isUploading, setIsUploading] = useState(false); // For showing progress
-  const [submitSuccess, setSubmitSuccess] = useState(false); // For showing success message
-  const [userDisabilityType, setUserDisabilityType] = useState(""); // Track user disability type
+  const [isUploading, setIsUploading] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [userDisabilityType, setUserDisabilityType] = useState("");
   const navigate = useNavigate();
 
-  const MAX_FILE_SIZE = 16777215; // 16,777,215 bytes (16MB)
+  const MAX_FILE_SIZE = 16777215; //16MB
 
   useEffect(() => {
     const userId = localStorage.getItem("Id");
@@ -57,34 +57,34 @@ const ApplyPage = () => {
     if (!isVoiceEnabled) {
       playIntroMessage();
     } else {
-      speechSynthesis.cancel(); // Stop any ongoing speech
+      speechSynthesis.cancel();
     }
   };
 
   const handleFileChange = (e) => {
-    setIsUploading(true); // Start showing the upload progress
+    setIsUploading(true);
     const file = e.target.files[0];
     if (file && file.type === "application/pdf") {
       if (file.size <= MAX_FILE_SIZE) {
         const pdfBlob = new Blob([file], { type: "application/pdf" });
 
         setResume(pdfBlob);
-        setPdfPreviewUrl(URL.createObjectURL(file)); // Create a URL for the PDF file to preview it
+        setPdfPreviewUrl(URL.createObjectURL(file));
         setError("");
-        toast.success("PDF uploaded successfully!"); // Show success toast
+        toast.success("PDF uploaded successfully!");
       } else {
         setError("File size exceeds 16MB. Please upload a smaller file.");
         setResume(null);
         setPdfPreviewUrl(null);
-        toast.error("File size exceeds 16MB. Please upload a smaller file."); // Show error toast
+        toast.error("File size exceeds 16MB. Please upload a smaller file.");
       }
     } else {
       setError("Please upload a PDF file.");
       setResume(null);
       setPdfPreviewUrl(null);
-      toast.error("Please upload a valid PDF file."); // Show error toast for invalid format
+      toast.error("Please upload a valid PDF file.");
     }
-    setIsUploading(false); // Stop showing the upload progress
+    setIsUploading(false);
   };
 
   const handleSubmit = (e) => {
@@ -103,8 +103,8 @@ const ApplyPage = () => {
 
         const resume = reader.result.split(",")[1];
         const data = JSON.stringify({
-          user_id: localStorage.getItem("Id"), // Assuming userId is stored in localStorage
-          joblisting_id: jobId, // Use the joblisting_id from URL params
+          user_id: localStorage.getItem("Id"),
+          joblisting_id: jobId,
           resume: resume,
         });
 
@@ -119,20 +119,20 @@ const ApplyPage = () => {
 
         axios(config)
           .then((response) => {
-            toast.success("Resume submitted successfully!"); // Show success toast
-            playSuccessMessage(); // Play the success message if applicable
-            setSubmitSuccess(true); // Show success message
+            toast.success("Resume submitted successfully!");
+            playSuccessMessage();
+            setSubmitSuccess(true);
           })
           .catch((error) => {
             console.log(error.response?.data?.message);
-            toast.error(error.response?.data?.message || "An error occurred"); // Show error toast
+            toast.error(error.response?.data?.message || "An error occurred");
             setError(error.response?.data?.message || "An error occurred");
           });
       };
       reader.readAsDataURL(resume);
     } else {
       setError("Please upload a PDF file before submitting.");
-      toast.error("Please upload a PDF file before submitting."); // Show error toast if no PDF uploaded
+      toast.error("Please upload a PDF file before submitting.");
     }
   };
 
@@ -140,7 +140,7 @@ const ApplyPage = () => {
     <div className="max-w-4xl mx-auto mb-10 mt-10 p-10 bg-white rounded-xl shadow-lg space-y-8  transform transition-all hover:shadow-2xl">
       <Toaster position="top-center" reverseOrder={false} />{" "}
       {/* Add Toaster for Toast Notifications */}
-      {submitSuccess ? ( // Conditionally render thank you message
+      {submitSuccess ? (
         <div className="text-center">
           <h2 className="text-3xl font-bold text-custom-blue">
             Thank You for Applying!
@@ -158,7 +158,6 @@ const ApplyPage = () => {
           </button>
         </div>
       ) : (
-        // Show form if not yet submitted
         <>
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-3xl font-bold text-gray-900">

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const NavbarComp = () => {
@@ -11,7 +11,7 @@ const NavbarComp = () => {
 
   const handleNavigation = (path) => {
     navigate(path);
-    setIsMenuOpen(false); // Close the menu after navigation
+    setIsMenuOpen(false);
   };
 
   return (

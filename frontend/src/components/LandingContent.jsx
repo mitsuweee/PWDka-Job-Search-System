@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const LandingContent = () => {
@@ -14,7 +14,7 @@ const LandingContent = () => {
     const message = new SpeechSynthesisUtterance(
       "Welcome to pwe de ka, Empowering You to Find the Job You Deserve! - A web-based job search system for Persons with disabilities, if you already have an account click login, if not click get started."
     );
-    message.lang = "en-US"; // Set the language to English (US)
+    message.lang = "en-US";
     speechSynthesis.speak(message);
   };
 
@@ -24,7 +24,7 @@ const LandingContent = () => {
     if (!isVoiceEnabled) {
       playWelcomeMessage();
     } else {
-      speechSynthesis.cancel(); // Stop any ongoing speech
+      speechSynthesis.cancel();
     }
   };
 

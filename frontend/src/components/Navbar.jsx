@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isRegistered, setIsRegistered] = useState(false); // State to track if a user or company is registered
-  const [role, setRole] = useState(""); // State to track the role of the user
+  const [isRegistered, setIsRegistered] = useState(false);
+  const [role, setRole] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,14 +26,14 @@ const Navbar = () => {
 
   const handleNavigation = (path) => {
     navigate(path);
-    setIsMenuOpen(false); // Close the menu after navigation
+    setIsMenuOpen(false);
   };
 
   const handleLogoClick = () => {
     if (role === "company") {
-      handleNavigation("/dashc"); // Redirect to /dashc if the role is company
+      handleNavigation("/dashc");
     } else if (!isRegistered) {
-      handleNavigation("/"); // Redirect to home if not registered
+      handleNavigation("/");
     }
   };
 
@@ -134,18 +134,17 @@ const Navbar = () => {
               <span>Contact</span>
             </button>
 
-            {isRegistered &&
-              role !== "company" && ( // Hide the browse job button if the role is company
-                <button
-                  onClick={() => handleNavigation("/joblist")}
-                  className="nav-link mx-2 font-sfprobold text-[#e3edf7] text-lg font-bold py-2 px-4 rounded-lg bg-[#007bff] shadow-2xl transition duration-300 hover:bg-white hover:text-[#007bff] flex items-center"
-                >
-                  <span className="material-symbols-outlined text-2xl mr-2">
-                    work
-                  </span>
-                  <span>Browse Jobs</span>
-                </button>
-              )}
+            {isRegistered && role !== "company" && (
+              <button
+                onClick={() => handleNavigation("/joblist")}
+                className="nav-link mx-2 font-sfprobold text-[#e3edf7] text-lg font-bold py-2 px-4 rounded-lg bg-[#007bff] shadow-2xl transition duration-300 hover:bg-white hover:text-[#007bff] flex items-center"
+              >
+                <span className="material-symbols-outlined text-2xl mr-2">
+                  work
+                </span>
+                <span>Browse Jobs</span>
+              </button>
+            )}
             {isRegistered && (
               <button
                 onClick={() => handleNavigation("/profile")}
