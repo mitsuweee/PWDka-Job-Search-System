@@ -162,9 +162,9 @@ const viewAllReviewedUsers = async (req, res, next) => {
         const applications = await knex("job_application")
           .select(
             "disability.type",
-            knex.raw(
-              "CONCAT(user.first_name, ' ', user.middle_initial, '. ', user.last_name) AS full_name"
-            ),
+            "user.first_name",
+            "user.middle_initial",
+            "user.last_name",
             "user.email",
             knex.raw("CONCAT(user.address, ' ', user.city) AS Location"),
             "user.gender",

@@ -166,9 +166,17 @@ const ViewApplicants = () => {
       .then((response) => {
         const fetchedReviewedApplicants = response.data.data.map(
           (applicant) => ({
+            profilePicture: `data:image/png;base64,${applicant.formal_picture}`,
             id: applicant.id,
-            fullName: applicant.full_name,
+            fullName: `${applicant.first_name} ${
+              applicant.middle_initial ? applicant.middle_initial + ". " : ""
+            }${applicant.last_name}`, // Construct full name conditionally
             email: applicant.email,
+            contactNumber: applicant.contact_number,
+            birthdate: applicant.birth_date,
+            gender: applicant.gender,
+            location: applicant.Location,
+            disability: applicant.type,
           })
         );
 
@@ -468,8 +476,16 @@ const ViewApplicants = () => {
                   className="w-32 h-32 rounded-full border-4 border-blue-600 shadow-lg mb-4"
                 />
                 <h4 className="text-lg font-semibold text-gray-900">
-                  {selectedProfile?.fullName}
+                  {selectedProfile?.fullName
+                    .split(" ")
+                    .map(
+                      (word) =>
+                        word.charAt(0).toUpperCase() +
+                        word.slice(1).toLowerCase()
+                    )
+                    .join(" ")}
                 </h4>
+
                 <p className="text-gray-600">{selectedProfile?.email}</p>
               </div>
 
@@ -487,9 +503,19 @@ const ViewApplicants = () => {
                     Location:
                   </p>
                   <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
-                    {selectedProfile?.location || "Not specified"}
+                    {selectedProfile?.location
+                      ? selectedProfile.location
+                          .split(" ")
+                          .map(
+                            (word) =>
+                              word.charAt(0).toUpperCase() +
+                              word.slice(1).toLowerCase()
+                          )
+                          .join(" ")
+                      : "Not specified"}
                   </p>
                 </div>
+
                 <div>
                   <p className="text-lg font-semibold text-gray-800">
                     Contact Number:
@@ -501,15 +527,16 @@ const ViewApplicants = () => {
                 <div>
                   <p className="text-lg font-semibold text-gray-800">Gender:</p>
                   <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
-                    {selectedProfile?.gender || "Not specified"}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-lg font-semibold text-gray-800">
-                    Birthdate:
-                  </p>
-                  <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
-                    {selectedProfile?.birthdate}
+                    {selectedProfile?.gender
+                      ? selectedProfile.gender
+                          .split(" ")
+                          .map(
+                            (word) =>
+                              word.charAt(0).toUpperCase() +
+                              word.slice(1).toLowerCase()
+                          )
+                          .join(" ")
+                      : "Not specified"}
                   </p>
                 </div>
               </div>
@@ -564,6 +591,7 @@ const ViewApplicants = () => {
                               )
                               .join(" ")}
                           </td>
+
                           <td className="py-3 px-6 text-left">
                             {applicant.email}
                           </td>
