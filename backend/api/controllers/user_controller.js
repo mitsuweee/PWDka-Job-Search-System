@@ -303,9 +303,9 @@ const updateUser = async (req, res, next) => {
   const id = req.params.id;
   const address = req.body.address.toLowerCase();
   const city = req.body.city.toLowerCase();
-  const contactNumber = req.body.contact_number;
+  const contact_number = req.body.contact_number;
 
-  if (!id || !address || !city || !contactNumber) {
+  if (!id || !address || !city || !contact_number) {
     return res.status(404).json({
       successful: false,
       message: "One or more details are missing",
@@ -321,7 +321,7 @@ const updateUser = async (req, res, next) => {
       message:
         "City Must only contain alphabetical characters and it should end with the word 'city'",
     });
-  } else if (!util.checkContactNumber(contactNumber)) {
+  } else if (!util.checkContactNumber(contact_number)) {
     return res.status(400).json({
       successful: false,
       message: "Invalid Contact Number Format. Ex(09123456789)",
@@ -329,10 +329,10 @@ const updateUser = async (req, res, next) => {
   } else {
     try {
       const existingContactUser = await knex("user")
-        .where({ contactNumber })
+        .where({ contact_number })
         .first();
       const existingContactCompany = await knex("company")
-        .where({ contactNumber })
+        .where({ contact_number })
         .first();
 
       if (existingContactUser || existingContactCompany) {
@@ -344,7 +344,7 @@ const updateUser = async (req, res, next) => {
         const result = await knex("user").where({ id }).update({
           address,
           city,
-          contact_number: contactNumber,
+          contact_number,
         });
 
         if (result === 0) {
