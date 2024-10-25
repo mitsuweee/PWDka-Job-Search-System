@@ -462,10 +462,6 @@ const updateCompanyEmail = async (req, res, next) => {
           message: "Invalid Credentials",
         });
       }
-
-      // Check if email exists in other tables
-      const adminWithEmail = await knex("admin").where({ email }).first();
-      const userWithEmail = await knex("user").where({ email }).first();
       const companyWithEmail = await knex("company").where({ email }).first();
 
       if (adminWithEmail || userWithEmail || companyWithEmail) {
