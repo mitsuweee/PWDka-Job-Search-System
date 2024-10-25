@@ -217,7 +217,7 @@ const AboutContent = () => {
             {
               name: "Joshua Brioso",
               role: "Developer",
-              img: "/imgs/brioso.jpg",
+              img: "/imgs/briosos.jpg",
             },
             {
               name: "Kevin Allen Guia",
