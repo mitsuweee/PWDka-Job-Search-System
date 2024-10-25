@@ -186,6 +186,8 @@ const UserProf = () => {
   };
 
   const handleUpdate = () => {
+    setIsModalOpen(false);
+
     const updateUserProfile = JSON.stringify({
       address: user.address,
       city: user.city,

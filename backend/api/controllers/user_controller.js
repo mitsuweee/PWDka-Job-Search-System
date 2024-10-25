@@ -330,6 +330,7 @@ const updateUser = async (req, res, next) => {
     try {
       const existingContactUser = await knex("user")
         .where({ contact_number })
+        .andWhere("id", "!=", id)
         .first();
       const existingContactCompany = await knex("company")
         .where({ contact_number })

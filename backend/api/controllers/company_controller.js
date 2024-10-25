@@ -242,6 +242,7 @@ const updateCompany = async (req, res, next) => {
         .first();
       const existingContactCompany = await knex("company")
         .where({ contact_number })
+        .andWhere("id", "!=", id)
         .first();
 
       if (existingContactUser || existingContactCompany) {
