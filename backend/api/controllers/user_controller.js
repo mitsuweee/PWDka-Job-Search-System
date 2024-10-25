@@ -110,6 +110,12 @@ const registerUser = async (req, res, next) => {
     });
   } else {
     try {
+      const existingContactUser = await knex("user")
+        .where({ contact_number })
+        .first();
+      const existingContactCompany = await knex("company")
+        .where({ contact_number })
+        .first();
       const existingId = await knex("user").where({ id }).first();
       const existingEmail = await knex("user").where({ email }).first();
       const emailInAdmin = await knex("admin").where({ email }).first();
@@ -119,20 +125,15 @@ const registerUser = async (req, res, next) => {
           successful: false,
           message: "ID already exists",
         });
-      } else if (existingEmail) {
+      } else if (existingEmail || emailInAdmin || emailInCompany) {
         return res.status(400).json({
           successful: false,
           message: "Email already exists",
         });
-      } else if (emailInAdmin) {
+      } else if (existingContactUser || existingContactCompany) {
         return res.status(400).json({
           successful: false,
-          message: "Email already exists",
-        });
-      } else if (emailInCompany) {
-        return res.status(400).json({
-          successful: false,
-          message: "Email already exists",
+          message: "Contact Number already exists",
         });
       } else {
         const disability = await knex("disability")
@@ -327,22 +328,36 @@ const updateUser = async (req, res, next) => {
     });
   } else {
     try {
-      const result = await knex("user").where({ id }).update({
-        address,
-        city,
-        contact_number: contactNumber,
-      });
+      const existingContactUser = await knex("user")
+        .where({ contactNumber })
+        .first();
+      const existingContactCompany = await knex("company")
+        .where({ contactNumber })
+        .first();
 
-      if (result === 0) {
-        return res.status(404).json({
+      if (existingContactUser || existingContactCompany) {
+        return res.status(400).json({
           successful: false,
-          message: "User not found",
+          message: "Contact Number already exists",
         });
       } else {
-        return res.status(200).json({
-          successful: true,
-          message: "User Details updated successfully",
+        const result = await knex("user").where({ id }).update({
+          address,
+          city,
+          contact_number: contactNumber,
         });
+
+        if (result === 0) {
+          return res.status(404).json({
+            successful: false,
+            message: "User not found",
+          });
+        } else {
+          return res.status(200).json({
+            successful: true,
+            message: "User Details updated successfully",
+          });
+        }
       }
     } catch (err) {
       return res.status(500).json({
@@ -536,6 +551,68 @@ const viewUserViaId = async (req, res, next) => {
     }
   }
 };
+
+const updateUserEmail = async (req, res, next) => {
+  const id = req.params.id;
+  const email = req.body.email.toLowerCase();
+  const password = req.body.password;
+
+  if (!id || !email || !password) {
+    return res.status(400).json({
+      successful: false,
+      message: "ID, Email, or Password is missing",
+    });
+  } else if (!util.checkEmail(email)) {
+    return res.status(400).json({
+      successful: false,
+      message: "Invalid Email Format",
+    });
+  } else {
+    try {
+      // Check if the user exists
+      const user = await knex("user")
+        .select("id", "email", "password")
+        .where({ id })
+        .first();
+      if (!user) {
+        return res.status(404).json({
+          successful: false,
+          message: "User not found",
+        });
+      }
+
+      // Verify the provided password
+      const passwordMatch = await bcrypt.compare(password, user.password);
+      if (!passwordMatch) {
+        return res.status(400).json({
+          successful: false,
+          message: "Invalid Credentials",
+        });
+      }
+      const adminWithEmail = await knex("admin").where({ email }).first();
+      const userWithEmail = await knex("user").where({ email }).first();
+      const companyWithEmail = await knex("company").where({ email }).first();
+      if (adminWithEmail || userWithEmail || companyWithEmail) {
+        return res.status(400).json({
+          successful: false,
+          message: "Email already exists in the system",
+        });
+      } else {
+        const result = await knex("user").where({ id }).update({ email });
+
+        return res.status(200).json({
+          successful: true,
+          message: "User email updated successfully",
+        });
+      }
+    } catch (err) {
+      return res.status(500).json({
+        successful: false,
+        message: err.message,
+      });
+    }
+  }
+};
 module.exports = {
   registerUser,
   loginUser,
@@ -543,4 +620,5 @@ module.exports = {
   updateUserProfilePicture,
   userChangePassword,
   viewUserViaId,
+  updateUserEmail,
 };

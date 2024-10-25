@@ -69,11 +69,22 @@ const registerCompany = async (req, res, next) => {
       const existingCompany = await knex("company").where({ email }).first();
       const existingAdmin = await knex("admin").where({ email }).first();
       const existingUser = await knex("user").where({ email }).first();
+      const existingContactUser = await knex("user")
+        .where({ contact_number })
+        .first();
+      const existingContactCompany = await knex("company")
+        .where({ contact_number })
+        .first();
 
       if (existingCompany || existingAdmin || existingUser) {
         return res.status(400).json({
           successful: false,
           message: "Email already exists",
+        });
+      } else if (existingContactUser || existingContactCompany) {
+        return res.status(400).json({
+          successful: false,
+          message: "Contact Number already exists",
         });
       } else {
         // Compress the profile picture
@@ -226,24 +237,38 @@ const updateCompany = async (req, res, next) => {
     });
   } else {
     try {
-      const result = await knex("company").where({ id }).update({
-        name,
-        address,
-        city,
-        description,
-        contact_number,
-      });
+      const existingContactUser = await knex("user")
+        .where({ contact_number })
+        .first();
+      const existingContactCompany = await knex("company")
+        .where({ contact_number })
+        .first();
 
-      if (result === 0) {
-        return res.status(404).json({
+      if (existingContactUser || existingContactCompany) {
+        return res.status(400).json({
           successful: false,
-          message: "Company not found",
+          message: "Contact Number already exists",
         });
       } else {
-        return res.status(200).json({
-          successful: true,
-          message: "Company Details updated successfully",
+        const result = await knex("company").where({ id }).update({
+          name,
+          address,
+          city,
+          description,
+          contact_number,
         });
+
+        if (result === 0) {
+          return res.status(404).json({
+            successful: false,
+            message: "Company not found",
+          });
+        } else {
+          return res.status(200).json({
+            successful: true,
+            message: "Company Details updated successfully",
+          });
+        }
       }
     } catch (err) {
       return res.status(500).json({

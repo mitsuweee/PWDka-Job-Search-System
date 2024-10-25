@@ -10,12 +10,12 @@ companyRouter.get("/view/:id", companyController.viewCompanyViaId); // Search Co
 
 companyRouter.put("/update/:id", companyController.updateCompany); // Update Company Details
 
-companyRouter.put("/update/email/:id", companyController.updateCompanyEmail); // Update Company Details
+companyRouter.put("/update/email/:id", companyController.updateCompanyEmail); // Update Company Email
 
 companyRouter.put(
   "/update/picture/:id",
   companyController.updateCompanyProfilePicture
-); // Update Company Details
+); // Update Company Picture
 
 companyRouter.put(
   "/update/password/:id",
