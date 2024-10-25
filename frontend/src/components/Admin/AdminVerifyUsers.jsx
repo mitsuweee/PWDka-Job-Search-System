@@ -64,7 +64,9 @@ const AdminVerifyUsers = () => {
   const formatUserData = (userData) => {
     return {
       id: userData.id,
-      fullName: userData.full_name,
+      fullName: `${userData.first_name} ${
+        userData.middle_initial ? userData.middle_initial + ". " : ""
+      }${userData.last_name}`,
       pwdId: userData.id,
       disability: userData.type,
       address: userData.address,
@@ -279,17 +281,21 @@ const AdminVerifyUsers = () => {
                     <tr key={user.id} className="hover:bg-gray-100">
                       <td className="py-2 px-4 text-left">{user.id}</td>
                       <td className="py-2 px-4 text-left">
-                        {user.full_name
-                          ? user.full_name
-                              .split(" ")
-                              .map(
-                                (word) =>
-                                  word.charAt(0).toUpperCase() +
-                                  word.slice(1).toLowerCase()
-                              )
-                              .join(" ")
+                        {user.first_name && user.last_name
+                          ? `${
+                              user.first_name.charAt(0).toUpperCase() +
+                              user.first_name.slice(1).toLowerCase()
+                            } ${
+                              user.middle_initial
+                                ? user.middle_initial.toUpperCase() + ". "
+                                : ""
+                            }${
+                              user.last_name.charAt(0).toUpperCase() +
+                              user.last_name.slice(1).toLowerCase()
+                            }`
                           : ""}
                       </td>
+
                       <td className="py-2 px-4 text-left">{user.type}</td>
                       <td className="py-2 px-4 text-center">
                         <button
