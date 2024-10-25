@@ -68,9 +68,9 @@ const AdminViewUsers = () => {
 
   const formatUserData = (userData) => ({
     id: userData.id,
-    fullName: `${userData.first_name} ${
-      userData.middle_initial ? userData.middle_initial + ". " : ""
-    }${userData.last_name}`,
+    firstName: userData.first_name,
+    middleInitial: userData.middle_initial || "", // default to empty if not present
+    lastName: userData.last_name,
     disability: userData.type,
     address: userData.address,
     city: userData.city,
@@ -135,11 +135,11 @@ const AdminViewUsers = () => {
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
   const filteredUsers = users
     .filter((user) =>
-      user.full_name.toLowerCase().includes(searchTerm.toLowerCase())
+      user.first_name.toLowerCase().includes(searchTerm.toLowerCase())
     )
     .sort((a, b) => {
-      if (sortOrder === "A-Z") return a.full_name.localeCompare(b.full_name);
-      if (sortOrder === "Z-A") return b.full_name.localeCompare(a.full_name);
+      if (sortOrder === "A-Z") return a.first_name.localeCompare(b.first_name);
+      if (sortOrder === "Z-A") return b.first_name.localeCompare(a.first_name);
       if (sortOrder === "Newest")
         return new Date(b.created_at) - new Date(a.created_at);
       return new Date(a.created_at) - new Date(b.created_at);
@@ -294,7 +294,22 @@ const AdminViewUsers = () => {
               {currentUsers.map((user) => (
                 <tr key={user.id} className="border-b hover:bg-gray-100">
                   <td className="py-3 px-6">{user.id}</td>
-                  <td className="py-3 px-6">{user.full_name}</td>
+                  <td className="py-3 px-6">
+                    {user.first_name && user.last_name
+                      ? `${
+                          user.first_name.charAt(0).toUpperCase() +
+                          user.first_name.slice(1)
+                        } ${
+                          user.middle_initial
+                            ? user.middle_initial.charAt(0).toUpperCase() + ". "
+                            : ""
+                        }${
+                          user.last_name.charAt(0).toUpperCase() +
+                          user.last_name.slice(1)
+                        }`
+                      : ""}
+                  </td>
+
                   <td className="py-3 px-6">{user.type}</td>
                   <td className="py-3 px-6 text-center">
                     <div className="flex justify-center space-x-2">
@@ -383,18 +398,22 @@ const AdminViewUsers = () => {
               <div>
                 <strong>Full Name:</strong>
                 <p className="shadow-lg p-1">
-                  {user.fullName
-                    ? user.fullName
-                        .split(" ")
-                        .map(
-                          (word) =>
-                            word.charAt(0).toUpperCase() +
-                            word.slice(1).toLowerCase()
-                        )
-                        .join(" ")
+                  {user.firstName && user.lastName
+                    ? `${
+                        user.firstName.charAt(0).toUpperCase() +
+                        user.firstName.slice(1)
+                      } ${
+                        user.middleInitial
+                          ? user.middleInitial.charAt(0).toUpperCase() + ". "
+                          : ""
+                      }${
+                        user.lastName.charAt(0).toUpperCase() +
+                        user.lastName.slice(1)
+                      }`
                     : ""}
                 </p>
               </div>
+
               <div>
                 <strong>PWD ID:</strong>
                 <p className="shadow-lg p-1">{user.id}</p>

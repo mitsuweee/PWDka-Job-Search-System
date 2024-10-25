@@ -219,7 +219,7 @@ const viewUsers = async (req, res, next) => {
         "user.id",
         "disability.type AS type",
         "user.first_name",
-        "user.middle_inital",
+        "user.middle_initial",
         "user.last_name",
         "email",
         "address",
