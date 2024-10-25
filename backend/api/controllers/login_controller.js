@@ -16,88 +16,63 @@ const login = async (req, res, next) => {
       successful: false,
       message: "Email or Password is missing",
     });
-  } else {
-    try {
-      const tables = ["user", "company"];
-      let storedPassword, role, status, id;
+  }
 
-      for (let table of tables) {
-        const rows = await knex(table)
-          .select("id", "email", "password", "role", "status")
-          .where({ email })
-          .first();
+  try {
+    const user =
+      (await knex("user")
+        .select("id", "email", "password", "role", "status")
+        .where({ email })
+        .first()) ||
+      (await knex("admin")
+        .select("id", "email", "password", "role")
+        .where({ email })
+        .first()) ||
+      (await knex("company")
+        .select("id", "email", "password", "role", "status")
+        .where({ email })
+        .first());
 
-        if (rows) {
-          id = rows.id;
-          storedPassword = rows.password;
-          role = rows.role;
-          status = rows.status;
-          break;
-        }
-      }
-      if (!storedPassword) {
-        const admin = await knex("admin")
-          .select("id", "email", "password", "role")
-          .where({ email })
-          .first();
-
-        if (admin) {
-          id = admin.id;
-          storedPassword = admin.password;
-          role = admin.role;
-        }
-      }
-
-      if (!storedPassword) {
-        return res.status(400).json({
-          successful: false,
-          message: "Invalid Credentials",
-        });
-      }
-
-      // Verify the password
-      const passwordMatch = await bcrypt.compare(password, storedPassword);
-
+    if (!user) {
+      return res.status(400).json({
+        successful: false,
+        message: "Invalid Credentials",
+      });
+    } else {
+      const passwordMatch = await bcrypt.compare(password, user.password);
       if (!passwordMatch) {
         return res.status(400).json({
           successful: false,
           message: "Invalid Credentials",
         });
+      } else {
+        if (user.status === "PENDING" && user.role !== "admin") {
+          return res.status(400).json({
+            successful: false,
+            message: `Account is under verification. Please wait for email confirmation.`,
+          });
+        } else {
+          const token = jwt.sign({ id: user.id, role: user.role }, SECRET_KEY, {
+            expiresIn: "2h",
+          });
+
+          return res.status(200).json({
+            successful: true,
+            role: user.role,
+            id: user.id,
+            token: token,
+            message: `Successfully Logged In as ${
+              user.role.charAt(0).toUpperCase() + user.role.slice(1)
+            }.`,
+          });
+        }
       }
-
-      // Check status for user and company roles
-      if (status === "PENDING" && role !== "admin") {
-        return res.status(400).json({
-          successful: false,
-          message: `${
-            role.charAt(0).toUpperCase() + role.slice(1)
-          }'s Account is under Verification. Please wait for the email confirmation.`,
-        });
-      }
-
-      // Generate a JWT token with a 2-hour expiration
-      const token = jwt.sign(
-        { id, role }, // Payload with user ID and role
-        SECRET_KEY, // Secret key to sign the token
-        { expiresIn: "2h" } // Token expiration time
-      );
-
-      // Successful login response with token
-      return res.status(200).json({
-        successful: true,
-        role: role,
-        id: id,
-        token: token, // Include the token in the response
-        message: `Successfully Logged In as ${
-          role.charAt(0).toUpperCase() + role.slice(1)
-        }.`,
-      });
-    } catch (err) {
-      return res.status(500).json({
-        successful: false,
-        message: err.message,
-      });
     }
+  } catch (err) {
+    return res.status(500).json({
+      successful: false,
+      message: err.message,
+    });
   }
 };
 
