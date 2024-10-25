@@ -39,7 +39,6 @@ const JobListing = () => {
         .get(`/user/view/${userId}`)
         .then((response) => {
           const userData = response.data.data;
-          // Set the first name instead of the full name
           setUserFullName(userData.first_name);
           const userDisabilityType = userData.type;
           setUserDisabilityType(userDisabilityType);
@@ -159,9 +158,7 @@ const JobListing = () => {
     setIsVoiceEnabled(!isVoiceEnabled);
   };
 
-  const handleSearch = () => {
-    // Trigger fetching jobs with filters
-  };
+  const handleSearch = () => {};
 
   const filteredJobs = jobs
     .filter((job) => {
@@ -516,9 +513,9 @@ const JobListing = () => {
                   className="absolute -top-4 -right-4 bg-transparent border-2 border-gray-600 text-gray-600 text-2xl font-bold py-1 px-3 rounded-full shadow-lg hover:bg-gray-600 hover:text-white hover:shadow-2xl transition transform hover:scale-105"
                   onClick={() => {
                     if (isVoiceEnabled) {
-                      handleToggleVoice(null); // Stop the voice first
+                      handleToggleVoice(null);
                     }
-                    setSelectedJobId(null); // Close the card
+                    setSelectedJobId(null);
                   }}
                 >
                   &times;

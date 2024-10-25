@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 
@@ -8,7 +8,7 @@ const LoginComp = () => {
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false); // Add loading state
+  const [loading, setLoading] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -17,7 +17,7 @@ const LoginComp = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setLoading(true); // Show loader
+    setLoading(true);
 
     const data = JSON.stringify({
       email: formValues.email.toLowerCase(),
@@ -35,10 +35,9 @@ const LoginComp = () => {
 
     axios(config)
       .then(function (response) {
-        toast.success(response.data.message); // Show success toast
-        setLoading(false); // Hide loader when the request completes
+        toast.success(response.data.message);
+        setLoading(false);
 
-        // Give some time to show the success toast before redirect
         setTimeout(() => {
           const { id, role, token } = response.data;
 
@@ -54,13 +53,13 @@ const LoginComp = () => {
           } else {
             window.location.href = "/dashc";
           }
-        }, 2000); // 2-second delay before redirecting
+        }, 2000);
       })
       .catch(function (error) {
         const errorMessage =
           error.response?.data?.message || "An error occurred";
-        toast.error(errorMessage); // Show error toast
-        setLoading(false); // Hide loader on error
+        toast.error(errorMessage);
+        setLoading(false);
       });
   };
 
@@ -116,7 +115,7 @@ const LoginComp = () => {
               </h2>
               <p className="text-gray-600 mt-5">
                 Use your credentials to log in either as a User or a Company.
-                You'll be directed to the appropriate dashboard based on your
+                You will be directed to the appropriate dashboard based on your
                 role.
               </p>
 
