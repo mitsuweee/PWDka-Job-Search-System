@@ -9,8 +9,8 @@ const JobListing = () => {
   const [isDetailsVisible, setIsDetailsVisible] = useState(false);
   const [isMoreInfoVisible, setIsMoreInfoVisible] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [locationSearchTerm, setLocationSearchTerm] = useState("");
-  const [jobType, setJobType] = useState("");
+  const [locationSearchTerm, setLocationSearchTerm] = useState(""); // For location search
+  const [jobType, setJobType] = useState(""); // For full-time or part-time filter
   const [currentPage, setCurrentPage] = useState(1);
   const [sortOption, setSortOption] = useState("newest");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -114,7 +114,7 @@ const JobListing = () => {
         : "Salary is hidden.";
 
     const jobDetails = `
-      Company: ${job.companyName}.  
+      Company: ${job.companyName}.
       Job Title: ${job.jobName}.
       Job Description: ${job.description}.
       Location: ${job.companyLocation}.
@@ -172,6 +172,7 @@ const JobListing = () => {
         jobType === "" ||
         job.positionType.toLowerCase() === jobType.toLowerCase();
 
+      // Apply all three filters: job name, city, and job type
       return jobNameMatch && cityMatch && jobTypeMatch;
     })
     .sort((a, b) => {
@@ -333,9 +334,10 @@ const JobListing = () => {
           </button>
         </div>
       </div>
-      {/* Desktop View */}
-      <div className="hidden lg:flex flex-row w-full h-full mt-6">
-        <div className="w-full lg:w-1/2 p-4 overflow-auto">
+
+      {/* Job Listings and Pagination */}
+      <div className="flex flex-col lg:flex-row w-full h-full mt-6">
+        <div className="lg:w-1/2 p-4 overflow-auto">
           <h1 className="text-3xl font-bold mb-6 text-blue-600">
             <span className="material-symbols-outlined text-2xl mr-2">
               work_update
@@ -388,6 +390,7 @@ const JobListing = () => {
                           )
                           .join(" ")}
                       </p>
+
                       <p className="text-white">
                         <span className="material-symbols-outlined mr-2">
                           location_on
@@ -401,6 +404,7 @@ const JobListing = () => {
                           )
                           .join(" ")}
                       </p>
+
                       <p className="font-semibold text-white">
                         <span className="material-symbols-outlined mr-2">
                           schedule
@@ -426,24 +430,22 @@ const JobListing = () => {
                         {toSentenceCase(job.description)}
                       </p>
                     </div>
-                    {/* Voice toggle button */}
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation(); // Prevent the job detail click event
-                        handleToggleVoice(job);
-                      }}
-                      className={`ml-4 px-4 py-2 rounded-full transition-colors duration-200 ${
-                        isVoiceEnabled && selectedJobId === job.id
-                          ? "bg-blue-500 text-white"
-                          : "bg-gray-300 text-black"
-                      } hover:bg-blue-600`}
-                    >
-                      <span className="material-symbols-outlined text-2xl">
-                        {isVoiceEnabled && selectedJobId === job.id
-                          ? "volume_up"
-                          : "volume_off"}
-                      </span>
-                    </button>
+                    {userDisabilityType !== "Deaf or Hard of Hearing" && (
+                      <button
+                        onClick={() => handleToggleVoice(job)}
+                        className={`ml-4 px-4 py-2 rounded-full transition-colors duration-200 ${
+                          isVoiceEnabled && selectedJobId === job.id
+                            ? "bg-blue-500 text-white"
+                            : "bg-gray-300 text-black"
+                        } hover:bg-blue-600`}
+                      >
+                        <span className="material-symbols-outlined text-2xl">
+                          {isVoiceEnabled && selectedJobId === job.id
+                            ? "volume_up"
+                            : "volume_off"}
+                        </span>
+                      </button>
+                    )}
                   </div>
                 </div>
               ))
@@ -459,6 +461,7 @@ const JobListing = () => {
             )}
           </div>
 
+          {/* Pagination */}
           <div className="flex justify-center mt-6">
             <ol className="flex justify-center gap-1 text-xs font-medium">
               <li>
@@ -525,103 +528,119 @@ const JobListing = () => {
           </div>
         </div>
 
-        {selectedJob && (
-          <div className="lg:w-1/2 w-full p-4 mt-4 lg:mt-0 relative">
-            <div
-              key={selectedJob.id}
-              className="p-6 bg-white rounded-lg shadow-2xl relative"
-            >
-              <button
-                className="absolute -top-4 -right-4 bg-transparent border-2 border-gray-600 text-gray-600 text-2xl font-bold py-1 px-3 rounded-full shadow-lg hover:bg-gray-600 hover:text-white hover:shadow-2xl transition transform hover:scale-105"
-                onClick={() => {
-                  setSelectedJobId(null);
-                }}
-              >
-                &times;
-              </button>
-              <h2 className="text-2xl font-semibold mb-4 text-blue-600">
-                {selectedJob.jobName
-                  .split(" ")
-                  .map(
-                    (word) =>
-                      word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-                  )
-                  .join(" ")}
-              </h2>
-              <p className="text-lg mb-2 text-gray-700 flex items-center">
-                <span className="material-symbols-outlined mr-2">work</span>
-                {selectedJob.companyName
-                  .split(" ")
-                  .map(
-                    (word) =>
-                      word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-                  )
-                  .join(" ")}
-              </p>
-              <p className="text-lg mb-4 text-gray-500 flex items-center">
-                <span className="material-symbols-outlined mr-2">
-                  location_on
-                </span>
-                {selectedJob.companyLocation
-                  .split(" ")
-                  .map(
-                    (word) =>
-                      word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-                  )
-                  .join(" ")}
-              </p>
-              <p className="text-lg mb-2 text-gray-700 flex items-center">
-                <span className="material-symbols-outlined mr-2">schedule</span>
-                {toSentenceCase(selectedJob.positionType)}
-              </p>
-              {selectedJob.salaryVisibility === "SHOW" ? (
-                <p className="text-lg mb-4 text-gray-700 flex items-center">
-                  <span className="material-symbols-outlined mr-2">
-                    payments
-                  </span>
-                  {selectedJob.salary}
-                </p>
-              ) : (
-                <p className="text-lg mb-4 text-gray-700 flex items-center">
-                  <span className="material-symbols-outlined mr-2">
-                    payments
-                  </span>
-                  Salary: Hidden
-                </p>
-              )}
-              <p className="text-lg font-medium text-gray-800 mt-6">
-                Qualifications
-              </p>
-              <ul className="text-gray-700 list-disc pl-4">
-                {selectedJob.qualifications
-                  .split("/")
-                  .map((qualification, index) => (
-                    <li key={index}>{toSentenceCase(qualification.trim())}</li>
-                  ))}
-              </ul>
-              <p className="text-lg font-medium text-gray-800 mt-6">
-                Requirements
-              </p>
-              <ul className="text-gray-700 list-disc pl-4">
-                {selectedJob.requirements
-                  .split("/")
-                  .map((requirement, index) => (
-                    <li key={index}>{toSentenceCase(requirement.trim())}</li>
-                  ))}
-              </ul>
-              <div className="mt-6 flex space-x-4">
-                <a href={`/apply?id=${selectedJob.id}`}>
-                  <button className="bg-blue-500 text-white py-3 px-6 rounded-full shadow-lg hover:bg-blue-600 hover:shadow-2xl transition transform hover:scale-105">
-                    Apply now
-                  </button>
-                </a>
+        <div className={`lg:w-1/2 p-4 hidden lg:block relative`}>
+          {selectedJob ? (
+            <div key={selectedJob.id}>
+              <div className="p-6 bg-white rounded-lg shadow-2xl relative">
                 <button
-                  className="bg-transparent border-2 border-custom-blue text-custom-blue py-3 px-6 rounded-full shadow-lg hover:bg-custom-blue hover:text-white hover:shadow-2xl transition transform hover:scale-105"
-                  onClick={() => setIsMoreInfoVisible(!isMoreInfoVisible)}
+                  className="absolute -top-4 -right-4 bg-transparent border-2 border-gray-600 text-gray-600 text-2xl font-bold py-1 px-3 rounded-full shadow-lg hover:bg-gray-600 hover:text-white hover:shadow-2xl transition transform hover:scale-105"
+                  onClick={() => {
+                    if (isVoiceEnabled) {
+                      handleToggleVoice(null);
+                    }
+                    setSelectedJobId(null);
+                  }}
                 >
-                  Learn more
+                  &times;
                 </button>
+                <h2 className="text-2xl font-semibold mb-4 text-blue-600">
+                  {selectedJob.jobName
+                    .split(" ")
+                    .map(
+                      (word) =>
+                        word.charAt(0).toUpperCase() +
+                        word.slice(1).toLowerCase()
+                    )
+                    .join(" ")}
+                </h2>
+
+                <p className="text-lg mb-2 text-gray-700 flex items-center">
+                  <span className="material-symbols-outlined mr-2">work</span>
+                  {selectedJob.companyName
+                    .split(" ")
+                    .map(
+                      (word) =>
+                        word.charAt(0).toUpperCase() +
+                        word.slice(1).toLowerCase()
+                    )
+                    .join(" ")}
+                </p>
+
+                <p className="text-lg mb-4 text-gray-500 flex items-center">
+                  <span className="material-symbols-outlined mr-2">
+                    location_on
+                  </span>
+                  {selectedJob.companyLocation
+                    .split(" ")
+                    .map(
+                      (word) =>
+                        word.charAt(0).toUpperCase() +
+                        word.slice(1).toLowerCase()
+                    )
+                    .join(" ")}
+                </p>
+
+                <p className="text-lg mb-2 text-gray-700 flex items-center">
+                  <span className="material-symbols-outlined mr-2">
+                    schedule
+                  </span>
+                  {toSentenceCase(selectedJob.positionType)}
+                </p>
+
+                {selectedJob.salaryVisibility === "SHOW" ? (
+                  <p className="text-lg mb-4 text-gray-700 flex items-center">
+                    <span className="material-symbols-outlined mr-2">
+                      payments
+                    </span>
+                    {selectedJob.salary}
+                  </p>
+                ) : (
+                  <p className="text-lg mb-4 text-gray-700 flex items-center">
+                    <span className="material-symbols-outlined mr-2">
+                      payments
+                    </span>
+                    Salary: Hidden
+                  </p>
+                )}
+
+                <p className="text-lg font-medium text-gray-800 mt-6">
+                  Qualifications
+                </p>
+                <ul className="text-gray-700 list-disc pl-4">
+                  {selectedJob.qualifications
+                    .split("/")
+                    .map((qualification, index) => (
+                      <li key={index}>
+                        {toSentenceCase(qualification.trim())}
+                      </li>
+                    ))}
+                </ul>
+                <p className="text-lg font-medium text-gray-800 mt-6">
+                  Requirements
+                </p>
+                <ul className="text-gray-700 list-disc pl-4">
+                  {selectedJob.requirements
+                    .split("/")
+                    .map((requirement, index) => (
+                      <li key={index}>{toSentenceCase(requirement.trim())}</li>
+                    ))}
+                </ul>
+
+                <div className="mt-6 flex space-x-4">
+                  <a href={`/apply?id=${selectedJob.id}`}>
+                    <button className="bg-blue-500 text-white py-3 px-6 rounded-full shadow-lg hover:bg-blue-600 hover:shadow-2xl transition transform hover:scale-105">
+                      Apply now
+                    </button>
+                  </a>
+                  <button
+                    className="bg-transparent border-2 border-custom-blue text-custom-blue py-3 px-6 rounded-full shadow-lg hover:bg-custom-blue hover:text-white hover:shadow-2xl transition transform hover:scale-105"
+                    onClick={() => setIsMoreInfoVisible(!isMoreInfoVisible)}
+                  >
+                    Learn more
+                  </button>
+                </div>
               </div>
+
               {isMoreInfoVisible && (
                 <div className="mt-6 p-6 bg-white rounded-lg shadow-2xl relative">
                   <img
@@ -634,8 +653,16 @@ const JobListing = () => {
                   </h3>
                   <p className="text-black">
                     <span className="font-medium">Company name:</span>{" "}
-                    {toSentenceCase(selectedJob.companyName)}
+                    {selectedJob.companyName
+                      .split(" ")
+                      .map(
+                        (word) =>
+                          word.charAt(0).toUpperCase() +
+                          word.slice(1).toLowerCase()
+                      )
+                      .join(" ")}
                   </p>
+
                   <p className="text-black">
                     <span className="font-medium">Email:</span>{" "}
                     {toSentenceCase(selectedJob.companyEmail)}
@@ -646,170 +673,6 @@ const JobListing = () => {
                   </p>
                   <p className="text-black">
                     <span className="font-medium">Address:</span>{" "}
-                    {toSentenceCase(selectedJob.companyLocation)}
-                  </p>
-                  <p className="text-black">
-                    <span className="font-medium">City:</span>{" "}
-                    {toSentenceCase(selectedJob.companyCity)}
-                  </p>
-                  <p className="text-black mt-4 text-sm leading-relaxed">
-                    {toSentenceCase(selectedJob.companyDescription)}
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Mobile View */}
-      <div className="lg:hidden flex flex-col w-full h-full mt-6">
-        <h1 className="text-3xl font-bold mb-6 text-blue-600">
-          <span className="material-symbols-outlined text-2xl mr-2">
-            work_update
-          </span>
-          Jobs for You,{" "}
-          {userFullName.charAt(0).toUpperCase() + userFullName.slice(1)}
-        </h1>
-
-        {currentJobs.length > 0 ? (
-          currentJobs.map((job) => (
-            <div key={job.id}>
-              <div
-                className="p-4 bg-blue-500 rounded-lg shadow-3xl cursor-pointer hover:bg-blue-600 transition transform hover:scale-95 flex items-center"
-                onClick={() => {
-                  setSelectedJobId(job.id);
-                  setIsDetailsVisible(true);
-                  setIsMoreInfoVisible(false);
-                }}
-              >
-                <img
-                  src={job.companyImage}
-                  alt="Company Logo"
-                  className="w-24 h-24 object-cover rounded-xl mr-4 shadow-xl"
-                />
-                <div>
-                  <h2 className="text-xl font-bold text-white">
-                    <span className="material-symbols-outlined mr-2">work</span>
-                    {job.jobName
-                      .split(" ")
-                      .map(
-                        (word) =>
-                          word.charAt(0).toUpperCase() +
-                          word.slice(1).toLowerCase()
-                      )
-                      .join(" ")}
-                  </h2>
-                  <p className="text-white">
-                    <span className="material-symbols-outlined mr-2">
-                      location_on
-                    </span>
-                    {job.companyLocation
-                      .split(" ")
-                      .map(
-                        (word) =>
-                          word.charAt(0).toUpperCase() +
-                          word.slice(1).toLowerCase()
-                      )
-                      .join(" ")}
-                  </p>
-                  <p className="text-white">
-                    <span className="material-symbols-outlined mr-2">
-                      location_on
-                    </span>
-                    {job.companyCity
-                      .split(" ")
-                      .map(
-                        (word) =>
-                          word.charAt(0).toUpperCase() +
-                          word.slice(1).toLowerCase()
-                      )
-                      .join(" ")}
-                  </p>
-                  <p className="font-semibold text-white">
-                    <span className="material-symbols-outlined mr-2">
-                      schedule
-                    </span>
-                    {toSentenceCase(job.positionType)}
-                  </p>
-                  {job.salaryVisibility === "SHOW" ? (
-                    <p className="font-semibold text-white">
-                      <span className="material-symbols-outlined mr-2">
-                        payments
-                      </span>
-                      {job.salary}
-                    </p>
-                  ) : (
-                    <p className="font-semibold text-white">
-                      <span className="material-symbols-outlined mr-2">
-                        payments
-                      </span>
-                      Salary: Hidden
-                    </p>
-                  )}
-                  <p className="text-gray-200 mt-2">
-                    {toSentenceCase(job.description)}
-                  </p>
-                </div>
-
-                {/* Voice toggle button */}
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation(); // Prevent the job detail click event
-                    handleToggleVoice(job);
-                  }}
-                  className={`ml-4 px-4 py-2 rounded-full transition-colors duration-200 ${
-                    isVoiceEnabled && selectedJobId === job.id
-                      ? "bg-blue-500 text-white"
-                      : "bg-gray-300 text-black"
-                  } hover:bg-blue-600`}
-                >
-                  <span className="material-symbols-outlined text-2xl">
-                    {isVoiceEnabled && selectedJobId === job.id
-                      ? "volume_up"
-                      : "volume_off"}
-                  </span>
-                </button>
-              </div>
-
-              {selectedJob && selectedJob.id === job.id && (
-                <div className="mt-4 p-6 bg-white rounded-lg shadow-2xl relative">
-                  {/* Close button */}
-                  <button
-                    className="absolute top-4 right-4 bg-transparent border border-gray-300 text-gray-600 text-2xl font-bold py-1 px-3 rounded-full hover:bg-gray-300 transition transform hover:scale-105"
-                    onClick={() => {
-                      setSelectedJobId(null);
-                      setIsMoreInfoVisible(false);
-                    }}
-                  >
-                    &times;
-                  </button>
-
-                  <h2 className="text-2xl font-semibold mb-4 text-blue-600">
-                    {selectedJob.jobName
-                      .split(" ")
-                      .map(
-                        (word) =>
-                          word.charAt(0).toUpperCase() +
-                          word.slice(1).toLowerCase()
-                      )
-                      .join(" ")}
-                  </h2>
-                  <p className="text-lg mb-2 text-gray-700 flex items-center">
-                    <span className="material-symbols-outlined mr-2">work</span>
-                    {selectedJob.companyName
-                      .split(" ")
-                      .map(
-                        (word) =>
-                          word.charAt(0).toUpperCase() +
-                          word.slice(1).toLowerCase()
-                      )
-                      .join(" ")}
-                  </p>
-                  <p className="text-lg mb-4 text-gray-500 flex items-center">
-                    <span className="material-symbols-outlined mr-2">
-                      location_on
-                    </span>
                     {selectedJob.companyLocation
                       .split(" ")
                       .map(
@@ -819,115 +682,33 @@ const JobListing = () => {
                       )
                       .join(" ")}
                   </p>
-                  <p className="text-lg mb-2 text-gray-700 flex items-center">
-                    <span className="material-symbols-outlined mr-2">
-                      schedule
-                    </span>
-                    {toSentenceCase(selectedJob.positionType)}
+                  <p className="text-black">
+                    <span className="font-medium">City:</span>{" "}
+                    {selectedJob.companyCity
+                      .split(" ")
+                      .map(
+                        (word) =>
+                          word.charAt(0).toUpperCase() +
+                          word.slice(1).toLowerCase()
+                      )
+                      .join(" ")}
                   </p>
-                  {selectedJob.salaryVisibility === "SHOW" ? (
-                    <p className="text-lg mb-4 text-gray-700 flex items-center">
-                      <span className="material-symbols-outlined mr-2">
-                        payments
-                      </span>
-                      {selectedJob.salary}
-                    </p>
-                  ) : (
-                    <p className="text-lg mb-4 text-gray-700 flex items-center">
-                      <span className="material-symbols-outlined mr-2">
-                        payments
-                      </span>
-                      Salary: Hidden
-                    </p>
-                  )}
-                  <p className="text-lg font-medium text-gray-800 mt-6">
-                    Qualifications
-                  </p>
-                  <ul className="text-gray-700 list-disc pl-4">
-                    {selectedJob.qualifications
-                      .split("/")
-                      .map((qualification, index) => (
-                        <li key={index}>
-                          {toSentenceCase(qualification.trim())}
-                        </li>
-                      ))}
-                  </ul>
-                  <p className="text-lg font-medium text-gray-800 mt-6">
-                    Requirements
-                  </p>
-                  <ul className="text-gray-700 list-disc pl-4">
-                    {selectedJob.requirements
-                      .split("/")
-                      .map((requirement, index) => (
-                        <li key={index}>
-                          {toSentenceCase(requirement.trim())}
-                        </li>
-                      ))}
-                  </ul>
-                  <div className="mt-6 flex space-x-4">
-                    <a href={`/apply?id=${selectedJob.id}`}>
-                      <button className="bg-blue-500 text-white py-3 px-6 rounded-full shadow-lg hover:bg-blue-600 hover:shadow-2xl transition transform hover:scale-105">
-                        Apply now
-                      </button>
-                    </a>
-                    <button
-                      className="bg-transparent border-2 border-custom-blue text-custom-blue py-3 px-6 rounded-full shadow-lg hover:bg-custom-blue hover:text-white hover:shadow-2xl transition transform hover:scale-105"
-                      onClick={() => setIsMoreInfoVisible(!isMoreInfoVisible)}
-                    >
-                      Learn more
-                    </button>
-                  </div>
 
-                  {/* Conditional rendering for 'Learn more' additional information */}
-                  {isMoreInfoVisible && (
-                    <div className="mt-6 p-6 bg-white rounded-lg shadow-2xl relative">
-                      <img
-                        src={selectedJob.companyImage}
-                        alt="Company"
-                        className="w-20 h-20 object-cover rounded-full absolute top-6 right-6"
-                      />
-                      <h3 className="text-xl font-semibold text-custom-blue mb-4">
-                        Company overview
-                      </h3>
-                      <p className="text-black">
-                        <span className="font-medium">Company name:</span>{" "}
-                        {toSentenceCase(selectedJob.companyName)}
-                      </p>
-                      <p className="text-black">
-                        <span className="font-medium">Email:</span>{" "}
-                        {toSentenceCase(selectedJob.companyEmail)}
-                      </p>
-                      <p className="text-black">
-                        <span className="font-medium">Contact number:</span>{" "}
-                        {toSentenceCase(selectedJob.companyContact)}
-                      </p>
-                      <p className="text-black">
-                        <span className="font-medium">Address:</span>{" "}
-                        {toSentenceCase(selectedJob.companyLocation)}
-                      </p>
-                      <p className="text-black">
-                        <span className="font-medium">City:</span>{" "}
-                        {toSentenceCase(selectedJob.companyCity)}
-                      </p>
-                      <p className="text-black mt-4 text-sm leading-relaxed">
-                        {toSentenceCase(selectedJob.companyDescription)}
-                      </p>
-                    </div>
-                  )}
+                  <p className="text-black mt-4 text-sm leading-relaxed">
+                    {selectedJob.companyDescription.charAt(0).toUpperCase() +
+                      selectedJob.companyDescription.slice(1).toLowerCase()}
+                  </p>
                 </div>
               )}
             </div>
-          ))
-        ) : (
-          <div className="flex justify-center items-center h-64">
-            <p className="text-gray-600">
-              Currently, there are no job listings available. Please rest
-              assured, we are actively working to provide new opportunities
-              tailored to your unique skills and abilities. Stay positive—your
-              next opportunity is just around the corner!
-            </p>
-          </div>
-        )}
+          ) : (
+            <div className="p-6 bg-white rounded-lg shadow-lg text-center">
+              <p className="text-xl text-gray-600">
+                Select a job listing to view details
+              </p>
+            </div>
+          )}
+        </div>
       </div>
 
       {isModalOpen && (
