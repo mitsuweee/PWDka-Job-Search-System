@@ -13,6 +13,8 @@ const AdminVerifyComp = () => {
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const companiesPerPage = 10;
+  const [showDeclineModal, setShowDeclineModal] = useState(false);
+  const [declineReason, setDeclineReason] = useState("");
 
   const navigate = useNavigate();
 
@@ -106,15 +108,21 @@ const AdminVerifyComp = () => {
       });
   };
 
-  const handleDecline = (companyId) => {
+  const openDeclineModal = (companyId) => {
+    setSelectedCompany(companyId);
+    setShowDeclineModal(true);
+  };
+
+  const confirmDecline = () => {
     if (actionInProgress) return;
     setActionInProgress(true);
     const config = {
       method: "delete",
-      url: `/verification/company/${companyId}`,
+      url: `/verification/company/${selectedCompany}`,
       headers: {
         "Content-Type": "application/json",
       },
+      data: { reason: declineReason },
     };
 
     setLoading(true);
@@ -122,12 +130,14 @@ const AdminVerifyComp = () => {
       .then(function () {
         toast.success("Company declined successfully");
         setCompanies((prevCompanies) =>
-          prevCompanies.filter((company) => company.id !== companyId)
+          prevCompanies.filter((company) => company.id !== selectedCompany)
         );
         setSelectedCompany(null);
         setShowModal(false);
+        setShowDeclineModal(false);
         setLoading(false);
         setActionInProgress(false);
+        setDeclineReason("");
       })
       .catch(function (error) {
         setLoading(false);
@@ -268,7 +278,6 @@ const AdminVerifyComp = () => {
         </div>
 
         <div className="mt-4">
-          {/* Table */}
           {currentCompanies.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="min-w-full bg-white rounded-lg shadow-md">
@@ -337,7 +346,7 @@ const AdminVerifyComp = () => {
                                 ? "opacity-50 cursor-not-allowed"
                                 : ""
                             }`}
-                            onClick={() => handleDecline(company.id)}
+                            onClick={() => openDeclineModal(company.id)}
                           >
                             Decline
                           </button>
@@ -354,7 +363,6 @@ const AdminVerifyComp = () => {
             </p>
           )}
 
-          {/* View company functionality */}
           {selectedCompany && showModal && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
               <div className="bg-white rounded-lg p-6 w-[600px] h-[700px] shadow-lg hover:shadow-2xl transition-shadow duration-300 max-h-[90vh] overflow-y-auto">
@@ -444,7 +452,6 @@ const AdminVerifyComp = () => {
                   </div>
                 </div>
 
-                {/* Accept or Decline functionality */}
                 <div className="flex justify-end mt-4 space-x-2">
                   <button
                     className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
@@ -454,7 +461,7 @@ const AdminVerifyComp = () => {
                   </button>
                   <button
                     className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
-                    onClick={() => handleDecline(selectedCompany.id)}
+                    onClick={() => openDeclineModal(selectedCompany.id)}
                   >
                     Decline
                   </button>
@@ -575,6 +582,37 @@ const AdminVerifyComp = () => {
                 className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
               >
                 Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Decline Modal */}
+      {showDeclineModal && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+              Decline Reason
+            </h2>
+            <textarea
+              value={declineReason}
+              onChange={(e) => setDeclineReason(e.target.value)}
+              placeholder="Enter reason for decline"
+              className="w-full h-32 p-2 border border-gray-300 rounded-lg resize-none"
+            ></textarea>
+            <div className="flex justify-end space-x-4 mt-4">
+              <button
+                onClick={() => setShowDeclineModal(false)}
+                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-200"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDecline}
+                className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
+              >
+                Confirm Decline
               </button>
             </div>
           </div>

@@ -141,11 +141,19 @@ const verifyCompany = async (req, res, next) => {
 
 const declineCompany = async (req, res, next) => {
   const id = req.params.id;
+  const { reason } = req.body; // Retrieve the decline reason from the request body
 
   if (!id) {
     return res.status(404).json({
       successful: false,
       message: "ID is missing",
+    });
+  }
+
+  if (!reason) {
+    return res.status(400).json({
+      successful: false,
+      message: "Reason for declining is required",
     });
   }
 
@@ -173,14 +181,23 @@ const declineCompany = async (req, res, next) => {
       from: process.env.EMAIL_USER,
       to: company.email,
       subject: "UNABLE TO VERIFY COMPANY",
-      text: `Dear User,\n\nYour request to verify your company has been declined. Ensure the company is legitimate and all data entered is correct. The company can request verification again by re-registering.\n\nSincerely Yours,\nPWDKA TEAM`,
+      text: `Dear User,
+
+Your request to verify your company has been declined for the following reason:
+
+"${reason}"
+
+Please ensure the company is legitimate and all data entered is correct. You can request verification again by re-registering.
+
+Sincerely Yours,
+PWDKA TEAM`,
     };
 
     await transporter.sendMail(mailOptions);
 
     return res.status(200).json({
       successful: true,
-      message: "Successfully Deleted Company",
+      message: "Successfully Deleted Company and sent notification email",
     });
   } catch (err) {
     return res.status(500).json({
@@ -243,11 +260,19 @@ const verifyUser = async (req, res, next) => {
 
 const declineUser = async (req, res, next) => {
   const id = req.params.id;
+  const { reason } = req.body; // Retrieve the decline reason from the request body
 
   if (!id) {
     return res.status(404).json({
       successful: false,
       message: "ID is missing",
+    });
+  }
+
+  if (!reason) {
+    return res.status(400).json({
+      successful: false,
+      message: "Reason for declining is required",
     });
   }
 
@@ -275,14 +300,23 @@ const declineUser = async (req, res, next) => {
       from: process.env.EMAIL_USER,
       to: user.email,
       subject: "UNABLE TO VERIFY USER",
-      text: `Dear User,\n\nYour request to verify your account has been declined. Ensure all data entered is correct. You can request verification again by re-registering.\n\nSincerely Yours,\nPWDKA TEAM`,
+      text: `Dear User,
+
+Your request to verify your account has been declined for the following reason:
+
+"${reason}"
+
+Please ensure that all data entered is correct. You can request verification again by re-registering.
+
+Sincerely Yours,
+PWDKA TEAM`,
     };
 
     await transporter.sendMail(mailOptions);
 
     return res.status(200).json({
       successful: true,
-      message: "Successfully Deleted User",
+      message: "Successfully Deleted User and sent notification email",
     });
   } catch (err) {
     return res.status(500).json({

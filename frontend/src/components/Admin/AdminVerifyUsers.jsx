@@ -14,6 +14,8 @@ const AdminVerifyUsers = () => {
   const usersPerPage = 10;
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState("");
+  const [showDeclineModal, setShowDeclineModal] = useState(false); // State for decline modal
+  const [declineReason, setDeclineReason] = useState(""); // Store decline reason
 
   const navigate = useNavigate();
 
@@ -117,23 +119,33 @@ const AdminVerifyUsers = () => {
       });
   };
 
-  const handleDecline = (userId) => {
+  const openDeclineModal = (userId) => {
+    setSelectedUser(userId);
+    setShowDeclineModal(true);
+  };
+
+  const confirmDecline = () => {
     const config = {
       method: "delete",
-      url: `/verification/user/${userId}`,
+      url: `/verification/user/${selectedUser}`,
       headers: {
         "Content-Type": "application/json",
       },
+      data: { reason: declineReason }, // Include decline reason
     };
 
     setLoading(true);
     axios(config)
       .then(function () {
         toast.success("User declined successfully");
-        setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
+        setUsers((prevUsers) =>
+          prevUsers.filter((user) => user.id !== selectedUser)
+        );
         setSelectedUser(null);
         setShowModal(false);
+        setShowDeclineModal(false);
         setLoading(false);
+        setDeclineReason(""); // Reset decline reason
       })
       .catch(function (error) {
         setLoading(false);
@@ -321,7 +333,7 @@ const AdminVerifyUsers = () => {
                           </button>
                           <button
                             className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-200"
-                            onClick={() => handleDecline(user.id)}
+                            onClick={() => openDeclineModal(user.id)}
                           >
                             Decline
                           </button>
@@ -452,7 +464,7 @@ const AdminVerifyUsers = () => {
                   </button>
                   <button
                     className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
-                    onClick={() => handleDecline(selectedUser.id)}
+                    onClick={() => openDeclineModal(selectedUser.id)}
                   >
                     Decline
                   </button>
@@ -535,7 +547,7 @@ const AdminVerifyUsers = () => {
                 >
                   <path
                     fillRule="evenodd"
-                    d="M7.293 14.707a1 1 010-1.414L10.586 10 7.293 6.707a1 1 011.414-1.414l4 4a1 1 010 1.414l-4-4a1 1 01-1.414 0z"
+                    d="M7.293 14.707a1 1 010-1.414L10.586 10 7.293 6.707a1 1 011.414-1.414l4-4a1 1 010 1.414l-4-4a1 1 01-1.414 0z"
                     clipRule="evenodd"
                   />
                 </svg>
@@ -590,6 +602,37 @@ const AdminVerifyUsers = () => {
                 className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
               >
                 Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Decline Modal */}
+      {showDeclineModal && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+              Decline Reason
+            </h2>
+            <textarea
+              value={declineReason}
+              onChange={(e) => setDeclineReason(e.target.value)}
+              placeholder="Enter reason for decline"
+              className="w-full h-32 p-2 border border-gray-300 rounded-lg resize-none"
+            ></textarea>
+            <div className="flex justify-end space-x-4 mt-4">
+              <button
+                onClick={() => setShowDeclineModal(false)}
+                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-200"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDecline}
+                className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
+              >
+                Confirm Decline
               </button>
             </div>
           </div>
