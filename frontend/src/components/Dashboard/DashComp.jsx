@@ -1,26 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Bar } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
-
-// Register the required chart components
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
 
 const CompanyDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -60,75 +40,6 @@ const CompanyDashboard = () => {
       console.error("Company ID is not available in session storage");
     }
   }, []);
-
-  // Data for the main bar chart (Job Listings and Job Applications)
-  const mainBarChartData = {
-    labels: ["Job Listings", "Job Applications"],
-    datasets: [
-      {
-        label: "Counts",
-        data: [companyCounts.job_listings, companyCounts.job_applications],
-        backgroundColor: ["rgba(75, 192, 192, 1)", "rgba(153, 102, 255, 1)"],
-        borderColor: ["rgba(75, 192, 192, 1)", "rgba(153, 102, 255, 1)"],
-        borderWidth: 1,
-      },
-    ],
-  };
-
-  // Data for the full-time and part-time bar chart
-  const jobTypeBarChartData = {
-    labels: ["Full-Time", "Part-Time"],
-    datasets: [
-      {
-        label: "Job Listings",
-        data: [
-          companyCounts.full_time_job_listings,
-          companyCounts.part_time_job_listings,
-        ],
-        backgroundColor: ["rgba(54, 162, 235, 1)", "rgba(255, 159, 64, 1)"],
-        borderColor: ["rgba(54, 162, 235, 1)", "rgba(255, 159, 64, 1)"],
-        borderWidth: 1,
-      },
-    ],
-  };
-
-  // Options for the first bar chart (Job Listings and Applications)
-  const jobActivityChartOptions = {
-    scales: {
-      y: {
-        beginAtZero: true,
-      },
-    },
-    responsive: true,
-    plugins: {
-      legend: {
-        position: "top",
-      },
-      title: {
-        display: true,
-        text: "Company Job Activity Summary",
-      },
-    },
-  };
-
-  // Options for the second bar chart (Full-Time and Part-Time)
-  const jobTypeChartOptions = {
-    scales: {
-      y: {
-        beginAtZero: true,
-      },
-    },
-    responsive: true,
-    plugins: {
-      legend: {
-        position: "top",
-      },
-      title: {
-        display: true,
-        text: "Full-Time and Part-Time Job Distribution",
-      },
-    },
-  };
 
   const confirmLogout = () => {
     localStorage.removeItem("Id");
@@ -223,25 +134,6 @@ const CompanyDashboard = () => {
           <h1 className="text-4xl font-bold text-blue-900">
             Company Dashboard
           </h1>
-        </div>
-
-        {/* Flexbox container to hold both charts side by side */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Bar Chart for Job Listings and Job Applications */}
-          <div className="bg-white rounded-lg shadow-md p-6 h-80">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">
-              Job Activities
-            </h2>
-            <Bar data={mainBarChartData} options={jobActivityChartOptions} />
-          </div>
-
-          {/* Bar Chart for Full-Time and Part-Time Job Listings */}
-          <div className="bg-white rounded-lg shadow-md p-6 h-80">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">
-              Job Types
-            </h2>
-            <Bar data={jobTypeBarChartData} options={jobTypeChartOptions} />
-          </div>
         </div>
 
         {/* Dashboard Stats Cards */}

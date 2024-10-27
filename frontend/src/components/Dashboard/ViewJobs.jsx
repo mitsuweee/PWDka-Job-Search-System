@@ -88,21 +88,12 @@ const ViewJobs = () => {
       salaryVisibility: jobData.salary_visibility || "HIDE",
       status: jobData.status || "ACTIVE",
       positionType: jobData.positiontype_id === 1 ? "fulltime" : "parttime",
-      disabilityCategories: jobData.disability_ids || [],
+      disabilityCategories: jobData.disability_ids || [], // Set an empty array if undefined
     });
+
+    // Make sure to initialize selectedDisabilityCategories as an array
     setSelectedDisabilityCategories(jobData.disability_ids || []);
     setIsUpdateModalOpen(true);
-  };
-
-  const handleCheckboxChange = (e) => {
-    const { value, checked } = e.target;
-    if (checked) {
-      setSelectedDisabilityCategories((prev) => [...prev, value]);
-    } else {
-      setSelectedDisabilityCategories((prev) =>
-        prev.filter((category) => category !== value)
-      );
-    }
   };
 
   const handleChange = (e) => {
@@ -156,6 +147,17 @@ const ViewJobs = () => {
   const handleDeleteJobListing = (id) => {
     setSelectedJobId(id);
     setIsDeleteModalOpen(true);
+  };
+
+  const handleCheckboxChange = (e) => {
+    const { value, checked } = e.target;
+    if (checked) {
+      setSelectedDisabilityCategories((prev) => [...prev, value]);
+    } else {
+      setSelectedDisabilityCategories((prev) =>
+        prev.filter((category) => category !== value)
+      );
+    }
   };
 
   const confirmDelete = () => {
@@ -724,14 +726,14 @@ const ViewJobs = () => {
                     </label>
                     <div className="flex flex-wrap gap-4">
                       {[
-                        "Visual Disability",
                         "Deaf or Hard of Hearing",
+                        "Intellectual Disability",
                         "Learning Disability",
                         "Mental Disability",
                         "Physical Disability (Orthopedic)",
                         "Psychosocial Disability",
                         "Speech and Language Impairment",
-                        "Intellectual Disability",
+                        "Visual Disability",
                         "Cancer (RA11215)",
                         "Rare Disease (RA10747)",
                       ].map((category) => (

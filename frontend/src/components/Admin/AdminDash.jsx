@@ -2,26 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Bar } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
 import toast, { Toaster } from "react-hot-toast";
-
-// Register the required chart components
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
 
 const AdminDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -72,66 +53,6 @@ const AdminDashboard = () => {
 
   const closeLogoutModal = () => {
     setIsLogoutModalOpen(false); // Close logout confirmation modal
-  };
-
-  // Data for the bar chart
-  const barChartData = {
-    labels: [
-      "Verified Users",
-      "Pending Users",
-      "Verified Companies",
-      "Pending Companies",
-      "Job Listings",
-      "Job Applications",
-    ],
-    datasets: [
-      {
-        label: "Counts",
-        data: [
-          dashboardCounts.verified_users,
-          dashboardCounts.pending_users,
-          dashboardCounts.verified_companies,
-          dashboardCounts.pending_companies,
-          dashboardCounts.total_job_listings,
-          dashboardCounts.total_job_application,
-        ],
-        backgroundColor: [
-          "rgba(75, 192, 192, 1)", // Solid teal
-          "rgba(153, 102, 255, 1)", // Solid purple
-          "rgba(255, 159, 64, 1)", // Solid orange
-          "rgba(54, 162, 235, 1)", // Solid blue
-          "rgba(255, 206, 86, 1)", // Solid yellow
-          "rgba(75, 192, 192, 1)", // Solid teal
-        ],
-        borderColor: [
-          "rgba(75, 192, 192, 1)",
-          "rgba(153, 102, 255, 1)",
-          "rgba(255, 159, 64, 1)",
-          "rgba(54, 162, 235, 1)",
-          "rgba(255, 206, 86, 1)",
-          "rgba(75, 192, 192, 1)",
-        ],
-        borderWidth: 1,
-      },
-    ],
-  };
-
-  const barChartOptions = {
-    scales: {
-      y: {
-        beginAtZero: true,
-      },
-    },
-    responsive: true,
-    plugins: {
-      legend: {
-        position: "top",
-      },
-      title: {
-        display: true,
-        text: "Dashboard Statistics",
-      },
-    },
   };
 
   return (
@@ -252,14 +173,6 @@ const AdminDashboard = () => {
               </span>
             </button>
           </div>
-        </div>
-
-        {/* Bar Chart Section */}
-        <div className="bg-white p-6 rounded-lg shadow-lg mt-6 hover:shadow-2xl transition-shadow duration-300 ease-in-out w-full  md:h-[550px]">
-          <Bar
-            data={barChartData}
-            options={{ ...barChartOptions, maintainAspectRatio: false }}
-          />
         </div>
 
         {/* Dashboard Stats Cards */}

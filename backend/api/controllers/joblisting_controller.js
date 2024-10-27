@@ -4,16 +4,19 @@ const { jobListingModel } = require("../models/joblisting_model");
 const util = require("./util");
 
 const postJobs = async (req, res, next) => {
-  let position_name = req.body.position_name;
-  let description = req.body.description;
-  let qualification = req.body.qualification;
-  let requirement = req.body.requirement;
-  let minimum_salary = req.body.minimum_salary;
-  let maximum_salary = req.body.maximum_salary;
-  let positiontype_id = req.body.positiontype_id;
-  let company_id = req.body.company_id;
-  let disability_ids = req.body.disability_ids;
+  let {
+    position_name,
+    description,
+    qualification,
+    requirement,
+    minimum_salary,
+    maximum_salary,
+    positiontype_id,
+    company_id,
+    disability_ids,
+  } = req.body;
 
+  // Input validation
   if (
     !position_name ||
     !description ||
@@ -48,67 +51,68 @@ const postJobs = async (req, res, next) => {
       message:
         "Maximum Salary must only contain numbers that are Equal or greater than minimum Salary",
     });
-  } else {
-    try {
-      // Check if position type exists
-      const positionType = await knex("position_type")
-        .select("id")
-        .where("type", positiontype_id)
-        .first();
+  }
 
-      if (!positionType) {
-        return res.status(400).json({
-          successful: false,
-          message: "Position Type Id is invalid",
-        });
-      } else {
-        // Insert the job listing
-        const [jobListingId] = await knex("job_listing")
-          .insert({
-            position_name,
-            description,
-            qualification,
-            requirement,
-            minimum_salary,
-            maximum_salary,
-            positiontype_id: positionType.id,
-            company_id,
-          })
-          .returning("id");
+  try {
+    // Check if position type exists
+    const positionType = await knex("position_type")
+      .select("id")
+      .where("type", positiontype_id)
+      .first();
 
-        // Validate and insert disability job listings
-        for (const disability_id of disability_ids) {
-          const disability = await knex("disability")
-            .select("id")
-            .where("type", disability_id)
-            .first();
-
-          if (!disability) {
-            // Rollback job listing creation if disability_id is invalid
-            await knex("job_listing").where("id", jobListingId).del();
-            return res.status(400).json({
-              successful: false,
-              message: "Disability Id does not exist",
-            });
-          } else {
-            await knex("disability_job_listing").insert({
-              disability_id: disability.id,
-              joblisting_id: jobListingId,
-            });
-          }
-
-          return res.status(200).json({
-            successful: true,
-            message: "Job listing posted successfully!",
-          });
-        }
-      }
-    } catch (err) {
-      return res.status(500).json({
+    if (!positionType) {
+      return res.status(400).json({
         successful: false,
-        message: err.message,
+        message: "Position Type Id is invalid",
       });
     }
+
+    // Insert the job listing
+    const [jobListingId] = await knex("job_listing")
+      .insert({
+        position_name,
+        description,
+        qualification,
+        requirement,
+        minimum_salary,
+        maximum_salary,
+        positiontype_id: positionType.id,
+        company_id,
+      })
+      .returning("id");
+
+    // Insert all selected disability types
+    for (const disability_id of disability_ids) {
+      const disability = await knex("disability")
+        .select("id")
+        .where("type", disability_id)
+        .first();
+
+      if (!disability) {
+        // Rollback job listing creation if disability_id is invalid
+        await knex("job_listing").where("id", jobListingId).del();
+        return res.status(400).json({
+          successful: false,
+          message: "Disability Id does not exist",
+        });
+      } else {
+        await knex("disability_job_listing").insert({
+          disability_id: disability.id,
+          joblisting_id: jobListingId,
+        });
+      }
+    }
+
+    // Move the success response outside the loop
+    return res.status(200).json({
+      successful: true,
+      message: "Job listing posted successfully!",
+    });
+  } catch (err) {
+    return res.status(500).json({
+      successful: false,
+      message: err.message,
+    });
   }
 };
 
