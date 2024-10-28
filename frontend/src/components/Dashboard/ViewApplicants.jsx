@@ -56,6 +56,9 @@ const ViewApplicants = () => {
             email: applicant.email,
             resume: applicant.resume,
             jobAppliedFor: applicant.position_name,
+            dateCreated: applicant.date_created
+              ? new Date(applicant.date_created).toLocaleDateString()
+              : null, // Format as date only
             profile: {
               fullName: `${applicant.first_name} ${applicant.middle_initial}. ${applicant.last_name}`,
               email: applicant.email,
@@ -439,6 +442,7 @@ const ViewApplicants = () => {
               <tr className="bg-gray-200 text-gray-700">
                 <th className="py-3 px-6 text-left">Full Name</th>
                 <th className="py-3 px-6 text-left">Email</th>
+                <th className="py-3 px-6 text-left">Date Applied</th>
                 <th className="py-3 px-6 text-center">Actions</th>
               </tr>
             </thead>
@@ -459,8 +463,11 @@ const ViewApplicants = () => {
                         )
                         .join(" ")}
                     </td>
-
                     <td className="py-3 px-6 text-left">{applicant.email}</td>
+                    <td className="py-3 px-6 text-left">
+                      {applicant.dateCreated}
+                    </td>{" "}
+                    {/* New Date Created Column */}
                     <td className="py-3 px-6 text-center space-x-2">
                       <button
                         className="py-1 px-2 bg-blue-500 text-white rounded hover:bg-blue-600"

@@ -100,8 +100,9 @@ const viewAllUsersApplicationsViaJobListingId = async (req, res, next) => {
           "user.birth_date",
           "user.contact_number",
           "user.formal_picture",
-          "resume",
-          "job_listing.position_name"
+          "job_application.resume",
+          "job_listing.position_name",
+          "job_application.date_created" // Include date_created field
         )
         .join("user", "job_application.user_id", "user.id")
         .join("disability", "user.disability_id", "disability.id")
@@ -115,13 +116,16 @@ const viewAllUsersApplicationsViaJobListingId = async (req, res, next) => {
           message: "Job Applications not found",
         });
       } else {
-        // Convert BLOB data to string
+        // Convert BLOB data to string and format date_created
         const processedApplications = applications.map((app) => ({
           ...app,
           formal_picture: app.formal_picture
             ? app.formal_picture.toString()
             : null,
           resume: app.resume ? app.resume.toString() : null,
+          date_created: app.date_created
+            ? new Date(app.date_created).toLocaleString()
+            : null,
         }));
 
         return res.status(200).json({
