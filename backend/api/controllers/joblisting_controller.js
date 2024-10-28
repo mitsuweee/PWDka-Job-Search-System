@@ -6,11 +6,13 @@ const util = require("./util");
 const postJobs = async (req, res, next) => {
   let {
     position_name,
+    level,
     description,
     qualification,
     requirement,
     minimum_salary,
     maximum_salary,
+    salary_visibility,
     positiontype_id,
     company_id,
     disability_ids,
@@ -19,9 +21,13 @@ const postJobs = async (req, res, next) => {
   // Input validation
   if (
     !position_name ||
+    !level ||
     !description ||
     !qualification ||
     !requirement ||
+    !minimum_salary ||
+    !maximum_salary ||
+    !salary_visibility ||
     !positiontype_id ||
     !company_id ||
     !disability_ids ||
@@ -75,11 +81,13 @@ const postJobs = async (req, res, next) => {
     const [jobListingId] = await knex("job_listing")
       .insert({
         position_name,
+        level,
         description,
         qualification,
         requirement,
         minimum_salary,
         maximum_salary,
+        salary_visibility,
         positiontype_id: positionType.id,
         company_id,
       })
@@ -134,6 +142,7 @@ const viewJobListing = async (req, res, next) => {
         .select(
           "job_listing.id",
           "job_listing.position_name",
+          "job_listing.level",
           "job_listing.description",
           "job_listing.qualification",
           "job_listing.requirement",
@@ -172,6 +181,7 @@ const viewJobListing = async (req, res, next) => {
         .groupBy(
           "job_listing.id",
           "job_listing.position_name",
+          "job_listing.level",
           "job_listing.description",
           "job_listing.qualification",
           "job_listing.requirement",
@@ -270,6 +280,8 @@ const viewJobListingViaUserNewestToOldest = async (req, res, next) => {
             "job_listing.id",
             "job_listing.status",
             "job_listing.position_name",
+            "job_listing.level",
+
             "job_listing.description",
             "job_listing.qualification",
             "job_listing.requirement",
@@ -362,6 +374,8 @@ const viewJobsCreatedByCompanyNewestToOldest = async (req, res, next) => {
         "job_listing.id",
         "job_listing.status",
         "job_listing.position_name",
+        "job_listing.level",
+
         "job_listing.description",
         "job_listing.qualification",
         "job_listing.minimum_salary",
@@ -376,6 +390,8 @@ const viewJobsCreatedByCompanyNewestToOldest = async (req, res, next) => {
         "job_listing.id",
         "job_listing.status",
         "job_listing.position_name",
+        "job_listing.level",
+
         "job_listing.description",
         "job_listing.qualification",
         "job_listing.requirement",
@@ -429,6 +445,7 @@ const updateJobListing = async (req, res, next) => {
   const id = req.params.id;
   const status = req.body.status;
   const position_name = req.body.position_name;
+  const level = req.body.level;
   const description = req.body.description;
   const qualification = req.body.qualification;
   const requirement = req.body.requirement;
@@ -441,6 +458,7 @@ const updateJobListing = async (req, res, next) => {
     !id ||
     !status ||
     !position_name ||
+    !level ||
     !description ||
     !qualification ||
     !requirement ||
@@ -493,6 +511,7 @@ const updateJobListing = async (req, res, next) => {
           const result = await trx("job_listing").where("id", id).update({
             status,
             position_name,
+            level,
             description,
             qualification,
             requirement,

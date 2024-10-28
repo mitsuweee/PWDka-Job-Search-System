@@ -171,7 +171,8 @@ const viewUserJobApplicationStatus = async (req, res, next) => {
             "job_listing.id"
           )
           .join("company", "job_listing.company_id", "company.id")
-          .where("job_application.user_id", id);
+          .where("job_application.user_id", id)
+          .orderBy("job_listing.date_created", "desc");
 
         if (applications.length === 0) {
           return res.status(404).json({
