@@ -129,20 +129,41 @@ const AdminViewJobs = () => {
     <div className="flex flex-col md:flex-row min-h-screen bg-blue-100">
       <Toaster position="top-center" reverseOrder={false} />
 
+      {/* Sidebar */}
       <aside
         className={`bg-custom-blue w-full md:w-[300px] lg:w-[250px] p-4 flex flex-col items-center md:relative fixed top-0 left-0 min-h-screen h-full transition-transform transform ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } md:translate-x-0 z-50 md:z-auto`}
+        } md:translate-x-0 z-50 md:z-auto `}
       >
+        {/* Logo Section */}
+        <div className="w-full flex justify-center items-center mb-6 p-2 bg-white rounded-lg">
+          <img
+            src="/imgs/LOGO PWDKA.png" // Replace with the actual path to your logo
+            alt="Logo"
+            className="w-26 h-19 object-contain"
+          />
+        </div>
+
         <button
           className="text-white md:hidden self-end size-10"
           onClick={() => setIsSidebarOpen(false)}
         >
           &times;
         </button>
+
+        {/* Dashboard Section */}
+        <h2 className="text-white text-lg font-semibold mb-2 mt-4 w-full text-left">
+          Dashboard
+        </h2>
+        <hr className="border-gray-400 w-full mb-4" />
+
         <a
           href="/admin/dashboard"
-          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
+          className={`${
+            window.location.pathname === "/admin/dashboard"
+              ? "bg-blue-900 text-gray-200"
+              : "bg-gray-200 text-blue-900"
+          } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
           style={{
             boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
           }}
@@ -153,9 +174,19 @@ const AdminViewJobs = () => {
           <span className="flex-grow text-center">Dashboard</span>
         </a>
 
+        {/* Verification Section */}
+        <h2 className="text-white text-lg font-semibold mb-2 mt-4 w-full text-left">
+          Verification
+        </h2>
+        <hr className="border-gray-400 w-full mb-4" />
+
         <a
           href="/admin/dashboard/VerifyUsers"
-          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
+          className={`${
+            window.location.pathname === "/admin/dashboard/VerifyUsers"
+              ? "bg-blue-900 text-gray-200"
+              : "bg-gray-200 text-blue-900"
+          } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
         >
           <span className="material-symbols-outlined text-xl mr-4">
             how_to_reg
@@ -165,7 +196,11 @@ const AdminViewJobs = () => {
 
         <a
           href="/admin/dashboard/VerifyComps"
-          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
+          className={`${
+            window.location.pathname === "/admin/dashboard/VerifyComps"
+              ? "bg-blue-900 text-gray-200"
+              : "bg-gray-200 text-blue-900"
+          } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
         >
           <span className="material-symbols-outlined text-xl mr-4">
             apartment
@@ -173,9 +208,19 @@ const AdminViewJobs = () => {
           <span className="flex-grow text-center">Verify Companies</span>
         </a>
 
+        {/* View Section */}
+        <h2 className="text-white text-lg font-semibold mb-2 mt-4 w-full text-left">
+          View Records
+        </h2>
+        <hr className="border-gray-400 w-full mb-4" />
+
         <a
           href="/admin/dashboard/ViewUsers"
-          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
+          className={`${
+            window.location.pathname === "/admin/dashboard/ViewUsers"
+              ? "bg-blue-900 text-gray-200"
+              : "bg-gray-200 text-blue-900"
+          } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
         >
           <span className="material-symbols-outlined text-xl mr-4">group</span>
           <span className="flex-grow text-center">View All Applicants</span>
@@ -183,7 +228,11 @@ const AdminViewJobs = () => {
 
         <a
           href="/admin/dashboard/ViewCompany"
-          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
+          className={`${
+            window.location.pathname === "/admin/dashboard/ViewCompany"
+              ? "bg-blue-900 text-gray-200"
+              : "bg-gray-200 text-blue-900"
+          } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
         >
           <span className="material-symbols-outlined text-xl mr-4">
             source_environment
@@ -193,15 +242,29 @@ const AdminViewJobs = () => {
 
         <a
           href="/admin/dashboard/ViewJobs"
-          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
+          className={`${
+            window.location.pathname === "/admin/dashboard/ViewJobs"
+              ? "bg-blue-900 text-gray-200" // Active style for View All Job Listings
+              : "bg-gray-200 text-blue-900"
+          } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
         >
           <span className="material-symbols-outlined text-xl mr-4">work</span>
           <span className="flex-grow text-center">View All Job Listings</span>
         </a>
 
+        {/* Account Section */}
+        <h2 className="text-white text-lg font-semibold mb-2 mt-4 w-full text-left">
+          Account
+        </h2>
+        <hr className="border-gray-400 w-full mb-4" />
+
         <a
           href="/admin/dashboard/AdminSignup"
-          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
+          className={`${
+            window.location.pathname === "/admin/dashboard/AdminSignup"
+              ? "bg-blue-900 text-gray-200"
+              : "bg-gray-200 text-blue-900"
+          } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
         >
           <span className="material-symbols-outlined text-xl mr-4">draw</span>
           <span className="flex-grow text-center">Sign Up</span>
