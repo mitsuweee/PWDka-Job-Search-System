@@ -183,6 +183,18 @@ const AdminDashboard = () => {
           <span className="flex-grow text-center">View All Job Listings</span>
         </a>
 
+        <a
+          href="/admin/dashboard/ViewJobs"
+          className={`${
+            window.location.pathname === "/admin/dashboard/ViewJobs" // GUEL pa edit
+              ? "bg-blue-900 text-gray-200"
+              : "bg-gray-200 text-blue-900"
+          } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
+        >
+          <span className="material-symbols-outlined text-xl mr-4">group</span>
+          <span className="flex-grow text-center">View All Admins</span>
+        </a>
+
         {/* Account Section */}
         <h2 className="text-white text-lg font-semibold mb-2 mt-4 w-full text-left">
           Account
