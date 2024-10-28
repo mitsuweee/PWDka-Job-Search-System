@@ -60,7 +60,7 @@ const ViewApplicants = () => {
               fullName: `${applicant.first_name} ${applicant.middle_initial}. ${applicant.last_name}`,
               email: applicant.email,
               disability: applicant.type,
-              location: applicant.Location,
+              city: applicant.city,
               contactNumber: applicant.contact_number,
               gender: applicant.gender,
               birthdate: new Date(applicant.birth_date).toLocaleDateString(
@@ -119,8 +119,7 @@ const ViewApplicants = () => {
         applicant.profile?.disability ||
         applicant.disability ||
         "Not specified",
-      location:
-        applicant.profile?.location || applicant.location || "Not specified",
+      city: applicant.profile?.city || applicant.city || "Not specified",
       contactNumber:
         applicant.profile?.contactNumber ||
         applicant.contactNumber ||
@@ -137,6 +136,31 @@ const ViewApplicants = () => {
     setSelectedProfile(profile);
     setIsProfileModalOpen(true);
     setIsReviewedModalOpen(false);
+  };
+
+  const handleDeleteApplicant = (applicantId) => {
+    const config = {
+      method: "delete",
+      url: `/jobapplication/delete/${applicantId}`, // Update this URL based on your backend endpoint for deletion
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    axios(config)
+      .then((response) => {
+        toast.success("Applicant deleted successfully!");
+
+        // Update state to remove the deleted applicant from the list
+        setApplicants((prevApplicants) =>
+          prevApplicants.filter((applicant) => applicant.id !== applicantId)
+        );
+      })
+      .catch((error) => {
+        const errorMessage =
+          error.response?.data?.message || "Failed to delete applicant";
+        toast.error(errorMessage);
+      });
   };
 
   const goBackToReviewedModal = () => {
@@ -175,7 +199,7 @@ const ViewApplicants = () => {
             contactNumber: applicant.contact_number,
             birthdate: applicant.birth_date,
             gender: applicant.gender,
-            location: applicant.Location,
+            city: applicant.city,
             disability: applicant.type,
           })
         );
@@ -450,6 +474,13 @@ const ViewApplicants = () => {
                       >
                         View Profile
                       </button>
+
+                      <button
+                        className="py-1 px-2 bg-red-500 text-white rounded hover:bg-red-600"
+                        onClick={() => handleDeleteApplicant(applicant.id)}
+                      >
+                        Delete
+                      </button>
                       <button
                         className="py-1 px-2 bg-yellow-500 text-white rounded hover:bg-yellow-600"
                         onClick={() => handleReviewToggle(applicant.id)}
@@ -538,12 +569,10 @@ const ViewApplicants = () => {
                   </p>
                 </div>
                 <div>
-                  <p className="text-lg font-semibold text-gray-800">
-                    Location:
-                  </p>
+                  <p className="text-lg font-semibold text-gray-800">City:</p>
                   <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
-                    {selectedProfile?.location
-                      ? selectedProfile.location
+                    {selectedProfile?.city
+                      ? selectedProfile.city
                           .split(" ")
                           .map(
                             (word) =>
