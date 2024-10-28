@@ -389,6 +389,12 @@ const ViewJobs = () => {
                 <th className="py-3 px-4 text-left text-sm md:text-base">
                   Job Title
                 </th>
+                <th className="py-3 px-4 text-left text-sm md:text-base">
+                  Position Type
+                </th>
+                <th className="py-3 px-4 text-left text-sm md:text-base">
+                  Salary Range
+                </th>
                 <th className="py-3 px-4 text-center text-sm md:text-base">
                   Actions
                 </th>
@@ -411,6 +417,14 @@ const ViewJobs = () => {
                           )
                           .join(" ")
                       : ""}
+                  </td>
+                  <td className="py-3 px-4 text-sm md:text-base">
+                    {job.position_type || "N/A"}
+                  </td>
+                  <td className="py-3 px-4 text-sm md:text-base">
+                    {job.minimum_salary && job.maximum_salary
+                      ? `₱${job.minimum_salary} - ₱${job.maximum_salary}`
+                      : "Not specified"}
                   </td>
                   <td className="py-3 px-4">
                     <div className="flex justify-center items-center space-x-2">
