@@ -36,11 +36,15 @@ const postJobs = async (req, res, next) => {
       successful: false,
       message: "Position name must not contain special characters",
     });
-  } else if (!util.checkNumbers(minimum_salary) || minimum_salary < 0) {
+  } else if (
+    !util.checkNumbers(minimum_salary) ||
+    minimum_salary < 0 ||
+    minimum_salary < 14800
+  ) {
     return res.status(400).json({
       successful: false,
       message:
-        "Minimum Salary must only contain numbers that are greater than or equal to 0",
+        "Minimum Salary must only contain numbers that are greater than or equal to 0 and must not be lower than the minimum wage(₱14800)",
     });
   } else if (
     !util.checkNumbers(maximum_salary) ||

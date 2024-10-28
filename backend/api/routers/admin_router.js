@@ -25,6 +25,7 @@ adminRouter.put("/update/email/:id", adminController.updateAdminEmail); //Admin 
 adminRouter.put("/update/details/:id", adminController.updateAdmin); //Admin Details
 
 adminRouter.delete("/delete/user/:id", adminController.deleteUser); // Delete User
+adminRouter.delete("/delete/admin/:id", adminController.deleteAdmin); // Delete Admin
 adminRouter.delete("/delete/company/:id", adminController.deleteCompany); // Delete Company
 adminRouter.delete("/delete/joblisting/:id", adminController.deleteJob); // Delete Job Listing
 

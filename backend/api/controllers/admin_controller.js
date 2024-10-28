@@ -1001,6 +1001,7 @@ module.exports = {
   viewJobListing,
   adminChangePassword,
   updateAdmin,
+  deleteAdmin,
   deleteUser,
   deleteCompany,
   deleteJob,

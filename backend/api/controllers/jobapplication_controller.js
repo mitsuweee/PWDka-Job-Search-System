@@ -140,13 +140,13 @@ const viewAllUsersApplicationsViaJobListingId = async (req, res, next) => {
   }
 };
 
-const viewAllReviewedUsers = async (req, res, next) => {
+const viewAllUsersByStatus = async (req, res, next) => {
   let id = req.params.id;
-
-  if (!id) {
+  let status = req.params.status;
+  if (!id || !status) {
     return res.status(400).json({
       successful: false,
-      message: "ID is missing",
+      message: "ID or STATUS is missing",
     });
   } else {
     try {
@@ -172,6 +172,7 @@ const viewAllReviewedUsers = async (req, res, next) => {
             "user.contact_number",
             "user.formal_picture",
             "resume",
+            "job_application.date_created",
             "job_listing.position_name"
           )
           .join("user", "job_application.user_id", "user.id")
@@ -182,12 +183,12 @@ const viewAllReviewedUsers = async (req, res, next) => {
             "job_listing.id"
           )
           .where("job_listing.id", id)
-          .andWhere("job_application.status", "Reviewed");
+          .andWhere("job_application.status", status);
 
         if (applications.length === 0) {
           return res.status(404).json({
             successful: false,
-            message: "There are no Reviewed Users",
+            message: `There are no ${status} Users`,
           });
         } else {
           // Convert BLOB data to string
@@ -295,7 +296,7 @@ const updateJobApplicationStatus = async (req, res, next) => {
 module.exports = {
   uploadResume,
   viewAllUsersApplicationsViaJobListingId,
-  viewAllReviewedUsers,
+  viewAllUsersByStatus,
   deleteJobApplication,
   updateJobApplicationStatus,
 };
