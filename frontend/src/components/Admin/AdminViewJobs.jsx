@@ -258,16 +258,24 @@ const AdminViewJobs = () => {
         </h2>
         <hr className="border-gray-400 w-full mb-4" />
 
+        {/* Account Section */}
+        <h2 className="text-white text-lg font-semibold mb-2 mt-4 w-full text-left">
+          Account
+        </h2>
+        <hr className="border-gray-400 w-full mb-4" />
+
         <a
-          href="/admin/dashboard/AdminSignup"
+          href="/admin/dashboard/viewadmin"
           className={`${
-            window.location.pathname === "/admin/dashboard/AdminSignup"
+            window.location.pathname === "/admin/dashboard/viewadmin"
               ? "bg-blue-900 text-gray-200"
               : "bg-gray-200 text-blue-900"
           } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
         >
-          <span className="material-symbols-outlined text-xl mr-4">draw</span>
-          <span className="flex-grow text-center">Sign Up</span>
+          <span className="material-symbols-outlined text-xl mr-4">
+            manage_accounts
+          </span>
+          <span className="flex-grow text-center">Admin Management</span>
         </a>
 
         <button
