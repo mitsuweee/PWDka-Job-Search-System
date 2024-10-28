@@ -398,6 +398,42 @@ const updateJobApplicationStatus = async (req, res, next) => {
   }
 };
 
+const getAllApplicantsByStatus = async (req, res) => {
+  const { jobListingId } = req.params; // Assuming you have a job listing ID filter
+
+  try {
+    const applicants = await knex("job_application")
+      .select(
+        "job_application.id",
+        "user.first_name",
+        "user.middle_initial",
+        "user.last_name",
+        "user.email",
+        "job_application.status",
+        "job_application.resume" // Adding the resume field
+      )
+      .join("user", "job_application.user_id", "user.id")
+      .where("job_application.joblisting_id", jobListingId); // Assuming you're filtering by job listing ID
+
+    // Convert BLOB to string if necessary
+    const processedApplicants = applicants.map((applicant) => ({
+      ...applicant,
+      resume: applicant.resume ? applicant.resume.toString() : null,
+    }));
+
+    res.status(200).json({
+      successful: true,
+      message: "Applicants retrieved successfully",
+      data: processedApplicants,
+    });
+  } catch (error) {
+    res.status(500).json({
+      successful: false,
+      message: "Failed to retrieve applicants",
+    });
+  }
+};
+
 module.exports = {
   uploadResume,
   viewAllUsersApplicationsViaJobListingId,
@@ -405,4 +441,5 @@ module.exports = {
   viewUserJobApplicationStatus,
   deleteJobApplication,
   updateJobApplicationStatus,
+  getAllApplicantsByStatus,
 };

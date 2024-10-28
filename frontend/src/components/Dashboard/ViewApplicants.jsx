@@ -248,6 +248,45 @@ const ViewApplicants = () => {
       });
   };
 
+  // DAGDAG KO
+  const openReviewedModal = () => {
+    const params = new URLSearchParams(window.location.search);
+    const joblistingId = params.get("id");
+
+    const config = {
+      method: "get",
+      url: `/jobapplication/status/all/${joblistingId}`,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    setIsLoading(true);
+    axios(config)
+      .then((response) => {
+        const fetchedApplicants = response.data.data.map((applicant) => ({
+          id: applicant.id,
+          fullName: `${applicant.first_name} ${
+            applicant.middle_initial ? applicant.middle_initial + ". " : ""
+          }${applicant.last_name}`,
+          email: applicant.email,
+          status: applicant.status,
+        }));
+
+        setReviewedApplicants(fetchedApplicants);
+        setIsReviewedModalOpen(true);
+        toast.success("Applicants with statuses loaded successfully!");
+      })
+      .catch((error) => {
+        const errorMessage =
+          error.response?.data?.message || "Failed to load applicants";
+        toast.error(errorMessage);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
   const fetchApplicantsByStatus = async (status) => {
     const joblistingId = new URLSearchParams(window.location.search).get("id");
 
@@ -451,7 +490,7 @@ const ViewApplicants = () => {
         {/* Button for viewing all applicants' statuses */}
         <button
           className="mb-6 py-2 px-4 bg-green-600 text-white rounded-lg"
-          onClick={openApplicantsStatusModal} // Updated function name
+          onClick={openReviewedModal}
         >
           Applicants Status
         </button>
@@ -563,7 +602,7 @@ const ViewApplicants = () => {
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
             <div className="bg-white p-6 rounded-lg shadow-lg relative w-full max-w-2xl">
               <button
-                onClick={closeProfileModal}
+                onClick={() => setIsProfileModalOpen(false)}
                 className="absolute top-2 right-2 text-2xl font-bold text-gray-700 hover:text-gray-900"
               >
                 &times;
@@ -580,16 +619,8 @@ const ViewApplicants = () => {
                   className="w-32 h-32 rounded-full border-4 border-blue-600 shadow-lg mb-4"
                 />
                 <h4 className="text-lg font-semibold text-gray-900">
-                  {selectedProfile?.fullName
-                    .split(" ")
-                    .map(
-                      (word) =>
-                        word.charAt(0).toUpperCase() +
-                        word.slice(1).toLowerCase()
-                    )
-                    .join(" ")}
+                  {selectedProfile?.fullName}
                 </h4>
-
                 <p className="text-gray-600">{selectedProfile?.email}</p>
               </div>
 
@@ -599,56 +630,47 @@ const ViewApplicants = () => {
                     Disability:
                   </p>
                   <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
-                    {selectedProfile?.disability || "Not specified"}
+                    {selectedProfile?.disability}
                   </p>
                 </div>
                 <div>
                   <p className="text-lg font-semibold text-gray-800">City:</p>
                   <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
-                    {selectedProfile?.city
-                      ? selectedProfile.city
-                          .split(" ")
-                          .map(
-                            (word) =>
-                              word.charAt(0).toUpperCase() +
-                              word.slice(1).toLowerCase()
-                          )
-                          .join(" ")
-                      : "Not specified"}
+                    {selectedProfile?.city}
                   </p>
                 </div>
-
                 <div>
                   <p className="text-lg font-semibold text-gray-800">
                     Contact Number:
                   </p>
                   <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
-                    {selectedProfile?.contactNumber || "Not specified"}
+                    {selectedProfile?.contactNumber}
                   </p>
                 </div>
                 <div>
                   <p className="text-lg font-semibold text-gray-800">Gender:</p>
                   <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
-                    {selectedProfile?.gender
-                      ? selectedProfile.gender
-                          .split(" ")
-                          .map(
-                            (word) =>
-                              word.charAt(0).toUpperCase() +
-                              word.slice(1).toLowerCase()
-                          )
-                          .join(" ")
-                      : "Not specified"}
+                    {selectedProfile?.gender}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-lg font-semibold text-gray-800">
+                    Birthdate:
+                  </p>
+                  <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
+                    {selectedProfile?.birthdate}
                   </p>
                 </div>
               </div>
 
-              {/* Back Button */}
               <button
-                onClick={goBackToReviewedModal}
+                onClick={() => {
+                  setIsProfileModalOpen(false);
+                  setIsReviewedModalOpen(true); // Navigate back to previous modal if needed
+                }}
                 className="mt-4 py-2 px-4 bg-gray-600 text-white rounded hover:bg-gray-700"
               >
-                Back to Reviewed Applicants
+                Back to Applicants Status
               </button>
             </div>
           </div>
@@ -685,14 +707,7 @@ const ViewApplicants = () => {
                           className="border-b border-gray-200 hover:bg-gray-100 transition duration-200"
                         >
                           <td className="py-3 px-6 text-left">
-                            {applicant.fullName
-                              .split(" ")
-                              .map(
-                                (word) =>
-                                  word.charAt(0).toUpperCase() +
-                                  word.slice(1).toLowerCase()
-                              )
-                              .join(" ")}
+                            {applicant.fullName}
                           </td>
                           <td className="py-3 px-6 text-left">
                             {applicant.email}
@@ -702,10 +717,10 @@ const ViewApplicants = () => {
                           </td>
                           <td className="py-3 px-6 text-center space-x-2">
                             <button
-                              className="py-1 px-2 bg-green-500 text-white rounded hover:bg-green-600"
-                              onClick={() => openProfileModal(applicant)}
+                              className="py-1 px-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                              onClick={() => openResumeModal(applicant.resume)}
                             >
-                              View Profile
+                              View Resume
                             </button>
                           </td>
                         </tr>
@@ -723,6 +738,28 @@ const ViewApplicants = () => {
                   </tbody>
                 </table>
               </div>
+            </div>
+          </div>
+        )}
+
+        {isResumeModalOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+            <div className="bg-white p-8 rounded-lg shadow-lg relative w-full max-w-6xl">
+              <button
+                onClick={closeResumeModal}
+                className="absolute top-2 right-2 text-2xl font-bold text-gray-700 hover:text-gray-900"
+              >
+                &times;
+              </button>
+              <h3 className="text-lg font-semibold mb-4">Applicant's Resume</h3>
+              <embed
+                src={`data:application/pdf;base64,${selectedResume}`}
+                type="application/pdf"
+                width="100%"
+                height="800px"
+                className="w-full border rounded-lg shadow-sm"
+                aria-label="PDF Preview"
+              />
             </div>
           </div>
         )}

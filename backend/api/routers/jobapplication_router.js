@@ -39,4 +39,10 @@ jobApplicationRouter.put(
   jobApplicationController.updateJobApplicationStatus
 ); // Route for updating job application status - MITS
 
+jobApplicationRouter.get(
+  "/status/all/:jobListingId",
+  jobApplicationController.getAllApplicantsByStatus
+);
+// Get all applicants by status - mits
+
 module.exports = jobApplicationRouter;
