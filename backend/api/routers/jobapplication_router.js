@@ -34,4 +34,9 @@ jobApplicationRouter.delete(
   jobApplicationController.deleteJobApplication
 ); // Delete Job Listing
 
+jobApplicationRouter.put(
+  "/status/:id",
+  jobApplicationController.updateJobApplicationStatus
+); // Route for updating job application status - MITS
+
 module.exports = jobApplicationRouter;

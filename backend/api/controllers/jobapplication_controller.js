@@ -314,6 +314,45 @@ const deleteJobApplication = async (req, res, next) => {
   }
 };
 
+// const updateJobApplicationStatus = async (req, res, next) => {
+//   let id = req.params.id;
+//   let status = req.body.status;
+
+//   if (!id || !status) {
+//     return res.status(400).json({
+//       successful: false,
+//       message: "ID is missing",
+//     });
+//   } else {
+//     try {
+//       // Check if the job application exists
+//       const applicationExists = await knex("job_application")
+//         .where({ id })
+//         .first();
+
+//       if (!applicationExists) {
+//         return res.status(404).json({
+//           successful: false,
+//           message: "Job application not found",
+//         });
+//       } else {
+//         await knex("job_application").where({ id }).update({ status: status });
+
+//         return res.status(200).json({
+//           successful: true,
+//           message: `Successfully updated Job Application status to '${status}'!`,
+//         });
+//       }
+//     } catch (err) {
+//       return res.status(500).json({
+//         successful: false,
+//         message: err.message,
+//       });
+//     }
+//   }
+// };
+
+// akin to- mits ewan ko kung tama ba to or mali
 const updateJobApplicationStatus = async (req, res, next) => {
   let id = req.params.id;
   let status = req.body.status;
@@ -321,34 +360,41 @@ const updateJobApplicationStatus = async (req, res, next) => {
   if (!id || !status) {
     return res.status(400).json({
       successful: false,
-      message: "ID is missing",
+      message: "ID or STATUS is missing",
     });
-  } else {
-    try {
-      // Check if the job application exists
-      const applicationExists = await knex("job_application")
-        .where({ id })
-        .first();
+  }
 
-      if (!applicationExists) {
-        return res.status(404).json({
-          successful: false,
-          message: "Job application not found",
-        });
-      } else {
-        await knex("job_application").where({ id }).update({ status: status });
+  try {
+    const applicationExists = await knex("job_application")
+      .where({ id })
+      .first();
 
-        return res.status(200).json({
-          successful: true,
-          message: `Successfully updated Job Application status to '${status}'!`,
-        });
-      }
-    } catch (err) {
-      return res.status(500).json({
+    if (!applicationExists) {
+      return res.status(404).json({
         successful: false,
-        message: err.message,
+        message: "Job application not found",
       });
     }
+
+    // Update the status in the database
+    await knex("job_application").where({ id }).update({ status: status });
+
+    // Fetch the updated applicant data
+    const updatedApplicant = await knex("job_application")
+      .select("id", "status") // Add other fields as needed
+      .where({ id })
+      .first();
+
+    return res.status(200).json({
+      successful: true,
+      message: `Successfully updated Job Application status to '${status}'!`,
+      data: updatedApplicant, // Include updated data in response
+    });
+  } catch (err) {
+    return res.status(500).json({
+      successful: false,
+      message: err.message,
+    });
   }
 };
 
