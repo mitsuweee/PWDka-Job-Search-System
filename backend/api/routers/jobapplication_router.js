@@ -15,6 +15,11 @@ jobApplicationRouter.get(
 ); // View All APPLICATION VIA Job Listing ID
 
 jobApplicationRouter.get(
+  "/applications/user/:id",
+  jobApplicationController.viewUserJobApplicationStatus
+); // View All APPLICATION VIA Job Listing ID
+
+jobApplicationRouter.get(
   "/:status/:id",
   jobApplicationController.viewAllUsersByStatus
 ); // View Reviewed Applications VIA Job Listing ID

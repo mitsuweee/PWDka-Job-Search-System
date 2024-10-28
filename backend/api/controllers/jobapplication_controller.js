@@ -140,6 +140,61 @@ const viewAllUsersApplicationsViaJobListingId = async (req, res, next) => {
   }
 };
 
+const viewUserJobApplicationStatus = async (req, res, next) => {
+  let id = req.params.id;
+
+  if (!id) {
+    return res.status(400).json({
+      successful: false,
+      message: "Id is missing",
+    });
+  } else {
+    try {
+      const idExists = await knex("job_application").where({ id }).first();
+      if (!idExists) {
+        return res.status(400).json({
+          successful: false,
+          message: "Invalid User ID",
+        });
+      } else {
+        // Retrieve all job applications of the user
+        const applications = await knex("job_application")
+          .select(
+            "job_listing.position_name",
+            "company.name as company_name",
+            "job_application.status",
+            "job_application.date_created"
+          )
+          .join(
+            "job_listing",
+            "job_application.joblisting_id",
+            "job_listing.id"
+          )
+          .join("company", "job_listing.company_id", "company.id")
+          .where("job_application.user_id", id);
+
+        if (applications.length === 0) {
+          return res.status(404).json({
+            successful: false,
+            message: "No job applications found for this user",
+          });
+        } else {
+          return res.status(200).json({
+            successful: true,
+            message: "Successfully retrieved user's job applications",
+            data: applications,
+          });
+        }
+      }
+    } catch (err) {
+      return res.status(500).json({
+        successful: false,
+        message: err.message,
+      });
+    }
+  }
+};
+
 const viewAllUsersByStatus = async (req, res, next) => {
   let id = req.params.id;
   let status = req.params.status;
@@ -297,6 +352,7 @@ module.exports = {
   uploadResume,
   viewAllUsersApplicationsViaJobListingId,
   viewAllUsersByStatus,
+  viewUserJobApplicationStatus,
   deleteJobApplication,
   updateJobApplicationStatus,
 };
