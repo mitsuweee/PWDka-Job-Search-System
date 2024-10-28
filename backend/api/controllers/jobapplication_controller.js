@@ -311,8 +311,9 @@ const deleteJobApplication = async (req, res, next) => {
 
 const updateJobApplicationStatus = async (req, res, next) => {
   let id = req.params.id;
+  let status = req.body.status;
 
-  if (!id) {
+  if (!id || !status) {
     return res.status(400).json({
       successful: false,
       message: "ID is missing",
@@ -330,13 +331,11 @@ const updateJobApplicationStatus = async (req, res, next) => {
           message: "Job application not found",
         });
       } else {
-        await knex("job_application")
-          .where({ id })
-          .update({ status: "Reviewed" });
+        await knex("job_application").where({ id }).update({ status: status });
 
         return res.status(200).json({
           successful: true,
-          message: "Successfully updated Job Application status to 'Reviewed'!",
+          message: `Successfully updated Job Application status to '${status}'!`,
         });
       }
     } catch (err) {
