@@ -29,4 +29,9 @@ jobApplicationRouter.put(
   jobApplicationController.updateJobApplicationStatus
 ); //Upload Resume
 
+jobApplicationRouter.delete(
+  "/delete/:id",
+  jobApplicationController.deleteJobApplication
+); // Delete Job Listing
+
 module.exports = jobApplicationRouter;
