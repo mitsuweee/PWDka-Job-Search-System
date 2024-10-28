@@ -16,7 +16,7 @@ const AdminViewAdmin = () => {
     const fetchAdmins = async () => {
       setLoading(true);
       try {
-        const response = await axios.get("/admin/view/admins");
+        const response = await axios.get("/view/admins");
         setAdmins(response.data.data);
         toast.success("Admins loaded successfully");
       } catch (error) {
@@ -26,10 +26,8 @@ const AdminViewAdmin = () => {
         setLoading(false);
       }
     };
-
     fetchAdmins();
   }, []);
-
   const handleViewAdmin = (adminId) => {
     const selectedAdmin = admins.find((admin) => admin.id === adminId);
     setAdmin(selectedAdmin);
@@ -38,7 +36,7 @@ const AdminViewAdmin = () => {
 
   const handleDeleteAdmin = async (adminId) => {
     try {
-      await axios.delete(`/admin/delete/${adminId}`);
+      await axios.delete(`/delete/admin/${adminId}`);
       setAdmins(admins.filter((admin) => admin.id !== adminId));
       toast.success("Admin deleted successfully");
     } catch (error) {
