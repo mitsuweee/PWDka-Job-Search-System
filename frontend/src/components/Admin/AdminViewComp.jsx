@@ -263,12 +263,6 @@ const AdminViewComp = () => {
         </h2>
         <hr className="border-gray-400 w-full mb-4" />
 
-        {/* Account Section */}
-        <h2 className="text-white text-lg font-semibold mb-2 mt-4 w-full text-left">
-          Account
-        </h2>
-        <hr className="border-gray-400 w-full mb-4" />
-
         <a
           href="/admin/dashboard/viewadmin"
           className={`${

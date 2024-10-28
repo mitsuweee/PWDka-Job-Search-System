@@ -8,6 +8,8 @@ const AdminViewAdmin = () => {
   const [admin, setAdmin] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -44,14 +46,192 @@ const AdminViewAdmin = () => {
     }
   };
 
+  const handleLogout = () => {
+    setIsLogoutModalOpen(true);
+  };
+
+  const confirmLogout = () => {
+    localStorage.removeItem("Id");
+    localStorage.removeItem("Role");
+    localStorage.removeItem("Token");
+    toast.success("Logged out successfully", { position: "top-center" });
+    navigate("/login");
+    setIsLogoutModalOpen(false);
+  };
+
+  const closeLogoutModal = () => {
+    setIsLogoutModalOpen(false);
+  };
+
   return (
-    <div className="flex flex-col min-h-screen bg-blue-100">
+    <div className="flex flex-col md:flex-row min-h-screen bg-blue-100">
       <Toaster position="top-center" reverseOrder={false} />
       {loading && (
         <div className="fixed inset-0 bg-white bg-opacity-90 flex items-center justify-center z-50">
           <div className="animate-spin rounded-full h-32 w-32 border-t-4 border-blue-500"></div>
         </div>
       )}
+
+      {/* Sidebar */}
+      <aside
+        className={`bg-custom-blue w-full md:w-[300px] lg:w-[250px] p-4 flex flex-col items-center md:relative fixed top-0 left-0 min-h-screen h-full transition-transform transform ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } md:translate-x-0 z-50 md:z-auto `}
+      >
+        {/* Logo Section */}
+        <div className="w-full flex justify-center items-center mb-6 p-2 bg-white rounded-lg">
+          <img
+            src="/imgs/LOGO PWDKA.png" // Replace with the actual path to your logo
+            alt="Logo"
+            className="w-26 h-19 object-contain"
+          />
+        </div>
+
+        <button
+          className="text-white md:hidden self-end size-10"
+          onClick={() => setIsSidebarOpen(false)}
+        >
+          &times;
+        </button>
+
+        {/* Dashboard Section */}
+        <h2 className="text-white text-lg font-semibold mb-2 mt-4 w-full text-left">
+          Dashboard
+        </h2>
+        <hr className="border-gray-400 w-full mb-4" />
+
+        <a
+          href="/admin/dashboard"
+          className={`${
+            window.location.pathname === "/admin/dashboard"
+              ? "bg-blue-900 text-gray-200" // Active style for Dashboard
+              : "bg-gray-200 text-blue-900"
+          } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
+          style={{
+            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
+          }}
+        >
+          <span className="material-symbols-outlined text-xl mr-4">
+            dashboard
+          </span>
+          <span className="flex-grow text-center">Dashboard</span>
+        </a>
+
+        {/* Verification Section */}
+        <h2 className="text-white text-lg font-semibold mb-2 mt-4 w-full text-left">
+          Verification
+        </h2>
+        <hr className="border-gray-400 w-full mb-4" />
+
+        <a
+          href="/admin/dashboard/VerifyUsers"
+          className={`${
+            window.location.pathname === "/admin/dashboard/VerifyUsers"
+              ? "bg-blue-900 text-gray-200"
+              : "bg-gray-200 text-blue-900"
+          } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
+        >
+          <span className="material-symbols-outlined text-xl mr-4">
+            how_to_reg
+          </span>
+          <span className="flex-grow text-center">Verify Applicants</span>
+        </a>
+
+        <a
+          href="/admin/dashboard/VerifyComps"
+          className={`${
+            window.location.pathname === "/admin/dashboard/VerifyComps"
+              ? "bg-blue-900 text-gray-200" // Active style for Verify Companies
+              : "bg-gray-200 text-blue-900"
+          } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
+        >
+          <span className="material-symbols-outlined text-xl mr-4">
+            apartment
+          </span>
+          <span className="flex-grow text-center">Verify Companies</span>
+        </a>
+
+        {/* View Section */}
+        <h2 className="text-white text-lg font-semibold mb-2 mt-4 w-full text-left">
+          View Records
+        </h2>
+        <hr className="border-gray-400 w-full mb-4" />
+
+        <a
+          href="/admin/dashboard/ViewUsers"
+          className={`${
+            window.location.pathname === "/admin/dashboard/ViewUsers"
+              ? "bg-blue-900 text-gray-200"
+              : "bg-gray-200 text-blue-900"
+          } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
+        >
+          <span className="material-symbols-outlined text-xl mr-4">group</span>
+          <span className="flex-grow text-center">View All Applicants</span>
+        </a>
+
+        <a
+          href="/admin/dashboard/ViewCompany"
+          className={`${
+            window.location.pathname === "/admin/dashboard/ViewCompany"
+              ? "bg-blue-900 text-gray-200"
+              : "bg-gray-200 text-blue-900"
+          } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
+        >
+          <span className="material-symbols-outlined text-xl mr-4">
+            source_environment
+          </span>
+          <span className="flex-grow text-center">View All Companies</span>
+        </a>
+
+        <a
+          href="/admin/dashboard/ViewJobs"
+          className={`${
+            window.location.pathname === "/admin/dashboard/ViewJobs"
+              ? "bg-blue-900 text-gray-200"
+              : "bg-gray-200 text-blue-900"
+          } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
+        >
+          <span className="material-symbols-outlined text-xl mr-4">work</span>
+          <span className="flex-grow text-center">View All Job Listings</span>
+        </a>
+
+        {/* Account Section */}
+        <h2 className="text-white text-lg font-semibold mb-2 mt-4 w-full text-left">
+          Account
+        </h2>
+        <hr className="border-gray-400 w-full mb-4" />
+
+        <a
+          href="/admin/dashboard/viewadmin"
+          className={`${
+            window.location.pathname === "/admin/dashboard/viewadmin"
+              ? "bg-blue-900 text-gray-200"
+              : "bg-gray-200 text-blue-900"
+          } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
+        >
+          <span className="material-symbols-outlined text-xl mr-4">
+            manage_accounts
+          </span>
+          <span className="flex-grow text-center">Admin Management</span>
+        </a>
+
+        <button
+          className="bg-red-600 text-white rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-red-500 transition-all duration-200 ease-in-out mt-6"
+          onClick={handleLogout}
+        >
+          Logout
+        </button>
+      </aside>
+
+      <button
+        className={`md:hidden bg-custom-blue text-white p-4 fixed top-4 left-4 z-50 rounded-xl mt-11 transition-transform ${
+          isSidebarOpen ? "hidden" : ""
+        }`}
+        onClick={() => setIsSidebarOpen(true)}
+      >
+        &#9776;
+      </button>
+
       <main className="flex-grow p-8">
         <h1 className="text-xl font-bold text-gray-700">View All Admins</h1>
 
@@ -103,7 +283,6 @@ const AdminViewAdmin = () => {
         </div>
       </main>
 
-      {/* View Modal */}
       {isModalOpen && admin && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white rounded-lg p-6 w-[600px] shadow-lg">
@@ -128,6 +307,43 @@ const AdminViewAdmin = () => {
                 className="bg-gray-500 text-white px-4 py-2 rounded-lg"
               >
                 Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {isLogoutModalOpen && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
+            <div className="flex justify-between items-center border-b pb-3 mb-4">
+              <h2 className="text-2xl font-semibold text-gray-800">
+                Logout Confirmation
+              </h2>
+              <button
+                onClick={closeLogoutModal}
+                className="text-gray-500 hover:text-gray-800 transition duration-200"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="mb-6">
+              <p className="text-lg text-gray-600">
+                Are you sure you want to log out?
+              </p>
+            </div>
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={closeLogoutModal}
+                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-200"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmLogout}
+                className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
+              >
+                Logout
               </button>
             </div>
           </div>
