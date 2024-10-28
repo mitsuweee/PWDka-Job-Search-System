@@ -45,19 +45,19 @@ const AdminViewAdmin = () => {
     }
   };
 
-  const handleUpdateAdmin = async (adminId, updatedAdmin) => {
-    try {
-      await axios.put(`/admin/update/details/${adminId}`, updatedAdmin);
-      setAdmins(
-        admins.map((admin) => (admin.id === adminId ? updatedAdmin : admin))
-      );
-      toast.success("Admin updated successfully");
-      setIsModalOpen(false);
-    } catch (error) {
-      toast.error("Failed to update admin");
-      console.error(error);
-    }
-  };
+  // const handleUpdateAdmin = async (adminId, updatedAdmin) => {
+  //   try {
+  //     await axios.put(`/admin/update/details/${adminId}`, updatedAdmin);
+  //     setAdmins(
+  //       admins.map((admin) => (admin.id === adminId ? updatedAdmin : admin))
+  //     );
+  //     toast.success("Admin updated successfully");
+  //     setIsModalOpen(false);
+  //   } catch (error) {
+  //     toast.error("Failed to update admin");
+  //     console.error(error);
+  //   }
+  // };
 
   const handleChangePassword = async (adminId, newPasswordData) => {
     try {

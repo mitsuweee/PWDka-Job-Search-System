@@ -64,7 +64,7 @@ const AdminDashboard = () => {
       <aside
         className={`bg-custom-blue w-full md:w-[300px] lg:w-[250px] p-4 flex flex-col items-center md:relative fixed top-0 left-0 min-h-screen h-full transition-transform transform ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } md:translate-x-0 z-50 md:z-auto`}
+        } md:translate-x-0 z-50 md:z-auto rounded-lg`}
       >
         {/* Logo Section */}
         <div className="w-full flex justify-center items-center mb-6 p-2 bg-white rounded-lg">
@@ -181,18 +181,6 @@ const AdminDashboard = () => {
         >
           <span className="material-symbols-outlined text-xl mr-4">work</span>
           <span className="flex-grow text-center">View All Job Listings</span>
-        </a>
-
-        <a
-          href="/admin/dashboard/ViewJobs"
-          className={`${
-            window.location.pathname === "/admin/dashboard/ViewJobs" // GUEL pa edit
-              ? "bg-blue-900 text-gray-200"
-              : "bg-gray-200 text-blue-900"
-          } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
-        >
-          <span className="material-symbols-outlined text-xl mr-4">group</span>
-          <span className="flex-grow text-center">View All Admins</span>
         </a>
 
         {/* Account Section */}

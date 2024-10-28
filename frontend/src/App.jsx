@@ -32,6 +32,7 @@ import ProtectedRoute from "./protectedroute.js";
 import RedirectAuthenticated from "./redirectauthenticated.js";
 import AdminProfile from "./pages/AdminProfile.jsx";
 import AdminSignups from "./pages/AdminSignups.jsx";
+import AdminViewA from "./pages/AdminVA.jsx";
 
 function App() {
   return (
@@ -101,7 +102,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/adminprofile"
           element={
@@ -134,6 +134,16 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        <Route
+          path="/admin/dashboard/viewadmin"
+          element={
+            <ProtectedRoute role="admin">
+              <AdminViewA />
+            </ProtectedRoute>
+          }
+        />
+
         <Route
           path="/admin/dashboard/ViewUsers"
           element={
