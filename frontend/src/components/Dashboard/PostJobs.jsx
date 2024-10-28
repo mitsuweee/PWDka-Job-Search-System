@@ -15,6 +15,8 @@ const PostJob = () => {
     maxSalary: "",
     positionType: "full-time",
     disabilityCategories: [],
+    salaryVisibility: "HIDE", // Default to "HIDE"
+    level: "",
   });
   const [showDisabilityOptions, setShowDisabilityOptions] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -43,9 +45,15 @@ const PostJob = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // Validation for minimum salary
+    if (parseFloat(jobDetails.minSalary) < 14800) {
+      toast.error("Minimum Salary must be at least ₱14800.");
+      return;
+    }
+
     if (parseFloat(jobDetails.maxSalary) < parseFloat(jobDetails.minSalary)) {
       toast.error(
-        "Maximum Salary must be equal or greater than Minimum Salary"
+        "Maximum Salary must be equal or greater than Minimum Salary."
       );
       return;
     }
@@ -67,6 +75,8 @@ const PostJob = () => {
       maximum_salary: parseFloat(jobDetails.maxSalary),
       positiontype_id: jobDetails.positionType,
       disability_ids: jobDetails.disabilityCategories,
+      salary_visibility: jobDetails.salaryVisibility,
+      level: jobDetails.level,
     });
 
     const config = {
@@ -92,8 +102,8 @@ const PostJob = () => {
       });
   };
 
-  const toggleSalaryDetails = () => {
-    setShowSalaryDetails(!showSalaryDetails);
+  const handleSalaryVisibilityChange = (e) => {
+    setJobDetails({ ...jobDetails, salaryVisibility: e.target.value });
   };
 
   const resetForm = () => {
@@ -107,6 +117,8 @@ const PostJob = () => {
       maxSalary: "",
       positionType: "full-time",
       disabilityCategories: [],
+      salaryVisibility: "HIDE", // Reset to default
+      level: "",
     });
     setShowDisabilityOptions(false);
     setIsSuccessCardVisible(false);
@@ -300,6 +312,19 @@ const PostJob = () => {
 
             <div className="col-span-1">
               <label className="block mb-2 text-gray-700 font-semibold">
+                Job Level <span className="text-red-500">*</span>
+              </label>
+              <textarea
+                name="level"
+                value={jobDetails.level}
+                onChange={handleChange}
+                className="p-3 w-full border-2 border-blue-300 rounded-lg shadow-sm h-28 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                required
+              />
+            </div>
+
+            <div className="col-span-1">
+              <label className="block mb-2 text-gray-700 font-semibold">
                 Requirements <span className="text-red-500">*</span>
               </label>
               <textarea
@@ -391,6 +416,37 @@ const PostJob = () => {
                   required
                   step="1"
                 />
+              </div>
+            </div>
+
+            {/* Salary Visibility Checkbox Group */}
+            <div className="col-span-1">
+              <label className="block mb-2 text-gray-700 font-semibold">
+                Salary Visibility <span className="text-red-500">*</span>
+              </label>
+              <div className="flex space-x-4">
+                <label className="flex items-center">
+                  <input
+                    type="radio"
+                    name="salaryVisibility"
+                    value="HIDE"
+                    checked={jobDetails.salaryVisibility === "HIDE"}
+                    onChange={handleSalaryVisibilityChange}
+                    className="mr-2"
+                  />
+                  Hide
+                </label>
+                <label className="flex items-center">
+                  <input
+                    type="radio"
+                    name="salaryVisibility"
+                    value="SHOW"
+                    checked={jobDetails.salaryVisibility === "SHOW"}
+                    onChange={handleSalaryVisibilityChange}
+                    className="mr-2"
+                  />
+                  Show
+                </label>
               </div>
             </div>
 
