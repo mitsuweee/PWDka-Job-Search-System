@@ -255,79 +255,91 @@ const viewJobListingViaUserNewestToOldest = async (req, res, next) => {
           "disability.id"
         )
         .join("user", "user.disability_id", "disability.id")
+        .leftJoin("job_application", function () {
+          this.on("job_listing.id", "=", "job_application.joblisting_id").andOn(
+            "job_application.user_id",
+            "=",
+            knex.raw("?", [id])
+          );
+        })
         .where("user.id", id)
         .andWhere("job_listing.status", "ACTIVE");
 
       // Count job listings with applied filters
       const totalJobListings = await baseQuery.clone().count({ count: "*" });
-
       const totalCount = totalJobListings[0].count;
 
       // Add filtering conditions to the base query
       if (city) {
         baseQuery.where("company.city", "like", `%${city}%`);
-      } else if (position_name) {
+      }
+      if (position_name) {
         baseQuery.where(
           "job_listing.position_name",
           "like",
           `%${position_name}%`
         );
-      } else if (position_type) {
+      }
+      if (position_type) {
         baseQuery.where("position_type.type", "like", `%${position_type}%`);
-      } else {
-        const rows = await baseQuery
-          .select(
-            "job_listing.id",
-            "job_listing.status",
-            "job_listing.position_name",
-            "job_listing.level",
+      }
 
-            "job_listing.description",
-            "job_listing.qualification",
-            "job_listing.requirement",
-            "job_listing.minimum_salary",
-            "job_listing.maximum_salary",
-            "job_listing.salary_visibility",
-            "position_type.type AS position_type",
-            "company.name AS company_name",
-            "company.profile_picture AS company_profile_picture",
-            "company.email AS company_email",
-            "company.address AS company_address",
-            "company.city AS company_city",
-            "company.contact_number AS company_contact_number",
-            "company.description AS company_description"
+      // Fetch job listings with pagination and sort order
+      const rows = await baseQuery
+        .select(
+          "job_listing.id",
+          "job_listing.status",
+          "job_listing.position_name",
+          "job_listing.level",
+          "job_listing.description",
+          "job_listing.qualification",
+          "job_listing.requirement",
+          "job_listing.minimum_salary",
+          "job_listing.maximum_salary",
+          "job_listing.salary_visibility",
+          "position_type.type AS position_type",
+          "company.name AS company_name",
+          "company.profile_picture AS company_profile_picture",
+          "company.email AS company_email",
+          "company.address AS company_address",
+          "company.city AS company_city",
+          "company.contact_number AS company_contact_number",
+          "company.description AS company_description",
+          knex.raw(
+            "CASE WHEN job_application.id IS NOT NULL THEN true ELSE false END AS is_applied"
           )
-          .orderBy("job_listing.date_created", "desc")
-          .limit(limit)
-          .offset(offset);
+        )
+        .orderBy("job_listing.date_created", "desc")
+        .limit(limit)
+        .offset(offset);
 
-        if (rows.length === 0) {
-          return res.status(404).json({
-            successful: false,
-            message:
-              "No job listings are available at the moment. We are committed to bringing you new opportunities tailored to your skills and abilities. Please stay hopeful, more listings will be available soon.",
-          });
-        } else {
-          // Convert company_profile_picture BLOB to String
-          const processedRows = rows.map((row) => ({
-            ...row,
-            company_profile_picture: row.company_profile_picture
-              ? row.company_profile_picture.toString()
-              : null,
-          }));
+      if (rows.length === 0) {
+        return res.status(404).json({
+          successful: false,
+          message:
+            "No job listings are available at the moment. Please check back soon for more listings.",
+        });
+      } else {
+        // Convert company_profile_picture BLOB to String and format the data
+        const processedRows = rows.map((row) => ({
+          ...row,
+          company_profile_picture: row.company_profile_picture
+            ? row.company_profile_picture.toString()
+            : null,
+          is_disabled: row.is_applied, // Mark listing as disabled if the user already applied
+        }));
 
-          return res.status(200).json({
-            successful: true,
-            message: "Successfully Retrieved Job Listing",
-            data: processedRows,
-            pagination: {
-              totalCount,
-              totalPages: Math.ceil(totalCount / limit),
-              currentPage: page,
-              perPage: limit,
-            },
-          });
-        }
+        return res.status(200).json({
+          successful: true,
+          message: "Successfully Retrieved Job Listing",
+          data: processedRows,
+          pagination: {
+            totalCount,
+            totalPages: Math.ceil(totalCount / limit),
+            currentPage: page,
+            perPage: limit,
+          },
+        });
       }
     } catch (err) {
       return res.status(500).json({
