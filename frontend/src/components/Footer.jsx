@@ -1,11 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Footer = () => {
   const navigate = useNavigate();
+  const [copiedItem, setCopiedItem] = useState(null);
 
   const handleNavigation = (path) => {
     navigate(path);
+  };
+
+  const handleCopy = (text, item) => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopiedItem(item);
+
+      // Reset indicator after a short delay
+      setTimeout(() => {
+        setCopiedItem(null);
+      }, 1500);
+    });
   };
 
   return (
@@ -29,6 +41,7 @@ const Footer = () => {
             </p>
 
             <ul className="mt-8 flex justify-center gap-6 sm:justify-start md:gap-8">
+              {/* Social Media Icons */}
               <li>
                 <a
                   href="#"
@@ -51,7 +64,6 @@ const Footer = () => {
                   </svg>
                 </a>
               </li>
-
               <li>
                 <a
                   href="#"
@@ -74,7 +86,6 @@ const Footer = () => {
                   </svg>
                 </a>
               </li>
-
               <li>
                 <a
                   href="#"
@@ -93,7 +104,6 @@ const Footer = () => {
                   </svg>
                 </a>
               </li>
-
               <li>
                 <a
                   href="#"
@@ -116,6 +126,7 @@ const Footer = () => {
                   </svg>
                 </a>
               </li>
+              {/* Additional social media icons can be added here */}
             </ul>
           </div>
 
@@ -127,7 +138,7 @@ const Footer = () => {
                 <li>
                   <a
                     className="text-gray-700 transition hover:text-gray-700/75"
-                    href="#"
+                    href="/about"
                   >
                     Us Page
                   </a>
@@ -135,7 +146,7 @@ const Footer = () => {
                 <li>
                   <a
                     className="text-gray-700 transition hover:text-gray-700/75"
-                    href="#"
+                    href="/about#section1"
                   >
                     Our Missions
                   </a>
@@ -143,7 +154,7 @@ const Footer = () => {
                 <li>
                   <a
                     className="text-gray-700 transition hover:text-gray-700/75"
-                    href="#"
+                    href="/about#makers"
                   >
                     The Makers
                   </a>
@@ -158,7 +169,7 @@ const Footer = () => {
                 <li>
                   <a
                     className="text-gray-700 transition hover:text-gray-700/75"
-                    href="#"
+                    href="/signup"
                   >
                     Look For Jobs
                   </a>
@@ -166,7 +177,7 @@ const Footer = () => {
                 <li>
                   <a
                     className="text-gray-700 transition hover:text-gray-700/75"
-                    href="#"
+                    href="/signup"
                   >
                     Hire People
                   </a>
@@ -174,7 +185,7 @@ const Footer = () => {
                 <li>
                   <a
                     className="text-gray-700 transition hover:text-gray-700/75"
-                    href="#"
+                    href="/contactpage"
                   >
                     Suggestions
                   </a>
@@ -182,7 +193,7 @@ const Footer = () => {
                 <li>
                   <a
                     className="text-gray-700 transition hover:text-gray-700/75"
-                    href="#"
+                    href="/login"
                   >
                     Login
                   </a>
@@ -195,13 +206,13 @@ const Footer = () => {
 
               <ul className="mt-8 space-y-4 text-sm">
                 <li>
-                  <a
-                    className="flex items-center justify-center gap-1.5 ltr:sm:justify-start rtl:sm:justify-end"
-                    href="#"
+                  <button
+                    className="flex items-center gap-1.5"
+                    onClick={() => handleCopy("pwdkateam@gmail.com", "email")}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      className="size-5 shrink-0 text-gray-900"
+                      className="size-5 text-gray-900"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -216,16 +227,21 @@ const Footer = () => {
                     <span className="flex-1 text-gray-700">
                       pwdkateam@gmail.com
                     </span>
-                  </a>
+                    {copiedItem === "email" && (
+                      <span className="text-blue-500 text-xs ml-2">
+                        Copied!
+                      </span>
+                    )}
+                  </button>
                 </li>
                 <li>
-                  <a
-                    className="flex items-center justify-center gap-1.5 ltr:sm:justify-start rtl:sm:justify-end"
-                    href="#"
+                  <button
+                    className="flex items-center gap-1.5"
+                    onClick={() => handleCopy("09982826032", "phone")}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      className="size-5 shrink-0 text-gray-900"
+                      className="size-5 text-gray-900"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -238,31 +254,48 @@ const Footer = () => {
                       />
                     </svg>
                     <span className="flex-1 text-gray-700">09982826032</span>
-                  </a>
+                    {copiedItem === "phone" && (
+                      <span className="text-blue-500 text-xs ml-2">
+                        Copied!
+                      </span>
+                    )}
+                  </button>
                 </li>
-                <li className="flex items-start justify-center gap-1.5 ltr:sm:justify-start rtl:sm:justify-end">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="size-5 shrink-0 text-gray-900"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
+                <li>
+                  <button
+                    className="flex items-center gap-1.5"
+                    onClick={() =>
+                      handleCopy("1638 Taguig - Makati Philippines", "address")
+                    }
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                  </svg>
-                  <address className="-mt-0.5 flex-1 not-italic text-gray-700">
-                    1638 Taguig - Makati Philippines
-                  </address>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="size-5 text-gray-900"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                    </svg>
+                    <address className="flex-1 text-gray-700 not-italic">
+                      1638 Taguig - Makati Philippines
+                    </address>
+                    {copiedItem === "address" && (
+                      <span className="text-blue-500 text-xs ml-2">
+                        Copied!
+                      </span>
+                    )}
+                  </button>
                 </li>
               </ul>
             </div>
@@ -275,14 +308,14 @@ const Footer = () => {
               <span className="block sm:inline">All rights reserved.</span>
               <a
                 className="inline-block text-custom-blue underline transition hover:text-blue-400"
-                href="#"
+                href="/terms"
               >
                 Terms & Conditions
               </a>
               <span>&middot;</span>
               <a
                 className="inline-block text-custom-blue underline transition hover:text-blue-400"
-                href="#"
+                href="/privacypolicy"
               >
                 Privacy Policy
               </a>
