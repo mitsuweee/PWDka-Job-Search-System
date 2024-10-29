@@ -132,7 +132,7 @@ const Footer = () => {
 
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-4 lg:col-span-2">
             <div className="text-center sm:text-left">
-              <p className="text-lg font-medium text-gray-900">About Us</p>
+              <p className="text-lg font-medium text-custom-blue">About Us</p>
 
               <ul className="mt-8 space-y-4 text-sm">
                 <li>
@@ -163,7 +163,9 @@ const Footer = () => {
             </div>
 
             <div className="text-center sm:text-left">
-              <p className="text-lg font-medium text-gray-900">Our Services</p>
+              <p className="text-lg font-medium text-custom-blue">
+                Our Services
+              </p>
 
               <ul className="mt-8 space-y-4 text-sm">
                 <li>
@@ -202,7 +204,7 @@ const Footer = () => {
             </div>
 
             <div className="text-center sm:text-left">
-              <p className="text-lg font-medium text-gray-900">Contact Us</p>
+              <p className="text-lg font-medium text-custom-blue">Contact Us</p>
 
               <ul className="mt-8 space-y-4 text-sm">
                 <li>
@@ -287,9 +289,10 @@ const Footer = () => {
                         d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                       />
                     </svg>
-                    <address className="flex-1 text-gray-700 not-italic">
+                    <address className="flex-1 text-gray-700 not-italic whitespace-nowrap">
                       1638 Taguig - Makati Philippines
                     </address>
+
                     {copiedItem === "address" && (
                       <span className="text-blue-500 text-xs ml-2">
                         Copied!
