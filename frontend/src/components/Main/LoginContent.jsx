@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
+import Typewriter from "typewriter-effect";
 
 const LoginComp = () => {
   const [formValues, setFormValues] = useState({
@@ -34,7 +35,7 @@ const LoginComp = () => {
     };
 
     axios(config)
-      .then(function (response) {
+      .then((response) => {
         toast.success(response.data.message);
         setLoading(false);
 
@@ -55,7 +56,7 @@ const LoginComp = () => {
           }
         }, 2000);
       })
-      .catch(function (error) {
+      .catch((error) => {
         const errorMessage =
           error.response?.data?.message || "An error occurred";
         toast.error(errorMessage);
@@ -64,8 +65,8 @@ const LoginComp = () => {
   };
 
   return (
-    <section className="bg-white relative">
-      <Toaster position="top-center" reverseOrder={false} />{" "}
+    <section className="relative bg-white">
+      <Toaster position="top-center" reverseOrder={false} />
       {loading && (
         <div className="fixed inset-0 bg-white bg-opacity-90 flex items-center justify-center z-50">
           <div className="animate-spin rounded-full h-32 w-32 border-t-4 border-blue-500"></div>
@@ -75,9 +76,10 @@ const LoginComp = () => {
         <section className="relative flex h-32 items-end bg-gray-900 lg:col-span-5 lg:h-full xl:col-span-6">
           <img
             alt=""
-            src="/imgs/smiley-woman-working-laptop.jpg" // Image for User
+            src="/imgs/smiley-woman-working-laptop.jpg"
             className="absolute inset-0 h-full w-full object-cover opacity-80"
           />
+          <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent"></div>
           <div className="hidden lg:relative lg:block lg:p-12">
             <a className="block text-white" href="#">
               <span className="sr-only">Home</span>
@@ -91,7 +93,14 @@ const LoginComp = () => {
               </svg>
             </a>
             <h2 className="mt-6 text-2xl font-bold text-white sm:text-3xl md:text-4xl">
-              Welcome Back!
+              <Typewriter
+                options={{
+                  autoStart: true,
+                  loop: true,
+                  delay: 50,
+                  strings: ["Welcome Back!"],
+                }}
+              />
             </h2>
             <p className="mt-4 leading-relaxed text-white/90">
               We are glad to have you back! Login to continue connecting with
@@ -101,8 +110,14 @@ const LoginComp = () => {
           </div>
         </section>
 
-        <main className="flex items-start justify-start px-8 py-8 sm:px-12 lg:col-span-7 lg:px-16 lg:py-12 xl:col-span-6 bg-custom-bg">
-          <div className="w-full">
+        <main
+          className="relative flex items-start justify-start px-8 py-8 sm:px-12 lg:col-span-7 lg:px-16 lg:py-12 xl:col-span-6 bg-cover bg-center bg-fixed min-h-screen"
+          style={{
+            backgroundImage: "url('/imgs/pft.png')",
+          }}
+        >
+          {/* Form content */}
+          <div className="w-full relative z-10">
             <p className="text-[#007bff] text-left text-sfprobold font-extrabold leading-snug tracking-tight mb-4 md:text-4xl">
               Welcome Back!
             </p>

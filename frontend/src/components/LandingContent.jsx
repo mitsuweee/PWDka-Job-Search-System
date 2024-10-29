@@ -39,7 +39,7 @@ const LandingContent = () => {
     <div>
       {/* Landing Section */}
       <div
-        className="w-full h-screen bg-cover bg-center"
+        className="w-full h-screen bg-cover bg-center bg-fixed"
         style={{
           backgroundImage: "url('/imgs/pft.png')",
         }}
@@ -123,14 +123,19 @@ const LandingContent = () => {
       </div>
 
       {/* How to Apply for Jobs Section */}
-      <div className="bg-gray-100 py-20">
+      <div
+        className="bg-cover bg-center bg-fixed py-20"
+        style={{
+          backgroundImage: "url('/imgs/pft.png')",
+        }}
+      >
         <h2 className="text-5xl font-bold text-center text-custom-blue mb-12">
           <Typewriter
             options={{
               autoStart: true,
               loop: true,
               delay: 50,
-              strings: ["How to Apply for Jobs"],
+              strings: ["How to Apply for Jobs?"],
             }}
           />
         </h2>
@@ -164,8 +169,11 @@ const LandingContent = () => {
           ].map((step, index) => (
             <div
               key={index}
-              className="flex flex-col items-center p-6 bg-white rounded-xl shadow-md border-2 border-blue-300 hover:border-blue-700 transition-all duration-300 transform hover:-translate-y-2"
-              style={{ height: "320px" }}
+              className="flex flex-col items-center p-6 bg-opacity-70 rounded-xl shadow-md border-2 border-blue-300 hover:border-blue-700 transition-all duration-300 transform hover:-translate-y-2"
+              style={{
+                height: "320px",
+                backgroundColor: "rgba(255, 255, 255, 0.8)",
+              }}
             >
               <span className="material-symbols-outlined text-6xl text-blue-700 mb-6">
                 {step.icon}
@@ -183,7 +191,7 @@ const LandingContent = () => {
 
       {/* Employee & Hire People Section */}
       <section
-        className="bg-cover bg-center py-20"
+        className="bg-cover bg-center bg-fixed py-20"
         style={{ backgroundImage: "url('/imgs/pft.png')" }}
       >
         <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
