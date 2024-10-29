@@ -145,16 +145,16 @@ const viewAllUsersApplicationsViaJobListingId = async (req, res, next) => {
 };
 
 const viewUserJobApplicationStatus = async (req, res, next) => {
-  let id = req.params.id;
+  let user_id = req.params.id;
 
-  if (!id) {
+  if (!user_id) {
     return res.status(400).json({
       successful: false,
       message: "Id is missing",
     });
   } else {
     try {
-      const idExists = await knex("job_application").where({ id }).first();
+      const idExists = await knex("job_application").where({ user_id }).first();
       if (!idExists) {
         return res.status(400).json({
           successful: false,
@@ -175,7 +175,7 @@ const viewUserJobApplicationStatus = async (req, res, next) => {
             "job_listing.id"
           )
           .join("company", "job_listing.company_id", "company.id")
-          .where("job_application.user_id", id)
+          .where("job_application.user_id", user_id)
           .orderBy("job_listing.date_created", "desc");
 
         if (applications.length === 0) {
