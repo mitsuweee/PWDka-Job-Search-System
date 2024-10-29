@@ -47,7 +47,7 @@ const LandingContent = () => {
         <div className="bg-transparent pt-16 pr-4 pb-16 pl-4 flex mr-auto ml-auto flex-col items-center relative lg:flex-row lg:py-32 xl:py-48 md:px-8 max-w-screen-2xl">
           <div className="flex justify-center items-center w-full h-full overflow-hidden lg:w-1/2 lg:justify-end lg:bottom-0 lg:left-0 lg:items-center">
             <img
-              src="/imgs/landing photo.png"
+              src="/imgs/lndpht.png"
               className="object-contain object-top lg:w-auto lg:h-full w-full h-auto shadow-xl"
             />
           </div>
