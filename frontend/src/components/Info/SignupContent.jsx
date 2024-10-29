@@ -957,7 +957,10 @@ const Signup = () => {
             className="absolute inset-0 h-full w-full object-cover opacity-80"
           />
 
-          <div className="hidden lg:relative lg:block lg:p-12">
+          {/* Gradient overlay for fade effect */}
+          <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-90"></div>
+
+          <div className="hidden lg:relative lg:block lg:p-12 z-10">
             <a className="block text-white" href="#">
               <span className="sr-only">Home</span>
               <svg
@@ -968,22 +971,33 @@ const Signup = () => {
               ></svg>
             </a>
 
-            <h2 className="mt-6 text-2xl font-bold text-white sm:text-3xl md:text-4xl">
-              Welcome to PwdKa!
-            </h2>
+            {/* Fade effect for the text content */}
+            <div className="fade-effect-container">
+              <h2 className="mt-6 text-2xl font-bold text-white sm:text-3xl md:text-4xl">
+                Welcome to PwdKa!
+              </h2>
 
-            <p className="mt-4 leading-relaxed text-white/90">
-              Where we focus on making the workplace welcoming and accessible
-              for everyone, especially Persons with Disabilities (PWD). We're
-              here to help you find the right job and connect with employers who
-              value inclusivity. Join us today to be part of a community that
-              cares about diversity. Sign up now and start your path to a
-              rewarding career.
-            </p>
+              <p className="mt-4 leading-relaxed text-white/90">
+                Where we focus on making the workplace welcoming and accessible
+                for everyone, especially Persons with Disabilities (PWD). We're
+                here to help you find the right job and connect with employers
+                who value inclusivity. Join us today to be part of a community
+                that cares about diversity. Sign up now and start your path to a
+                rewarding career.
+              </p>
+            </div>
           </div>
         </section>
 
-        <main className="flex items-start justify-start px-8 py-8 sm:px-12 lg:col-span-7 lg:px-16 lg:py-12 xl:col-span-6 bg-custom-bg">
+        <main
+          className="flex items-center justify-center px-8 py-12 sm:px-12 lg:col-span-7 lg:px-16 xl:col-span-6 min-h-screen bg-cover bg-center"
+          style={{
+            backgroundImage: "url('./imgs/pft.png')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+          }}
+        >
           <div className="w-full">
             <div className="switchContainer max-w-xs mx-auto shadow-xl rounded-lg p-4 bg-white flex justify-start items-center gap-4 mb-8">
               <span className="switchLabel font-bold text-lg text-blue-600">
@@ -1013,7 +1027,7 @@ const Signup = () => {
               </div>
             </div>
 
-            <div className="bg-white p-8  shadow-2xl rounded-2xl">
+            <div className="bg-white p-8 shadow-2xl rounded-2xl">
               {formType === "user" ? renderUserForm() : renderCompanyForm()}
             </div>
           </div>

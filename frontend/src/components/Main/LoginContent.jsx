@@ -79,7 +79,7 @@ const LoginComp = () => {
             src="/imgs/smiley-woman-working-laptop.jpg"
             className="absolute inset-0 h-full w-full object-cover opacity-80"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-gray-900  to-transparent opacity-90"></div>
           <div className="hidden lg:relative lg:block lg:p-12">
             <a className="block text-white" href="#">
               <span className="sr-only">Home</span>
@@ -98,7 +98,7 @@ const LoginComp = () => {
                   autoStart: true,
                   loop: true,
                   delay: 50,
-                  strings: ["Welcome Back!"],
+                  strings: ["Login"],
                 }}
               />
             </h2>
@@ -118,8 +118,17 @@ const LoginComp = () => {
         >
           {/* Form content */}
           <div className="w-full relative z-10">
-            <p className="text-[#007bff] text-left text-sfprobold font-extrabold leading-snug tracking-tight mb-4 md:text-4xl">
-              Welcome Back!
+            <p className="text-white text-left text-sfprobold font-extrabold leading-snug tracking-tight mb-4 md:text-4xl">
+              <Typewriter
+                options={{
+                  autoStart: true,
+                  loop: true,
+                  delay: 50,
+                  strings: ["Welcome Back!"],
+                  wrapperClassName: "typewriter-wrapper",
+                  cursorClassName: "typewriter-cursor",
+                }}
+              />
             </p>
             <div className="bg-white p-8 shadow-2xl rounded-2xl">
               <h2 className="text-3xl font-bold mt-2 text-custom-blue">
