@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import Typewriter from "typewriter-effect";
 
 const MAX_FILE_SIZE = 16777215; // 16MB
 
@@ -209,15 +210,27 @@ const Signup = () => {
   const renderUserForm = () => (
     <form className="mt-8 grid grid-cols-12 gap-6" onSubmit={handleSubmit}>
       <div className="col-span-12">
-        <h2 className="text-3xl font-bold text-custom-blue">Join us Now!</h2>
+        <h2 className="text-3xl font-bold text-custom-blue">
+          <Typewriter
+            options={{
+              autoStart: true,
+              loop: true,
+              delay: 50,
+              strings: ["Join us Now!", "Please Sign Up!"],
+              cursor: "|",
+              wrapperClassName: "typewriter-wrapper",
+              cursorClassName: "typewriter-cursor",
+            }}
+          />
+        </h2>
       </div>
 
       <div className="col-span-12 md:col-span-8">
         <div className="grid grid-cols-2 gap-x-4 gap-y-4">
-          <div>
+          <div className="col-span-2 sm:col-span-1">
             <label
               htmlFor="firstName"
-              className="block text-lg font-medium text-gray-700"
+              className="block text-sm md:text-lg font-medium text-gray-700 whitespace-nowrap truncate"
             >
               First Name <span className="text-red-500">*</span>
             </label>
@@ -232,10 +245,10 @@ const Signup = () => {
             />
           </div>
 
-          <div>
+          <div className="col-span-2 sm:col-span-1">
             <label
               htmlFor="middleInitial"
-              className="block text-lg font-medium text-gray-700"
+              className="block text-sm md:text-lg font-medium text-gray-700 whitespace-nowrap truncate"
             >
               Middle Initial
             </label>
@@ -250,10 +263,10 @@ const Signup = () => {
             />
           </div>
 
-          <div>
+          <div className="col-span-2 sm:col-span-1">
             <label
               htmlFor="lastName"
-              className="block text-lg font-medium text-gray-700"
+              className="block text-sm md:text-lg font-medium text-gray-700 whitespace-nowrap truncate"
             >
               Last Name <span className="text-red-500">*</span>
             </label>
@@ -268,10 +281,10 @@ const Signup = () => {
             />
           </div>
 
-          <div>
+          <div className="col-span-2 sm:col-span-1">
             <label
               htmlFor="gender"
-              className="block text-lg font-medium text-gray-700"
+              className="block text-sm md:text-lg font-medium text-gray-700 whitespace-nowrap truncate"
             >
               Gender <span className="text-red-500">*</span>
             </label>
@@ -280,7 +293,7 @@ const Signup = () => {
               name="gender"
               value={userFormValues.gender}
               onChange={handleInputChange}
-              className="mt-2 w-full h-10 p-2 bg-white text-gray-600 rounded-lg focus:outline-none border border-gray-300 focus:border-blue-500 transition duration-300"
+              className="mt-1 w-full p-2 bg-white text-gray-600 rounded-lg focus:outline-none border border-gray-300 focus:border-blue-500 transition duration-300"
               required
             >
               <option value="" disabled>
@@ -291,10 +304,10 @@ const Signup = () => {
             </select>
           </div>
 
-          <div>
+          <div className="col-span-2 sm:col-span-1">
             <label
               htmlFor="birthdate"
-              className="block text-lg font-medium text-gray-700"
+              className="block text-sm md:text-lg font-medium text-gray-700 whitespace-nowrap truncate"
             >
               Birthdate <span className="text-red-500">*</span>
             </label>
@@ -309,10 +322,10 @@ const Signup = () => {
             />
           </div>
 
-          <div>
+          <div className="col-span-2 sm:col-span-1">
             <label
               htmlFor="address"
-              className="block text-lg font-medium text-gray-700"
+              className="block text-sm md:text-lg font-medium text-gray-700 whitespace-nowrap truncate"
             >
               Address <span className="text-red-500">*</span>
             </label>
@@ -323,7 +336,6 @@ const Signup = () => {
               value={userFormValues.address}
               onChange={handleInputChange}
               onKeyDown={(e) => {
-                // Allow only letters, numbers, and spaces
                 const regex = /^[a-zA-Z0-9\s]*$/;
                 if (
                   !regex.test(e.key) &&
@@ -338,10 +350,10 @@ const Signup = () => {
             />
           </div>
 
-          <div>
+          <div className="col-span-2 sm:col-span-1">
             <label
               htmlFor="city"
-              className="block text-lg font-medium text-gray-700"
+              className="block text-sm md:text-lg font-medium text-gray-700 whitespace-nowrap truncate"
             >
               City <span className="text-red-500">*</span>
             </label>
@@ -356,10 +368,10 @@ const Signup = () => {
             />
           </div>
 
-          <div>
+          <div className="col-span-2 sm:col-span-1">
             <label
               htmlFor="contactNumber"
-              className="block text-lg font-medium text-gray-700"
+              className="block text-sm md:text-lg font-medium text-gray-700 whitespace-nowrap truncate"
             >
               Contact Number <span className="text-red-500">*</span>
             </label>
@@ -373,10 +385,9 @@ const Signup = () => {
               onKeyDown={(e) => {
                 if (
                   !/[0-9]/.test(e.key) &&
-                  e.key !== "Backspace" &&
-                  e.key !== "Delete" &&
-                  e.key !== "ArrowLeft" &&
-                  e.key !== "ArrowRight"
+                  !["Backspace", "Delete", "ArrowLeft", "ArrowRight"].includes(
+                    e.key
+                  )
                 ) {
                   e.preventDefault();
                 }
@@ -386,10 +397,10 @@ const Signup = () => {
             />
           </div>
 
-          <div>
+          <div className="col-span-2 sm:col-span-1">
             <label
               htmlFor="disability"
-              className="block text-lg font-medium text-gray-700"
+              className="block text-sm md:text-lg font-medium text-gray-700 whitespace-nowrap truncate"
             >
               Disability <span className="text-red-500">*</span>
             </label>
@@ -398,7 +409,7 @@ const Signup = () => {
               name="disability"
               value={userFormValues.disability}
               onChange={handleInputChange}
-              className="mt-2 w-full h-10 p-2 bg-white text-gray-600 rounded-lg focus:outline-none border border-gray-300 focus:border-blue-500 transition duration-300"
+              className="mt-1 w-full p-2 bg-white text-gray-600 rounded-lg focus:outline-none border border-gray-300 focus:border-blue-500 transition duration-300"
               required
             >
               <option value="" disabled>
@@ -429,10 +440,10 @@ const Signup = () => {
             </select>
           </div>
 
-          <div>
+          <div className="col-span-2 sm:col-span-1">
             <label
               htmlFor="email"
-              className="block text-lg font-medium text-gray-700"
+              className="block text-sm md:text-lg font-medium text-gray-700 whitespace-nowrap truncate"
             >
               Email <span className="text-red-500">*</span>
             </label>
@@ -447,10 +458,10 @@ const Signup = () => {
             />
           </div>
 
-          <div>
+          <div className="col-span-2 sm:col-span-1">
             <label
               htmlFor="password"
-              className="block text-lg font-medium text-gray-700"
+              className="block text-sm md:text-lg font-medium text-gray-700 whitespace-nowrap truncate"
             >
               Password <span className="text-red-500">*</span>
             </label>
@@ -476,10 +487,10 @@ const Signup = () => {
             </div>
           </div>
 
-          <div>
+          <div className="col-span-2 sm:col-span-1">
             <label
               htmlFor="reEnterPassword"
-              className="block text-lg font-medium text-gray-700"
+              className="block text-sm md:text-lg font-medium text-gray-700 whitespace-nowrap truncate"
             >
               Re-Enter Password <span className="text-red-500">*</span>
             </label>
@@ -661,7 +672,17 @@ const Signup = () => {
     >
       <div className="col-span-12">
         <h2 className="text-3xl font-bold text-custom-blue">
-          Hire People Now!
+          <Typewriter
+            options={{
+              autoStart: true,
+              loop: true,
+              delay: 50,
+              strings: ["Hire People Now!", "Please Sign Up!"],
+              cursor: "|",
+              wrapperClassName: "typewriter-wrapper",
+              cursorClassName: "typewriter-cursor",
+            }}
+          />
         </h2>
       </div>
 
@@ -971,10 +992,19 @@ const Signup = () => {
               ></svg>
             </a>
 
-            {/* Fade effect for the text content */}
             <div className="fade-effect-container">
               <h2 className="mt-6 text-2xl font-bold text-white sm:text-3xl md:text-4xl">
-                Welcome to PwdKa!
+                <Typewriter
+                  options={{
+                    autoStart: true,
+                    loop: true,
+                    delay: 50,
+                    strings: ["Welcome to PwdKa!"],
+                    cursor: "|",
+                    wrapperClassName: "typewriter-wrapper",
+                    cursorClassName: "typewriter-cursor",
+                  }}
+                />
               </h2>
 
               <p className="mt-4 leading-relaxed text-white/90">

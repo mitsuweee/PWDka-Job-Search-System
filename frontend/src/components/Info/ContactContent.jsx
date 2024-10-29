@@ -84,7 +84,7 @@ const ContactUs = () => {
         <div className="p-8 md:p-12 lg:px-16 lg:py-24">
           <div className="mx-auto max-w-xl text-center ltr:sm:text-left rtl:sm:text-right">
             <div className="flex justify-between items-center">
-              <h1 className="text-2xl md:text-3xl font-bold text-white">
+              <h1 className="text-2xl md:text-3xl font-bold text-custom-blue">
                 <Typewriter
                   options={{
                     autoStart: true,

@@ -164,7 +164,7 @@ const LandingContent = () => {
           ].map((step, index) => (
             <div
               key={index}
-              className="flex flex-col items-center p-6 bg-white rounded-xl shadow-md border-2 border-blue-300 hover:border-blue-700 transition-all duration-300 transform hover:-translate-y-2"
+              className="flex flex-col items-center p-6 bg-white rounded-xl shadow-md border-4 border-blue-400 hover:border-blue-700 transition-all duration-300 transform hover:-translate-y-2"
               style={{ height: "320px" }}
             >
               <span className="material-symbols-outlined text-6xl text-blue-700 mb-6">
