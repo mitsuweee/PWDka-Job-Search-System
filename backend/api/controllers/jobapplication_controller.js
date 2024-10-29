@@ -100,8 +100,9 @@ const viewAllUsersApplicationsViaJobListingId = async (req, res, next) => {
           "user.birth_date",
           "user.contact_number",
           "user.formal_picture",
-          "resume",
-          "job_listing.position_name"
+          "job_application.resume",
+          "job_listing.position_name",
+          "job_application.date_created" // Include date_created field
         )
         .join("user", "job_application.user_id", "user.id")
         .join("disability", "user.disability_id", "disability.id")
@@ -115,13 +116,16 @@ const viewAllUsersApplicationsViaJobListingId = async (req, res, next) => {
           message: "Job Applications not found",
         });
       } else {
-        // Convert BLOB data to string
+        // Convert BLOB data to string and format date_created
         const processedApplications = applications.map((app) => ({
           ...app,
           formal_picture: app.formal_picture
             ? app.formal_picture.toString()
             : null,
           resume: app.resume ? app.resume.toString() : null,
+          date_created: app.date_created
+            ? new Date(app.date_created).toLocaleString()
+            : null,
         }));
 
         return res.status(200).json({
@@ -310,6 +314,45 @@ const deleteJobApplication = async (req, res, next) => {
   }
 };
 
+// const updateJobApplicationStatus = async (req, res, next) => {
+//   let id = req.params.id;
+//   let status = req.body.status;
+
+//   if (!id || !status) {
+//     return res.status(400).json({
+//       successful: false,
+//       message: "ID is missing",
+//     });
+//   } else {
+//     try {
+//       // Check if the job application exists
+//       const applicationExists = await knex("job_application")
+//         .where({ id })
+//         .first();
+
+//       if (!applicationExists) {
+//         return res.status(404).json({
+//           successful: false,
+//           message: "Job application not found",
+//         });
+//       } else {
+//         await knex("job_application").where({ id }).update({ status: status });
+
+//         return res.status(200).json({
+//           successful: true,
+//           message: `Successfully updated Job Application status to '${status}'!`,
+//         });
+//       }
+//     } catch (err) {
+//       return res.status(500).json({
+//         successful: false,
+//         message: err.message,
+//       });
+//     }
+//   }
+// };
+
+// akin to- mits ewan ko kung tama ba to or mali
 const updateJobApplicationStatus = async (req, res, next) => {
   let id = req.params.id;
   let status = req.body.status;
@@ -317,34 +360,77 @@ const updateJobApplicationStatus = async (req, res, next) => {
   if (!id || !status) {
     return res.status(400).json({
       successful: false,
-      message: "ID is missing",
+      message: "ID or STATUS is missing",
     });
-  } else {
-    try {
-      // Check if the job application exists
-      const applicationExists = await knex("job_application")
-        .where({ id })
-        .first();
+  }
 
-      if (!applicationExists) {
-        return res.status(404).json({
-          successful: false,
-          message: "Job application not found",
-        });
-      } else {
-        await knex("job_application").where({ id }).update({ status: status });
+  try {
+    const applicationExists = await knex("job_application")
+      .where({ id })
+      .first();
 
-        return res.status(200).json({
-          successful: true,
-          message: `Successfully updated Job Application status to '${status}'!`,
-        });
-      }
-    } catch (err) {
-      return res.status(500).json({
+    if (!applicationExists) {
+      return res.status(404).json({
         successful: false,
-        message: err.message,
+        message: "Job application not found",
       });
     }
+
+    // Update the status in the database
+    await knex("job_application").where({ id }).update({ status: status });
+
+    // Fetch the updated applicant data
+    const updatedApplicant = await knex("job_application")
+      .select("id", "status") // Add other fields as needed
+      .where({ id })
+      .first();
+
+    return res.status(200).json({
+      successful: true,
+      message: `Successfully updated Job Application status to '${status}'!`,
+      data: updatedApplicant, // Include updated data in response
+    });
+  } catch (err) {
+    return res.status(500).json({
+      successful: false,
+      message: err.message,
+    });
+  }
+};
+
+const getAllApplicantsByStatus = async (req, res) => {
+  const { jobListingId } = req.params; // Assuming you have a job listing ID filter
+
+  try {
+    const applicants = await knex("job_application")
+      .select(
+        "job_application.id",
+        "user.first_name",
+        "user.middle_initial",
+        "user.last_name",
+        "user.email",
+        "job_application.status",
+        "job_application.resume" // Adding the resume field
+      )
+      .join("user", "job_application.user_id", "user.id")
+      .where("job_application.joblisting_id", jobListingId); // Assuming you're filtering by job listing ID
+
+    // Convert BLOB to string if necessary
+    const processedApplicants = applicants.map((applicant) => ({
+      ...applicant,
+      resume: applicant.resume ? applicant.resume.toString() : null,
+    }));
+
+    res.status(200).json({
+      successful: true,
+      message: "Applicants retrieved successfully",
+      data: processedApplicants,
+    });
+  } catch (error) {
+    res.status(500).json({
+      successful: false,
+      message: "Failed to retrieve applicants",
+    });
   }
 };
 
@@ -355,4 +441,5 @@ module.exports = {
   viewUserJobApplicationStatus,
   deleteJobApplication,
   updateJobApplicationStatus,
+  getAllApplicantsByStatus,
 };

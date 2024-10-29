@@ -86,6 +86,7 @@ const ViewJobs = () => {
       minimumSalary: jobData.minimum_salary,
       maximumSalary: jobData.maximum_salary,
       salaryVisibility: jobData.salary_visibility || "HIDE",
+      level: jobData.level,
       status: jobData.status || "ACTIVE",
       positionType: jobData.positiontype_id === 1 ? "fulltime" : "parttime",
       disabilityCategories: jobData.disability_ids || [], // Set an empty array if undefined
@@ -117,6 +118,7 @@ const ViewJobs = () => {
         minimum_salary: jobUpdate.minimumSalary,
         maximum_salary: jobUpdate.maximumSalary,
         salary_visibility: jobUpdate.salaryVisibility,
+        level: jobUpdate.level,
         status: jobUpdate.status,
         positiontype_id:
           jobUpdate.positionType === "fulltime"
@@ -511,6 +513,11 @@ const ViewJobs = () => {
               </div>
               <div className="bg-gray-200 p-3 rounded-md">
                 <p>
+                  <strong>Job Level:</strong> {job?.level}
+                </p>
+              </div>
+              <div className="bg-gray-200 p-3 rounded-md">
+                <p>
                   <strong>Requirements:</strong>{" "}
                   {job?.requirement
                     ? job.requirement
@@ -649,7 +656,19 @@ const ViewJobs = () => {
                     required
                   />
                 </div>
-
+                {/* Level */}
+                <div className="col-span-1">
+                  <label className="block mb-1 text-gray-700 font-semibold">
+                    Level
+                  </label>
+                  <input
+                    type="text"
+                    name="level"
+                    value={jobUpdate.level}
+                    onChange={handleChange}
+                    className="p-2 w-full border-2 border-blue-300 rounded-lg shadow-sm"
+                  />
+                </div>
                 <div className="col-span-2">
                   <label className="block mb-1 text-gray-700 font-semibold">
                     Requirements <span className="text-red-500">*</span>

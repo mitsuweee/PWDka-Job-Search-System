@@ -56,11 +56,14 @@ const ViewApplicants = () => {
             email: applicant.email,
             resume: applicant.resume,
             jobAppliedFor: applicant.position_name,
+            dateCreated: applicant.date_created
+              ? new Date(applicant.date_created).toLocaleDateString()
+              : null, // Format as date only
             profile: {
               fullName: `${applicant.first_name} ${applicant.middle_initial}. ${applicant.last_name}`,
               email: applicant.email,
               disability: applicant.type,
-              location: applicant.Location,
+              city: applicant.city,
               contactNumber: applicant.contact_number,
               gender: applicant.gender,
               birthdate: new Date(applicant.birth_date).toLocaleDateString(
@@ -119,8 +122,7 @@ const ViewApplicants = () => {
         applicant.profile?.disability ||
         applicant.disability ||
         "Not specified",
-      location:
-        applicant.profile?.location || applicant.location || "Not specified",
+      city: applicant.profile?.city || applicant.city || "Not specified",
       contactNumber:
         applicant.profile?.contactNumber ||
         applicant.contactNumber ||
@@ -139,6 +141,31 @@ const ViewApplicants = () => {
     setIsReviewedModalOpen(false);
   };
 
+  const handleDeleteApplicant = (applicantId) => {
+    const config = {
+      method: "delete",
+      url: `/jobapplication/delete/${applicantId}`, // Update this URL based on your backend endpoint for deletion
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    axios(config)
+      .then((response) => {
+        toast.success("Applicant deleted successfully!");
+
+        // Update state to remove the deleted applicant from the list
+        setApplicants((prevApplicants) =>
+          prevApplicants.filter((applicant) => applicant.id !== applicantId)
+        );
+      })
+      .catch((error) => {
+        const errorMessage =
+          error.response?.data?.message || "Failed to delete applicant";
+        toast.error(errorMessage);
+      });
+  };
+
   const goBackToReviewedModal = () => {
     setIsReviewedModalOpen(true);
     setIsProfileModalOpen(false);
@@ -149,13 +176,13 @@ const ViewApplicants = () => {
     setSelectedProfile(null);
   };
 
-  const openReviewedModal = () => {
+  const openApplicantsStatusModal = () => {
     const params = new URLSearchParams(window.location.search);
     const joblistingId = params.get("id");
 
     const config = {
       method: "get",
-      url: `/jobapplication/reviewed/${joblistingId}`,
+      url: `/jobapplication/all/${joblistingId}`, // Adjust the endpoint to fetch all statuses
       headers: {
         "Content-Type": "application/json",
       },
@@ -164,29 +191,28 @@ const ViewApplicants = () => {
     setIsLoading(true);
     axios(config)
       .then((response) => {
-        const fetchedReviewedApplicants = response.data.data.map(
-          (applicant) => ({
-            profilePicture: `data:image/png;base64,${applicant.formal_picture}`,
-            id: applicant.id,
-            fullName: `${applicant.first_name} ${
-              applicant.middle_initial ? applicant.middle_initial + ". " : ""
-            }${applicant.last_name}`, // Construct full name conditionally
-            email: applicant.email,
-            contactNumber: applicant.contact_number,
-            birthdate: applicant.birth_date,
-            gender: applicant.gender,
-            location: applicant.Location,
-            disability: applicant.type,
-          })
-        );
+        const fetchedApplicants = response.data.data.map((applicant) => ({
+          profilePicture: `data:image/png;base64,${applicant.formal_picture}`,
+          id: applicant.id,
+          fullName: `${applicant.first_name} ${
+            applicant.middle_initial ? applicant.middle_initial + ". " : ""
+          }${applicant.last_name}`,
+          email: applicant.email,
+          contactNumber: applicant.contact_number,
+          birthdate: applicant.birth_date,
+          gender: applicant.gender,
+          city: applicant.city,
+          disability: applicant.type,
+          status: applicant.status, // Include the status field to display it
+        }));
 
-        setReviewedApplicants(fetchedReviewedApplicants);
+        setReviewedApplicants(fetchedApplicants);
         setIsReviewedModalOpen(true);
-        toast.success("Reviewed applicants loaded successfully!");
+        toast.success("Applicants loaded successfully!");
       })
       .catch((error) => {
         const errorMessage =
-          error.response?.data?.message || "Failed to load reviewed applicants";
+          error.response?.data?.message || "Failed to load applicants";
         toast.error(errorMessage);
       })
       .finally(() => {
@@ -198,35 +224,96 @@ const ViewApplicants = () => {
     setIsReviewedModalOpen(false);
   };
 
-  const handleReviewToggle = (applicantId) => {
-    const config = {
-      method: "put",
-      url: `/jobapplication/status/reviewed/${applicantId}`,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-
-    axios(config)
+  const handleStatusChange = (applicantId, newStatus) => {
+    axios
+      .put(`/jobapplication/status/${applicantId}`, { status: newStatus })
       .then((response) => {
-        toast.success("Applicant status updated to Reviewed");
+        toast.success("Status updated successfully");
 
-        // Move the reviewed applicant to the reviewed list
-        const updatedApplicants = applicants.filter(
-          (applicant) => applicant.id !== applicantId
+        const updatedApplicant = response.data.data; // Get the updated data
+
+        // Update the local state with the new status
+        setApplicants((prev) =>
+          prev.map((applicant) =>
+            applicant.id === updatedApplicant.id
+              ? { ...applicant, status: updatedApplicant.status }
+              : applicant
+          )
         );
-        const reviewedApplicant = applicants.find(
-          (applicant) => applicant.id === applicantId
-        );
-        reviewedApplicant.reviewed = true;
-        setReviewedApplicants([...reviewedApplicants, reviewedApplicant]);
-        setApplicants(updatedApplicants);
       })
       .catch((error) => {
         const errorMessage =
           error.response?.data?.message || "Failed to update status";
         toast.error(errorMessage);
       });
+  };
+
+  // DAGDAG KO
+  const openReviewedModal = () => {
+    const params = new URLSearchParams(window.location.search);
+    const joblistingId = params.get("id");
+
+    const config = {
+      method: "get",
+      url: `/jobapplication/status/all/${joblistingId}`,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    setIsLoading(true);
+    axios(config)
+      .then((response) => {
+        const fetchedApplicants = response.data.data.map((applicant) => ({
+          id: applicant.id,
+          fullName: `${applicant.first_name} ${
+            applicant.middle_initial ? applicant.middle_initial + ". " : ""
+          }${applicant.last_name}`,
+          email: applicant.email,
+          status: applicant.status,
+        }));
+
+        setReviewedApplicants(fetchedApplicants);
+        setIsReviewedModalOpen(true);
+        toast.success("Applicants with statuses loaded successfully!");
+      })
+      .catch((error) => {
+        const errorMessage =
+          error.response?.data?.message || "Failed to load applicants";
+        toast.error(errorMessage);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
+  const fetchApplicantsByStatus = async (status) => {
+    const joblistingId = new URLSearchParams(window.location.search).get("id");
+
+    if (!joblistingId) {
+      alert("Job listing ID is missing.");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const response = await axios.get(
+        `/jobapplication/${status}/${joblistingId}`
+      );
+      if (response.data.successful) {
+        setJobName(response.data.data[0]?.position_name || "Job");
+        setApplicants(response.data.data);
+        toast.success("Applicants loaded successfully!");
+      } else {
+        setJobName("No Job Found");
+        setApplicants([]);
+      }
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || "An error occurred";
+      toast.error(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const sortedApplicants = applicants.sort((a, b) => {
@@ -400,12 +487,12 @@ const ViewApplicants = () => {
           </div>
         </div>
 
-        {/* Button for reviewing applicants */}
+        {/* Button for viewing all applicants' statuses */}
         <button
           className="mb-6 py-2 px-4 bg-green-600 text-white rounded-lg"
           onClick={openReviewedModal}
         >
-          Reviewed Applicants
+          Applicants Status
         </button>
 
         {/* Applicants Table */}
@@ -415,6 +502,7 @@ const ViewApplicants = () => {
               <tr className="bg-gray-200 text-gray-700">
                 <th className="py-3 px-6 text-left">Full Name</th>
                 <th className="py-3 px-6 text-left">Email</th>
+                <th className="py-3 px-6 text-left">Date Applied</th>
                 <th className="py-3 px-6 text-center">Actions</th>
               </tr>
             </thead>
@@ -435,8 +523,12 @@ const ViewApplicants = () => {
                         )
                         .join(" ")}
                     </td>
-
                     <td className="py-3 px-6 text-left">{applicant.email}</td>
+                    <td className="py-3 px-6 text-left">
+                      {applicant.dateCreated}
+                    </td>
+
+                    {/* Actions Column */}
                     <td className="py-3 px-6 text-center space-x-2">
                       <button
                         className="py-1 px-2 bg-blue-500 text-white rounded hover:bg-blue-600"
@@ -451,11 +543,23 @@ const ViewApplicants = () => {
                         View Profile
                       </button>
                       <button
-                        className="py-1 px-2 bg-yellow-500 text-white rounded hover:bg-yellow-600"
-                        onClick={() => handleReviewToggle(applicant.id)}
+                        className="py-1 px-2 bg-red-500 text-white rounded hover:bg-red-600"
+                        onClick={() => handleDeleteApplicant(applicant.id)}
                       >
-                        Review
+                        Delete
                       </button>
+                      <select
+                        value={applicant.status || "Under Review"}
+                        onChange={(e) =>
+                          handleStatusChange(applicant.id, e.target.value)
+                        }
+                        className="py-1 px-2 bg-yellow-500 text-white rounded hover:bg-yellow-600"
+                      >
+                        <option value="Under Review">Under Review</option>
+                        <option value="Reviewed">Reviewed</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Rejected">Rejected</option>
+                      </select>
                     </td>
                   </tr>
                 ))
@@ -498,7 +602,7 @@ const ViewApplicants = () => {
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
             <div className="bg-white p-6 rounded-lg shadow-lg relative w-full max-w-2xl">
               <button
-                onClick={closeProfileModal}
+                onClick={() => setIsProfileModalOpen(false)}
                 className="absolute top-2 right-2 text-2xl font-bold text-gray-700 hover:text-gray-900"
               >
                 &times;
@@ -515,16 +619,8 @@ const ViewApplicants = () => {
                   className="w-32 h-32 rounded-full border-4 border-blue-600 shadow-lg mb-4"
                 />
                 <h4 className="text-lg font-semibold text-gray-900">
-                  {selectedProfile?.fullName
-                    .split(" ")
-                    .map(
-                      (word) =>
-                        word.charAt(0).toUpperCase() +
-                        word.slice(1).toLowerCase()
-                    )
-                    .join(" ")}
+                  {selectedProfile?.fullName}
                 </h4>
-
                 <p className="text-gray-600">{selectedProfile?.email}</p>
               </div>
 
@@ -534,64 +630,53 @@ const ViewApplicants = () => {
                     Disability:
                   </p>
                   <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
-                    {selectedProfile?.disability || "Not specified"}
+                    {selectedProfile?.disability}
                   </p>
                 </div>
                 <div>
-                  <p className="text-lg font-semibold text-gray-800">
-                    Location:
-                  </p>
+                  <p className="text-lg font-semibold text-gray-800">City:</p>
                   <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
-                    {selectedProfile?.location
-                      ? selectedProfile.location
-                          .split(" ")
-                          .map(
-                            (word) =>
-                              word.charAt(0).toUpperCase() +
-                              word.slice(1).toLowerCase()
-                          )
-                          .join(" ")
-                      : "Not specified"}
+                    {selectedProfile?.city}
                   </p>
                 </div>
-
                 <div>
                   <p className="text-lg font-semibold text-gray-800">
                     Contact Number:
                   </p>
                   <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
-                    {selectedProfile?.contactNumber || "Not specified"}
+                    {selectedProfile?.contactNumber}
                   </p>
                 </div>
                 <div>
                   <p className="text-lg font-semibold text-gray-800">Gender:</p>
                   <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
-                    {selectedProfile?.gender
-                      ? selectedProfile.gender
-                          .split(" ")
-                          .map(
-                            (word) =>
-                              word.charAt(0).toUpperCase() +
-                              word.slice(1).toLowerCase()
-                          )
-                          .join(" ")
-                      : "Not specified"}
+                    {selectedProfile?.gender}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-lg font-semibold text-gray-800">
+                    Birthdate:
+                  </p>
+                  <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
+                    {selectedProfile?.birthdate}
                   </p>
                 </div>
               </div>
 
-              {/* Back Button */}
               <button
-                onClick={goBackToReviewedModal}
+                onClick={() => {
+                  setIsProfileModalOpen(false);
+                  setIsReviewedModalOpen(true); // Navigate back to previous modal if needed
+                }}
                 className="mt-4 py-2 px-4 bg-gray-600 text-white rounded hover:bg-gray-700"
               >
-                Back to Reviewed Applicants
+                Back to Applicants Status
               </button>
             </div>
           </div>
         )}
 
-        {/* Reviewed Applicants Modal */}
+        {/* Applicants Status Modal */}
         {isReviewedModalOpen && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
             <div className="bg-white p-6 rounded-lg shadow-lg relative w-full max-w-2xl">
@@ -602,7 +687,7 @@ const ViewApplicants = () => {
                 &times;
               </button>
               <h3 className="text-xl font-bold text-gray-800 mb-6 text-center">
-                Reviewed Applicants
+                Applicants Status
               </h3>
               <div className="overflow-x-auto">
                 <table className="min-w-full bg-white shadow-md rounded-lg">
@@ -610,6 +695,7 @@ const ViewApplicants = () => {
                     <tr className="bg-gray-200 text-gray-700">
                       <th className="py-3 px-6 text-left">Full Name</th>
                       <th className="py-3 px-6 text-left">Email</th>
+                      <th className="py-3 px-6 text-left">Status</th>
                       <th className="py-3 px-6 text-center">Actions</th>
                     </tr>
                   </thead>
@@ -621,25 +707,20 @@ const ViewApplicants = () => {
                           className="border-b border-gray-200 hover:bg-gray-100 transition duration-200"
                         >
                           <td className="py-3 px-6 text-left">
-                            {applicant.fullName
-                              .split(" ")
-                              .map(
-                                (word) =>
-                                  word.charAt(0).toUpperCase() +
-                                  word.slice(1).toLowerCase()
-                              )
-                              .join(" ")}
+                            {applicant.fullName}
                           </td>
-
                           <td className="py-3 px-6 text-left">
                             {applicant.email}
                           </td>
+                          <td className="py-3 px-6 text-left">
+                            {applicant.status}
+                          </td>
                           <td className="py-3 px-6 text-center space-x-2">
                             <button
-                              className="py-1 px-2 bg-green-500 text-white rounded hover:bg-green-600"
-                              onClick={() => openProfileModal(applicant)}
+                              className="py-1 px-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                              onClick={() => openResumeModal(applicant.resume)}
                             >
-                              View Profile
+                              View Resume
                             </button>
                           </td>
                         </tr>
@@ -647,16 +728,38 @@ const ViewApplicants = () => {
                     ) : (
                       <tr>
                         <td
-                          colSpan={3}
+                          colSpan={4}
                           className="py-4 text-center text-gray-500"
                         >
-                          No reviewed applicants.
+                          No applicants found.
                         </td>
                       </tr>
                     )}
                   </tbody>
                 </table>
               </div>
+            </div>
+          </div>
+        )}
+
+        {isResumeModalOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+            <div className="bg-white p-8 rounded-lg shadow-lg relative w-full max-w-6xl">
+              <button
+                onClick={closeResumeModal}
+                className="absolute top-2 right-2 text-2xl font-bold text-gray-700 hover:text-gray-900"
+              >
+                &times;
+              </button>
+              <h3 className="text-lg font-semibold mb-4">Applicant's Resume</h3>
+              <embed
+                src={`data:application/pdf;base64,${selectedResume}`}
+                type="application/pdf"
+                width="100%"
+                height="800px"
+                className="w-full border rounded-lg shadow-sm"
+                aria-label="PDF Preview"
+              />
             </div>
           </div>
         )}
