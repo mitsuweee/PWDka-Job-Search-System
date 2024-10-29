@@ -42,21 +42,21 @@ const AboutContent = () => {
   };
 
   return (
-    <div>
+    <div className="bg-[url('/imgs/pft.png')] bg-cover bg-fixed bg-center min-h-screen">
       {/* New Section with Background Image and Buttons */}
       <section className="relative bg-[url('/imgs/wheelchair.jpg')] bg-cover bg-center bg-no-repeat">
         <div className="absolute inset-0 bg-gray-900/75 sm:bg-transparent sm:from-gray-900/95 sm:to-gray-900/25 ltr:sm:bg-gradient-to-r rtl:sm:bg-gradient-to-l"></div>
 
         <div className="relative mx-auto max-w-screen-xl px-4 py-32 sm:px-6 lg:flex lg:h-screen lg:items-center lg:px-8">
           <div className="max-w-xl text-left">
-            <h1 className="text-3xl font-extrabold  text-white sm:text-5xl">
+            <h1 className="text-3xl font-extrabold text-white sm:text-5xl">
               Hello! We Are
               <strong className="block font-extrabold text-blue-500">
                 PWDka
               </strong>
             </h1>
 
-            <p className="mt-4 max-w-lg  text-white sm:text-xl">
+            <p className="mt-4 max-w-lg text-white sm:text-xl">
               At PWDKa, our mission is to champion inclusivity and create
               meaningful opportunities for Persons with Disabilities (PWDs). We
               are driven by a vision of a world where every individual,
@@ -91,52 +91,55 @@ const AboutContent = () => {
       </section>
 
       {/* Section 1 */}
-      <section id="section1">
-        <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
-          <div className="max-w-3xl">
+      <section id="section1" className="py-16">
+        <div className="mx-auto max-w-screen-xl px-4 py-8 bg-white/90 rounded-lg shadow-lg sm:px-6 sm:py-12 lg:px-8">
+          <div className="max-w-3xl mb-8">
             <h2 className="text-3xl text-custom-blue font-bold sm:text-4xl">
               Breaking Barriers, Building Futures
             </h2>
           </div>
 
-          <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-16">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-16">
             <div className="relative h-64 overflow-hidden sm:h-80 lg:h-full">
               <img
                 alt=""
                 src="/imgs/pwd1.jpg"
-                className="absolute inset-0 h-full w-full object-cover"
+                className="absolute inset-0 h-full w-full object-cover rounded-lg"
               />
             </div>
 
             <div className="lg:py-16">
-              <article className="space-y-4 text-black">
-                <p>
-                  Our mission is to create inclusive opportunities for persons
-                  with disabilities, recognizing their potential and the value
-                  they bring. We are dedicated to fostering a supportive
-                  environment where diverse talents can thrive, driving
-                  innovation and success for both individuals and a company.
-                </p>
+              <div className="p-6 bg-white rounded-xl shadow-xl">
+                <article className="space-y-4 text-black">
+                  <p>
+                    Our mission is to create inclusive opportunities for persons
+                    with disabilities, recognizing their potential and the value
+                    they bring. We are dedicated to fostering a supportive
+                    environment where diverse talents can thrive, driving
+                    innovation and success for both individuals and a company.
+                  </p>
 
-                <p>
-                  Our commitment goes beyond just offering opportunities; it
-                  extends to reshaping mindsets and challenging stereotypes,
-                  showing that diversity, particularly the inclusion of persons
-                  with disabilities, is a vital driver of growth, excellence,
-                  and resilience in today’s evolving world. We believe that an
-                  inclusive workplace leads to a stronger, more dynamic
-                  workforce, and in turn, a better future for all.
-                </p>
-              </article>
+                  <p>
+                    Our commitment goes beyond just offering opportunities; it
+                    extends to reshaping mindsets and challenging stereotypes,
+                    showing that diversity, particularly the inclusion of
+                    persons with disabilities, is a vital driver of growth,
+                    excellence, and resilience in today’s evolving world. We
+                    believe that an inclusive workplace leads to a stronger,
+                    more dynamic workforce, and in turn, a better future for
+                    all.
+                  </p>
+                </article>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Section 2 */}
-      <section>
-        <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
-          <div className="max-w-3xl mb-4">
+      <section className="py-16">
+        <div className="mx-auto max-w-screen-xl px-4 py-8 bg-white/90 rounded-lg shadow-lg sm:px-6 sm:py-12 lg:px-8">
+          <div className="max-w-3xl mb-8">
             <h2 className="text-3xl font-bold sm:text-4xl text-[#007bff] text-center lg:text-left">
               Unlock Potential, Amplify Success
             </h2>
@@ -147,26 +150,28 @@ const AboutContent = () => {
               <img
                 alt=""
                 src="/imgs/pwd3.jpg"
-                className="absolute inset-0 h-full w-full object-cover"
+                className="absolute inset-0 h-full w-full object-cover rounded-lg"
               />
             </div>
 
             <div className="lg:py-16">
-              <article className="space-y-4 text-gray-600">
-                <p>
-                  We envision a future where businesses harness the unique
-                  strengths of persons with disabilities, leading to enhanced
-                  creativity and growth. Our goal is to create pathways that
-                  drive mutual success and progress, fostering a culture of
-                  inclusivity that enriches organizations and transforms
-                  industries.
-                </p>
+              <div className="p-6 bg-white rounded-xl shadow-xl">
+                <article className="space-y-4 text-black">
+                  <p>
+                    We envision a future where businesses harness the unique
+                    strengths of persons with disabilities, leading to enhanced
+                    creativity and growth. Our goal is to create pathways that
+                    drive mutual success and progress, fostering a culture of
+                    inclusivity that enriches organizations and transforms
+                    industries.
+                  </p>
 
-                <p>
-                  By integrating diverse talents, we help companies unlock their
-                  full potential and achieve sustainable success.
-                </p>
-              </article>
+                  <p>
+                    By integrating diverse talents, we help companies unlock
+                    their full potential and achieve sustainable success.
+                  </p>
+                </article>
+              </div>
             </div>
           </div>
         </div>
