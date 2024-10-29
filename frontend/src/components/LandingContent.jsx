@@ -28,18 +28,23 @@ const LandingContent = () => {
   };
 
   return (
-    <div>
+    <div
+      className="w-full h-screen bg-cover bg-center"
+      style={{
+        backgroundImage: "url('/imgs/pft.png')",
+      }}
+    >
       <div className="bg-transparent pt-16 pr-4 pb-16 pl-4 flex mr-auto ml-auto flex-col items-center relative lg:flex-row lg:py-32 xl:py-48 md:px-8 max-w-screen-2xl">
         <div className="flex justify-center items-center w-full h-full overflow-hidden lg:w-1/2 lg:justify-end lg:bottom-0 lg:left-0 lg:items-center">
           <img
             src="/imgs/landing photo.png"
-            className="object-contain object-top lg:w-auto lg:h-full w-full h-auto"
+            className="object-contain object-top lg:w-auto lg:h-full w-full h-auto shadow-xl"
           />
         </div>
 
         {/* Card for content */}
         <div className="mr-auto ml-auto flex justify-end relative max-w-xl xl:pr-32 lg:max-w-screen-xl">
-          <div className="mb-16 lg:pr-5 lg:max-w-lg lg:mb-0 bg-white shadow-lg rounded-2xl p-8">
+          <div className="mb-16 lg:pr-5 lg:max-w-lg lg:mb-0 bg-white bg-opacity-90 shadow-lg rounded-2xl p-8">
             <div className="mb-6 max-w-xl">
               <p className="inline-block pt-1 pr-3 pb-1 pl-3 mb-4 text-pink-200 bg-pink-500 rounded-2xl uppercase text-xs font-semibold tracking-wider">
                 Get Hired!
