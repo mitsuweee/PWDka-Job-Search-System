@@ -21,6 +21,9 @@ const JobListing = () => {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [currentJobSpeech, setCurrentJobSpeech] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [applicationHistory, setApplicationHistory] = useState([]); // New state for application history
+  const [isApplicationHistoryModalOpen, setIsApplicationHistoryModalOpen] =
+    useState(false); // New state for modal visibility
 
   const jobsPerPage = 4;
   const navigate = useNavigate();
@@ -88,6 +91,7 @@ const JobListing = () => {
             companyCity: job.company_city,
             companyDescription: job.company_description,
             companyImage: `data:image/png;base64,${job.company_profile_picture}`,
+            isApplied: job.is_applied,
           }));
 
           setJobs(fetchedJobs);
@@ -106,6 +110,28 @@ const JobListing = () => {
     fetchUserFullName();
     fetchJobs();
   }, []);
+
+  const fetchApplicationHistory = async () => {
+    const userId = localStorage.getItem("Id");
+    try {
+      const response = await axios.get(
+        `/jobapplication/applications/user/${userId}`
+      );
+      if (response.data.successful) {
+        setApplicationHistory(response.data.data);
+        setIsApplicationHistoryModalOpen(true); // Open the modal
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      toast.error("Failed to load application history");
+    }
+  };
+
+  // Render loading spinner if data is still being fetched
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   const playJobListingMessage = (job) => {
     const salaryMessage =
@@ -338,13 +364,21 @@ const JobListing = () => {
       {/* Job Listings and Pagination */}
       <div className="flex flex-col lg:flex-row w-full h-full mt-6">
         <div className="lg:w-1/2 p-4 overflow-auto">
-          <h1 className="text-3xl font-bold mb-6 text-blue-600">
-            <span className="material-symbols-outlined text-2xl mr-2">
-              work_update
-            </span>
-            Jobs for You,{" "}
-            {userFullName.charAt(0).toUpperCase() + userFullName.slice(1)}
-          </h1>
+          <div className="flex items-center justify-between mb-4">
+            <h1 className="text-2xl font-bold text-custom-blue flex items-center">
+              <span className="material-symbols-outlined text-2xl mr-2">
+                work_update
+              </span>
+              Jobs for You,{" "}
+              {userFullName.charAt(0).toUpperCase() + userFullName.slice(1)}
+            </h1>
+            <button
+              onClick={fetchApplicationHistory}
+              className="ml-4 px-4 py-2 bg-blue-200 text-blue-700 rounded-lg shadow-md hover:bg-blue-300 transition"
+            >
+              Application History
+            </button>
+          </div>
 
           <div className="space-y-4">
             {currentJobs.length > 0 ? (
@@ -628,8 +662,15 @@ const JobListing = () => {
 
                 <div className="mt-6 flex space-x-4">
                   <a href={`/apply?id=${selectedJob.id}`}>
-                    <button className="bg-blue-500 text-white py-3 px-6 rounded-full shadow-lg hover:bg-blue-600 hover:shadow-2xl transition transform hover:scale-105">
-                      Apply now
+                    <button
+                      className={`py-2 px-4 rounded ${
+                        selectedJob.isApplied
+                          ? "bg-gray-400 cursor-not-allowed"
+                          : "bg-blue-600 hover:bg-blue-700"
+                      } text-white`}
+                      disabled={selectedJob.isApplied} // Disable if already applied
+                    >
+                      {selectedJob.isApplied ? "Already Applied" : "Apply Now"}
                     </button>
                   </a>
                   <button
@@ -760,6 +801,63 @@ const JobListing = () => {
                 Logout
               </button>
             </div>
+          </div>
+        </div>
+      )}
+      {/* Application History Modal */}
+      {isApplicationHistoryModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg relative w-full max-w-2xl">
+            <button
+              onClick={() => setIsApplicationHistoryModalOpen(false)}
+              className="absolute top-2 right-2 text-2xl font-bold text-gray-700 hover:text-gray-900"
+            >
+              &times;
+            </button>
+            <h3 className="text-xl font-bold text-gray-800 mb-6 text-center">
+              Application History
+            </h3>
+            {applicationHistory.length > 0 ? (
+              <div className="overflow-y-auto max-h-96">
+                <table className="min-w-full bg-white shadow-md rounded-lg">
+                  <thead>
+                    <tr className="bg-gray-200 text-gray-700">
+                      <th className="py-3 px-6 text-left">Position</th>
+                      <th className="py-3 px-6 text-left">Company</th>
+                      <th className="py-3 px-6 text-left">Status</th>
+                      <th className="py-3 px-6 text-left">Date Applied</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {applicationHistory.map((application, index) => (
+                      <tr
+                        key={index}
+                        className="border-b border-gray-200 hover:bg-gray-100 transition duration-200"
+                      >
+                        <td className="py-3 px-6 text-left">
+                          {application.position_name}
+                        </td>
+                        <td className="py-3 px-6 text-left">
+                          {application.company_name}
+                        </td>
+                        <td className="py-3 px-6 text-left">
+                          {application.status}
+                        </td>
+                        <td className="py-3 px-6 text-left">
+                          {new Date(
+                            application.date_created
+                          ).toLocaleDateString()}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <p className="text-center text-gray-500">
+                No application history found.
+              </p>
+            )}
           </div>
         </div>
       )}
