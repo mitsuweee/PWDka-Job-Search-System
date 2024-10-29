@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Typewriter from "typewriter-effect";
 
 const LandingContent = () => {
   const navigate = useNavigate();
@@ -9,7 +10,6 @@ const LandingContent = () => {
     navigate("/signup");
   };
 
-  // Function to play the welcome message
   const playWelcomeMessage = () => {
     const message = new SpeechSynthesisUtterance(
       "Welcome to pwe de ka, Empowering You to Find the Job You Deserve! - A web-based job search system for Persons with disabilities, if you already have an account click login, if not click get started."
@@ -18,7 +18,6 @@ const LandingContent = () => {
     speechSynthesis.speak(message);
   };
 
-  // Toggle voice message
   const handleToggleVoice = () => {
     setIsVoiceEnabled(!isVoiceEnabled);
     if (!isVoiceEnabled) {
@@ -37,31 +36,37 @@ const LandingContent = () => {
             className="object-contain object-top lg:w-auto lg:h-full w-full h-auto"
           />
         </div>
+
+        {/* Card for content */}
         <div className="mr-auto ml-auto flex justify-end relative max-w-xl xl:pr-32 lg:max-w-screen-xl">
-          <div className="mb-16 lg:pr-5 lg:max-w-lg lg:mb-0">
+          <div className="mb-16 lg:pr-5 lg:max-w-lg lg:mb-0 bg-white shadow-lg rounded-2xl p-8">
             <div className="mb-6 max-w-xl">
               <p className="inline-block pt-1 pr-3 pb-1 pl-3 mb-4 text-pink-200 bg-pink-500 rounded-2xl uppercase text-xs font-semibold tracking-wider">
                 Get Hired!
               </p>
+              {/* Typing Effect */}
               <div className="text-3xl font-bold tracking-tight text-gray-900 max-w-lg sm:text-4xl sm:leading-none mb-6">
-                <p className="text-black text-3xl font-'bold' tracking-tight sm:text-4xl sm:leading-none">
-                  Exclusive Jobs For You{" "}
-                </p>
-                <p className="inline-block text-black text-3xl font-bold tracking-tight mr-2 sm:text-4xl sm:leading-none">
-                  Using
-                </p>
-                <p className="inline-block text-blue-500 text-3xl font-bold tracking-tight sm:text-4xl sm:leading-none">
-                  PWDKa!
-                </p>
+                <Typewriter
+                  options={{
+                    autoStart: true,
+                    loop: true,
+                    delay: 50,
+                    strings: [
+                      "Exclusive Jobs For You",
+                      'Using <span style="color: #3b82f6;">PWDKa!</span>',
+                    ],
+                    wrapperClassName: "typewriter-wrapper",
+                    cursorClassName: "typewriter-cursor",
+                  }}
+                />
               </div>
               <p className="text-gray-700 text-base md:text-lg">
-                {" "}
                 Dedicated job listing platform designed to connect persons with
                 disabilities with inclusive employers. Our mission is to empower
                 individuals by providing access to meaningful employment
                 opportunities, tailored to their unique skills and needs. Join
                 us in fostering an inclusive workforce and unlocking potential
-                across all abilities.{" "}
+                across all abilities.
               </p>
             </div>
 

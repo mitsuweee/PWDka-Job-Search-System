@@ -21,7 +21,8 @@
     "react-dom": "^18.3.1",
     "react-hot-toast": "^2.4.1",
     "react-router-dom": "^6.26.0",
-    "rippleui": "^1.12.1"
+    "rippleui": "^1.12.1",
+    "typewriter-effect": "^2.21.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.8.0",
