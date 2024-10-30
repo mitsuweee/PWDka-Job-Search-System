@@ -17,6 +17,9 @@ const ViewApplicants = () => {
   const [isReviewedModalOpen, setIsReviewedModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState("All");
+  const [isStatusFilterOpen, setIsStatusFilterOpen] = useState(false);
+
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -50,29 +53,42 @@ const ViewApplicants = () => {
     axios(config)
       .then(async (response) => {
         const fetchedJobApplicants = await Promise.all(
-          response.data.data.map((applicant) => ({
-            id: applicant.id,
-            fullName: `${applicant.first_name} ${applicant.middle_initial}. ${applicant.last_name}`,
-            email: applicant.email,
-            resume: applicant.resume,
-            jobAppliedFor: applicant.position_name,
-            dateCreated: applicant.date_created
-              ? new Date(applicant.date_created).toLocaleDateString()
-              : null, // Format as date only
-            profile: {
-              fullName: `${applicant.first_name} ${applicant.middle_initial}. ${applicant.last_name}`,
+          response.data.data.map((applicant) => {
+            const fullName = [
+              applicant.first_name || "",
+              applicant.middle_initial ? `${applicant.middle_initial}.` : "",
+              applicant.last_name || "",
+            ]
+              .filter(Boolean)
+              .join(" ")
+              .trim(); // Ensure no leading/trailing spaces
+
+            console.log("Constructed Full Name:", fullName); // Debug log
+
+            return {
+              id: applicant.id,
+              fullName: fullName, // Use the constructed fullName
               email: applicant.email,
-              disability: applicant.type,
-              city: applicant.city,
-              contactNumber: applicant.contact_number,
-              gender: applicant.gender,
-              birthdate: new Date(applicant.birth_date).toLocaleDateString(
-                "en-US"
-              ),
-              profilePicture: `data:image/png;base64,${applicant.formal_picture}`,
-            },
-            reviewed: false,
-          }))
+              resume: applicant.resume,
+              jobAppliedFor: applicant.position_name,
+              dateCreated: applicant.date_created
+                ? new Date(applicant.date_created).toLocaleDateString()
+                : null,
+              profile: {
+                fullName: `${applicant.first_name} ${applicant.middle_initial}. ${applicant.last_name}`,
+                email: applicant.email,
+                disability: applicant.type,
+                city: applicant.city,
+                contactNumber: applicant.contact_number,
+                gender: applicant.gender,
+                birthdate: new Date(applicant.birth_date).toLocaleDateString(
+                  "en-US"
+                ),
+                profilePicture: `data:image/png;base64,${applicant.formal_picture}`,
+              },
+              reviewed: false,
+            };
+          })
         );
 
         if (fetchedJobApplicants.length > 0) {
@@ -94,6 +110,67 @@ const ViewApplicants = () => {
         setLoading(false);
       });
   }, []);
+
+  const fetchApplicantsByStatus = async (status) => {
+    const joblistingId = new URLSearchParams(window.location.search).get("id");
+
+    if (!joblistingId) {
+      alert("Job listing ID is missing.");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      let url;
+
+      // Construct URL based on the selected status
+      if (status === "All") {
+        url = `/jobapplication/all/${joblistingId}`; // Fetch all applicants
+      } else {
+        url = `/jobapplication/${status}/${joblistingId}`; // Fetch by specific status
+      }
+
+      const response = await axios.get(url);
+
+      if (response.data.successful) {
+        const applicantsData = await Promise.all(
+          response.data.data.map((applicant) => {
+            const fullName = [
+              applicant.first_name || "",
+              applicant.middle_initial ? `${applicant.middle_initial}.` : "",
+              applicant.last_name || "",
+            ]
+              .filter(Boolean)
+              .join(" ")
+              .trim();
+
+            return {
+              id: applicant.id,
+              fullName: fullName,
+              email: applicant.email || "N/A",
+              resume: applicant.resume || "N/A",
+              jobAppliedFor: applicant.position_name || "N/A",
+              dateCreated: applicant.date_created
+                ? new Date(applicant.date_created).toLocaleDateString()
+                : "N/A",
+            };
+          })
+        );
+
+        setApplicants(applicantsData);
+        setJobName(applicantsData[0]?.jobAppliedFor || "No Job Found");
+        toast.success("Applicants loaded successfully!");
+      } else {
+        setJobName("No Job Found");
+        setApplicants([]);
+      }
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || "An error occurred";
+      toast.error(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const toggleFilterMenu = () => {
     setIsFilterOpen(!isFilterOpen);
@@ -287,35 +364,6 @@ const ViewApplicants = () => {
       });
   };
 
-  const fetchApplicantsByStatus = async (status) => {
-    const joblistingId = new URLSearchParams(window.location.search).get("id");
-
-    if (!joblistingId) {
-      alert("Job listing ID is missing.");
-      return;
-    }
-
-    try {
-      setIsLoading(true);
-      const response = await axios.get(
-        `/jobapplication/${status}/${joblistingId}`
-      );
-      if (response.data.successful) {
-        setJobName(response.data.data[0]?.position_name || "Job");
-        setApplicants(response.data.data);
-        toast.success("Applicants loaded successfully!");
-      } else {
-        setJobName("No Job Found");
-        setApplicants([]);
-      }
-    } catch (error) {
-      const errorMessage = error.response?.data?.message || "An error occurred";
-      toast.error(errorMessage);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const sortedApplicants = applicants.sort((a, b) => {
     if (sortOption === "newest") {
       return b.id - a.id;
@@ -439,61 +487,92 @@ const ViewApplicants = () => {
             <span className="font-extrabold text-blue-900">{jobName}</span> (
             {applicants.length})
           </h2>
+        </div>
 
-          <div className="relative">
-            <button
-              className="py-2 px-4 mb-3 rounded-lg bg-blue-600 text-white"
-              onClick={toggleFilterMenu}
-            >
-              Filter
-            </button>
-            {isFilterOpen && (
-              <div
-                className="absolute right-0 mt-2 space-y-2 bg-white p-4 shadow-lg rounded-lg"
-                onClick={(e) => e.stopPropagation()}
+        {/* Button for viewing all applicants' statuses
+        <button
+          className="mb-6 py-2 px-4 bg-green-600 text-white rounded-lg"
+          onClick={openReviewedModal}
+        >
+          Applicants Status
+        </button> */}
+
+        {/* Status Filter and Sort Section */}
+        <div className="flex items-center mb-3">
+          {/* Filter by Status Button */}
+          <button
+            className="py-2 px-4 rounded-lg bg-green-600 text-white"
+            onClick={() => setIsStatusFilterOpen(!isStatusFilterOpen)} // Toggle the status filter dropdown
+          >
+            Filter by Status
+          </button>
+
+          {/* Status Dropdown */}
+          {isStatusFilterOpen && (
+            <div className="relative ml-2">
+              <select
+                value={selectedStatus}
+                onChange={(e) => {
+                  setSelectedStatus(e.target.value);
+                  if (e.target.value === "All") {
+                    fetchApplicantsByStatus(""); // Fetch all applicants if "All" is selected
+                  } else {
+                    fetchApplicantsByStatus(e.target.value);
+                  }
+                }}
+                className="py-2 px-4 rounded-lg bg-gray-200 text-blue-900"
               >
+                <option value="All">All</option>
+                <option value="Under Review">Under Review</option>
+                <option value="Reviewed">Reviewed</option>
+                <option value="Pending">Pending</option>
+                <option value="Rejected">Rejected</option>
+              </select>
+            </div>
+          )}
+
+          {/* Sort Button */}
+          <button
+            className="py-2 px-4 rounded-lg bg-blue-600 text-white ml-2" // Add margin-left for spacing
+            onClick={() => setIsFilterOpen(!isFilterOpen)} // Toggle sort options
+          >
+            Sort by
+          </button>
+
+          {/* Sort Options Dropdown */}
+          {isFilterOpen && (
+            <div className="relative ml-2" onClick={(e) => e.stopPropagation()}>
+              {" "}
+              {/* Flex column for sort options */}
+              <div className="py-2 px-4 rounded-lg bg-gray-200">
                 <button
-                  className={`py-2 px-4 rounded-lg w-full ${
-                    sortOption === "newest"
-                      ? "bg-blue-600 text-white"
-                      : "bg-gray-200 text-blue-900"
+                  className={`py-2 px-4 rounded-lg  text-blue-900 ${
+                    sortOption === "newest" ? "bg-blue-600 text-white" : ""
                   }`}
                   onClick={() => handleSortChange("newest")}
                 >
                   Newest
                 </button>
                 <button
-                  className={`py-2 px-4 rounded-lg w-full ${
-                    sortOption === "oldest"
-                      ? "bg-blue-600 text-white"
-                      : "bg-gray-200 text-blue-900"
+                  className={`py-2 px-4 rounded-lg text-blue-900 ${
+                    sortOption === "oldest" ? "bg-blue-600 text-white" : ""
                   }`}
                   onClick={() => handleSortChange("oldest")}
                 >
                   Oldest
                 </button>
                 <button
-                  className={`py-2 px-4 rounded-lg w-full ${
-                    sortOption === "a-z"
-                      ? "bg-blue-600 text-white"
-                      : "bg-gray-200 text-blue-900"
+                  className={`py-2 px-4 rounded-lg  text-blue-900 ${
+                    sortOption === "a-z" ? "bg-blue-600 text-white" : ""
                   }`}
                   onClick={() => handleSortChange("a-z")}
                 >
                   A-Z
                 </button>
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
-
-        {/* Button for viewing all applicants' statuses */}
-        <button
-          className="mb-6 py-2 px-4 bg-green-600 text-white rounded-lg"
-          onClick={openReviewedModal}
-        >
-          Applicants Status
-        </button>
 
         {/* Applicants Table */}
         <div className="overflow-x-auto">
@@ -514,14 +593,18 @@ const ViewApplicants = () => {
                     className="border-b border-gray-200 hover:bg-gray-100 transition duration-200"
                   >
                     <td className="py-3 px-6 text-left">
-                      {applicant.fullName
-                        .split(" ")
-                        .map(
-                          (word) =>
-                            word.charAt(0).toUpperCase() +
-                            word.slice(1).toLowerCase()
-                        )
-                        .join(" ")}
+                      {
+                        applicant.fullName && applicant.fullName.trim()
+                          ? applicant.fullName
+                              .split(" ")
+                              .map(
+                                (word) =>
+                                  word.charAt(0).toUpperCase() +
+                                  word.slice(1).toLowerCase()
+                              )
+                              .join(" ")
+                          : "N/A" // Display N/A if fullName is empty or not a valid string
+                      }
                     </td>
                     <td className="py-3 px-6 text-left">{applicant.email}</td>
                     <td className="py-3 px-6 text-left">
@@ -598,7 +681,7 @@ const ViewApplicants = () => {
         )}
 
         {/* Profile Modal */}
-        {isProfileModalOpen && (
+        {isProfileModalOpen && selectedProfile && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
             <div className="bg-white p-6 rounded-lg shadow-lg relative w-full max-w-2xl">
               <button
@@ -614,14 +697,14 @@ const ViewApplicants = () => {
 
               <div className="flex flex-col items-center mb-4">
                 <img
-                  src={selectedProfile?.profilePicture}
+                  src={selectedProfile.profilePicture}
                   alt="Profile"
                   className="w-32 h-32 rounded-full border-4 border-blue-600 shadow-lg mb-4"
                 />
                 <h4 className="text-lg font-semibold text-gray-900">
-                  {selectedProfile?.fullName}
+                  {selectedProfile.fullName}
                 </h4>
-                <p className="text-gray-600">{selectedProfile?.email}</p>
+                <p className="text-gray-600">{selectedProfile.email}</p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
@@ -630,13 +713,13 @@ const ViewApplicants = () => {
                     Disability:
                   </p>
                   <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
-                    {selectedProfile?.disability}
+                    {selectedProfile.disability}
                   </p>
                 </div>
                 <div>
                   <p className="text-lg font-semibold text-gray-800">City:</p>
                   <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
-                    {selectedProfile?.city}
+                    {selectedProfile.city}
                   </p>
                 </div>
                 <div>
@@ -644,13 +727,13 @@ const ViewApplicants = () => {
                     Contact Number:
                   </p>
                   <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
-                    {selectedProfile?.contactNumber}
+                    {selectedProfile.contactNumber}
                   </p>
                 </div>
                 <div>
                   <p className="text-lg font-semibold text-gray-800">Gender:</p>
                   <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
-                    {selectedProfile?.gender}
+                    {selectedProfile.gender}
                   </p>
                 </div>
                 <div>
@@ -658,7 +741,7 @@ const ViewApplicants = () => {
                     Birthdate:
                   </p>
                   <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
-                    {selectedProfile?.birthdate}
+                    {selectedProfile.birthdate}
                   </p>
                 </div>
               </div>
