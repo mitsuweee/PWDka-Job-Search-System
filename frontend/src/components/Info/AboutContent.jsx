@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
+import Typewriter from "typewriter-effect";
 
 const AboutContent = () => {
   const sections = useRef([]);
@@ -50,7 +51,14 @@ const AboutContent = () => {
         <div className="relative mx-auto max-w-screen-xl px-4 py-32 sm:px-6 lg:flex lg:h-screen lg:items-center lg:px-8">
           <div className="max-w-xl text-left">
             <h1 className="text-3xl font-extrabold text-white sm:text-5xl">
-              Hello! We Are
+              <Typewriter
+                options={{
+                  autoStart: true,
+                  loop: true,
+                  delay: 50,
+                  strings: ["Hello! We Are", "Get Hired with", "Welcome to"],
+                }}
+              />
               <strong className="block font-extrabold text-blue-500">
                 PWDka
               </strong>
@@ -100,21 +108,24 @@ const AboutContent = () => {
           </div>
 
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-16">
-            <div className="relative h-64 overflow-hidden sm:h-80 lg:h-full">
+            <div className="relative h-64 overflow-hidden sm:h-80 lg:h-full transition-transform duration-500 transform hover:scale-105">
               <img
                 alt=""
                 src="/imgs/pwd1.jpg"
-                className="absolute inset-0 h-full w-full object-cover rounded-lg"
+                className="absolute inset-0 h-full w-full object-cover rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
               />
             </div>
 
             <div className="lg:py-16">
-              <div className="p-6 bg-white rounded-xl shadow-xl">
-                <article className="space-y-4 text-black">
+              <div className="p-6 bg-white rounded-xl shadow-xl transition-transform duration-500 transform hover:scale-105 hover:bg-blue-50">
+                <article className="space-y-6 text-black text-lg">
                   <p>
-                    Our mission is to create inclusive opportunities for persons
-                    with disabilities, recognizing their potential and the value
-                    they bring. We are dedicated to fostering a supportive
+                    <span className="text-2xl font-bold text-blue-500">
+                      Our mission
+                    </span>
+                    &nbsp; is to create inclusive opportunities for persons with
+                    disabilities, recognizing their potential and the value they
+                    bring. We are dedicated to fostering a supportive
                     environment where diverse talents can thrive, driving
                     innovation and success for both individuals and a company.
                   </p>
@@ -145,20 +156,23 @@ const AboutContent = () => {
             </h2>
           </div>
 
-          <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-16">
-            <div className="lg:order-last relative h-64 overflow-hidden sm:h-80 lg:h-full">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-16">
+            <div className="lg:order-last relative h-64 overflow-hidden sm:h-80 lg:h-full transition-transform duration-500 transform hover:scale-105">
               <img
                 alt=""
                 src="/imgs/pwd3.jpg"
-                className="absolute inset-0 h-full w-full object-cover rounded-lg"
+                className="absolute inset-0 h-full w-full object-cover rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
               />
             </div>
 
             <div className="lg:py-16">
-              <div className="p-6 bg-white rounded-xl shadow-xl">
-                <article className="space-y-4 text-black">
+              <div className="p-6 bg-white rounded-xl shadow-xl transition-transform duration-500 transform hover:scale-105 hover:bg-blue-50">
+                <article className="space-y-6 text-black text-lg">
                   <p>
-                    We envision a future where businesses harness the unique
+                    <span className="text-2xl font-bold text-blue-500">
+                      We envision
+                    </span>
+                    &nbsp; a future where businesses harness the unique
                     strengths of persons with disabilities, leading to enhanced
                     creativity and growth. Our goal is to create pathways that
                     drive mutual success and progress, fostering a culture of
@@ -195,7 +209,7 @@ const AboutContent = () => {
               </p>
             </div>
           </div>
-          <p className="text-base text-gray-700 md:text-lg">
+          <p className="text-base text-black md:text-lg">
             Introducing the 6 Students who made this Job Listing Web/Application
             possible. In Fulfillment of our Thesis in Centro Escolar
             University-Makati
@@ -211,7 +225,7 @@ const AboutContent = () => {
             },
             {
               name: "Carlos Miguel Bundac",
-              role: "Lead UI UX Designer / Full stack Developer",
+              role: "Lead Frontend UI UX Designer / Full stack Developer",
               img: "/imgs/ako.jpg",
             },
             {
@@ -257,7 +271,7 @@ const AboutContent = () => {
                     <p className="text-md font-bold text-[#007bff]">
                       {member.name}
                     </p>
-                    <p className="text-sm text-gray-800 mt-0 mr-0 mb-4 ml-0">
+                    <p className="text-sm text-black mt-0 mr-0 mb-4 ml-0">
                       {member.role}
                     </p>
                   </div>
