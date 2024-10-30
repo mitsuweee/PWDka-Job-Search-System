@@ -202,7 +202,7 @@ const AboutContent = () => {
           </p>
         </div>
 
-        <div className="grid mt-0 mr-auto mb-0 ml-auto gap-10 row-gap-8 bg-custom-bg sm:row-gap-10 lg:max-w-screen-lg sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid mt-0 mr-auto mb-0 ml-auto gap-10 row-gap-8 p-4 bg-white sm:row-gap-10 rounded-2xl lg:max-w-screen-lg sm:grid-cols-2 lg:grid-cols-3">
           {[
             {
               name: "Kyle Anakin Aguas",
@@ -234,29 +234,35 @@ const AboutContent = () => {
               role: "Frontend Developer",
               img: "/imgs/ace.jpg",
             },
+            // Add a placeholder to center Mitsui's card
+            <div className="hidden lg:block"></div>,
             {
               name: "Mitsui Ortega",
-              role: " Project Manager / Full Stack Developer / Integration Engineer ",
+              role: "Project Manager / Full Stack Developer / Integration Engineer",
               img: "/imgs/mits.jpg",
             },
-          ].map((member) => (
+          ].map((member, index) => (
             <div
-              className="flex p-4 hover:scale-105 hover:shadow-xl transition-transform duration-300 ease-in-out rounded-xl bg-custom-bg items-center"
-              key={member.name}
+              className="flex p-4 hover:scale-105 hover:shadow-xl transition-transform duration-300 ease-in-out rounded-xl bg-white items-center"
+              key={member.name || index}
             >
-              <img
-                src={member.img}
-                className="shadow object-cover mt-0 mr-4 mb-0 ml-0 rounded-full w-24 h-24"
-                alt={member.name}
-              />
-              <div className="flex justify-center flex-col">
-                <p className="text-md font-bold text-[#007bff]">
-                  {member.name}
-                </p>
-                <p className="text-sm text-gray-800 mt-0 mr-0 mb-4 ml-0">
-                  {member.role}
-                </p>
-              </div>
+              {member.img && (
+                <>
+                  <img
+                    src={member.img}
+                    className="shadow object-cover mt-0 mr-4 mb-0 ml-0 rounded-full w-24 h-24"
+                    alt={member.name}
+                  />
+                  <div className="flex justify-center flex-col">
+                    <p className="text-md font-bold text-[#007bff]">
+                      {member.name}
+                    </p>
+                    <p className="text-sm text-gray-800 mt-0 mr-0 mb-4 ml-0">
+                      {member.role}
+                    </p>
+                  </div>
+                </>
+              )}
             </div>
           ))}
         </div>
