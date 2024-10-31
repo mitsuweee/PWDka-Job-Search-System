@@ -56,7 +56,10 @@ const ViewApplicants = () => {
 
         const fetchedApplicants = response.data.data.map((applicant) => ({
           id: applicant.id,
-          fullName: `${applicant.first_name} ${applicant.middle_initial}. ${applicant.last_name}`,
+          fullName: `${applicant.first_name} ${
+            applicant.middle_initial ? applicant.middle_initial + ". " : ""
+          }${applicant.last_name}`,
+
           email: applicant.email,
           dateCreated: applicant.date_created
             ? new Date(applicant.date_created).toLocaleDateString()
@@ -64,7 +67,9 @@ const ViewApplicants = () => {
           status: applicant.status,
           resume: applicant.resume,
           profile: {
-            fullName: `${applicant.first_name} ${applicant.middle_initial}. ${applicant.last_name}`,
+            fullName: `${applicant.first_name} ${
+              applicant.middle_initial ? applicant.middle_initial + ". " : ""
+            }${applicant.last_name}`,
             email: applicant.email,
             disability: applicant.type,
             city: applicant.city,
@@ -355,7 +360,14 @@ const ViewApplicants = () => {
                     className="border-b border-gray-200 hover:bg-gray-100 transition duration-200"
                   >
                     <td className="py-3 px-6 text-left">
-                      {applicant.fullName}
+                      {applicant.fullName
+                        .split(" ")
+                        .map(
+                          (word) =>
+                            word.charAt(0).toUpperCase() +
+                            word.slice(1).toLowerCase()
+                        )
+                        .join(" ")}
                     </td>
                     <td className="py-3 px-6 text-left">{applicant.email}</td>
                     <td className="py-3 px-6 text-left">
@@ -451,7 +463,14 @@ const ViewApplicants = () => {
                   className="w-32 h-32 rounded-full border-4 border-blue-600 shadow-lg mb-4"
                 />
                 <h4 className="text-lg font-semibold text-gray-900">
-                  {selectedProfile?.fullName}
+                  {selectedProfile?.fullName
+                    .split(" ")
+                    .map(
+                      (word) =>
+                        word.charAt(0).toUpperCase() +
+                        word.slice(1).toLowerCase()
+                    )
+                    .join(" ")}
                 </h4>
                 <p className="text-gray-600">{selectedProfile?.email}</p>
               </div>
@@ -467,7 +486,14 @@ const ViewApplicants = () => {
                 <div>
                   <p className="text-lg font-semibold text-gray-800">City:</p>
                   <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
-                    {selectedProfile?.city}
+                    {selectedProfile?.city
+                      .split(" ")
+                      .map(
+                        (word) =>
+                          word.charAt(0).toUpperCase() +
+                          word.slice(1).toLowerCase()
+                      )
+                      .join(" ")}
                   </p>
                 </div>
                 <div>
@@ -481,7 +507,14 @@ const ViewApplicants = () => {
                 <div>
                   <p className="text-lg font-semibold text-gray-800">Gender:</p>
                   <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
-                    {selectedProfile?.gender}
+                    {selectedProfile?.gender
+                      .split(" ")
+                      .map(
+                        (word) =>
+                          word.charAt(0).toUpperCase() +
+                          word.slice(1).toLowerCase()
+                      )
+                      .join(" ")}
                   </p>
                 </div>
                 <div>
