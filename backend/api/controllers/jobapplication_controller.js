@@ -399,12 +399,31 @@ const updateJobApplicationStatus = async (req, res, next) => {
 };
 
 const getAllApplicantsByStatus = async (req, res) => {
-  const { jobListingId } = req.params; // Assuming you have a job listing ID filter
+  const { jobListingId } = req.params;
+
+  if (!jobListingId) {
+    return res.status(400).json({
+      successful: false,
+      message: "Job Listing ID is missing",
+    });
+  }
 
   try {
+    // Check if the Job Listing ID is valid
+    const jobListingExists = await knex("job_listing")
+      .where({ id: jobListingId })
+      .first();
+    if (!jobListingExists) {
+      return res.status(400).json({
+        successful: false,
+        message: "Invalid Job Listing ID",
+      });
+    }
+
     const applicants = await knex("job_application")
       .select(
         "job_application.id",
+        "disability.type",
         "user.first_name",
         "user.middle_initial",
         "user.last_name",
@@ -415,34 +434,45 @@ const getAllApplicantsByStatus = async (req, res) => {
         "user.birth_date",
         "user.contact_number",
         "user.formal_picture",
-        "disability.type",
+        "job_application.resume",
         "job_application.status",
-        "job_application.date_created",
-        "job_application.resume" // Adding the resume field
+        "job_listing.position_name",
+        "job_application.date_created"
       )
       .join("disability", "user.disability_id", "disability.id")
 
       .join("user", "job_application.user_id", "user.id")
-      .where("job_application.joblisting_id", jobListingId); // Assuming you're filtering by job listing ID
+      .join("disability", "user.disability_id", "disability.id")
+      .join("job_listing", "job_application.joblisting_id", "job_listing.id")
+      .where("job_application.joblisting_id", jobListingId);
 
-    // Convert BLOB fields to base64 strings if necessary
-    const processedApplicants = applicants.map((applicant) => ({
-      ...applicant,
-      resume: applicant.resume ? applicant.resume.toString() : null,
-      formal_picture: applicant.formal_picture
-        ? applicant.formal_picture.toString()
+    if (applicants.length === 0) {
+      return res.status(404).json({
+        successful: false,
+        message: "Job Applications not found",
+      });
+    }
+
+    // Convert BLOB data to string and format date_created
+    const processedApplicants = applicants.map((app) => ({
+      ...app,
+      formal_picture: app.formal_picture ? app.formal_picture.toString() : null,
+      resume: app.resume ? app.resume.toString() : null,
+      date_created: app.date_created
+        ? new Date(app.date_created).toLocaleString()
         : null,
     }));
 
-    res.status(200).json({
+    return res.status(200).json({
       successful: true,
       message: "Applicants retrieved successfully",
       data: processedApplicants,
+      count: processedApplicants.length,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       successful: false,
-      message: "Failed to retrieve applicants",
+      message: error.message,
     });
   }
 };

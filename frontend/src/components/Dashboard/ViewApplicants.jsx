@@ -8,16 +8,18 @@ const ViewApplicants = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [applicants, setApplicants] = useState([]);
-  const [reviewedApplicants, setReviewedApplicants] = useState([]); // Reviewed applicants state
   const [jobName, setJobName] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState("All");
   const [selectedResume, setSelectedResume] = useState(null);
   const [selectedProfile, setSelectedProfile] = useState(null);
   const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
-  const [isReviewedModalOpen, setIsReviewedModalOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
+  const filteredApplicants = applicants.filter((applicant) =>
+    selectedStatus === "All" ? true : applicant.status === selectedStatus
+  );
 
   const handleLogout = () => {
     const confirmed = window.confirm("Are you sure you want to logout?");
@@ -40,221 +42,6 @@ const ViewApplicants = () => {
 
     const config = {
       method: "get",
-      url: `/jobapplication/applications/${joblistingId}`,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-
-    setIsLoading(true);
-    axios(config)
-      .then(async (response) => {
-        const fetchedJobApplicants = await Promise.all(
-          response.data.data.map((applicant) => ({
-            id: applicant.id,
-            fullName: `${applicant.first_name} ${applicant.middle_initial}. ${applicant.last_name}`,
-            email: applicant.email,
-            resume: applicant.resume,
-            jobAppliedFor: applicant.position_name,
-            dateCreated: applicant.date_created
-              ? new Date(applicant.date_created).toLocaleDateString()
-              : null, // Format as date only
-            profile: {
-              fullName: `${applicant.first_name} ${applicant.middle_initial}. ${applicant.last_name}`,
-              email: applicant.email,
-              disability: applicant.type,
-              city: applicant.city,
-              contactNumber: applicant.contact_number,
-              gender: applicant.gender,
-              birthdate: new Date(applicant.birth_date).toLocaleDateString(
-                "en-US"
-              ),
-              profilePicture: `data:image/png;base64,${applicant.formal_picture}`,
-            },
-            reviewed: false,
-          }))
-        );
-
-        if (fetchedJobApplicants.length > 0) {
-          setJobName(fetchedJobApplicants[0].jobAppliedFor);
-        } else {
-          setJobName("No Job Found");
-        }
-
-        setApplicants(fetchedJobApplicants);
-        toast.success("Applicants loaded successfully!");
-      })
-      .catch((error) => {
-        const errorMessage =
-          error.response?.data?.message || "An error occurred";
-        toast.error(errorMessage);
-      })
-      .finally(() => {
-        setIsLoading(false);
-        setLoading(false);
-      });
-  }, []);
-
-  const toggleFilterMenu = () => {
-    setIsFilterOpen(!isFilterOpen);
-  };
-
-  const handleSortChange = (option) => {
-    setSortOption(option);
-    setIsFilterOpen(false);
-  };
-
-  const openResumeModal = (resume) => {
-    setSelectedResume(resume);
-    setIsResumeModalOpen(true);
-  };
-
-  const closeResumeModal = () => {
-    setIsResumeModalOpen(false);
-    setSelectedResume(null);
-  };
-
-  const openProfileModal = (applicant) => {
-    const profile = {
-      fullName: applicant.fullName || "N/A",
-      email: applicant.email || "N/A",
-      disability:
-        applicant.profile?.disability ||
-        applicant.disability ||
-        "Not specified",
-      city: applicant.profile?.city || applicant.city || "Not specified",
-      contactNumber:
-        applicant.profile?.contactNumber ||
-        applicant.contactNumber ||
-        "Not specified",
-      gender: applicant.profile?.gender || applicant.gender || "Not specified",
-      birthdate:
-        applicant.profile?.birthdate || applicant.birthdate || "Not specified",
-      profilePicture:
-        applicant.profile?.profilePicture ||
-        applicant.profilePicture ||
-        "/default.png",
-    };
-
-    setSelectedProfile(profile);
-    setIsProfileModalOpen(true);
-    setIsReviewedModalOpen(false);
-  };
-
-  const handleDeleteApplicant = (applicantId) => {
-    const config = {
-      method: "delete",
-      url: `/jobapplication/delete/${applicantId}`, // Update this URL based on your backend endpoint for deletion
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-
-    axios(config)
-      .then((response) => {
-        toast.success("Applicant deleted successfully!");
-
-        // Update state to remove the deleted applicant from the list
-        setApplicants((prevApplicants) =>
-          prevApplicants.filter((applicant) => applicant.id !== applicantId)
-        );
-      })
-      .catch((error) => {
-        const errorMessage =
-          error.response?.data?.message || "Failed to delete applicant";
-        toast.error(errorMessage);
-      });
-  };
-
-  const goBackToReviewedModal = () => {
-    setIsReviewedModalOpen(true);
-    setIsProfileModalOpen(false);
-  };
-
-  const closeProfileModal = () => {
-    setIsProfileModalOpen(false);
-    setSelectedProfile(null);
-  };
-
-  const openApplicantsStatusModal = () => {
-    const params = new URLSearchParams(window.location.search);
-    const joblistingId = params.get("id");
-
-    const config = {
-      method: "get",
-      url: `/jobapplication/all/${joblistingId}`, // Adjust the endpoint to fetch all statuses
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-
-    setIsLoading(true);
-    axios(config)
-      .then((response) => {
-        const fetchedApplicants = response.data.data.map((applicant) => ({
-          profilePicture: `data:image/png;base64,${applicant.formal_picture}`,
-          id: applicant.id,
-          fullName: `${applicant.first_name} ${
-            applicant.middle_initial ? applicant.middle_initial + ". " : ""
-          }${applicant.last_name}`,
-          email: applicant.email,
-          contactNumber: applicant.contact_number,
-          birthdate: applicant.birth_date,
-          gender: applicant.gender,
-          city: applicant.city,
-          disability: applicant.type,
-          status: applicant.status, // Include the status field to display it
-        }));
-
-        setReviewedApplicants(fetchedApplicants);
-        setIsReviewedModalOpen(true);
-        toast.success("Applicants loaded successfully!");
-      })
-      .catch((error) => {
-        const errorMessage =
-          error.response?.data?.message || "Failed to load applicants";
-        toast.error(errorMessage);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  };
-
-  const closeReviewedModal = () => {
-    setIsReviewedModalOpen(false);
-  };
-
-  const handleStatusChange = (applicantId, newStatus) => {
-    axios
-      .put(`/jobapplication/status/${applicantId}`, { status: newStatus })
-      .then((response) => {
-        toast.success("Status updated successfully");
-
-        const updatedApplicant = response.data.data; // Get the updated data
-
-        // Update the local state with the new status
-        setApplicants((prev) =>
-          prev.map((applicant) =>
-            applicant.id === updatedApplicant.id
-              ? { ...applicant, status: updatedApplicant.status }
-              : applicant
-          )
-        );
-      })
-      .catch((error) => {
-        const errorMessage =
-          error.response?.data?.message || "Failed to update status";
-        toast.error(errorMessage);
-      });
-  };
-
-  // DAGDAG KO
-  const openReviewedModal = () => {
-    const params = new URLSearchParams(window.location.search);
-    const joblistingId = params.get("id");
-
-    const config = {
-      method: "get",
       url: `/jobapplication/status/all/${joblistingId}`,
       headers: {
         "Content-Type": "application/json",
@@ -266,57 +53,83 @@ const ViewApplicants = () => {
       .then((response) => {
         const fetchedApplicants = response.data.data.map((applicant) => ({
           id: applicant.id,
-          fullName: `${applicant.first_name} ${
-            applicant.middle_initial ? applicant.middle_initial + ". " : ""
-          }${applicant.last_name}`,
+          fullName: `${applicant.first_name} ${applicant.middle_initial}. ${applicant.last_name}`,
           email: applicant.email,
+          dateCreated: applicant.date_created
+            ? new Date(applicant.date_created).toLocaleDateString()
+            : null,
           status: applicant.status,
+          resume: applicant.resume,
+          profile: {
+            fullName: `${applicant.first_name} ${applicant.middle_initial}. ${applicant.last_name}`,
+            email: applicant.email,
+            disability: applicant.type,
+            city: applicant.city,
+            contactNumber: applicant.contact_number,
+            gender: applicant.gender,
+            birthdate: applicant.birth_date
+              ? new Date(applicant.birth_date).toLocaleDateString("en-US")
+              : null,
+            profilePicture: `data:image/png;base64,${applicant.formal_picture}`,
+          },
         }));
 
-        setReviewedApplicants(fetchedApplicants);
-        setIsReviewedModalOpen(true);
-        toast.success("Applicants with statuses loaded successfully!");
+        setJobName(fetchedApplicants[0]?.position_name || "No Job Found");
+        setApplicants(fetchedApplicants);
+        toast.success("Applicants loaded successfully!");
       })
       .catch((error) => {
         const errorMessage =
-          error.response?.data?.message || "Failed to load applicants";
+          error.response?.data?.message || "An error occurred";
         toast.error(errorMessage);
       })
       .finally(() => {
         setIsLoading(false);
       });
+  }, []);
+
+  const handleSortChange = (option) => {
+    setSortOption(option);
+    setIsFilterOpen(false);
   };
 
-  const fetchApplicantsByStatus = async (status) => {
-    const joblistingId = new URLSearchParams(window.location.search).get("id");
-
-    if (!joblistingId) {
-      alert("Job listing ID is missing.");
-      return;
-    }
-
-    try {
-      setIsLoading(true);
-      const response = await axios.get(
-        `/jobapplication/${status}/${joblistingId}`
-      );
-      if (response.data.successful) {
-        setJobName(response.data.data[0]?.position_name || "Job");
-        setApplicants(response.data.data);
-        toast.success("Applicants loaded successfully!");
-      } else {
-        setJobName("No Job Found");
-        setApplicants([]);
-      }
-    } catch (error) {
-      const errorMessage = error.response?.data?.message || "An error occurred";
-      toast.error(errorMessage);
-    } finally {
-      setIsLoading(false);
-    }
+  const handleStatusChange = (applicantId, newStatus) => {
+    axios
+      .put(`/jobapplication/status/${applicantId}`, { status: newStatus })
+      .then((response) => {
+        toast.success("Status updated successfully");
+        setApplicants((prev) =>
+          prev.map((applicant) =>
+            applicant.id === applicantId
+              ? { ...applicant, status: newStatus }
+              : applicant
+          )
+        );
+      })
+      .catch((error) => {
+        const errorMessage =
+          error.response?.data?.message || "Failed to update status";
+        toast.error(errorMessage);
+      });
   };
 
-  const sortedApplicants = applicants.sort((a, b) => {
+  const handleDeleteApplicant = (applicantId) => {
+    axios
+      .delete(`/jobapplication/delete/${applicantId}`)
+      .then(() => {
+        toast.success("Applicant deleted successfully!");
+        setApplicants((prevApplicants) =>
+          prevApplicants.filter((applicant) => applicant.id !== applicantId)
+        );
+      })
+      .catch((error) => {
+        const errorMessage =
+          error.response?.data?.message || "Failed to delete applicant";
+        toast.error(errorMessage);
+      });
+  };
+
+  const sortedApplicants = filteredApplicants.sort((a, b) => {
     if (sortOption === "newest") {
       return b.id - a.id;
     } else if (sortOption === "oldest") {
@@ -326,6 +139,26 @@ const ViewApplicants = () => {
     }
     return 0;
   });
+
+  const openResumeModal = (resume) => {
+    setSelectedResume(resume);
+    setIsResumeModalOpen(true);
+  };
+
+  const closeResumeModal = () => {
+    setIsResumeModalOpen(false);
+    setSelectedResume(null);
+  };
+
+  const openProfileModal = (profile) => {
+    setSelectedProfile(profile);
+    setIsProfileModalOpen(true);
+  };
+
+  const closeProfileModal = () => {
+    setIsProfileModalOpen(false);
+    setSelectedProfile(null);
+  };
 
   return (
     <div className="flex">
@@ -345,7 +178,7 @@ const ViewApplicants = () => {
         {/* Logo Section */}
         <div className="w-full flex justify-center items-center mb-6 p-2 bg-white rounded-lg">
           <img
-            src="/imgs/LOGO PWDKA.png" // Replace with the actual path to your logo
+            src="/imgs/LOGO PWDKA.png"
             alt="Logo"
             className="w-26 h-19 object-contain"
           />
@@ -443,7 +276,7 @@ const ViewApplicants = () => {
           <div className="relative">
             <button
               className="py-2 px-4 mb-3 rounded-lg bg-blue-600 text-white"
-              onClick={toggleFilterMenu}
+              onClick={() => setIsFilterOpen(!isFilterOpen)}
             >
               Filter
             </button>
@@ -487,13 +320,18 @@ const ViewApplicants = () => {
           </div>
         </div>
 
-        {/* Button for viewing all applicants' statuses */}
-        <button
-          className="mb-6 py-2 px-4 bg-green-600 text-white rounded-lg"
-          onClick={openReviewedModal}
-        >
-          Applicants Status
-        </button>
+        <div className="mb-4 flex justify-end">
+          <select
+            value={selectedStatus}
+            onChange={(e) => setSelectedStatus(e.target.value)}
+            className="py-2 px-4 border border-gray-300 rounded-lg shadow-md"
+          >
+            <option value="All">All</option>
+            <option value="Reviewed">Reviewed</option>
+            <option value="Pending">Pending</option>
+            <option value="Rejected">Rejected</option>
+          </select>
+        </div>
 
         {/* Applicants Table */}
         <div className="overflow-x-auto">
@@ -503,6 +341,7 @@ const ViewApplicants = () => {
                 <th className="py-3 px-6 text-left">Full Name</th>
                 <th className="py-3 px-6 text-left">Email</th>
                 <th className="py-3 px-6 text-left">Date Applied</th>
+                <th className="py-3 px-6 text-left">Status</th>
                 <th className="py-3 px-6 text-center">Actions</th>
               </tr>
             </thead>
@@ -514,42 +353,15 @@ const ViewApplicants = () => {
                     className="border-b border-gray-200 hover:bg-gray-100 transition duration-200"
                   >
                     <td className="py-3 px-6 text-left">
-                      {applicant.fullName
-                        .split(" ")
-                        .map(
-                          (word) =>
-                            word.charAt(0).toUpperCase() +
-                            word.slice(1).toLowerCase()
-                        )
-                        .join(" ")}
+                      {applicant.fullName}
                     </td>
                     <td className="py-3 px-6 text-left">{applicant.email}</td>
                     <td className="py-3 px-6 text-left">
                       {applicant.dateCreated}
                     </td>
-
-                    {/* Actions Column */}
-                    <td className="py-3 px-6 text-center space-x-2">
-                      <button
-                        className="py-1 px-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                        onClick={() => openResumeModal(applicant.resume)}
-                      >
-                        View Resume
-                      </button>
-                      <button
-                        className="py-1 px-2 bg-green-500 text-white rounded hover:bg-green-600"
-                        onClick={() => openProfileModal(applicant.profile)}
-                      >
-                        View Profile
-                      </button>
-                      <button
-                        className="py-1 px-2 bg-red-500 text-white rounded hover:bg-red-600"
-                        onClick={() => handleDeleteApplicant(applicant.id)}
-                      >
-                        Delete
-                      </button>
+                    <td className="py-3 px-6 text-center">
                       <select
-                        value={applicant.status || "Under Review"}
+                        value={applicant.status}
                         onChange={(e) =>
                           handleStatusChange(applicant.id, e.target.value)
                         }
@@ -561,11 +373,31 @@ const ViewApplicants = () => {
                         <option value="Rejected">Rejected</option>
                       </select>
                     </td>
+                    <td className="py-3 px-6 text-center space-x-2">
+                      <button
+                        className="py-1 px-2 bg-green-500 text-white rounded hover:bg-green-600"
+                        onClick={() => openProfileModal(applicant.profile)}
+                      >
+                        View Profile
+                      </button>
+                      <button
+                        className="py-1 px-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                        onClick={() => openResumeModal(applicant.resume)}
+                      >
+                        View Resume
+                      </button>
+                      <button
+                        className="py-1 px-2 bg-red-500 text-white rounded hover:bg-red-600"
+                        onClick={() => handleDeleteApplicant(applicant.id)}
+                      >
+                        Delete
+                      </button>
+                    </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan={4} className="py-4 text-center text-gray-500">
+                  <td colSpan={5} className="py-4 text-center text-gray-500">
                     No applicants found.
                   </td>
                 </tr>
@@ -602,16 +434,14 @@ const ViewApplicants = () => {
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
             <div className="bg-white p-6 rounded-lg shadow-lg relative w-full max-w-2xl">
               <button
-                onClick={() => setIsProfileModalOpen(false)}
+                onClick={closeProfileModal}
                 className="absolute top-2 right-2 text-2xl font-bold text-gray-700 hover:text-gray-900"
               >
                 &times;
               </button>
-
               <h3 className="text-xl font-bold text-gray-800 mb-6 text-center">
                 Applicant's Profile
               </h3>
-
               <div className="flex flex-col items-center mb-4">
                 <img
                   src={selectedProfile?.profilePicture}
@@ -623,7 +453,6 @@ const ViewApplicants = () => {
                 </h4>
                 <p className="text-gray-600">{selectedProfile?.email}</p>
               </div>
-
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
                 <div>
                   <p className="text-lg font-semibold text-gray-800">
@@ -662,104 +491,6 @@ const ViewApplicants = () => {
                   </p>
                 </div>
               </div>
-
-              <button
-                onClick={() => {
-                  setIsProfileModalOpen(false);
-                  setIsReviewedModalOpen(true); // Navigate back to previous modal if needed
-                }}
-                className="mt-4 py-2 px-4 bg-gray-600 text-white rounded hover:bg-gray-700"
-              >
-                Back to Applicants Status
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Applicants Status Modal */}
-        {isReviewedModalOpen && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg relative w-full max-w-2xl">
-              <button
-                onClick={closeReviewedModal}
-                className="absolute top-2 right-2 text-2xl font-bold text-gray-700 hover:text-gray-900"
-              >
-                &times;
-              </button>
-              <h3 className="text-xl font-bold text-gray-800 mb-6 text-center">
-                Applicants Status
-              </h3>
-              <div className="overflow-x-auto">
-                <table className="min-w-full bg-white shadow-md rounded-lg">
-                  <thead>
-                    <tr className="bg-gray-200 text-gray-700">
-                      <th className="py-3 px-6 text-left">Full Name</th>
-                      <th className="py-3 px-6 text-left">Email</th>
-                      <th className="py-3 px-6 text-left">Status</th>
-                      <th className="py-3 px-6 text-center">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {reviewedApplicants.length > 0 ? (
-                      reviewedApplicants.map((applicant) => (
-                        <tr
-                          key={applicant.id}
-                          className="border-b border-gray-200 hover:bg-gray-100 transition duration-200"
-                        >
-                          <td className="py-3 px-6 text-left">
-                            {applicant.fullName}
-                          </td>
-                          <td className="py-3 px-6 text-left">
-                            {applicant.email}
-                          </td>
-                          <td className="py-3 px-6 text-left">
-                            {applicant.status}
-                          </td>
-                          <td className="py-3 px-6 text-center space-x-2">
-                            <button
-                              className="py-1 px-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                              onClick={() => openResumeModal(applicant.resume)}
-                            >
-                              View Resume
-                            </button>
-                          </td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td
-                          colSpan={4}
-                          className="py-4 text-center text-gray-500"
-                        >
-                          No applicants found.
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {isResumeModalOpen && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-            <div className="bg-white p-8 rounded-lg shadow-lg relative w-full max-w-6xl">
-              <button
-                onClick={closeResumeModal}
-                className="absolute top-2 right-2 text-2xl font-bold text-gray-700 hover:text-gray-900"
-              >
-                &times;
-              </button>
-              <h3 className="text-lg font-semibold mb-4">Applicant's Resume</h3>
-              <embed
-                src={`data:application/pdf;base64,${selectedResume}`}
-                type="application/pdf"
-                width="100%"
-                height="800px"
-                className="w-full border rounded-lg shadow-sm"
-                aria-label="PDF Preview"
-              />
             </div>
           </div>
         )}
