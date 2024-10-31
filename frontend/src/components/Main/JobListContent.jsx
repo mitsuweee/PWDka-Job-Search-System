@@ -248,7 +248,7 @@ const JobListing = () => {
 
       {/* Search and Filters Section */}
       <div
-        className="w-full bg-cover bg-center py-4 lg:h-40 flex flex-col sm:flex-row justify-center items-center px-4"
+        className="w-full bg-cover bg-center py-4 lg:h-40 flex flex-col items-center px-4 space-y-4 sm:space-y-0 sm:flex-row sm:justify-center"
         style={{
           backgroundImage: `url('/imgs/bg search.png')`,
           backgroundSize: "cover",
@@ -256,67 +256,58 @@ const JobListing = () => {
           backgroundRepeat: "no-repeat",
         }}
       >
-        <div className="w-full lg:w-2/3 mb-4 sm:mb-0 flex justify-center">
-          <div className="flex w-full">
-            {/* Main Job Search */}
-            <input
-              type="text"
-              placeholder="Search Job Name"
-              className="w-3/5 p-3 rounded-lg focus:outline-none focus:border-2 focus:border-blue-500 transition duration-200 text-lg mx-2"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-
-            {/* Location Search */}
-            <input
-              type="text"
-              placeholder="Location"
-              className="w-1/4 p-3 focus:outline-none rounded-lg focus:border-2 focus:border-blue-500 transition duration-200 text-lg mx-2"
-              value={locationSearchTerm}
-              onChange={(e) => setLocationSearchTerm(e.target.value)}
-            />
-
-            {/* Job Type Dropdown */}
-            <select
-              className="w-1/4 p-3 focus:outline-none rounded-lg focus:border-2 focus:border-blue-500 transition duration-200 text-lg mx-2"
-              value={jobType}
-              onChange={(e) => setJobType(e.target.value)}
-            >
-              <option value="" className="text-gray-400">
-                All
-              </option>
-              <option value="full-time">Full-Time</option>
-              <option value="part-time">Part-Time</option>
-            </select>
-
-            {/* Search Button */}
-            <button
-              className="p-3 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition flex items-center justify-center mx-2"
-              onClick={handleSearch}
-            >
-              <span className="material-symbols-outlined text-2xl">search</span>
-            </button>
-          </div>
+        <div className="w-full lg:w-2/3 flex flex-col sm:flex-row items-center justify-center space-y-3 sm:space-y-0 sm:space-x-2">
+          <input
+            type="text"
+            placeholder="Search Job Name"
+            className="w-full sm:w-2/3 p-3 rounded-lg focus:outline-none focus:border-2 focus:border-blue-500 transition duration-200 text-lg"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="Location"
+            className="w-full sm:w-1/4 p-3 rounded-lg focus:outline-none focus:border-2 focus:border-blue-500 transition duration-200 text-lg"
+            value={locationSearchTerm}
+            onChange={(e) => setLocationSearchTerm(e.target.value)}
+          />
+          <select
+            className="w-full sm:w-1/4 p-3 rounded-lg focus:outline-none focus:border-2 focus:border-blue-500 transition duration-200 text-lg"
+            value={jobType}
+            onChange={(e) => setJobType(e.target.value)}
+          >
+            <option value="" className="text-gray-400">
+              All
+            </option>
+            <option value="full-time">Full-Time</option>
+            <option value="part-time">Part-Time</option>
+          </select>
+          <button
+            className="w-full sm:w-auto p-3 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition flex items-center justify-center"
+            onClick={handleSearch}
+          >
+            <span className="material-symbols-outlined text-2xl">search</span>
+          </button>
         </div>
 
-        <div className="flex justify-center items-center space-x-2 ml-4">
-          <div className="relative">
+        <div className="flex flex-col sm:flex-row items-center justify-center space-y-3 sm:space-y-0 sm:space-x-2">
+          <div className="relative w-full sm:w-auto">
             <button
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-400 transition flex items-center"
+              className="w-full sm:w-auto px-6 py-2 bg-blue-600 text-white ml-2 rounded-lg shadow-md hover:bg-blue-400 transition flex items-center justify-center"
               onClick={() => setIsFilterOpen(!isFilterOpen)}
             >
               <span className="material-symbols-outlined text-xl mr-2">
                 filter_alt
               </span>
-              <span>Filter</span>
+              Filter
             </button>
             {isFilterOpen && (
               <div
-                className="absolute right-0 top-full mt-0 bg-white p-4 shadow-lg rounded-lg z-50"
+                className="absolute right-0 sm:left-0 top-full mt-2 w-full sm:w-48 bg-white p-4 shadow-lg rounded-lg z-50"
                 onClick={(e) => e.stopPropagation()}
               >
                 <button
-                  className={`py-2 px-4 rounded-lg w-full ${
+                  className={`w-full py-2 px-4 rounded-lg mb-2 ${
                     sortOption === "newest"
                       ? "bg-blue-600 text-white"
                       : "bg-gray-200 text-blue-900"
@@ -326,7 +317,7 @@ const JobListing = () => {
                   Newest
                 </button>
                 <button
-                  className={`py-2 px-3 rounded-lg w-full my-2 ${
+                  className={`w-full py-2 px-4 rounded-lg mb-2 ${
                     sortOption === "oldest"
                       ? "bg-blue-600 text-white"
                       : "bg-gray-200 text-blue-900"
@@ -336,7 +327,7 @@ const JobListing = () => {
                   Oldest
                 </button>
                 <button
-                  className={`py-2 px-4 rounded-lg w-full ${
+                  className={`w-full py-2 px-4 rounded-lg ${
                     sortOption === "a-z"
                       ? "bg-blue-600 text-white"
                       : "bg-gray-200 text-blue-900"
@@ -351,12 +342,12 @@ const JobListing = () => {
 
           <button
             onClick={handleLogout}
-            className="px-4 py-2 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 transition flex items-center"
+            className="w-full sm:w-auto px-4 py-2 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 transition flex items-center justify-center"
           >
             <span className="material-symbols-outlined text-xl mr-2">
               logout
             </span>
-            <span>Logout</span>
+            Logout
           </button>
         </div>
       </div>
