@@ -409,16 +409,29 @@ const getAllApplicantsByStatus = async (req, res) => {
         "user.middle_initial",
         "user.last_name",
         "user.email",
+        "user.address",
+        "user.city",
+        "user.gender",
+        "user.birth_date",
+        "user.contact_number",
+        "user.formal_picture",
+        "disability.type",
         "job_application.status",
+        "job_application.date_created",
         "job_application.resume" // Adding the resume field
       )
+      .join("disability", "user.disability_id", "disability.id")
+
       .join("user", "job_application.user_id", "user.id")
       .where("job_application.joblisting_id", jobListingId); // Assuming you're filtering by job listing ID
 
-    // Convert BLOB to string if necessary
+    // Convert BLOB fields to base64 strings if necessary
     const processedApplicants = applicants.map((applicant) => ({
       ...applicant,
       resume: applicant.resume ? applicant.resume.toString() : null,
+      formal_picture: applicant.formal_picture
+        ? applicant.formal_picture.toString()
+        : null,
     }));
 
     res.status(200).json({
