@@ -439,8 +439,6 @@ const getAllApplicantsByStatus = async (req, res) => {
         "job_listing.position_name",
         "job_application.date_created"
       )
-      .join("disability", "user.disability_id", "disability.id")
-
       .join("user", "job_application.user_id", "user.id")
       .join("disability", "user.disability_id", "disability.id")
       .join("job_listing", "job_application.joblisting_id", "job_listing.id")
