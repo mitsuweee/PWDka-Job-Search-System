@@ -409,11 +409,13 @@ const getAllApplicantsByStatus = async (req, res) => {
   }
 
   try {
-    // Check if the Job Listing ID is valid
-    const jobListingExists = await knex("job_listing")
+    // Check if the Job Listing ID is valid and retrieve job name
+    const jobListing = await knex("job_listing")
+      .select("position_name")
       .where({ id: jobListingId })
       .first();
-    if (!jobListingExists) {
+
+    if (!jobListing) {
       return res.status(400).json({
         successful: false,
         message: "Invalid Job Listing ID",
@@ -464,6 +466,7 @@ const getAllApplicantsByStatus = async (req, res) => {
     return res.status(200).json({
       successful: true,
       message: "Applicants retrieved successfully",
+      jobName: jobListing.position_name, // Add the job name here
       data: processedApplicants,
       count: processedApplicants.length,
     });

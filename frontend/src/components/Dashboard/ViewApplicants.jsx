@@ -51,6 +51,9 @@ const ViewApplicants = () => {
     setIsLoading(true);
     axios(config)
       .then((response) => {
+        // Set jobName directly from the backend response
+        setJobName(response.data.jobName || "No Job Found");
+
         const fetchedApplicants = response.data.data.map((applicant) => ({
           id: applicant.id,
           fullName: `${applicant.first_name} ${applicant.middle_initial}. ${applicant.last_name}`,
@@ -74,7 +77,6 @@ const ViewApplicants = () => {
           },
         }));
 
-        setJobName(fetchedApplicants[0]?.position_name || "No Job Found");
         setApplicants(fetchedApplicants);
         toast.success("Applicants loaded successfully!");
       })
