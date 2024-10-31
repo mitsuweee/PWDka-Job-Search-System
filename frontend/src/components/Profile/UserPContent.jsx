@@ -279,7 +279,7 @@ const UserProf = () => {
     <div className="max-w-4xl mx-auto mb-10 mt-10 p-8 bg-white rounded-lg shadow-lg">
       <Toaster position="top-center" reverseOrder={false} />
       <div className="flex flex-col md:flex-row items-center justify-between">
-        <div className="relative w-24 h-24">
+        <div className="relative w-32 h-32">
           <img
             src={user.profilePicture}
             alt="Profile"
@@ -287,7 +287,7 @@ const UserProf = () => {
           />
           <button
             onClick={handleProfilePictureEdit}
-            className="absolute bottom-0 right-0 transform translate-x-1/2 translate-y-1/2 bg-white border border-gray-300 rounded-full p-2 shadow-md"
+            className="absolute bottom-1 right-1 bg-white border border-gray-300 rounded-full p-1 shadow-md"
           >
             <span className="material-symbols-outlined">edit</span>
           </button>
