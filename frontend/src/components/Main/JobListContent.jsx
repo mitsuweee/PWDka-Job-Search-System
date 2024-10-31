@@ -460,9 +460,6 @@ const JobListing = () => {
                           Salary: Hidden
                         </p>
                       )}
-                      <p className="text-gray-200 mt-2">
-                        {toSentenceCase(job.description)}
-                      </p>
                     </div>
                     {userDisabilityType !== "Deaf or Hard of Hearing" && (
                       <button
@@ -636,6 +633,10 @@ const JobListing = () => {
                     Salary: Hidden
                   </p>
                 )}
+
+                <p className="text-lg font-medium text-gray-600 mt-6">
+                  {toSentenceCase(selectedJob.description)}
+                </p>
 
                 <p className="text-lg font-medium text-gray-800 mt-6">
                   Qualifications
