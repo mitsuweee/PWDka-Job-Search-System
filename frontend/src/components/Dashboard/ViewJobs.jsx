@@ -76,6 +76,30 @@ const ViewJobs = () => {
       });
   };
 
+  // const handleUpdateJob = (jobData) => {
+  //   setJobUpdate({
+  //     id: jobData.id,
+  //     jobName: jobData.position_name,
+  //     description: jobData.description,
+  //     requirements: jobData.requirement,
+  //     qualification: jobData.qualification,
+  //     minimumSalary: jobData.minimum_salary,
+  //     maximumSalary: jobData.maximum_salary,
+  //     salaryVisibility: jobData.salary_visibility || "HIDE",
+  //     level: jobData.level,
+  //     status: jobData.status || "ACTIVE",
+  //     positionType: jobData.positiontype_id === 1 ? "fulltime" : "parttime",
+  //     disabilityCategories: jobData.disability_ids || [], // Set an empty array if undefined
+  //   });
+
+  //   // Make sure to initialize selectedDisabilityCategories as an array
+  //   setSelectedDisabilityCategories(jobData.disability_types || []);
+
+  //   setIsUpdateModalOpen(true);
+  // };
+
+  const normalizeText = (text) => text.toLowerCase().trim();
+
   const handleUpdateJob = (jobData) => {
     setJobUpdate({
       id: jobData.id,
@@ -89,11 +113,17 @@ const ViewJobs = () => {
       level: jobData.level,
       status: jobData.status || "ACTIVE",
       positionType: jobData.positiontype_id === 1 ? "fulltime" : "parttime",
-      disabilityCategories: jobData.disability_ids || [], // Set an empty array if undefined
+      disabilityCategories: jobData.disability_types
+        ? jobData.disability_types.split(",").map((item) => item.trim()) // Split and trim each item
+        : [],
     });
 
-    // Make sure to initialize selectedDisabilityCategories as an array
-    setSelectedDisabilityCategories(jobData.disability_ids || []);
+    setSelectedDisabilityCategories(
+      jobData.disability_types
+        ? jobData.disability_types.split(",").map((item) => normalizeText(item))
+        : []
+    );
+
     setIsUpdateModalOpen(true);
   };
 
@@ -152,12 +182,14 @@ const ViewJobs = () => {
   };
 
   const handleCheckboxChange = (e) => {
-    const { value, checked } = e.target;
+    const normalizedValue = normalizeText(e.target.value);
+    const { checked } = e.target;
+
     if (checked) {
-      setSelectedDisabilityCategories((prev) => [...prev, value]);
+      setSelectedDisabilityCategories((prev) => [...prev, normalizedValue]);
     } else {
       setSelectedDisabilityCategories((prev) =>
-        prev.filter((category) => category !== value)
+        prev.filter((category) => category !== normalizedValue)
       );
     }
   };
@@ -811,7 +843,7 @@ const ViewJobs = () => {
                             type="checkbox"
                             value={category}
                             checked={selectedDisabilityCategories.includes(
-                              category
+                              normalizeText(category)
                             )}
                             onChange={handleCheckboxChange}
                             className="mr-2"
