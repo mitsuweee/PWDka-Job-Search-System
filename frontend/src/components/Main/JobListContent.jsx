@@ -386,9 +386,9 @@ const JobListing = () => {
                     <img
                       src={job.companyImage}
                       alt="Company Logo"
-                      className="w-32 h-32 object-cover rounded-xl mr-4 shadow-xl border-4 border-blue-700"
+                      className="w-20 h-20 lg:w-32 lg:h-32 object-cover rounded-xl mr-4 shadow-xl border-4 border-blue-700"
                     />
-                    <div>
+                    <div className="flex-1">
                       <h2 className="text-xl font-bold text-white">
                         <span className="material-symbols-outlined mr-2">
                           work
@@ -415,7 +415,6 @@ const JobListing = () => {
                           )
                           .join(" ")}
                       </p>
-
                       <p className="text-white">
                         <span className="material-symbols-outlined mr-2">
                           location_on
@@ -429,7 +428,6 @@ const JobListing = () => {
                           )
                           .join(" ")}
                       </p>
-
                       <p className="font-semibold text-white">
                         <span className="material-symbols-outlined mr-2">
                           schedule
@@ -469,6 +467,192 @@ const JobListing = () => {
                       </button>
                     )}
                   </div>
+
+                  {/* Job Details Modal for Mobile (appears below the selected job listing) */}
+                  {selectedJobId === job.id && isDetailsVisible && (
+                    <div className="lg:hidden p-6 bg-white rounded-lg shadow-2xl mt-4 relative">
+                      <button
+                        className="absolute -top-4 -right-4 bg-blue-600 border-2 border-blue-600 text-white text-2xl font-bold py-1 px-3 rounded-full shadow-md hover:bg-transparent hover:text-blue-600 hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                        onClick={() => {
+                          if (isVoiceEnabled) handleToggleVoice(null);
+                          setSelectedJobId(null);
+                          setIsDetailsVisible(false);
+                        }}
+                      >
+                        &times;
+                      </button>
+
+                      <h2 className="text-2xl font-semibold mb-4 text-blue-600">
+                        {job.jobName
+                          .split(" ")
+                          .map(
+                            (word) =>
+                              word.charAt(0).toUpperCase() +
+                              word.slice(1).toLowerCase()
+                          )
+                          .join(" ")}
+                      </h2>
+                      <p className="text-lg mb-2 text-gray-700 flex items-center">
+                        <span className="material-symbols-outlined mr-2">
+                          work
+                        </span>
+                        {job.companyName
+                          .split(" ")
+                          .map(
+                            (word) =>
+                              word.charAt(0).toUpperCase() +
+                              word.slice(1).toLowerCase()
+                          )
+                          .join(" ")}
+                      </p>
+                      <p className="text-lg mb-4 text-gray-500 flex items-center">
+                        <span className="material-symbols-outlined mr-2">
+                          location_on
+                        </span>
+                        {job.companyLocation
+                          .split(" ")
+                          .map(
+                            (word) =>
+                              word.charAt(0).toUpperCase() +
+                              word.slice(1).toLowerCase()
+                          )
+                          .join(" ")}
+                      </p>
+                      <p className="text-lg mb-2 text-gray-700 flex items-center">
+                        <span className="material-symbols-outlined mr-2">
+                          schedule
+                        </span>
+                        {toSentenceCase(job.positionType)}
+                      </p>
+                      {job.salaryVisibility === "SHOW" ? (
+                        <p className="text-lg mb-4 text-gray-700 flex items-center">
+                          <span className="material-symbols-outlined mr-2">
+                            payments
+                          </span>
+                          {job.salary}
+                        </p>
+                      ) : (
+                        <p className="text-lg mb-4 text-gray-700 flex items-center">
+                          <span className="material-symbols-outlined mr-2">
+                            payments
+                          </span>
+                          Salary: Hidden
+                        </p>
+                      )}
+                      <p className="text-lg font-medium text-gray-600 mt-6">
+                        {toSentenceCase(job.description)}
+                      </p>
+
+                      <p className="text-lg font-medium text-gray-800 mt-6">
+                        Qualifications
+                      </p>
+                      <ul className="text-gray-700 list-disc pl-4">
+                        {job.qualifications
+                          .split("/")
+                          .map((qualification, index) => (
+                            <li key={index}>
+                              {toSentenceCase(qualification.trim())}
+                            </li>
+                          ))}
+                      </ul>
+
+                      <p className="text-lg font-medium text-gray-800 mt-6">
+                        Requirements
+                      </p>
+                      <ul className="text-gray-700 list-disc pl-4">
+                        {job.requirements
+                          .split("/")
+                          .map((requirement, index) => (
+                            <li key={index}>
+                              {toSentenceCase(requirement.trim())}
+                            </li>
+                          ))}
+                      </ul>
+
+                      <div className="mt-6 flex flex-col md:flex-row md:space-x-4 items-center space-y-4 md:space-y-0">
+                        <a
+                          href={`/apply?id=${job.id}`}
+                          className="w-full md:w-auto"
+                        >
+                          <button
+                            className={`w-full md:w-auto py-3 px-6 rounded-lg transition-all duration-300 ${
+                              job.isApplied
+                                ? "bg-gray-400 cursor-not-allowed text-gray-200"
+                                : "bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg"
+                            }`}
+                            disabled={job.isApplied}
+                          >
+                            {job.isApplied ? "Already Applied" : "Apply Now"}
+                          </button>
+                        </a>
+                        <button
+                          className="w-full md:w-auto bg-transparent border-2 border-blue-600 text-blue-600 py-3 px-6 rounded-lg shadow-md hover:bg-blue-600 hover:text-white hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                          onClick={() =>
+                            setIsMoreInfoVisible(!isMoreInfoVisible)
+                          }
+                        >
+                          Learn More
+                        </button>
+                      </div>
+
+                      {/* Learn More Section for Mobile (appears below the details card) */}
+                      {isMoreInfoVisible && (
+                        <div className="mt-6 p-8 bg-white rounded-lg shadow-2xl">
+                          <img
+                            src={job.companyImage}
+                            alt="Company"
+                            className="w-24 h-24 object-cover rounded-full border-4 border-blue-600 absolute top-4 right-4 shadow-lg"
+                          />
+                          <h3 className="text-2xl font-semibold text-blue-600 mb-6">
+                            Company Overview
+                          </h3>
+                          <div className="text-gray-700 space-y-4">
+                            <p className="flex items-center">
+                              <span className="material-symbols-outlined mr-2 text-blue-600">
+                                business
+                              </span>
+                              <span className="font-medium">Company Name:</span>{" "}
+                              {job.companyName}
+                            </p>
+                            <p className="flex items-center">
+                              <span className="material-symbols-outlined mr-2 text-blue-600">
+                                email
+                              </span>
+                              <span className="font-medium">Email:</span>{" "}
+                              {job.companyEmail}
+                            </p>
+                            <p className="flex items-center">
+                              <span className="material-symbols-outlined mr-2 text-blue-600">
+                                phone
+                              </span>
+                              <span className="font-medium">
+                                Contact Number:
+                              </span>{" "}
+                              {job.companyContact}
+                            </p>
+                            <p className="flex items-center">
+                              <span className="material-symbols-outlined mr-2 text-blue-600">
+                                location_on
+                              </span>
+                              <span className="font-medium">Address:</span>{" "}
+                              {job.companyLocation}
+                            </p>
+                            <p className="flex items-center">
+                              <span className="material-symbols-outlined mr-2 text-blue-600">
+                                location_city
+                              </span>
+                              <span className="font-medium">City:</span>{" "}
+                              {job.companyCity}
+                            </p>
+                          </div>
+                          <div className="text-gray-600 mt-6 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
+                            {job.companyDescription.charAt(0).toUpperCase() +
+                              job.companyDescription.slice(1).toLowerCase()}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               ))
             ) : (
@@ -482,90 +666,24 @@ const JobListing = () => {
               </div>
             )}
           </div>
-
-          {/* Pagination */}
-          <div className="flex justify-center mt-6">
-            <ol className="flex justify-center gap-1 text-xs font-medium">
-              <li>
-                <button
-                  onClick={() => currentPage > 1 && paginate(currentPage - 1)}
-                  className="inline-flex size-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900"
-                  disabled={currentPage === 1}
-                >
-                  <span className="sr-only">Prev Page</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-3 w-3"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M12.707 5.293a1 1 010 1.414L9.414 10l3.293 3.293a1 1 01-1.414 1.414l-4-4a1 1 010-1.414l4-4a1 1 011.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </button>
-              </li>
-
-              {Array.from({ length: totalPages }, (_, index) => (
-                <li key={index + 1}>
-                  <button
-                    onClick={() => paginate(index + 1)}
-                    className={`block size-8 rounded border text-center leading-8 ${
-                      currentPage === index + 1
-                        ? "border-blue-600 bg-blue-600 text-white"
-                        : "border-gray-100 bg-white text-gray-900"
-                    }`}
-                  >
-                    {index + 1}
-                  </button>
-                </li>
-              ))}
-
-              <li>
-                <button
-                  onClick={() =>
-                    currentPage < totalPages && paginate(currentPage + 1)
-                  }
-                  className="inline-flex size-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900"
-                  disabled={currentPage === totalPages}
-                >
-                  <span className="sr-only">Next Page</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-3 w-3"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M7.293 14.707a1 1 010-1.414L10.586 10 7.293 6.707a1 1 011.414-1.414l4 4a1 1 010 1.414l-4-4a1 1 01-1.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </button>
-              </li>
-            </ol>
-          </div>
         </div>
 
+        {/* Job Details on Desktop */}
         <div className={`lg:w-1/2 p-4 hidden lg:block relative`}>
-          {selectedJob ? (
-            <div key={selectedJob.id}>
+          {selectedJobId && isDetailsVisible ? (
+            <div>
+              {/* Job Details and Learn More content for desktop */}
               <div className="p-6 bg-white rounded-lg shadow-2xl relative">
                 <button
                   className="absolute -top-4 -right-4 bg-blue-600 border-2 border-blue-600 text-white text-2xl font-bold py-1 px-3 rounded-full shadow-md hover:bg-transparent hover:text-blue-600 hover:shadow-lg transition-all duration-300 transform hover:scale-105"
                   onClick={() => {
-                    if (isVoiceEnabled) {
-                      handleToggleVoice(null);
-                    }
+                    if (isVoiceEnabled) handleToggleVoice(null);
                     setSelectedJobId(null);
+                    setIsDetailsVisible(false);
                   }}
                 >
                   &times;
                 </button>
-
                 <h2 className="text-2xl font-semibold mb-4 text-blue-600">
                   {selectedJob.jobName
                     .split(" ")
@@ -576,7 +694,6 @@ const JobListing = () => {
                     )
                     .join(" ")}
                 </h2>
-
                 <p className="text-lg mb-2 text-gray-700 flex items-center">
                   <span className="material-symbols-outlined mr-2">work</span>
                   {selectedJob.companyName
@@ -588,7 +705,6 @@ const JobListing = () => {
                     )
                     .join(" ")}
                 </p>
-
                 <p className="text-lg mb-4 text-gray-500 flex items-center">
                   <span className="material-symbols-outlined mr-2">
                     location_on
@@ -602,14 +718,12 @@ const JobListing = () => {
                     )
                     .join(" ")}
                 </p>
-
                 <p className="text-lg mb-2 text-gray-700 flex items-center">
                   <span className="material-symbols-outlined mr-2">
                     schedule
                   </span>
                   {toSentenceCase(selectedJob.positionType)}
                 </p>
-
                 {selectedJob.salaryVisibility === "SHOW" ? (
                   <p className="text-lg mb-4 text-gray-700 flex items-center">
                     <span className="material-symbols-outlined mr-2">
@@ -625,11 +739,9 @@ const JobListing = () => {
                     Salary: Hidden
                   </p>
                 )}
-
                 <p className="text-lg font-medium text-gray-600 mt-6">
                   {toSentenceCase(selectedJob.description)}
                 </p>
-
                 <p className="text-lg font-medium text-gray-800 mt-6">
                   Qualifications
                 </p>
@@ -652,7 +764,6 @@ const JobListing = () => {
                       <li key={index}>{toSentenceCase(requirement.trim())}</li>
                     ))}
                 </ul>
-
                 <div className="mt-6 flex flex-col md:flex-row md:space-x-4 items-center space-y-4 md:space-y-0">
                   <a
                     href={`/apply?id=${selectedJob.id}`}
@@ -670,93 +781,94 @@ const JobListing = () => {
                     </button>
                   </a>
                   <button
-                    className="w-full md:w-auto bg-transparent border-2 border-custom-blue text-custom-blue py-3 px-6 rounded-lg shadow-md hover:bg-custom-blue hover:text-white hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                    className="w-full md:w-auto bg-transparent border-2 border-blue-600 text-blue-600 py-3 px-6 rounded-lg shadow-md hover:bg-blue-600 hover:text-white hover:shadow-lg transition-all duration-300 transform hover:scale-105"
                     onClick={() => setIsMoreInfoVisible(!isMoreInfoVisible)}
                   >
                     Learn More
                   </button>
                 </div>
+                {isMoreInfoVisible && (
+                  <div className="mt-6 p-8 bg-white rounded-lg shadow-2xl">
+                    <div className="flex justify-between items-center mb-6">
+                      <h3 className="text-2xl font-semibold text-custom-blue">
+                        Company Overview
+                      </h3>
+                      <img
+                        src={selectedJob.companyImage}
+                        alt="Company"
+                        className="w-24 h-24 object-cover rounded-full border-4 border-custom-blue shadow-lg"
+                      />
+                    </div>
+                    <div className="text-black space-y-4">
+                      <p className="flex items-center">
+                        <span className="material-symbols-outlined mr-2 text-custom-blue">
+                          business
+                        </span>
+                        <span className="font-medium">Company Name:</span>{" "}
+                        {selectedJob.companyName
+                          .split(" ")
+                          .map(
+                            (word) =>
+                              word.charAt(0).toUpperCase() +
+                              word.slice(1).toLowerCase()
+                          )
+                          .join(" ")}
+                      </p>
+
+                      <p className="flex items-center">
+                        <span className="material-symbols-outlined mr-2 text-custom-blue">
+                          email
+                        </span>
+                        <span className="font-medium">Email:</span>{" "}
+                        {toSentenceCase(selectedJob.companyEmail)}
+                      </p>
+
+                      <p className="flex items-center">
+                        <span className="material-symbols-outlined mr-2 text-custom-blue">
+                          phone
+                        </span>
+                        <span className="font-medium">Contact Number:</span>{" "}
+                        {toSentenceCase(selectedJob.companyContact)}
+                      </p>
+
+                      <p className="flex items-center">
+                        <span className="material-symbols-outlined mr-2 text-custom-blue">
+                          location_on
+                        </span>
+                        <span className="font-medium">Address:</span>{" "}
+                        {selectedJob.companyLocation
+                          .split(" ")
+                          .map(
+                            (word) =>
+                              word.charAt(0).toUpperCase() +
+                              word.slice(1).toLowerCase()
+                          )
+                          .join(" ")}
+                      </p>
+
+                      <p className="flex items-center">
+                        <span className="material-symbols-outlined mr-2 text-custom-blue">
+                          location_city
+                        </span>
+                        <span className="font-medium">City:</span>{" "}
+                        {selectedJob.companyCity
+                          .split(" ")
+                          .map(
+                            (word) =>
+                              word.charAt(0).toUpperCase() +
+                              word.slice(1).toLowerCase()
+                          )
+                          .join(" ")}
+                      </p>
+                    </div>
+
+                    <div className="text-black mt-6 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
+                      {selectedJob.companyDescription.charAt(0).toUpperCase() +
+                        selectedJob.companyDescription.slice(1).toLowerCase()}
+                    </div>
+                  </div>
+                )}
               </div>
-
-              {isMoreInfoVisible && (
-                <div className="mt-6 p-8 bg-white rounded-lg shadow-2xl relative">
-                  <img
-                    src={selectedJob.companyImage}
-                    alt="Company"
-                    className="w-24 h-24 object-cover rounded-full border-4 border-custom-blue absolute top-4 right-4 shadow-lg"
-                  />
-                  <h3 className="text-2xl font-semibold text-custom-blue mb-6">
-                    Company Overview
-                  </h3>
-                  <div className="text-black space-y-4">
-                    <p className="flex items-center">
-                      <span className="material-symbols-outlined mr-2 text-custom-blue">
-                        business
-                      </span>
-                      <span className="font-medium">Company Name:</span>{" "}
-                      {selectedJob.companyName
-                        .split(" ")
-                        .map(
-                          (word) =>
-                            word.charAt(0).toUpperCase() +
-                            word.slice(1).toLowerCase()
-                        )
-                        .join(" ")}
-                    </p>
-
-                    <p className="flex items-center">
-                      <span className="material-symbols-outlined mr-2 text-custom-blue">
-                        email
-                      </span>
-                      <span className="font-medium">Email:</span>{" "}
-                      {toSentenceCase(selectedJob.companyEmail)}
-                    </p>
-
-                    <p className="flex items-center">
-                      <span className="material-symbols-outlined mr-2 text-custom-blue">
-                        phone
-                      </span>
-                      <span className="font-medium">Contact Number:</span>{" "}
-                      {toSentenceCase(selectedJob.companyContact)}
-                    </p>
-
-                    <p className="flex items-center">
-                      <span className="material-symbols-outlined mr-2 text-custom-blue">
-                        location_on
-                      </span>
-                      <span className="font-medium">Address:</span>{" "}
-                      {selectedJob.companyLocation
-                        .split(" ")
-                        .map(
-                          (word) =>
-                            word.charAt(0).toUpperCase() +
-                            word.slice(1).toLowerCase()
-                        )
-                        .join(" ")}
-                    </p>
-
-                    <p className="flex items-center">
-                      <span className="material-symbols-outlined mr-2 text-custom-blue">
-                        location_city
-                      </span>
-                      <span className="font-medium">City:</span>{" "}
-                      {selectedJob.companyCity
-                        .split(" ")
-                        .map(
-                          (word) =>
-                            word.charAt(0).toUpperCase() +
-                            word.slice(1).toLowerCase()
-                        )
-                        .join(" ")}
-                    </p>
-                  </div>
-
-                  <div className="text-black mt-6 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
-                    {selectedJob.companyDescription.charAt(0).toUpperCase() +
-                      selectedJob.companyDescription.slice(1).toLowerCase()}
-                  </div>
-                </div>
-              )}
             </div>
           ) : (
             <div className="p-6 bg-white rounded-lg shadow-lg text-center">
@@ -822,42 +934,42 @@ const JobListing = () => {
       )}
       {/* Application History Modal */}
       {isApplicationHistoryModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-8 rounded-xl shadow-2xl relative w-full max-w-2xl border border-gray-200">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4">
+          <div className="bg-white p-6 sm:p-8 rounded-xl shadow-2xl relative w-full max-w-lg sm:max-w-2xl border border-gray-200">
             <button
               onClick={() => setIsApplicationHistoryModalOpen(false)}
-              className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 transition duration-200 text-3xl"
+              className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 transition duration-200 text-2xl"
               aria-label="Close modal"
             >
               &times;
             </button>
-            <h3 className="text-2xl font-semibold text-gray-700 mb-6 text-center">
+            <h3 className="text-xl sm:text-2xl font-semibold text-gray-700 mb-4 sm:mb-6 text-center">
               Application History
             </h3>
             {applicationHistory.length > 0 ? (
-              <div className="overflow-y-auto max-h-80 border-t border-gray-200 pt-4">
+              <div className="overflow-y-auto max-h-64 sm:max-h-80 border-t border-gray-200 pt-4">
                 <table className="min-w-full bg-white">
                   <thead>
-                    <tr className="bg-gray-100 text-gray-600 text-sm uppercase tracking-wider">
-                      <th className="py-3 px-4 text-left">Position</th>
-                      <th className="py-3 px-4 text-left">Company</th>
-                      <th className="py-3 px-4 text-left">Status</th>
-                      <th className="py-3 px-4 text-left">Date Applied</th>
+                    <tr className="bg-gray-100 text-gray-600 text-xs sm:text-sm uppercase tracking-wider">
+                      <th className="py-2 px-2 sm:px-4 text-left">Position</th>
+                      <th className="py-2 px-2 sm:px-4 text-left">Company</th>
+                      <th className="py-2 px-2 sm:px-4 text-left">Status</th>
+                      <th className="py-2 px-2 sm:px-4 text-left">Date</th>
                     </tr>
                   </thead>
                   <tbody>
                     {applicationHistory.map((application, index) => (
                       <tr
                         key={index}
-                        className="hover:bg-gray-50 transition duration-150 text-gray-800"
+                        className="hover:bg-gray-50 transition duration-150 text-gray-800 text-xs sm:text-sm"
                       >
-                        <td className="py-3 px-4">
+                        <td className="py-2 px-2 sm:px-4">
                           {application.position_name}
                         </td>
-                        <td className="py-3 px-4">
+                        <td className="py-2 px-2 sm:px-4">
                           {application.company_name}
                         </td>
-                        <td className="py-3 px-4">
+                        <td className="py-2 px-2 sm:px-4">
                           <span
                             className={`px-2 py-1 rounded-full text-xs font-semibold ${
                               application.status === "Approved"
@@ -870,7 +982,7 @@ const JobListing = () => {
                             {application.status}
                           </span>
                         </td>
-                        <td className="py-3 px-4">
+                        <td className="py-2 px-2 sm:px-4">
                           {new Date(
                             application.date_created
                           ).toLocaleDateString()}
