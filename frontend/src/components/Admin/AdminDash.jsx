@@ -203,6 +203,20 @@ const AdminDashboard = () => {
           <span className="flex-grow text-center">Admin Management</span>
         </a>
 
+        <a
+          href="/adminprofile"
+          className={`${
+            window.location.pathname === "/adminprofile"
+              ? "bg-blue-900 text-gray-200"
+              : "bg-gray-200 text-blue-900"
+          } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
+        >
+          <span className="material-symbols-outlined text-xl mr-4">
+            server_person
+          </span>
+          <span className="flex-grow text-center">Profile</span>
+        </a>
+
         <button
           className="bg-red-600 text-white rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-red-500 transition-all duration-200 ease-in-out mt-6"
           onClick={handleLogout}

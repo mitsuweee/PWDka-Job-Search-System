@@ -15,6 +15,9 @@ const ViewApplicants = () => {
   const [selectedProfile, setSelectedProfile] = useState(null);
   const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [deleteApplicantId, setDeleteApplicantId] = useState(null);
+
   const navigate = useNavigate();
 
   const filteredApplicants = applicants.filter((applicant) =>
@@ -117,6 +120,36 @@ const ViewApplicants = () => {
         const errorMessage =
           error.response?.data?.message || "Failed to update status";
         toast.error(errorMessage);
+      });
+  };
+
+  const openDeleteModal = (applicantId) => {
+    setDeleteApplicantId(applicantId);
+    setIsDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+    setDeleteApplicantId(null);
+  };
+
+  const confirmDeleteApplicant = () => {
+    axios
+      .delete(`/jobapplication/delete/${deleteApplicantId}`)
+      .then(() => {
+        toast.success("Applicant deleted successfully!");
+        setApplicants((prevApplicants) =>
+          prevApplicants.filter(
+            (applicant) => applicant.id !== deleteApplicantId
+          )
+        );
+        closeDeleteModal();
+      })
+      .catch((error) => {
+        const errorMessage =
+          error.response?.data?.message || "Failed to delete applicant";
+        toast.error(errorMessage);
+        closeDeleteModal();
       });
   };
 
@@ -402,7 +435,7 @@ const ViewApplicants = () => {
                       </button>
                       <button
                         className="py-1 px-2 bg-red-500 text-white rounded hover:bg-red-600"
-                        onClick={() => handleDeleteApplicant(applicant.id)}
+                        onClick={() => openDeleteModal(applicant.id)}
                       >
                         Delete
                       </button>
@@ -419,6 +452,43 @@ const ViewApplicants = () => {
             </tbody>
           </table>
         </div>
+        {isDeleteModalOpen && (
+          <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
+              <div className="flex justify-between items-center border-b pb-3 mb-4">
+                <h2 className="text-2xl font-semibold text-gray-800">
+                  Delete Confirmation
+                </h2>
+                <button
+                  onClick={closeDeleteModal}
+                  className="text-gray-500 hover:text-gray-800 transition duration-200"
+                >
+                  &times;
+                </button>
+              </div>
+              <div className="mb-6">
+                <p className="text-lg text-gray-600">
+                  Are you sure you want to delete this applicant? This action
+                  cannot be undone.
+                </p>
+              </div>
+              <div className="flex justify-end space-x-4">
+                <button
+                  onClick={closeDeleteModal}
+                  className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-200"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={confirmDeleteApplicant}
+                  className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Resume Modal */}
         {isResumeModalOpen && (

@@ -14,6 +14,7 @@ const AdminViewUsers = () => {
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedJobId, setSelectedJobId] = useState(null);
   const [sortOrder, setSortOrder] = useState("A-Z");
   const usersPerPage = 10;
   const navigate = useNavigate();
@@ -345,20 +346,22 @@ const AdminViewUsers = () => {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="min-w-full bg-white mt-4 rounded-lg shadow-lg">
+          <table className="min-w-full bg-white mt-4 rounded-lg shadow-lg overflow-hidden">
             <thead>
               <tr className="bg-blue-600 text-white text-left">
-                <th className="py-3 px-6">ID</th>
-                <th className="py-3 px-6">User</th>
-                <th className="py-3 px-6">Disability</th>
-                <th className="py-3 px-6 text-center">Actions</th>
+                <th className="py-3 px-6 text-xs md:text-sm">ID</th>
+                <th className="py-3 px-6 text-xs md:text-sm">User</th>
+                <th className="py-3 px-6 text-xs md:text-sm">Disability</th>
+                <th className="py-3 px-6 text-center text-xs md:text-sm">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody>
               {currentUsers.map((user) => (
-                <tr key={user.id} className="border-b hover:bg-gray-100">
-                  <td className="py-3 px-6">{user.id}</td>
-                  <td className="py-3 px-6">
+                <tr key={user.id} className="border-b hover:bg-gray-50">
+                  <td className="py-3 px-6 text-xs md:text-sm">{user.id}</td>
+                  <td className="py-3 px-6 text-xs md:text-sm">
                     {user.first_name && user.last_name
                       ? `${
                           user.first_name.charAt(0).toUpperCase() +
@@ -373,19 +376,18 @@ const AdminViewUsers = () => {
                         }`
                       : ""}
                   </td>
-
-                  <td className="py-3 px-6">{user.type}</td>
+                  <td className="py-3 px-6 text-xs md:text-sm">{user.type}</td>
                   <td className="py-3 px-6 text-center">
-                    <div className="flex justify-center space-x-2">
+                    <div className="flex justify-center space-x-1 md:space-x-2">
                       <button
                         onClick={() => handleViewUser(user.id)}
-                        className="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-700 transition duration-200"
+                        className="bg-blue-500 text-white text-xs md:text-sm px-2 md:px-3 py-1 rounded-md hover:bg-blue-700 transition duration-200"
                       >
                         View
                       </button>
                       <button
                         onClick={() => handleDeleteUser(user.id)}
-                        className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-700 transition duration-200"
+                        className="bg-red-500 text-white text-xs md:text-sm px-2 md:px-3 py-1 rounded-md hover:bg-red-700 transition duration-200"
                       >
                         Delete
                       </button>
