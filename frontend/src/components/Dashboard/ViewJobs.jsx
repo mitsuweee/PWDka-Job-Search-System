@@ -509,26 +509,48 @@ const ViewJobs = () => {
       {/* Modal for viewing job details */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white w-full max-w-lg p-6 rounded-lg shadow-xl mx-4 max-h-[90vh] overflow-y-auto">
-            <h2 className="text-3xl font-bold mb-6 text-gray-800 text-center">
-              Job Details
-            </h2>
+          <div className="bg-white w-full max-w-2xl p-6 rounded-lg shadow-xl mx-4 max-h-[90vh] overflow-y-auto transition-transform transform scale-100">
+            <div className="flex justify-between items-center mb-4 border-b pb-3">
+              <h2 className="text-3xl font-bold text-gray-800 flex items-center">
+                <span className="material-symbols-outlined mr-2">work</span>
+                Job Details
+              </h2>
+              <button
+                onClick={closeModal}
+                className="text-gray-500 hover:text-gray-700 transition duration-200"
+              >
+                <span className="material-symbols-outlined text-2xl">
+                  close
+                </span>
+              </button>
+            </div>
             <div className="space-y-4">
-              <div>
-                <div className="bg-gray-200 p-3 rounded-md mb-2">
-                  <p>
-                    <strong>Company Name:</strong> {job?.company_name}
-                  </p>
-                </div>
-                <div className="bg-gray-200 p-3 rounded-md">
-                  <p>
-                    <strong>Job Title:</strong> {job?.position_name}
-                  </p>
-                </div>
+              <div className="bg-gray-100 p-4 rounded-lg shadow-inner">
+                <p className="text-black font-semibold flex items-center">
+                  <span className="material-symbols-outlined mr-1">
+                    business
+                  </span>{" "}
+                  Company Name:
+                </p>
+                <p className="text-gray-600 mt-2">{job?.company_name}</p>
               </div>
-              <div className="bg-gray-200 p-3 rounded-md">
-                <p>
-                  <strong>Description:</strong>{" "}
+
+              <div className="bg-gray-100 p-4 rounded-lg shadow-inner">
+                <p className="text-black font-semibold flex items-center">
+                  <span className="material-symbols-outlined mr-1">title</span>{" "}
+                  Job Title:
+                </p>
+                <p className="text-gray-600 mt-2">{job?.position_name}</p>
+              </div>
+
+              <div className="bg-gray-100 p-4 rounded-lg shadow-inner">
+                <p className="text-black font-semibold flex items-center">
+                  <span className="material-symbols-outlined mr-1">
+                    description
+                  </span>{" "}
+                  Description:
+                </p>
+                <p className="text-gray-600 mt-2">
                   {job?.description
                     ? job.description
                         .split(".")
@@ -541,14 +563,21 @@ const ViewJobs = () => {
                     : ""}
                 </p>
               </div>
-              <div className="bg-gray-200 p-3 rounded-md">
-                <p>
-                  <strong>Job Level:</strong> {job?.level}
+
+              <div className="bg-gray-100 p-4 rounded-lg shadow-inner">
+                <p className="text-black font-semibold flex items-center">
+                  <span className="material-symbols-outlined mr-1">radar</span>{" "}
+                  Job Level:
                 </p>
+                <p className="text-gray-600 mt-2">{job?.level}</p>
               </div>
-              <div className="bg-gray-200 p-3 rounded-md">
-                <p>
-                  <strong>Requirements:</strong>{" "}
+
+              <div className="bg-gray-100 p-4 rounded-lg shadow-inner">
+                <p className="text-black font-semibold flex items-center">
+                  <span className="material-symbols-outlined mr-1">build</span>{" "}
+                  Requirements:
+                </p>
+                <p className="text-gray-600 mt-2">
                   {job?.requirement
                     ? job.requirement
                         .split(",")
@@ -561,9 +590,13 @@ const ViewJobs = () => {
                     : ""}
                 </p>
               </div>
-              <div className="bg-gray-200 p-3 rounded-md">
-                <p>
-                  <strong>Qualification:</strong>{" "}
+
+              <div className="bg-gray-100 p-4 rounded-lg shadow-inner">
+                <p className="text-black font-semibold flex items-center">
+                  <span className="material-symbols-outlined mr-1">school</span>{" "}
+                  Qualification:
+                </p>
+                <p className="text-gray-600 mt-2">
                   {job?.qualification
                     ? job.qualification
                         .split(",")
@@ -577,18 +610,35 @@ const ViewJobs = () => {
                 </p>
               </div>
 
-              <div className="flex justify-between bg-gray-200 p-3 rounded-md">
-                <span>
-                  <strong>Min Salary:</strong> ₱ {job?.minimum_salary}
+              <div className="flex justify-between bg-gray-100 p-4 rounded-lg shadow-inner">
+                <span className="text-black font-semibold flex items-center">
+                  <span className="material-symbols-outlined mr-1">
+                    attach_money
+                  </span>{" "}
+                  Min Salary:
+                  <span className="text-gray-600 ml-2">
+                    ₱ {job?.minimum_salary}
+                  </span>
                 </span>
-                <span>
-                  <strong>Max Salary:</strong> ₱ {job?.maximum_salary}
+                <span className="text-black font-semibold flex items-center">
+                  <span className="material-symbols-outlined mr-1">
+                    attach_money
+                  </span>{" "}
+                  Max Salary:
+                  <span className="text-gray-600 ml-2">
+                    ₱ {job?.maximum_salary}
+                  </span>
                 </span>
               </div>
 
-              <div className="bg-gray-200 p-3 rounded-md">
-                <p>
-                  <strong>Position Type:</strong>{" "}
+              <div className="bg-gray-100 p-4 rounded-lg shadow-inner">
+                <p className="text-black font-semibold flex items-center">
+                  <span className="material-symbols-outlined mr-1">
+                    work_outline
+                  </span>{" "}
+                  Position Type:
+                </p>
+                <p className="text-gray-600 mt-2">
                   {job?.position_type
                     ? job.position_type
                         .split("-")
@@ -601,37 +651,40 @@ const ViewJobs = () => {
                     : ""}
                 </p>
               </div>
-              {/* Salary Visibility */}
-              <div className="bg-gray-200 p-3 rounded-md">
-                <p>
-                  <strong>Salary Visibility:</strong>{" "}
+
+              <div className="bg-gray-100 p-4 rounded-lg shadow-inner">
+                <p className="text-black font-semibold flex items-center">
+                  <span className="material-symbols-outlined mr-1">
+                    visibility
+                  </span>{" "}
+                  Salary Visibility:
+                </p>
+                <p className="text-gray-600 mt-2">
                   {job?.salary_visibility === "SHOW" ? "Visible" : "Hidden"}
                 </p>
               </div>
 
-              {/* Disability Categories */}
-              {job?.disability_types ? (
-                <div className="bg-gray-200 p-3 rounded-md">
-                  <p>
-                    <strong>Disability Categories:</strong>
-                  </p>
-                  <ul className="list-disc pl-5">
-                    {job.disability_types
-                      .split(",")
-                      .map((disability, index) => (
-                        <li key={index}>{disability.trim()}</li>
-                      ))}
-                  </ul>
-                </div>
-              ) : (
-                <div className="bg-gray-200 p-3 rounded-md">
-                  <p>No disability categories specified.</p>
-                </div>
-              )}
+              <div className="bg-gray-100 p-4 rounded-lg shadow-inner">
+                <p className="text-black font-semibold flex items-center">
+                  <span className="material-symbols-outlined mr-1">
+                    accessibility
+                  </span>{" "}
+                  Disability Categories:
+                </p>
+                <ul className="list-disc pl-5 text-gray-600 mt-2 text-sm">
+                  {job?.disability_types
+                    ? job.disability_types
+                        .split(",")
+                        .map((disability, index) => (
+                          <li key={index}>{disability.trim()}</li>
+                        ))
+                    : "No disability categories specified."}
+                </ul>
+              </div>
             </div>
-            <div className="mt-8 flex justify-center space-x-4">
+            <div className="mt-8 flex justify-center">
               <button
-                className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition"
+                className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition duration-200"
                 onClick={closeModal}
               >
                 Close

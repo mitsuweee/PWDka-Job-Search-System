@@ -521,23 +521,26 @@ const ViewApplicants = () => {
         {/* Profile Modal */}
         {isProfileModalOpen && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg relative w-full max-w-2xl">
+            <div className="bg-white p-6 rounded-lg shadow-lg relative w-full max-w-2xl mx-4 transition-transform transform scale-100 max-h-[90vh] overflow-y-auto">
               <button
                 onClick={closeProfileModal}
-                className="absolute top-2 right-2 text-2xl font-bold text-gray-700 hover:text-gray-900"
+                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition duration-200"
               >
-                &times;
+                <span className="material-symbols-outlined text-3xl">
+                  close
+                </span>
               </button>
-              <h3 className="text-xl font-bold text-gray-800 mb-6 text-center">
+              <h3 className="text-2xl font-bold text-black mb-6 text-center flex items-center">
+                <span className="material-symbols-outlined mr-2">person</span>
                 Applicant's Profile
               </h3>
-              <div className="flex flex-col items-center mb-4">
+              <div className="flex flex-col items-center mb-6">
                 <img
                   src={selectedProfile?.profilePicture}
                   alt="Profile"
-                  className="w-32 h-32 rounded-full border-4 border-blue-600 shadow-lg mb-4"
+                  className="w-32 h-32 rounded-full border-4 border-custom-blue shadow-lg mb-4"
                 />
-                <h4 className="text-lg font-semibold text-gray-900">
+                <h4 className="text-lg font-semibold text-black">
                   {selectedProfile?.fullName
                     .split(" ")
                     .map(
@@ -551,16 +554,24 @@ const ViewApplicants = () => {
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
                 <div>
-                  <p className="text-lg font-semibold text-gray-800">
+                  <p className="text-black font-semibold flex items-center">
+                    <span className="material-symbols-outlined mr-1">
+                      accessibility
+                    </span>
                     Disability:
                   </p>
-                  <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
+                  <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
                     {selectedProfile?.disability}
                   </p>
                 </div>
                 <div>
-                  <p className="text-lg font-semibold text-gray-800">City:</p>
-                  <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
+                  <p className="text-black font-semibold flex items-center">
+                    <span className="material-symbols-outlined mr-1">
+                      location_city
+                    </span>
+                    City:
+                  </p>
+                  <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
                     {selectedProfile?.city
                       .split(" ")
                       .map(
@@ -572,16 +583,22 @@ const ViewApplicants = () => {
                   </p>
                 </div>
                 <div>
-                  <p className="text-lg font-semibold text-gray-800">
+                  <p className="text-black font-semibold flex items-center">
+                    <span className="material-symbols-outlined mr-1">
+                      phone
+                    </span>
                     Contact Number:
                   </p>
-                  <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
+                  <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
                     {selectedProfile?.contactNumber}
                   </p>
                 </div>
                 <div>
-                  <p className="text-lg font-semibold text-gray-800">Gender:</p>
-                  <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
+                  <p className="text-black font-semibold flex items-center">
+                    <span className="material-symbols-outlined mr-1">male</span>
+                    Gender:
+                  </p>
+                  <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
                     {selectedProfile?.gender
                       .split(" ")
                       .map(
@@ -593,10 +610,11 @@ const ViewApplicants = () => {
                   </p>
                 </div>
                 <div>
-                  <p className="text-lg font-semibold text-gray-800">
+                  <p className="text-black font-semibold flex items-center">
+                    <span className="material-symbols-outlined mr-1">cake</span>
                     Birthdate:
                   </p>
-                  <p className="text-gray-600 bg-gray-200 p-4 rounded-lg">
+                  <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
                     {selectedProfile?.birthdate}
                   </p>
                 </div>
