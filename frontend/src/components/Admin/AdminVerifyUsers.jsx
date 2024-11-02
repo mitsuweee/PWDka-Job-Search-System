@@ -420,93 +420,119 @@ const AdminVerifyUsers = () => {
             <p className="text-center text-gray-500">No users to verify yet.</p>
           )}
           {selectedUser && showModal && (
-            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-              <div className="bg-white rounded-lg p-6 w-[600px] h-[700px] shadow-lg hover:shadow-2xl transition-shadow duration-300 max-h-[90vh] overflow-y-auto">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-xl font-bold">User Details</h3>
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+              <div className="bg-white rounded-lg p-6 w-full max-w-2xl shadow-lg transition-transform transform scale-100 max-h-[90vh] overflow-y-auto">
+                <div className="flex justify-between items-center mb-4 border-b pb-3">
+                  <h3 className="text-2xl font-bold text-custom-blue flex items-center">
+                    <span className="material-symbols-outlined mr-2">
+                      person
+                    </span>
+                    User Details
+                  </h3>
                   <button
-                    className="text-gray-500 hover:text-gray-700"
                     onClick={() => setShowModal(false)}
+                    className="text-gray-500 hover:text-gray-700 transition duration-200"
                   >
-                    &times;
+                    <span className="material-symbols-outlined text-2xl">
+                      close
+                    </span>
                   </button>
                 </div>
                 <div className="flex justify-center mb-6">
                   <img
                     src={selectedUser.profilePicture}
                     alt={selectedUser.fullName}
-                    className="w-32 h-32 rounded-full border-2 border-gray-300 hover:shadow-lg transition-shadow duration-300 object-cover"
+                    className="w-32 h-32 rounded-full border-4 border-custom-blue hover:shadow-lg transition-shadow duration-300 object-cover"
                   />
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-gray-100 p-4 rounded-lg">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <strong>Full Name:</strong>
-                    <p className="shadow-lg p-1">
-                      {selectedUser.fullName
-                        ? selectedUser.fullName
-                            .split(" ")
-                            .map(
-                              (word) =>
-                                word.charAt(0).toUpperCase() +
-                                word.slice(1).toLowerCase()
-                            )
-                            .join(" ")
-                        : ""}
+                    <p className="text-black font-semibold flex items-center">
+                      <span className="material-symbols-outlined mr-2">
+                        badge
+                      </span>
+                      Full Name:
                     </p>
-                  </div>
-
-                  <div>
-                    <strong>PWD ID:</strong>
-                    <p className="shadow-lg p-1">{selectedUser.pwdId}</p>
-                  </div>
-                  <div>
-                    <strong>Disability:</strong>
-                    <p className="shadow-lg p-1">{selectedUser.disability}</p>
-                  </div>
-                  <div>
-                    <strong>Address:</strong>
-                    <p className="shadow-lg p-1">
-                      {selectedUser.address
-                        ? selectedUser.address
-                            .split(" ")
-                            .map(
-                              (word) =>
-                                word.charAt(0).toUpperCase() +
-                                word.slice(1).toLowerCase()
-                            )
-                            .join(" ")
-                        : ""}
+                    <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
+                      {selectedUser.fullName}
                     </p>
                   </div>
                   <div>
-                    <strong>City:</strong>
-                    <p className="shadow-lg p-1">
-                      {selectedUser.city
-                        ? selectedUser.city
-                            .split(" ")
-                            .map(
-                              (word) =>
-                                word.charAt(0).toUpperCase() +
-                                word.slice(1).toLowerCase()
-                            )
-                            .join(" ")
-                        : ""}
+                    <p className="text-black font-semibold flex items-center">
+                      <span className="material-symbols-outlined mr-2">
+                        credit_card
+                      </span>
+                      PWD ID:
+                    </p>
+                    <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
+                      {selectedUser.pwdId}
                     </p>
                   </div>
-
                   <div>
-                    <strong>Birthdate:</strong>
-                    <p className="shadow-lg p-1">{selectedUser.birthdate}</p>
+                    <p className="text-black font-semibold flex items-center">
+                      <span className="material-symbols-outlined mr-2">
+                        accessibility
+                      </span>
+                      Disability:
+                    </p>
+                    <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
+                      {selectedUser.disability}
+                    </p>
                   </div>
                   <div>
-                    <strong>Contact Number:</strong>
-                    <p className="shadow-lg p-1">
+                    <p className="text-black font-semibold flex items-center">
+                      <span className="material-symbols-outlined mr-2">
+                        location_on
+                      </span>
+                      Address:
+                    </p>
+                    <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
+                      {selectedUser.address}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-black font-semibold flex items-center">
+                      <span className="material-symbols-outlined mr-2">
+                        home
+                      </span>
+                      City:
+                    </p>
+                    <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
+                      {selectedUser.city}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-black font-semibold flex items-center">
+                      <span className="material-symbols-outlined mr-2">
+                        calendar_today
+                      </span>
+                      Birthdate:
+                    </p>
+                    <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
+                      {selectedUser.birthdate}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-black font-semibold flex items-center">
+                      <span className="material-symbols-outlined mr-2">
+                        phone
+                      </span>
+                      Contact Number:
+                    </p>
+                    <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
                       {selectedUser.contactNumber}
                     </p>
                   </div>
                   <div>
-                    <strong>Email:</strong>
-                    <p className="shadow-lg p-1">{selectedUser.email}</p>
+                    <p className="text-black font-semibold flex items-center">
+                      <span className="material-symbols-outlined mr-2">
+                        mail
+                      </span>
+                      Email:
+                    </p>
+                    <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
+                      {selectedUser.email}
+                    </p>
                   </div>
                   <div>
                     <img
@@ -527,16 +553,16 @@ const AdminVerifyUsers = () => {
                     />
                   </div>
                 </div>
-                <div className="flex justify-end mt-4 space-x-2">
+                <div className="flex justify-end mt-6 space-x-3">
                   <button
-                    className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
                     onClick={() => handleApprove(selectedUser.id)}
+                    className="bg-green-500 text-white px-4 py-2 rounded-full shadow-md hover:bg-green-600 transition duration-200 font-medium"
                   >
                     Approve
                   </button>
                   <button
-                    className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
                     onClick={() => openDeclineModal(selectedUser.id)}
+                    className="bg-red-500 text-white px-4 py-2 rounded-full shadow-md hover:bg-red-600 transition duration-200 font-medium"
                   >
                     Decline
                   </button>
@@ -544,6 +570,7 @@ const AdminVerifyUsers = () => {
               </div>
             </div>
           )}
+
           {isImageModalOpen && (
             <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
               <div className="relative p-4 bg-white rounded-lg shadow-xl w-[90%] max-w-2xl h-[80%] flex items-center justify-center">

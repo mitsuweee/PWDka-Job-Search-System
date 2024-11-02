@@ -395,108 +395,129 @@ const AdminViewJobs = () => {
 
       {/* Modal for viewing job details */}
       {isModalOpen && job && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg p-6 w-[700px] shadow-lg hover:shadow-2xl transition-shadow duration-300 max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-bold">Job Details</h3>
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-lg p-6 mx-4 shadow-lg transition-transform transform scale-100 max-h-[90vh] overflow-y-auto w-full md:w-[700px]">
+            <div className="flex justify-between items-center mb-6 border-b pb-3">
+              <h3 className="text-2xl font-bold text-custom-blue flex items-center ">
+                <span className="material-symbols-outlined mr-2">work</span> Job
+                Details
+              </h3>
               <button
-                className="text-gray-500 hover:text-gray-700"
                 onClick={closeModal}
+                className="text-gray-500 hover:text-gray-700 transition duration-200"
               >
-                &times;
+                <span className="material-symbols-outlined text-2xl">
+                  close
+                </span>
               </button>
             </div>
 
-            {/* First Div: Company Details */}
-            <div className="grid gap-4 bg-gray-100 p-4 rounded-lg">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Company and Job Details */}
+            <div className="grid gap-4 bg-gray-100 p-6 rounded-lg">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <strong>Company:</strong>
-                  <p className="shadow-lg p-1">{job.companyName}</p>
+                  <p className="text-black font-semibold text-sm leading-relaxed  flex items-center">
+                    <span className="material-symbols-outlined mr-1">
+                      business
+                    </span>{" "}
+                    Company:
+                  </p>
+                  <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
+                    {job.companyName}
+                  </p>
                 </div>
                 <div>
-                  <strong>Job Title:</strong>
-                  <p className="shadow-lg p-1">{job.jobName}</p>
+                  <p className="text-black font-semibold text-sm leading-relaxed  flex items-center">
+                    <span className="material-symbols-outlined mr-1">
+                      badge
+                    </span>{" "}
+                    Job Title:
+                  </p>
+                  <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
+                    {job.jobName}
+                  </p>
                 </div>
+              </div>
+
+              <div>
+                <p className="text-black font-semibold text-sm leading-relaxed  flex items-center">
+                  <span className="material-symbols-outlined mr-1">
+                    description
+                  </span>{" "}
+                  Description:
+                </p>
+                <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
+                  {job.description}
+                </p>
+              </div>
+
+              {/* Job Requirements and Qualifications */}
+              <div>
+                <p className="text-black font-semibold text-sm leading-relaxed  flex items-center">
+                  <span className="material-symbols-outlined mr-1">
+                    check_circle
+                  </span>{" "}
+                  Requirements:
+                </p>
+                <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
+                  {job.requirements}
+                </p>
               </div>
               <div>
-                <div className="w-full">
-                  <strong>Description:</strong>
-                  <p className="shadow-lg p-1">
-                    {job.description
-                      .split(".")
-                      .map(
-                        (sentence) =>
-                          sentence.trim().charAt(0).toUpperCase() +
-                          sentence.trim().slice(1).toLowerCase() +
-                          "."
-                      )
-                      .join(" ")}
+                <p className="text-black font-semibold text-sm leading-relaxed  flex items-center">
+                  <span className="material-symbols-outlined mr-1">school</span>{" "}
+                  Qualification:
+                </p>
+                <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
+                  {job.qualification}
+                </p>
+              </div>
+
+              {/* Salary and Position Type */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <p className="text-black font-semibold text-sm leading-relaxed  flex items-center">
+                    <span className="material-symbols-outlined mr-1">
+                      attach_money
+                    </span>{" "}
+                    Salary:
+                  </p>
+                  <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
+                    ₱{job.minimumSalary} - ₱{job.maximumSalary}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-black font-semibold text-sm leading-relaxed  flex items-center">
+                    <span className="material-symbols-outlined mr-1">
+                      work_outline
+                    </span>{" "}
+                    Position Type:
+                  </p>
+                  <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
+                    {job.positionType}
                   </p>
                 </div>
               </div>
 
-              {/* Second Div: Job Information */}
-              <div className="w-full">
-                <strong>Requirements:</strong>
-                <p className="shadow-lg p-1">
-                  {job.requirements
-                    .split(",")
-                    .map(
-                      (requirement) =>
-                        requirement.trim().charAt(0).toUpperCase() +
-                        requirement.trim().slice(1).toLowerCase()
-                    )
-                    .join(", ")}
+              {/* Disability Types */}
+              <div>
+                <p className="text-black font-semibold text-sm leading-relaxed  flex items-center">
+                  <span className="material-symbols-outlined mr-1">
+                    accessible
+                  </span>{" "}
+                  Disabilities:
                 </p>
-              </div>
-              <div className="w-full">
-                <strong>Qualification:</strong>
-                <p className="shadow-lg p-1">
-                  {job.qualification
-                    .split(",")
-                    .map(
-                      (qualification) =>
-                        qualification.trim().charAt(0).toUpperCase() +
-                        qualification.trim().slice(1).toLowerCase()
-                    )
-                    .join(", ")}
+                <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
+                  {job.disabilityTypes}
                 </p>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <strong>Salary:</strong>
-                  <p className="shadow-lg p-1">
-                    ₱ {job.minimumSalary} - ₱ {job.maximumSalary}
-                  </p>
-                </div>
-                <div>
-                  <strong>Position Type:</strong>
-                  <p className="shadow-lg p-1">
-                    {job.positionType
-                      .split("-")
-                      .map(
-                        (part) =>
-                          part.charAt(0).toUpperCase() + part.slice(1).trim()
-                      )
-                      .join(" - ")}
-                  </p>
-                </div>
-              </div>
-
-              {/* Third Div: Additional Information */}
-              <div className="w-full">
-                <div>
-                  <strong>Disabilities:</strong>
-                  <p className="shadow-lg p-1">{job.disabilityTypes}</p>
-                </div>
               </div>
             </div>
+
             {/* Buttons */}
-            <div className="flex justify-end mt-4 space-x-2">
+            <div className="flex justify-end mt-6 space-x-3">
               <button
-                className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
                 onClick={closeModal}
+                className="bg-gray-500 text-white px-4 py-2 rounded-lg  hover:bg-gray-600 transition duration-200 font-medium"
               >
                 Back
               </button>

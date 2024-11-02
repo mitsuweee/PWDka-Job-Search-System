@@ -293,27 +293,51 @@ const AdminViewAdmin = () => {
       </main>
 
       {isModalOpen && admin && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg p-6 w-[600px] shadow-lg">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-bold">Admin Details</h3>
-              <button onClick={() => setIsModalOpen(false)}>&times;</button>
-            </div>
-            <div>
-              <p>
-                <strong>First Name:</strong> {admin.first_name}
-              </p>
-              <p>
-                <strong>Last Name:</strong> {admin.last_name}
-              </p>
-              <p>
-                <strong>Email:</strong> {admin.email}
-              </p>
-            </div>
-            <div className="flex justify-end mt-4">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4 shadow-lg transition-transform transform scale-100">
+            <div className="flex justify-between items-center mb-6 border-b pb-3">
+              <h3 className="text-2xl font-bold text-gray-800 flex items-center shadow-md">
+                <span className="material-symbols-outlined mr-2">person</span>{" "}
+                Admin Details
+              </h3>
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="bg-gray-500 text-white px-4 py-2 rounded-lg"
+                className="text-gray-500 hover:text-gray-700 transition duration-200"
+              >
+                <span className="material-symbols-outlined text-2xl">
+                  close
+                </span>
+              </button>
+            </div>
+
+            <div className="space-y-5 text-gray-700">
+              <p className="flex items-center shadow-inner text-gray-600 bg-gray-100 p-4 rounded-lg">
+                <span className="material-symbols-outlined mr-2">badge</span>
+                <strong className="mr-2 text-black font-semibold">
+                  First Name:
+                </strong>{" "}
+                {admin.first_name}
+              </p>
+              <p className="flex items-center shadow-inner text-gray-600 bg-gray-100 p-4 rounded-lg">
+                <span className="material-symbols-outlined mr-2">badge</span>
+                <strong className="mr-2 text-black font-semibold">
+                  Last Name:
+                </strong>{" "}
+                {admin.last_name}
+              </p>
+              <p className="flex items-center shadow-inner text-gray-600 bg-gray-100 p-4 rounded-lg">
+                <span className="material-symbols-outlined mr-2">mail</span>
+                <strong className="mr-2 text-black font-semibold">
+                  Email:
+                </strong>{" "}
+                {admin.email}
+              </p>
+            </div>
+
+            <div className="flex justify-end mt-8">
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="bg-gray-600 text-white px-5 py-2 rounded-full hover:bg-gray-700 transition duration-200 shadow-md"
               >
                 Close
               </button>

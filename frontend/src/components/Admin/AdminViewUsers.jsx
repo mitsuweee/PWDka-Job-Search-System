@@ -447,28 +447,36 @@ const AdminViewUsers = () => {
       </main>
 
       {isModalOpen && user && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg p-6 w-[600px] h-[700px] shadow-lg hover:shadow-2xl transition-shadow duration-300">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-bold">User Details</h3>
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-2xl shadow-lg transition-transform transform scale-100 max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-4 border-b pb-3">
+              <h3 className="text-2xl font-bold text-custom-blue flex items-center">
+                <span className="material-symbols-outlined mr-2">person</span>{" "}
+                User Details
+              </h3>
               <button
-                className="text-gray-500 hover:text-gray-700"
                 onClick={() => setIsModalOpen(false)}
+                className="text-gray-500 hover:text-gray-700 transition duration-200"
               >
-                &times;
+                <span className="material-symbols-outlined text-2xl">
+                  close
+                </span>
               </button>
             </div>
             <div className="flex justify-center mb-6">
               <img
                 src={user.profilePicture}
                 alt={user.fullName}
-                className="w-32 h-32 rounded-full border-2 border-gray-300 hover:shadow-lg transition-shadow duration-300 object-cover"
+                className="w-32 h-32 rounded-full border-4 border-custom-blue hover:shadow-lg transition-shadow duration-300 object-cover"
               />
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-gray-100 p-4 rounded-lg">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <strong>Full Name:</strong>
-                <p className="shadow-lg p-1">
+                <p className="text-black font-semibold flex items-center">
+                  <span className="material-symbols-outlined mr-1">badge</span>{" "}
+                  Full Name:
+                </p>
+                <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
                   {user.firstName && user.lastName
                     ? `${
                         user.firstName.charAt(0).toUpperCase() +
@@ -484,56 +492,74 @@ const AdminViewUsers = () => {
                     : ""}
                 </p>
               </div>
-
               <div>
-                <strong>PWD ID:</strong>
-                <p className="shadow-lg p-1">{user.id}</p>
-              </div>
-              <div>
-                <strong>Disability:</strong>
-                <p className="shadow-lg p-1">{user.disability}</p>
-              </div>
-              <div>
-                <strong>Address:</strong>
-                <p className="shadow-lg p-1">
-                  {user.address
-                    ? user.address
-                        .split(" ")
-                        .map(
-                          (word) =>
-                            word.charAt(0).toUpperCase() +
-                            word.slice(1).toLowerCase()
-                        )
-                        .join(" ")
-                    : ""}
+                <p className="text-black font-semibold flex items-center">
+                  <span className="material-symbols-outlined mr-1">
+                    credit_card
+                  </span>{" "}
+                  PWD ID:
+                </p>
+                <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
+                  {user.id}
                 </p>
               </div>
               <div>
-                <strong>City:</strong>
-                <p className="shadow-lg p-1">
-                  {user.city
-                    ? user.city
-                        .split(" ")
-                        .map(
-                          (word) =>
-                            word.charAt(0).toUpperCase() +
-                            word.slice(1).toLowerCase()
-                        )
-                        .join(" ")
-                    : ""}
+                <p className="text-black font-semibold flex items-center">
+                  <span className="material-symbols-outlined mr-1">
+                    accessible
+                  </span>{" "}
+                  Disability:
+                </p>
+                <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
+                  {user.disability}
                 </p>
               </div>
               <div>
-                <strong>Birthdate:</strong>
-                <p className="shadow-lg p-1">{user.birthdate}</p>
+                <p className="text-black font-semibold flex items-center">
+                  <span className="material-symbols-outlined mr-1">home</span>{" "}
+                  Address:
+                </p>
+                <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
+                  {user.address}
+                </p>
               </div>
               <div>
-                <strong>Contact Number:</strong>
-                <p className="shadow-lg p-1">{user.contactNumber}</p>
+                <p className="text-black font-semibold flex items-center">
+                  <span className="material-symbols-outlined mr-1">
+                    location_city
+                  </span>{" "}
+                  City:
+                </p>
+                <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
+                  {user.city}
+                </p>
               </div>
               <div>
-                <strong>Email:</strong>
-                <p className="shadow-lg p-1">{user.email}</p>
+                <p className="text-black font-semibold flex items-center">
+                  <span className="material-symbols-outlined mr-1">cake</span>{" "}
+                  Birthdate:
+                </p>
+                <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
+                  {user.birthdate}
+                </p>
+              </div>
+              <div>
+                <p className="text-black font-semibold flex items-center">
+                  <span className="material-symbols-outlined mr-1">phone</span>{" "}
+                  Contact Number:
+                </p>
+                <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
+                  {user.contactNumber}
+                </p>
+              </div>
+              <div>
+                <p className="text-black font-semibold flex items-center">
+                  <span className="material-symbols-outlined mr-1">email</span>{" "}
+                  Email:
+                </p>
+                <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
+                  {user.email}
+                </p>
               </div>
             </div>
           </div>

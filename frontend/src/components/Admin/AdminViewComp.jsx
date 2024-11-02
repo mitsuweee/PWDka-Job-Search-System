@@ -403,59 +403,103 @@ const AdminViewComp = () => {
       </main>
 
       {isModalOpen && company && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg p-6 w-[600px] shadow-lg hover:shadow-2xl transition-shadow duration-300 max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-bold">Company Details</h3>
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-2xl shadow-lg transition-transform transform scale-100 max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-4 border-b pb-3">
+              <h3 className="text-2xl font-bold text-custom-blue  flex items-center">
+                <span className="material-symbols-outlined mr-2">business</span>
+                Company Details
+              </h3>
               <button
-                className="text-gray-500 hover:text-gray-700"
                 onClick={closeModal}
+                className="text-gray-500 hover:text-gray-700 transition duration-200"
               >
-                &times;
+                <span className="material-symbols-outlined text-2xl">
+                  close
+                </span>
               </button>
             </div>
             <div className="flex justify-center mb-6">
               <img
                 src={company.companyProfile}
                 alt="Profile"
-                className="w-32 h-32 rounded-full border-2 border-gray-300 hover:shadow-lg transition-shadow duration-300 object-cover"
+                className="w-32 h-32 rounded-full border-4 border-custom-blue hover:shadow-lg transition-shadow duration-300 object-cover"
               />
             </div>
-            <div className="grid gap-4 bg-gray-100 p-4 rounded-lg">
+            <div className="grid gap-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <strong>Company Name:</strong>
-                  <p className="shadow-lg p-1">{company.companyName}</p>
+                  <p className="text-black font-semibold flex items-center">
+                    <span className="material-symbols-outlined mr-1">
+                      badge
+                    </span>
+                    Company Name:
+                  </p>
+                  <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
+                    {company.companyName}
+                  </p>
                 </div>
                 <div>
-                  <strong>City:</strong>
-                  <p className="shadow-lg p-1">{company.city}</p>
+                  <p className="text-black font-semibold flex items-center">
+                    <span className="material-symbols-outlined mr-1">
+                      location_city
+                    </span>
+                    City:
+                  </p>
+                  <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
+                    {company.city}
+                  </p>
                 </div>
               </div>
-
-              <div className="w-full">
-                <strong>Address:</strong>
-                <p className="shadow-lg p-1">{company.address}</p>
+              <div>
+                <p className="text-black font-semibold flex items-center">
+                  <span className="material-symbols-outlined mr-1">home</span>
+                  Address:
+                </p>
+                <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
+                  {company.address}
+                </p>
               </div>
-              <div className="w-full">
-                <strong>Description:</strong>
-                <p className="shadow-lg p-1">{company.description}</p>
+              <div>
+                <p className="text-black font-semibold flex items-center">
+                  <span className="material-symbols-outlined mr-1">
+                    description
+                  </span>
+                  Description:
+                </p>
+                <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
+                  {company.description}
+                </p>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <strong>Contact Number:</strong>
-                  <p className="shadow-lg p-1">{company.contactNumber}</p>
+                  <p className="text-black font-semibold flex items-center">
+                    <span className="material-symbols-outlined mr-1">
+                      phone
+                    </span>
+                    Contact Number:
+                  </p>
+                  <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
+                    {company.contactNumber}
+                  </p>
                 </div>
                 <div>
-                  <strong>Email:</strong>
-                  <p className="shadow-lg p-1">{company.companyEmail}</p>
+                  <p className="text-black font-semibold flex items-center">
+                    <span className="material-symbols-outlined mr-1">
+                      email
+                    </span>
+                    Email:
+                  </p>
+                  <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
+                    {company.companyEmail}
+                  </p>
                 </div>
               </div>
             </div>
-            <div className="flex justify-end mt-4 space-x-2">
+            <div className="flex justify-end mt-6 space-x-3">
               <button
-                className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
                 onClick={closeModal}
+                className="bg-gray-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-gray-600 transition duration-200 font-medium"
               >
                 Back
               </button>
