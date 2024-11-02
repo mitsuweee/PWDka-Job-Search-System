@@ -375,14 +375,14 @@ const ViewApplicants = () => {
 
         {/* Applicants Table */}
         <div className="overflow-x-auto">
-          <table className="min-w-full bg-white shadow-md rounded-lg">
+          <table className="min-w-full bg-white shadow-lg rounded-lg overflow-hidden">
             <thead>
-              <tr className="bg-gray-200 text-gray-700">
-                <th className="py-3 px-6 text-left">Full Name</th>
-                <th className="py-3 px-6 text-left">Email</th>
-                <th className="py-3 px-6 text-left">Date Applied</th>
-                <th className="py-3 px-6 text-left">Status</th>
-                <th className="py-3 px-6 text-center">Actions</th>
+              <tr className="bg-blue-600 text-white text-left text-sm uppercase tracking-wider">
+                <th className="py-4 px-6 font-semibold">Full Name</th>
+                <th className="py-4 px-6 font-semibold">Email</th>
+                <th className="py-4 px-6 font-semibold">Date Applied</th>
+                <th className="py-4 px-6 font-semibold text-center">Status</th>
+                <th className="py-4 px-6 font-semibold text-center">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -390,9 +390,9 @@ const ViewApplicants = () => {
                 sortedApplicants.map((applicant) => (
                   <tr
                     key={applicant.id}
-                    className="border-b border-gray-200 hover:bg-gray-100 transition duration-200"
+                    className="border-b border-gray-200 hover:bg-gray-50 transition duration-300"
                   >
-                    <td className="py-3 px-6 text-left">
+                    <td className="py-4 px-6 text-gray-800">
                       {applicant.fullName
                         .split(" ")
                         .map(
@@ -402,17 +402,19 @@ const ViewApplicants = () => {
                         )
                         .join(" ")}
                     </td>
-                    <td className="py-3 px-6 text-left">{applicant.email}</td>
-                    <td className="py-3 px-6 text-left">
+                    <td className="py-4 px-6 text-gray-800">
+                      {applicant.email}
+                    </td>
+                    <td className="py-4 px-6 text-gray-800">
                       {applicant.dateCreated}
                     </td>
-                    <td className="py-3 px-6 text-center">
+                    <td className="py-4 px-6 text-center">
                       <select
                         value={applicant.status}
                         onChange={(e) =>
                           handleStatusChange(applicant.id, e.target.value)
                         }
-                        className="py-1 px-2 bg-yellow-500 text-white rounded hover:bg-yellow-600"
+                        className="py-1 px-2 bg-yellow-500 text-white font-semibold rounded-md shadow-sm hover:bg-yellow-600 transition duration-200"
                       >
                         <option value="Under Review">Under Review</option>
                         <option value="Reviewed">Reviewed</option>
@@ -420,21 +422,21 @@ const ViewApplicants = () => {
                         <option value="Rejected">Rejected</option>
                       </select>
                     </td>
-                    <td className="py-3 px-6 text-center space-x-2">
+                    <td className="py-4 px-6 text-center flex justify-center space-x-2">
                       <button
-                        className="py-1 px-2 bg-green-500 text-white rounded hover:bg-green-600"
+                        className="py-1 px-3 bg-green-500 text-white rounded-md shadow-sm hover:bg-green-600 transition duration-200 text-sm font-medium"
                         onClick={() => openProfileModal(applicant.profile)}
                       >
                         View Profile
                       </button>
                       <button
-                        className="py-1 px-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                        className="py-1 px-3 bg-blue-500 text-white rounded-md shadow-sm hover:bg-blue-600 transition duration-200 text-sm font-medium"
                         onClick={() => openResumeModal(applicant.resume)}
                       >
                         View Resume
                       </button>
                       <button
-                        className="py-1 px-2 bg-red-500 text-white rounded hover:bg-red-600"
+                        className="py-1 px-3 bg-red-500 text-white rounded-md shadow-sm hover:bg-red-600 transition duration-200 text-sm font-medium"
                         onClick={() => openDeleteModal(applicant.id)}
                       >
                         Delete
@@ -444,7 +446,10 @@ const ViewApplicants = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={5} className="py-4 text-center text-gray-500">
+                  <td
+                    colSpan={5}
+                    className="py-8 text-center text-gray-500 text-lg"
+                  >
                     No applicants found.
                   </td>
                 </tr>

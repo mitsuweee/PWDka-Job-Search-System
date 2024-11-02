@@ -344,18 +344,23 @@ const AdminVerifyComp = () => {
         <div className="mt-4">
           {currentCompanies.length > 0 ? (
             <div className="overflow-x-auto">
-              <table className="min-w-full bg-white rounded-lg shadow-md">
+              <table className="min-w-full bg-white rounded-lg shadow-lg overflow-hidden">
                 <thead>
-                  <tr className="bg-blue-600 text-white text-left">
-                    <th className="py-3 px-6">Company Name</th>
-                    <th className="py-3 px-6">City</th>
-                    <th className="py-3 px-6 text-center">Actions</th>
+                  <tr className="bg-blue-600 text-white text-left text-xs md:text-sm uppercase tracking-wider">
+                    <th className="py-4 px-6 font-semibold">Company Name</th>
+                    <th className="py-4 px-6 font-semibold">City</th>
+                    <th className="py-4 px-6 font-semibold text-center">
+                      Actions
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   {currentCompanies.map((company) => (
-                    <tr key={company.id} className="border-b hover:bg-gray-100">
-                      <td className="py-4 px-6">
+                    <tr
+                      key={company.id}
+                      className="border-b border-gray-200 hover:bg-gray-50 transition duration-300"
+                    >
+                      <td className="py-4 px-6 text-gray-800 text-sm md:text-base break-words">
                         {company.name
                           ? company.name
                               .split(" ")
@@ -367,7 +372,7 @@ const AdminVerifyComp = () => {
                               .join(" ")
                           : ""}
                       </td>
-                      <td className="py-4 px-6">
+                      <td className="py-4 px-6 text-gray-800 text-sm md:text-base break-words">
                         {company.city
                           ? company.city
                               .split(" ")
@@ -380,10 +385,10 @@ const AdminVerifyComp = () => {
                           : ""}
                       </td>
                       <td className="py-4 px-6 text-center">
-                        <div className="flex justify-center space-x-2">
+                        <div className="flex justify-center items-center space-x-2">
                           <button
                             disabled={actionInProgress}
-                            className={`bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200 ${
+                            className={`bg-blue-500 text-white py-1 px-3 rounded-full shadow-sm hover:bg-blue-700 transition duration-200 text-xs md:text-sm font-medium ${
                               actionInProgress
                                 ? "opacity-50 cursor-not-allowed"
                                 : ""
@@ -394,7 +399,7 @@ const AdminVerifyComp = () => {
                           </button>
                           <button
                             disabled={actionInProgress}
-                            className={`bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-200 ${
+                            className={`bg-green-500 text-white py-1 px-3 rounded-full shadow-sm hover:bg-green-700 transition duration-200 text-xs md:text-sm font-medium ${
                               actionInProgress
                                 ? "opacity-50 cursor-not-allowed"
                                 : ""
@@ -405,7 +410,7 @@ const AdminVerifyComp = () => {
                           </button>
                           <button
                             disabled={actionInProgress}
-                            className={`bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-200 ${
+                            className={`bg-red-500 text-white py-1 px-3 rounded-full shadow-sm hover:bg-red-700 transition duration-200 text-xs md:text-sm font-medium ${
                               actionInProgress
                                 ? "opacity-50 cursor-not-allowed"
                                 : ""

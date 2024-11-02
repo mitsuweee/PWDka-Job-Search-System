@@ -319,19 +319,24 @@ const AdminViewComp = () => {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="min-w-full bg-white mt-4 rounded-lg shadow-lg">
+          <table className="min-w-full bg-white mt-4 rounded-lg shadow-lg overflow-hidden">
             <thead>
-              <tr className="bg-blue-600 text-white text-left">
-                <th className="py-3 px-6">Company Name</th>
-                <th className="py-3 px-6">City</th>
-                <th className="py-3 px-6 text-center">Actions</th>
+              <tr className="bg-blue-600 text-white text-left text-xs md:text-sm uppercase tracking-wider">
+                <th className="py-4 px-6 font-semibold">Company Name</th>
+                <th className="py-4 px-6 font-semibold">City</th>
+                <th className="py-4 px-6 text-center font-semibold">Actions</th>
               </tr>
             </thead>
             <tbody>
               {currentCompanies.map((company) => (
-                <tr key={company.id} className="border-b hover:bg-gray-100">
-                  <td className="py-3 px-6">{company.name}</td>
-                  <td className="py-3 px-6">
+                <tr
+                  key={company.id}
+                  className="border-b border-gray-200 hover:bg-gray-50 transition duration-300"
+                >
+                  <td className="py-4 px-6 text-gray-800 text-sm md:text-base break-words">
+                    {company.name}
+                  </td>
+                  <td className="py-4 px-6 text-gray-800 text-sm md:text-base break-words">
                     {company.city
                       .split(" ")
                       .map(
@@ -341,10 +346,10 @@ const AdminViewComp = () => {
                       )
                       .join(" ")}
                   </td>
-                  <td className="py-3 px-6 text-center">
+                  <td className="py-4 px-6 text-center">
                     <button
                       onClick={() => handleViewCompany(company.id)}
-                      className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-200"
+                      className="bg-blue-500 text-white text-xs md:text-sm px-3 py-1 rounded-full shadow-sm hover:bg-blue-700 transition duration-200 font-medium"
                     >
                       View
                     </button>

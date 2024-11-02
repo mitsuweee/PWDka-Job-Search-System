@@ -316,26 +316,30 @@ const AdminViewJobs = () => {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="min-w-full bg-white mt-4 rounded-lg shadow-lg">
+          <table className="min-w-full bg-white mt-4 rounded-lg shadow-lg overflow-hidden">
             <thead>
-              <tr className="bg-blue-600 text-white text-left">
-                <th className="py-3 px-6">Company</th>
-                <th className="py-3 px-6">Job Title</th>
-                <th className="py-3 px-6 text-center">Actions</th>
+              <tr className="bg-blue-600 text-white text-left text-xs md:text-sm uppercase tracking-wider">
+                <th className="py-4 px-6 font-semibold">Company</th>
+                <th className="py-4 px-6 font-semibold">Job Title</th>
+                <th className="py-4 px-6 text-center font-semibold">Actions</th>
               </tr>
             </thead>
             <tbody>
               {currentJobs.map((job) => (
                 <tr
                   key={job.id}
-                  className="border-b hover:bg-gray-100 transition-colors"
+                  className="border-b border-gray-200 hover:bg-gray-50 transition duration-300"
                 >
-                  <td className="py-3 px-6">{job.company_name}</td>
-                  <td className="py-3 px-6">{job.position_name}</td>
-                  <td className="py-3 px-6 text-center">
+                  <td className="py-4 px-6 text-gray-800 text-sm md:text-base break-words">
+                    {job.company_name}
+                  </td>
+                  <td className="py-4 px-6 text-gray-800 text-sm md:text-base break-words">
+                    {job.position_name}
+                  </td>
+                  <td className="py-4 px-6 text-center">
                     <button
                       onClick={() => handleViewJob(job.id)}
-                      className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 shadow-md transition duration-200"
+                      className="bg-blue-500 text-white text-xs md:text-sm px-3 py-1 rounded-full shadow-sm hover:bg-blue-700 transition duration-200 font-medium"
                     >
                       View
                     </button>

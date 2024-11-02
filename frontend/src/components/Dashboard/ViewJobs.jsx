@@ -417,30 +417,22 @@ const ViewJobs = () => {
 
         {/* Table */}
         <div className="w-full">
-          <table className="table-auto w-full bg-white mt-4 rounded-xl shadow-lg">
+          <table className="table-auto w-full bg-white mt-4 rounded-xl shadow-lg overflow-hidden">
             <thead>
-              <tr className="bg-blue-500 text-white">
-                <th className="py-3 px-4 text-left text-sm md:text-base">
-                  Job Title
-                </th>
-                <th className="py-3 px-4 text-left text-sm md:text-base">
-                  Position Type
-                </th>
-                <th className="py-3 px-4 text-left text-sm md:text-base">
-                  Salary Range
-                </th>
-                <th className="py-3 px-4 text-center text-sm md:text-base">
-                  Actions
-                </th>
+              <tr className="bg-blue-600 text-white text-left text-xs md:text-sm uppercase tracking-wider">
+                <th className="py-4 px-4 font-semibold">Job Title</th>
+                <th className="py-4 px-4 font-semibold">Position Type</th>
+                <th className="py-4 px-4 font-semibold">Salary Range</th>
+                <th className="py-4 px-4 font-semibold text-center">Actions</th>
               </tr>
             </thead>
             <tbody>
               {filteredJobListings.map((job) => (
                 <tr
                   key={job.id}
-                  className="border-b hover:bg-gray-100 transition-colors"
+                  className="border-b border-gray-200 hover:bg-gray-50 transition duration-300"
                 >
-                  <td className="py-3 px-4 text-sm md:text-base break-words">
+                  <td className="py-4 px-4 text-gray-800 text-sm md:text-base break-words">
                     {job.position_name
                       ? job.position_name
                           .split(" ")
@@ -452,51 +444,57 @@ const ViewJobs = () => {
                           .join(" ")
                       : ""}
                   </td>
-                  <td className="py-3 px-4 text-sm md:text-base">
+                  <td className="py-4 px-4 text-gray-800 text-sm md:text-base">
                     {job.position_type || "N/A"}
                   </td>
-                  <td className="py-3 px-4 text-sm md:text-base">
+                  <td className="py-4 px-4 text-gray-800 text-sm md:text-base">
                     {job.minimum_salary && job.maximum_salary
                       ? `₱${job.minimum_salary} - ₱${job.maximum_salary}`
                       : "Not specified"}
                   </td>
-                  <td className="py-3 px-4">
+                  <td className="py-4 px-4 text-center">
                     <div className="flex justify-center items-center space-x-2">
                       <button
                         onClick={() => handleViewJob(job.id)}
-                        className="bg-blue-500 text-white flex items-center px-2 py-1 rounded hover:bg-blue-700 transition duration-200"
+                        className="bg-blue-500 text-white flex items-center px-2 py-1 rounded-full shadow-sm hover:bg-blue-700 transition duration-200"
                       >
-                        <span className="material-symbols-outlined text-base md:text-xl">
+                        <span className="material-symbols-outlined text-sm md:text-base">
                           visibility
                         </span>
-                        <span className="ml-1 hidden md:inline">View</span>
+                        <span className="ml-1 hidden md:inline text-sm">
+                          View
+                        </span>
                       </button>
                       <button
                         onClick={() => handleDeleteJobListing(job.id)}
-                        className="bg-red-500 text-white flex items-center px-2 py-1 rounded hover:bg-red-700 transition duration-200"
+                        className="bg-red-500 text-white flex items-center px-2 py-1 rounded-full shadow-sm hover:bg-red-700 transition duration-200"
                       >
-                        <span className="material-symbols-outlined text-base md:text-xl">
+                        <span className="material-symbols-outlined text-sm md:text-base">
                           delete
                         </span>
-                        <span className="ml-1 hidden md:inline">Delete</span>
+                        <span className="ml-1 hidden md:inline text-sm">
+                          Delete
+                        </span>
                       </button>
                       <button
                         onClick={() => handleUpdateJob(job)}
-                        className="bg-yellow-500 text-white flex items-center px-2 py-1 rounded hover:bg-yellow-700 transition duration-200"
+                        className="bg-yellow-500 text-white flex items-center px-2 py-1 rounded-full shadow-sm hover:bg-yellow-700 transition duration-200"
                       >
-                        <span className="material-symbols-outlined text-base md:text-xl">
+                        <span className="material-symbols-outlined text-sm md:text-base">
                           edit
                         </span>
-                        <span className="ml-1 hidden md:inline">Edit</span>
+                        <span className="ml-1 hidden md:inline text-sm">
+                          Edit
+                        </span>
                       </button>
                       <button
                         onClick={() => handleViewApplicants(job.id)}
-                        className="bg-green-500 text-white flex items-center px-2 py-1 rounded hover:bg-green-700 transition duration-200"
+                        className="bg-green-500 text-white flex items-center px-2 py-1 rounded-full shadow-sm hover:bg-green-700 transition duration-200"
                       >
-                        <span className="material-symbols-outlined text-base md:text-xl">
+                        <span className="material-symbols-outlined text-sm md:text-base">
                           group_add
                         </span>
-                        <span className="ml-1 hidden md:inline">
+                        <span className="ml-1 hidden md:inline text-sm">
                           Applicants
                         </span>
                       </button>

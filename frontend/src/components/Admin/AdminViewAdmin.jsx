@@ -236,32 +236,41 @@ const AdminViewAdmin = () => {
         <h1 className="text-xl font-bold text-gray-700">View All Admins</h1>
 
         <div className="overflow-x-auto mt-4">
-          <table className="min-w-full bg-white rounded-lg shadow-lg">
+          <table className="min-w-full bg-white rounded-lg shadow-lg overflow-hidden">
             <thead>
-              <tr className="bg-blue-600 text-white text-left">
-                <th className="py-3 px-6">First Name</th>
-                <th className="py-3 px-6">Last Name</th>
-                <th className="py-3 px-6">Email</th>
-                <th className="py-3 px-6 text-center">Actions</th>
+              <tr className="bg-blue-600 text-white text-left text-xs md:text-sm uppercase tracking-wider">
+                <th className="py-4 px-6 font-semibold">First Name</th>
+                <th className="py-4 px-6 font-semibold">Last Name</th>
+                <th className="py-4 px-6 font-semibold">Email</th>
+                <th className="py-4 px-6 text-center font-semibold">Actions</th>
               </tr>
             </thead>
             <tbody>
               {admins && admins.length > 0 ? (
                 admins.map((admin) => (
-                  <tr key={admin.id} className="border-b hover:bg-gray-100">
-                    <td className="py-3 px-6">{admin.first_name}</td>
-                    <td className="py-3 px-6">{admin.last_name}</td>
-                    <td className="py-3 px-6">{admin.email}</td>
-                    <td className="py-3 px-6 text-center">
+                  <tr
+                    key={admin.id}
+                    className="border-b border-gray-200 hover:bg-gray-50 transition duration-300"
+                  >
+                    <td className="py-4 px-6 text-gray-800 text-sm md:text-base break-words">
+                      {admin.first_name}
+                    </td>
+                    <td className="py-4 px-6 text-gray-800 text-sm md:text-base break-words">
+                      {admin.last_name}
+                    </td>
+                    <td className="py-4 px-6 text-gray-800 text-sm md:text-base break-words">
+                      {admin.email}
+                    </td>
+                    <td className="py-4 px-6 text-center">
                       <button
                         onClick={() => handleViewAdmin(admin.id)}
-                        className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2 hover:bg-blue-700 transition duration-200"
+                        className="bg-blue-500 text-white text-xs md:text-sm px-3 py-1 rounded-full shadow-sm hover:bg-blue-700 transition duration-200 font-medium mr-2"
                       >
                         View
                       </button>
                       <button
                         onClick={() => handleDeleteAdmin(admin.id)}
-                        className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-700 transition duration-200"
+                        className="bg-red-500 text-white text-xs md:text-sm px-3 py-1 rounded-full shadow-sm hover:bg-red-700 transition duration-200 font-medium"
                       >
                         Delete
                       </button>
@@ -272,7 +281,7 @@ const AdminViewAdmin = () => {
                 <tr>
                   <td
                     colSpan="4"
-                    className="py-3 px-6 text-center text-gray-500"
+                    className="py-6 px-6 text-center text-gray-500 text-sm md:text-base"
                   >
                     No admins found
                   </td>
