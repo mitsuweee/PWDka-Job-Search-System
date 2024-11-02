@@ -386,7 +386,7 @@ const JobListing = () => {
                     <img
                       src={job.companyImage}
                       alt="Company Logo"
-                      className="w-32 h-32 object-cover rounded-xl mr-4 shadow-xl border-4 border-white"
+                      className="w-32 h-32 object-cover rounded-xl mr-4 shadow-xl border-4 border-blue-700"
                     />
                     <div>
                       <h2 className="text-xl font-bold text-white">

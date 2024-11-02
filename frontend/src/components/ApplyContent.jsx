@@ -137,126 +137,132 @@ const ApplyPage = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto mb-10 mt-10 p-10 bg-white rounded-xl shadow-lg space-y-8  transform transition-all hover:shadow-2xl">
-      <Toaster position="top-center" reverseOrder={false} />{" "}
-      {/* Add Toaster for Toast Notifications */}
-      {submitSuccess ? (
-        <div className="text-center">
-          <h2 className="text-3xl font-bold text-custom-blue">
-            Thank You for Applying!
-          </h2>
-          <p className="text-lg mt-4 text-gray-700">
-            Your application has been successfully submitted. We’ve received
-            your resume and the company will review it soon. Keep an eye on your
-            email for updates regarding your application.
-          </p>
-          <button
-            className="mt-8 py-3 px-6 bg-blue-600 text-white rounded-lg shadow-lg hover:bg-blue-700 transition duration-300"
-            onClick={() => navigate("/joblist")}
-          >
-            Go back to home
-          </button>
-        </div>
-      ) : (
-        <>
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-3xl font-bold text-gray-900">
-              Apply for the Job
+    <div
+      className="min-h-screen bg-cover bg-center flex items-center justify-center"
+      style={{ backgroundImage: `url('./imgs/pft.png')` }}
+    >
+      <div className="max-w-4xl mx-auto my-10 p-10 bg-white rounded-2xl shadow-2xl space-y-8 transition-transform transform hover:scale-105 hover:shadow-3xl">
+        <Toaster position="top-center" reverseOrder={false} />
+
+        {submitSuccess ? (
+          <div className="text-center space-y-6">
+            <h2 className="text-3xl font-bold text-blue-600">
+              Thank You for Applying!
             </h2>
-            {userDisabilityType !== "Deaf or Hard of Hearing" && (
-              <button
-                onClick={handleToggleVoice}
-                className={`ml-4 p-3 rounded-full transition-colors duration-200 shadow-lg ${
-                  isVoiceEnabled
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-300 text-black"
-                } hover:bg-blue-700`}
-                title={
-                  isVoiceEnabled
-                    ? "Voice is enabled"
-                    : "Enable voice instructions"
-                }
-              >
-                <span className="material-symbols-outlined text-2xl">
-                  {isVoiceEnabled ? "volume_up" : "volume_off"}
-                </span>
-              </button>
-            )}
+            <p className="text-lg text-gray-700">
+              Your application has been successfully submitted. We’ve received
+              your resume, and the company will review it soon. Keep an eye on
+              your email for updates regarding your application.
+            </p>
+            <button
+              className="mt-8 py-3 px-6 bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-full shadow-lg hover:shadow-2xl transform hover:scale-105 transition duration-300"
+              onClick={() => navigate("/joblist")}
+            >
+              Go back to home
+            </button>
           </div>
-          <form onSubmit={handleSubmit}>
-            <div className="mb-8">
-              <label className="block text-gray-700 font-semibold mb-4">
-                Upload Your Resume (PDF only):
-              </label>
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 cursor-pointer hover:border-blue-400 transition-all">
-                <input
-                  type="file"
-                  accept="application/pdf"
-                  onChange={handleFileChange}
-                  className="w-full text-gray-800"
-                />
-                <div className="flex items-center space-x-2 mt-2">
-                  <span className="material-symbols-outlined text-gray-500">
-                    file_upload
+        ) : (
+          <>
+            <div className="flex justify-between items-center mb-8">
+              <h2 className="text-4xl font-bold text-blue-700">
+                Apply for the Job
+              </h2>
+              {userDisabilityType !== "Deaf or Hard of Hearing" && (
+                <button
+                  onClick={handleToggleVoice}
+                  className={`ml-4 p-3 rounded-full transition-colors duration-300 shadow-lg transform hover:scale-110 ${
+                    isVoiceEnabled
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-300 text-black"
+                  }`}
+                  title={
+                    isVoiceEnabled
+                      ? "Voice is enabled"
+                      : "Enable voice instructions"
+                  }
+                >
+                  <span className="material-symbols-outlined text-2xl">
+                    {isVoiceEnabled ? "volume_up" : "volume_off"}
                   </span>
-                  <span className="text-gray-600">Choose a PDF</span>
-                </div>
-                <small className="block text-gray-500 mt-2">
-                  Max file size: 16MB
-                </small>
-              </div>
-              {error && <p className="text-red-500 mt-2">{error}</p>}
-              {isUploading && <div className="loader">Uploading...</div>}
+                </button>
+              )}
             </div>
-            {pdfPreviewUrl && (
-              <div className="mb-8">
-                <label className="block text-gray-700 font-semibold mb-4">
-                  Preview Your Resume:
+
+            <form onSubmit={handleSubmit} className="space-y-8">
+              <div>
+                <label className="block text-gray-700 font-semibold mb-3">
+                  Upload Your Resume (PDF only):
                 </label>
-                <iframe
-                  className="w-full h-72 border border-gray-300 rounded-lg shadow-sm"
-                  src={pdfPreviewUrl}
-                  title="PDF Preview"
-                  width="100%"
-                  height="500px"
-                ></iframe>
-                <div className="flex justify-between mt-4">
-                  <a
-                    href={pdfPreviewUrl}
-                    download="resume.pdf"
-                    className="text-blue-500 underline"
-                  >
-                    Download PDF
-                  </a>
-                  <button
-                    className="text-red-500 underline"
-                    onClick={() => setResume(null)}
-                  >
-                    Remove PDF
-                  </button>
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 cursor-pointer hover:border-blue-500 transition-all">
+                  <input
+                    type="file"
+                    accept="application/pdf"
+                    onChange={handleFileChange}
+                    className="w-full text-gray-800"
+                  />
+                  <div className="flex items-center space-x-2 mt-3">
+                    <span className="material-symbols-outlined text-gray-500">
+                      file_upload
+                    </span>
+                    <span className="text-gray-600">Choose a PDF</span>
+                  </div>
+                  <small className="block text-gray-500 mt-2">
+                    Max file size: 16MB
+                  </small>
                 </div>
+                {error && <p className="text-red-500 mt-2">{error}</p>}
+                {isUploading && <div className="loader">Uploading...</div>}
               </div>
-            )}
-            <button
-              type="submit"
-              className="w-full py-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300 transform hover:scale-105"
-            >
-              Submit Application
-            </button>
-            <button
-              type="reset"
-              className="w-full py-4 mt-4 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition duration-300"
-              onClick={() => {
-                setResume(null);
-                setPdfPreviewUrl(null);
-                setError("");
-              }}
-            >
-              Reset Form
-            </button>
-          </form>
-        </>
-      )}
+
+              {pdfPreviewUrl && (
+                <div>
+                  <label className="block text-gray-700 font-semibold mb-3">
+                    Preview Your Resume:
+                  </label>
+                  <iframe
+                    className="w-full h-72 border border-gray-300 rounded-lg shadow-sm"
+                    src={pdfPreviewUrl}
+                    title="PDF Preview"
+                  ></iframe>
+                  <div className="flex justify-between mt-4">
+                    <a
+                      href={pdfPreviewUrl}
+                      download="resume.pdf"
+                      className="text-blue-600 hover:underline"
+                    >
+                      Download PDF
+                    </a>
+                    <button
+                      className="text-red-500 hover:underline"
+                      onClick={() => setResume(null)}
+                    >
+                      Remove PDF
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              <button
+                type="submit"
+                className="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-800 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition duration-300"
+              >
+                Submit Application
+              </button>
+              <button
+                type="reset"
+                className="w-full py-4 mt-4 bg-gradient-to-r from-red-500 to-red-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition duration-300"
+                onClick={() => {
+                  setResume(null);
+                  setPdfPreviewUrl(null);
+                  setError("");
+                }}
+              >
+                Reset Form
+              </button>
+            </form>
+          </>
+        )}
+      </div>
     </div>
   );
 };
