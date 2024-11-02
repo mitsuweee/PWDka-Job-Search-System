@@ -365,7 +365,7 @@ const JobListing = () => {
             </h1>
             <button
               onClick={fetchApplicationHistory}
-              className="ml-4 px-4 py-2 bg-blue-200 text-blue-700 rounded-lg shadow-md hover:bg-blue-300 transition"
+              className="ml-4 px-5 py-2 bg-gradient-to-r from-blue-400 to-blue-600 text-white font-semibold rounded-lg shadow-md hover:from-blue-500 hover:to-blue-700 hover:shadow-lg transform hover:-translate-y-0.5 transition duration-200 ease-in-out"
             >
               Application History
             </button>
@@ -386,7 +386,7 @@ const JobListing = () => {
                     <img
                       src={job.companyImage}
                       alt="Company Logo"
-                      className="w-24 h-24 object-cover rounded-xl mr-4 shadow-xl"
+                      className="w-32 h-32 object-cover rounded-xl mr-4 shadow-xl border-4 border-white"
                     />
                     <div>
                       <h2 className="text-xl font-bold text-white">
@@ -555,7 +555,7 @@ const JobListing = () => {
             <div key={selectedJob.id}>
               <div className="p-6 bg-white rounded-lg shadow-2xl relative">
                 <button
-                  className="absolute -top-4 -right-4 bg-transparent border-2 border-gray-600 text-gray-600 text-2xl font-bold py-1 px-3 rounded-full shadow-lg hover:bg-gray-600 hover:text-white hover:shadow-2xl transition transform hover:scale-105"
+                  className="absolute -top-4 -right-4 bg-blue-600 border-2 border-blue-600 text-white text-2xl font-bold py-1 px-3 rounded-full shadow-md hover:bg-transparent hover:text-blue-600 hover:shadow-lg transition-all duration-300 transform hover:scale-105"
                   onClick={() => {
                     if (isVoiceEnabled) {
                       handleToggleVoice(null);
@@ -565,6 +565,7 @@ const JobListing = () => {
                 >
                   &times;
                 </button>
+
                 <h2 className="text-2xl font-semibold mb-4 text-blue-600">
                   {selectedJob.jobName
                     .split(" ")
@@ -652,85 +653,108 @@ const JobListing = () => {
                     ))}
                 </ul>
 
-                <div className="mt-6 flex space-x-4">
-                  <a href={`/apply?id=${selectedJob.id}`}>
+                <div className="mt-6 flex flex-col md:flex-row md:space-x-4 items-center space-y-4 md:space-y-0">
+                  <a
+                    href={`/apply?id=${selectedJob.id}`}
+                    className="w-full md:w-auto"
+                  >
                     <button
-                      className={`py-2 px-4 rounded ${
+                      className={`w-full md:w-auto py-3 px-6 rounded-lg transition-all duration-300 ${
                         selectedJob.isApplied
-                          ? "bg-gray-400 cursor-not-allowed"
-                          : "bg-blue-600 hover:bg-blue-700"
-                      } text-white`}
-                      disabled={selectedJob.isApplied} // Disable if already applied
+                          ? "bg-gray-400 cursor-not-allowed text-gray-200"
+                          : "bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg"
+                      }`}
+                      disabled={selectedJob.isApplied}
                     >
                       {selectedJob.isApplied ? "Already Applied" : "Apply Now"}
                     </button>
                   </a>
                   <button
-                    className="bg-transparent border-2 border-custom-blue text-custom-blue py-3 px-6 rounded-full shadow-lg hover:bg-custom-blue hover:text-white hover:shadow-2xl transition transform hover:scale-105"
+                    className="w-full md:w-auto bg-transparent border-2 border-custom-blue text-custom-blue py-3 px-6 rounded-lg shadow-md hover:bg-custom-blue hover:text-white hover:shadow-lg transition-all duration-300 transform hover:scale-105"
                     onClick={() => setIsMoreInfoVisible(!isMoreInfoVisible)}
                   >
-                    Learn more
+                    Learn More
                   </button>
                 </div>
               </div>
 
               {isMoreInfoVisible && (
-                <div className="mt-6 p-6 bg-white rounded-lg shadow-2xl relative">
+                <div className="mt-6 p-8 bg-white rounded-lg shadow-2xl relative">
                   <img
                     src={selectedJob.companyImage}
                     alt="Company"
-                    className="w-20 h-20 object-cover rounded-full absolute top-6 right-6"
+                    className="w-24 h-24 object-cover rounded-full border-4 border-custom-blue absolute top-4 right-4 shadow-lg"
                   />
-                  <h3 className="text-xl font-semibold text-custom-blue mb-4">
-                    Company overview
+                  <h3 className="text-2xl font-semibold text-custom-blue mb-6">
+                    Company Overview
                   </h3>
-                  <p className="text-black">
-                    <span className="font-medium">Company name:</span>{" "}
-                    {selectedJob.companyName
-                      .split(" ")
-                      .map(
-                        (word) =>
-                          word.charAt(0).toUpperCase() +
-                          word.slice(1).toLowerCase()
-                      )
-                      .join(" ")}
-                  </p>
+                  <div className="text-black space-y-4">
+                    <p className="flex items-center">
+                      <span className="material-symbols-outlined mr-2 text-custom-blue">
+                        business
+                      </span>
+                      <span className="font-medium">Company Name:</span>{" "}
+                      {selectedJob.companyName
+                        .split(" ")
+                        .map(
+                          (word) =>
+                            word.charAt(0).toUpperCase() +
+                            word.slice(1).toLowerCase()
+                        )
+                        .join(" ")}
+                    </p>
 
-                  <p className="text-black">
-                    <span className="font-medium">Email:</span>{" "}
-                    {toSentenceCase(selectedJob.companyEmail)}
-                  </p>
-                  <p className="text-black">
-                    <span className="font-medium">Contact number:</span>{" "}
-                    {toSentenceCase(selectedJob.companyContact)}
-                  </p>
-                  <p className="text-black">
-                    <span className="font-medium">Address:</span>{" "}
-                    {selectedJob.companyLocation
-                      .split(" ")
-                      .map(
-                        (word) =>
-                          word.charAt(0).toUpperCase() +
-                          word.slice(1).toLowerCase()
-                      )
-                      .join(" ")}
-                  </p>
-                  <p className="text-black">
-                    <span className="font-medium">City:</span>{" "}
-                    {selectedJob.companyCity
-                      .split(" ")
-                      .map(
-                        (word) =>
-                          word.charAt(0).toUpperCase() +
-                          word.slice(1).toLowerCase()
-                      )
-                      .join(" ")}
-                  </p>
+                    <p className="flex items-center">
+                      <span className="material-symbols-outlined mr-2 text-custom-blue">
+                        email
+                      </span>
+                      <span className="font-medium">Email:</span>{" "}
+                      {toSentenceCase(selectedJob.companyEmail)}
+                    </p>
 
-                  <p className="text-black mt-4 text-sm leading-relaxed">
+                    <p className="flex items-center">
+                      <span className="material-symbols-outlined mr-2 text-custom-blue">
+                        phone
+                      </span>
+                      <span className="font-medium">Contact Number:</span>{" "}
+                      {toSentenceCase(selectedJob.companyContact)}
+                    </p>
+
+                    <p className="flex items-center">
+                      <span className="material-symbols-outlined mr-2 text-custom-blue">
+                        location_on
+                      </span>
+                      <span className="font-medium">Address:</span>{" "}
+                      {selectedJob.companyLocation
+                        .split(" ")
+                        .map(
+                          (word) =>
+                            word.charAt(0).toUpperCase() +
+                            word.slice(1).toLowerCase()
+                        )
+                        .join(" ")}
+                    </p>
+
+                    <p className="flex items-center">
+                      <span className="material-symbols-outlined mr-2 text-custom-blue">
+                        location_city
+                      </span>
+                      <span className="font-medium">City:</span>{" "}
+                      {selectedJob.companyCity
+                        .split(" ")
+                        .map(
+                          (word) =>
+                            word.charAt(0).toUpperCase() +
+                            word.slice(1).toLowerCase()
+                        )
+                        .join(" ")}
+                    </p>
+                  </div>
+
+                  <div className="text-black mt-6 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
                     {selectedJob.companyDescription.charAt(0).toUpperCase() +
                       selectedJob.companyDescription.slice(1).toLowerCase()}
-                  </p>
+                  </div>
                 </div>
               )}
             </div>
@@ -799,43 +823,54 @@ const JobListing = () => {
       {/* Application History Modal */}
       {isApplicationHistoryModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg relative w-full max-w-2xl">
+          <div className="bg-white p-8 rounded-xl shadow-2xl relative w-full max-w-2xl border border-gray-200">
             <button
               onClick={() => setIsApplicationHistoryModalOpen(false)}
-              className="absolute top-2 right-2 text-2xl font-bold text-gray-700 hover:text-gray-900"
+              className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 transition duration-200 text-3xl"
+              aria-label="Close modal"
             >
               &times;
             </button>
-            <h3 className="text-xl font-bold text-gray-800 mb-6 text-center">
+            <h3 className="text-2xl font-semibold text-gray-700 mb-6 text-center">
               Application History
             </h3>
             {applicationHistory.length > 0 ? (
-              <div className="overflow-y-auto max-h-96">
-                <table className="min-w-full bg-white shadow-md rounded-lg">
+              <div className="overflow-y-auto max-h-80 border-t border-gray-200 pt-4">
+                <table className="min-w-full bg-white">
                   <thead>
-                    <tr className="bg-gray-200 text-gray-700">
-                      <th className="py-3 px-6 text-left">Position</th>
-                      <th className="py-3 px-6 text-left">Company</th>
-                      <th className="py-3 px-6 text-left">Status</th>
-                      <th className="py-3 px-6 text-left">Date Applied</th>
+                    <tr className="bg-gray-100 text-gray-600 text-sm uppercase tracking-wider">
+                      <th className="py-3 px-4 text-left">Position</th>
+                      <th className="py-3 px-4 text-left">Company</th>
+                      <th className="py-3 px-4 text-left">Status</th>
+                      <th className="py-3 px-4 text-left">Date Applied</th>
                     </tr>
                   </thead>
                   <tbody>
                     {applicationHistory.map((application, index) => (
                       <tr
                         key={index}
-                        className="border-b border-gray-200 hover:bg-gray-100 transition duration-200"
+                        className="hover:bg-gray-50 transition duration-150 text-gray-800"
                       >
-                        <td className="py-3 px-6 text-left">
+                        <td className="py-3 px-4">
                           {application.position_name}
                         </td>
-                        <td className="py-3 px-6 text-left">
+                        <td className="py-3 px-4">
                           {application.company_name}
                         </td>
-                        <td className="py-3 px-6 text-left">
-                          {application.status}
+                        <td className="py-3 px-4">
+                          <span
+                            className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                              application.status === "Approved"
+                                ? "bg-green-100 text-green-600"
+                                : application.status === "Pending"
+                                ? "bg-yellow-100 text-yellow-600"
+                                : "bg-red-100 text-red-600"
+                            }`}
+                          >
+                            {application.status}
+                          </span>
                         </td>
-                        <td className="py-3 px-6 text-left">
+                        <td className="py-3 px-4">
                           {new Date(
                             application.date_created
                           ).toLocaleDateString()}
@@ -846,7 +881,7 @@ const JobListing = () => {
                 </table>
               </div>
             ) : (
-              <p className="text-center text-gray-500">
+              <p className="text-center text-gray-500 mt-6">
                 No application history found.
               </p>
             )}
