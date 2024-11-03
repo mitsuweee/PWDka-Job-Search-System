@@ -20,6 +20,10 @@ const ViewApplicants = () => {
 
   const navigate = useNavigate();
 
+  const handleBackClick = () => {
+    navigate(-1);
+  };
+
   const filteredApplicants = applicants.filter((applicant) =>
     selectedStatus === "All" ? true : applicant.status === selectedStatus
   );
@@ -306,23 +310,45 @@ const ViewApplicants = () => {
       </aside>
 
       <div className="flex-1 p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-custom-blue">
+        <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center mb-6 space-y-4 sm:space-y-0">
+          {/* Back Button */}
+          <button
+            className="text-blue-900 hover:text-blue-700 text-base flex items-center w-full sm:w-auto"
+            onClick={handleBackClick}
+          >
+            ← Back
+          </button>
+
+          {/* Header Title */}
+          <h2 className="text-xl sm:text-2xl font-bold text-custom-blue text-left w-full sm:w-auto">
             Applicants for{" "}
             <span className="font-extrabold text-blue-900">{jobName}</span> (
             {applicants.length})
           </h2>
 
-          <div className="relative">
+          {/* Filter and Status Selection */}
+          <div className="flex items-center space-x-3 w-full sm:w-auto">
             <button
-              className="py-2 px-4 mb-3 rounded-lg bg-blue-600 text-white"
+              className="py-2 px-4 w-full sm:w-auto rounded-lg bg-blue-600 text-white"
               onClick={() => setIsFilterOpen(!isFilterOpen)}
             >
               Filter
             </button>
+            <select
+              value={selectedStatus}
+              onChange={(e) => setSelectedStatus(e.target.value)}
+              className="py-2 px-4 border border-gray-300 rounded-lg shadow-md bg-blue-600 text-white"
+            >
+              <option value="All">All</option>
+              <option value="Reviewed">Reviewed</option>
+              <option value="Pending">Pending</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+
+            {/* Dropdown menu for Filter Options */}
             {isFilterOpen && (
               <div
-                className="absolute right-0 mt-2 space-y-2 bg-white p-4 shadow-lg rounded-lg"
+                className="absolute right-0 mt-2 space-y-2 bg-white p-4 shadow-lg rounded-lg w-48 sm:w-auto"
                 onClick={(e) => e.stopPropagation()}
               >
                 <button
@@ -360,24 +386,12 @@ const ViewApplicants = () => {
           </div>
         </div>
 
-        <div className="mb-4 flex justify-end">
-          <select
-            value={selectedStatus}
-            onChange={(e) => setSelectedStatus(e.target.value)}
-            className="py-2 px-4 border border-gray-300 rounded-lg shadow-md"
-          >
-            <option value="All">All</option>
-            <option value="Reviewed">Reviewed</option>
-            <option value="Pending">Pending</option>
-            <option value="Rejected">Rejected</option>
-          </select>
-        </div>
-
         {/* Applicants Table */}
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white shadow-lg rounded-lg overflow-hidden">
+            {/* Table Header for Desktop */}
             <thead>
-              <tr className="bg-blue-600 text-white text-left text-sm uppercase tracking-wider">
+              <tr className="bg-blue-600 text-white text-left text-sm uppercase tracking-wider hidden sm:table-row">
                 <th className="py-4 px-6 font-semibold">Full Name</th>
                 <th className="py-4 px-6 font-semibold">Email</th>
                 <th className="py-4 px-6 font-semibold">Date Applied</th>
@@ -385,14 +399,17 @@ const ViewApplicants = () => {
                 <th className="py-4 px-6 font-semibold text-center">Actions</th>
               </tr>
             </thead>
+
+            {/* Table Body */}
             <tbody>
               {sortedApplicants.length > 0 ? (
                 sortedApplicants.map((applicant) => (
                   <tr
                     key={applicant.id}
-                    className="border-b border-gray-200 hover:bg-gray-50 transition duration-300"
+                    className="bg-gray-50 p-3 rounded-lg mb-2 shadow-md transition duration-300 sm:table-row flex flex-col"
                   >
-                    <td className="py-4 px-6 text-gray-800">
+                    {/* Desktop Row - Displays in table format on larger screens */}
+                    <td className="py-4 px-6 text-gray-800 hidden sm:table-cell">
                       {applicant.fullName
                         .split(" ")
                         .map(
@@ -402,13 +419,13 @@ const ViewApplicants = () => {
                         )
                         .join(" ")}
                     </td>
-                    <td className="py-4 px-6 text-gray-800">
+                    <td className="py-4 px-6 text-gray-800 hidden sm:table-cell">
                       {applicant.email}
                     </td>
-                    <td className="py-4 px-6 text-gray-800">
+                    <td className="py-4 px-6 text-gray-800 hidden sm:table-cell">
                       {applicant.dateCreated}
                     </td>
-                    <td className="py-4 px-6 text-center">
+                    <td className="py-4 px-6 text-center hidden sm:table-cell">
                       <select
                         value={applicant.status}
                         onChange={(e) =>
@@ -422,7 +439,7 @@ const ViewApplicants = () => {
                         <option value="Rejected">Rejected</option>
                       </select>
                     </td>
-                    <td className="py-4 px-6 text-center flex justify-center space-x-2">
+                    <td className="py-4 px-6 text-center hidden sm:flex justify-center space-x-2">
                       <button
                         className="py-1 px-3 bg-green-500 text-white rounded-md shadow-sm hover:bg-green-600 transition duration-200 text-sm font-medium"
                         onClick={() => openProfileModal(applicant.profile)}
@@ -442,6 +459,66 @@ const ViewApplicants = () => {
                         Delete
                       </button>
                     </td>
+
+                    {/* Mobile Row - Displays as a stacked card format on smaller screens */}
+                    <td className="sm:hidden flex flex-col text-black text-xs py-2 px-3">
+                      <div className="mb-1">
+                        <span className="font-semibold">Name: </span>
+                        {applicant.fullName
+                          .split(" ")
+                          .map(
+                            (word) =>
+                              word.charAt(0).toUpperCase() +
+                              word.slice(1).toLowerCase()
+                          )
+                          .join(" ")}
+                      </div>
+                      <div className="mb-1">
+                        <span className="font-semibold">Email: </span>
+                        {applicant.email}
+                      </div>
+                      <div className="mb-1">
+                        <span className="font-semibold">Date: </span>
+                        {applicant.dateCreated}
+                      </div>
+
+                      {/* Status and Actions for Mobile */}
+                      <div className="flex justify-between items-center mt-2">
+                        <select
+                          value={applicant.status}
+                          onChange={(e) =>
+                            handleStatusChange(applicant.id, e.target.value)
+                          }
+                          className="py-1 px-2 bg-yellow-500 text-white font-semibold rounded-md shadow-sm hover:bg-yellow-600 transition duration-200 text-xs"
+                        >
+                          <option value="Under Review">Under Review</option>
+                          <option value="Reviewed">Reviewed</option>
+                          <option value="Pending">Pending</option>
+                          <option value="Rejected">Rejected</option>
+                        </select>
+
+                        <div className="flex space-x-1">
+                          <button
+                            className="py-1 px-2 bg-green-500 text-white rounded-md shadow-sm hover:bg-green-600 transition duration-200 text-xs font-medium"
+                            onClick={() => openProfileModal(applicant.profile)}
+                          >
+                            Profile
+                          </button>
+                          <button
+                            className="py-1 px-2 bg-blue-500 text-white rounded-md shadow-sm hover:bg-blue-600 transition duration-200 text-xs font-medium"
+                            onClick={() => openResumeModal(applicant.resume)}
+                          >
+                            Resume
+                          </button>
+                          <button
+                            className="py-1 px-2 bg-red-500 text-white rounded-md shadow-sm hover:bg-red-600 transition duration-200 text-xs font-medium"
+                            onClick={() => openDeleteModal(applicant.id)}
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    </td>
                   </tr>
                 ))
               ) : (
@@ -457,6 +534,7 @@ const ViewApplicants = () => {
             </tbody>
           </table>
         </div>
+
         {isDeleteModalOpen && (
           <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
             <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
@@ -498,22 +576,43 @@ const ViewApplicants = () => {
         {/* Resume Modal */}
         {isResumeModalOpen && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-            <div className="bg-white p-8 rounded-lg shadow-lg relative w-full max-w-6xl">
+            <div className="bg-white p-4 sm:p-6 md:p-8 rounded-lg shadow-lg relative w-full max-w-sm sm:max-w-md md:max-w-4xl lg:max-w-6xl mx-4 md:mx-0">
+              {/* Close Button */}
               <button
                 onClick={closeResumeModal}
-                className="absolute top-2 right-2 text-2xl font-bold text-gray-700 hover:text-gray-900"
+                className="absolute top-3 right-3 text-lg sm:text-xl md:text-2xl font-bold text-gray-700 hover:text-gray-900"
+                aria-label="Close Resume Modal"
               >
                 &times;
               </button>
-              <h3 className="text-lg font-semibold mb-4">Applicant's Resume</h3>
-              <embed
+
+              {/* Modal Header */}
+              <h3 className="text-center text-sm sm:text-base md:text-lg font-semibold mb-4">
+                Applicant's Resume
+              </h3>
+
+              {/* PDF Embed via iframe */}
+              <iframe
                 src={`data:application/pdf;base64,${selectedResume}`}
                 type="application/pdf"
                 width="100%"
-                height="800px"
                 className="w-full border rounded-lg shadow-sm"
+                style={{ height: "50vh", maxHeight: "75vh" }}
                 aria-label="PDF Preview"
-              />
+              >
+                {/* Fallback message */}
+                <p className="text-center text-gray-500">
+                  Unable to display PDF.{" "}
+                  <a
+                    href={`data:application/pdf;base64,${selectedResume}`}
+                    download="resume.pdf"
+                    className="text-blue-600 underline"
+                  >
+                    Download here
+                  </a>
+                  .
+                </p>
+              </iframe>
             </div>
           </div>
         )}
