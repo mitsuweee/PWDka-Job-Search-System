@@ -161,13 +161,21 @@ const PostJob = () => {
         </div>
       )}
 
+      <button
+        className={`md:hidden bg-custom-blue text-white p-4 fixed top-4 left-4 z-50 rounded-xl mt-11 transition-transform ${
+          isSidebarOpen ? "hidden" : ""
+        }`}
+        onClick={() => setIsSidebarOpen(true)}
+      >
+        &#9776;
+      </button>
+
       {/* Sidebar */}
       <aside
         className={`bg-custom-blue w-full md:w-[300px] lg:w-[250px] p-4 flex flex-col items-center md:relative fixed top-0 left-0 min-h-screen h-full transition-transform transform ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 z-50 md:z-auto`}
       >
-        {/* Logo Section */}
         <div className="w-full flex justify-center items-center mb-6 p-2 bg-white rounded-lg">
           <img
             src="/imgs/LOGO PWDKA.png" // Replace with the actual path to your logo
@@ -175,8 +183,6 @@ const PostJob = () => {
             className="w-26 h-19 object-contain"
           />
         </div>
-
-        {/* Close Button for Mobile */}
         <button
           className="text-white md:hidden self-end text-3xl"
           onClick={() => setIsSidebarOpen(false)}
@@ -196,9 +202,6 @@ const PostJob = () => {
               ? "bg-blue-900 text-gray-200"
               : "bg-gray-200 text-blue-900"
           } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
-          }}
         >
           <span className="material-symbols-outlined text-xl mr-4">
             dashboard
@@ -211,7 +214,6 @@ const PostJob = () => {
           Job Management
         </h2>
         <hr className="border-gray-400 w-full mb-4" />
-
         <a
           href="/dashboard/postjob"
           className={`${
@@ -219,14 +221,10 @@ const PostJob = () => {
               ? "bg-blue-900 text-gray-200"
               : "bg-gray-200 text-blue-900"
           } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
-          }}
         >
           <span className="material-symbols-outlined text-xl mr-4">work</span>
           <span className="flex-grow text-center">Post Job</span>
         </a>
-
         <a
           href="/dashboard/ViewJobs"
           className={`${
@@ -234,9 +232,6 @@ const PostJob = () => {
               ? "bg-blue-900 text-gray-200"
               : "bg-gray-200 text-blue-900"
           } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
-          style={{
-            boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
-          }}
         >
           <span className="material-symbols-outlined text-xl mr-4">list</span>
           <span className="flex-grow text-center">View All Job Listings</span>
@@ -247,6 +242,19 @@ const PostJob = () => {
           Account
         </h2>
         <hr className="border-gray-400 w-full mb-4" />
+        <a
+          href="/dashboard/viewadmin"
+          className={`${
+            window.location.pathname === "/dashboard/viewadmin"
+              ? "bg-blue-900 text-gray-200"
+              : "bg-gray-200 text-blue-900"
+          } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
+        >
+          <span className="material-symbols-outlined text-xl mr-4">
+            manage_accounts
+          </span>
+          <span className="flex-grow text-center">Admin Management</span>
+        </a>
 
         {/* Logout Button */}
         <button
