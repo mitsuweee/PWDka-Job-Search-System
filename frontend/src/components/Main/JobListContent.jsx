@@ -539,34 +539,45 @@ const JobListing = () => {
                           Salary: Hidden
                         </p>
                       )}
+
                       <p className="text-lg font-medium text-gray-600 mt-6">
                         {toSentenceCase(job.description)}
                       </p>
-
                       <p className="text-lg font-medium text-gray-800 mt-6">
                         Qualifications
                       </p>
-                      <ul className="text-gray-700 list-disc pl-4">
-                        {job.qualifications
-                          .split("/")
-                          .map((qualification, index) => (
-                            <li key={index}>
-                              {toSentenceCase(qualification.trim())}
-                            </li>
-                          ))}
-                      </ul>
+                      {job?.qualifications &&
+                      job.qualifications.includes("|") ? (
+                        <ul className="text-gray-700 list-disc pl-4">
+                          {job.qualifications
+                            .split("|") // Split by "|", handling any spaces around it
+                            .map((qualification, index) => (
+                              <li key={index}>
+                                {qualification.trim().charAt(0).toUpperCase() +
+                                  qualification.trim().slice(1).toLowerCase()}
+                              </li>
+                            ))}
+                        </ul>
+                      ) : (
+                        <p className="text-gray-700">
+                          {job?.qualifications || "No qualifications listed"}
+                        </p>
+                      )}
 
                       <p className="text-lg font-medium text-gray-800 mt-6">
                         Requirements
                       </p>
-                      <ul className="text-gray-700 list-disc pl-4">
-                        {job.requirements
-                          .split("/")
-                          .map((requirement, index) => (
-                            <li key={index}>
-                              {toSentenceCase(requirement.trim())}
-                            </li>
-                          ))}
+                      <ul className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner list-disc pl-4">
+                        {job?.requirement
+                          ? job.requirement
+                              .split("|")
+                              .map((part, index) => (
+                                <li key={index}>
+                                  {part.trim().charAt(0).toUpperCase() +
+                                    part.trim().slice(1).toLowerCase()}
+                                </li>
+                              ))
+                          : null}
                       </ul>
 
                       <div className="mt-6 flex flex-col md:flex-row md:space-x-4 items-center space-y-4 md:space-y-0">
@@ -747,7 +758,7 @@ const JobListing = () => {
                 </p>
                 <ul className="text-gray-700 list-disc pl-4">
                   {selectedJob.qualifications
-                    .split("/")
+                    .split("|")
                     .map((qualification, index) => (
                       <li key={index}>
                         {toSentenceCase(qualification.trim())}
@@ -759,7 +770,7 @@ const JobListing = () => {
                 </p>
                 <ul className="text-gray-700 list-disc pl-4">
                   {selectedJob.requirements
-                    .split("/")
+                    .split("|")
                     .map((requirement, index) => (
                       <li key={index}>{toSentenceCase(requirement.trim())}</li>
                     ))}

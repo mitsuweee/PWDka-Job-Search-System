@@ -337,11 +337,27 @@ const AdminViewJobs = () => {
                   className="border-b border-gray-200 hover:bg-gray-50 transition duration-300"
                 >
                   <td className="py-4 px-6 text-gray-800 text-sm md:text-base break-words">
-                    {job.company_name}
+                    {job.company_name
+                      .split(" ")
+                      .map(
+                        (word) =>
+                          word.charAt(0).toUpperCase() +
+                          word.slice(1).toLowerCase()
+                      )
+                      .join(" ")}
                   </td>
+
                   <td className="py-4 px-6 text-gray-800 text-sm md:text-base break-words">
-                    {job.position_name}
+                    {job.position_name
+                      .split(" ")
+                      .map(
+                        (word) =>
+                          word.charAt(0).toUpperCase() +
+                          word.slice(1).toLowerCase()
+                      )
+                      .join(" ")}
                   </td>
+
                   <td className="py-4 px-6 text-center">
                     <button
                       onClick={() => handleViewJob(job.id)}
@@ -429,7 +445,14 @@ const AdminViewJobs = () => {
                     Company:
                   </p>
                   <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
-                    {job.companyName}
+                    {job.companyName
+                      .split(" ")
+                      .map(
+                        (word) =>
+                          word.charAt(0).toUpperCase() +
+                          word.slice(1).toLowerCase()
+                      )
+                      .join(" ")}
                   </p>
                 </div>
                 <div>
@@ -440,7 +463,14 @@ const AdminViewJobs = () => {
                     Job Title:
                   </p>
                   <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
-                    {job.jobName}
+                    {job.jobName
+                      .split(" ")
+                      .map(
+                        (word) =>
+                          word.charAt(0).toUpperCase() +
+                          word.slice(1).toLowerCase()
+                      )
+                      .join(" ")}
                   </p>
                 </div>
               </div>
@@ -453,7 +483,8 @@ const AdminViewJobs = () => {
                   Description:
                 </p>
                 <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
-                  {job.description}
+                  {job.description.charAt(0).toUpperCase() +
+                    job.description.slice(1)}
                 </p>
               </div>
 
@@ -465,18 +496,28 @@ const AdminViewJobs = () => {
                   </span>{" "}
                   Requirements:
                 </p>
-                <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
-                  {job.requirements}
-                </p>
+                <ul className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner list-disc pl-4">
+                  {job.requirements.split("|").map((requirement, index) => (
+                    <li key={index}>
+                      {requirement.trim().charAt(0).toUpperCase() +
+                        requirement.trim().slice(1).toLowerCase()}
+                    </li>
+                  ))}
+                </ul>
               </div>
               <div>
                 <p className="text-black font-semibold text-sm leading-relaxed  flex items-center">
                   <span className="material-symbols-outlined mr-1">school</span>{" "}
                   Qualification:
                 </p>
-                <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
-                  {job.qualification}
-                </p>
+                <ul className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner list-disc pl-4">
+                  {job.qualification.split("|").map((qualification, index) => (
+                    <li key={index}>
+                      {qualification.trim().charAt(0).toUpperCase() +
+                        qualification.trim().slice(1).toLowerCase()}
+                    </li>
+                  ))}
+                </ul>
               </div>
 
               {/* Salary and Position Type */}
@@ -513,9 +554,13 @@ const AdminViewJobs = () => {
                   </span>{" "}
                   Disabilities:
                 </p>
-                <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
-                  {job.disabilityTypes}
-                </p>
+                <ul className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner list-disc pl-4">
+                  {job.disabilityTypes
+                    .split(",") // Assuming disability types are separated by commas; adjust as needed
+                    .map((disability, index) => (
+                      <li key={index}>{disability.trim()}</li>
+                    ))}
+                </ul>
               </div>
             </div>
 

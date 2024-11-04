@@ -340,8 +340,16 @@ const AdminViewComp = () => {
                   className="border-b border-gray-200 hover:bg-gray-50 transition duration-300"
                 >
                   <td className="py-4 px-6 text-gray-800 text-sm md:text-base break-words">
-                    {company.name}
+                    {company.name
+                      .split(" ")
+                      .map(
+                        (word) =>
+                          word.charAt(0).toUpperCase() +
+                          word.slice(1).toLowerCase()
+                      )
+                      .join(" ")}
                   </td>
+
                   <td className="py-4 px-6 text-gray-800 text-sm md:text-base break-words">
                     {company.city
                       .split(" ")
@@ -442,7 +450,14 @@ const AdminViewComp = () => {
                     Company Name:
                   </p>
                   <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
-                    {company.companyName}
+                    {company.companyName
+                      .split(" ")
+                      .map(
+                        (word) =>
+                          word.charAt(0).toUpperCase() +
+                          word.slice(1).toLowerCase()
+                      )
+                      .join(" ")}
                   </p>
                 </div>
                 <div>
@@ -453,7 +468,14 @@ const AdminViewComp = () => {
                     City:
                   </p>
                   <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
-                    {company.city}
+                    {company.city
+                      .split(" ")
+                      .map(
+                        (word) =>
+                          word.charAt(0).toUpperCase() +
+                          word.slice(1).toLowerCase()
+                      )
+                      .join(" ")}
                   </p>
                 </div>
               </div>
@@ -463,7 +485,14 @@ const AdminViewComp = () => {
                   Address:
                 </p>
                 <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
-                  {company.address}
+                  {company.address
+                    .split(" ")
+                    .map(
+                      (word) =>
+                        word.charAt(0).toUpperCase() +
+                        word.slice(1).toLowerCase()
+                    )
+                    .join(" ")}
                 </p>
               </div>
               <div>
@@ -474,7 +503,8 @@ const AdminViewComp = () => {
                   Description:
                 </p>
                 <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
-                  {company.description}
+                  {company.description.charAt(0).toUpperCase() +
+                    company.description.slice(1)}
                 </p>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

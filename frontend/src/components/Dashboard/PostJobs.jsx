@@ -340,9 +340,9 @@ const PostJob = () => {
                 value={jobDetails.requirements}
                 onChange={(e) => {
                   let value = e.target.value;
-                  // If the last character is a slash, remove it
-                  if (value.endsWith("/")) {
-                    value = value.slice(0, -1);
+                  // If the last characters are " | ", remove them
+                  if (value.endsWith(" | ")) {
+                    value = value.slice(0, -3);
                   }
                   handleChange({ target: { name: "requirements", value } });
                 }}
@@ -350,15 +350,15 @@ const PostJob = () => {
                   if (e.key === "Enter") {
                     e.preventDefault();
                     let value = jobDetails.requirements;
-                    if (!value.endsWith("/")) {
-                      value += "/";
+                    if (!value.endsWith(" | ")) {
+                      value += " | ";
                     }
                     value += "\n";
                     handleChange({ target: { name: "requirements", value } });
                   }
                 }}
                 className="p-3 w-full border-2 border-blue-300 rounded-lg shadow-sm h-28 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                placeholder="Requirement1/ Requirement2/ Requirement3 *Enter Every Requirement*"
+                placeholder="Requirement1 | Requirement2 | Requirement3 *Enter Every Requirement*"
                 required
               />
             </div>
@@ -373,7 +373,7 @@ const PostJob = () => {
                 onChange={(e) => {
                   let value = e.target.value;
                   // If the last character is a slash, remove it
-                  if (value.endsWith("/")) {
+                  if (value.endsWith("|")) {
                     value = value.slice(0, -1);
                   }
                   handleChange({ target: { name: "qualifications", value } });
@@ -382,8 +382,8 @@ const PostJob = () => {
                   if (e.key === "Enter") {
                     e.preventDefault();
                     let value = jobDetails.qualifications;
-                    if (!value.endsWith("/")) {
-                      value += "/";
+                    if (!value.endsWith("|")) {
+                      value += "|";
                     }
                     value += "\n";
                     handleChange({ target: { name: "qualifications", value } });

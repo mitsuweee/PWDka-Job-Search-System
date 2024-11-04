@@ -538,7 +538,16 @@ const ViewJobs = () => {
                   </span>{" "}
                   Company Name:
                 </p>
-                <p className="text-gray-600 mt-2">{job?.company_name}</p>
+                <p className="text-gray-600 mt-2">
+                  {job?.company_name
+                    .split(" ")
+                    .map(
+                      (word) =>
+                        word.charAt(0).toUpperCase() +
+                        word.slice(1).toLowerCase()
+                    )
+                    .join(" ")}
+                </p>
               </div>
 
               <div className="bg-gray-100 p-4 rounded-lg shadow-inner">
@@ -546,7 +555,33 @@ const ViewJobs = () => {
                   <span className="material-symbols-outlined mr-1">title</span>{" "}
                   Job Title:
                 </p>
-                <p className="text-gray-600 mt-2">{job?.position_name}</p>
+                <p className="text-gray-600 mt-2">
+                  {job?.position_name
+                    .split(" ")
+                    .map(
+                      (word) =>
+                        word.charAt(0).toUpperCase() +
+                        word.slice(1).toLowerCase()
+                    )
+                    .join(" ")}
+                </p>
+              </div>
+
+              <div className="bg-gray-100 p-4 rounded-lg shadow-inner">
+                <p className="text-black font-semibold flex items-center">
+                  <span className="material-symbols-outlined mr-1">radar</span>{" "}
+                  Job Level:
+                </p>
+                <p className="text-gray-600 mt-2">
+                  {job?.level
+                    .split(" ")
+                    .map(
+                      (word) =>
+                        word.charAt(0).toUpperCase() +
+                        word.slice(1).toLowerCase()
+                    )
+                    .join(" ")}
+                </p>
               </div>
 
               <div className="bg-gray-100 p-4 rounded-lg shadow-inner">
@@ -556,26 +591,18 @@ const ViewJobs = () => {
                   </span>{" "}
                   Description:
                 </p>
-                <p className="text-gray-600 mt-2">
+                <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
                   {job?.description
                     ? job.description
-                        .split(".")
+                        .split(".") // Split by periods to find each sentence
                         .map(
                           (sentence) =>
                             sentence.trim().charAt(0).toUpperCase() +
                             sentence.trim().slice(1).toLowerCase()
                         )
-                        .join(". ")
+                        .join(". ") // Join back with ". " to form a paragraph
                     : ""}
                 </p>
-              </div>
-
-              <div className="bg-gray-100 p-4 rounded-lg shadow-inner">
-                <p className="text-black font-semibold flex items-center">
-                  <span className="material-symbols-outlined mr-1">radar</span>{" "}
-                  Job Level:
-                </p>
-                <p className="text-gray-600 mt-2">{job?.level}</p>
               </div>
 
               <div className="bg-gray-100 p-4 rounded-lg shadow-inner">
@@ -583,18 +610,18 @@ const ViewJobs = () => {
                   <span className="material-symbols-outlined mr-1">build</span>{" "}
                   Requirements:
                 </p>
-                <p className="text-gray-600 mt-2">
+                <ul className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner list-disc pl-4">
                   {job?.requirement
                     ? job.requirement
-                        .split(",")
-                        .map(
-                          (part) =>
-                            part.trim().charAt(0).toUpperCase() +
-                            part.trim().slice(1).toLowerCase()
-                        )
-                        .join(", ")
-                    : ""}
-                </p>
+                        .split("|")
+                        .map((part, index) => (
+                          <li key={index}>
+                            {part.trim().charAt(0).toUpperCase() +
+                              part.trim().slice(1).toLowerCase()}
+                          </li>
+                        ))
+                    : null}
+                </ul>
               </div>
 
               <div className="bg-gray-100 p-4 rounded-lg shadow-inner">
@@ -602,34 +629,28 @@ const ViewJobs = () => {
                   <span className="material-symbols-outlined mr-1">school</span>{" "}
                   Qualification:
                 </p>
-                <p className="text-gray-600 mt-2">
+                <ul className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner list-disc pl-4">
                   {job?.qualification
                     ? job.qualification
-                        .split(",")
-                        .map(
-                          (part) =>
-                            part.trim().charAt(0).toUpperCase() +
-                            part.trim().slice(1).toLowerCase()
-                        )
-                        .join(", ")
-                    : ""}
-                </p>
+                        .split("|")
+                        .map((part, index) => (
+                          <li key={index}>
+                            {part.trim().charAt(0).toUpperCase() +
+                              part.trim().slice(1).toLowerCase()}
+                          </li>
+                        ))
+                    : null}
+                </ul>
               </div>
 
               <div className="flex justify-between bg-gray-100 p-4 rounded-lg shadow-inner">
                 <span className="text-black font-semibold flex items-center">
-                  <span className="material-symbols-outlined mr-1">
-                    attach_money
-                  </span>{" "}
                   Min Salary:
                   <span className="text-gray-600 ml-2">
                     ₱ {job?.minimum_salary}
                   </span>
                 </span>
                 <span className="text-black font-semibold flex items-center">
-                  <span className="material-symbols-outlined mr-1">
-                    attach_money
-                  </span>{" "}
                   Max Salary:
                   <span className="text-gray-600 ml-2">
                     ₱ {job?.maximum_salary}
