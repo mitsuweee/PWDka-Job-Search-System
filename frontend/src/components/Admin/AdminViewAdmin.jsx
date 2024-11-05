@@ -81,7 +81,7 @@ const AdminViewAdmin = () => {
         {/* Logo Section */}
         <div className="w-full flex justify-center items-center mb-6 p-2 bg-white rounded-lg">
           <img
-            src="/imgs/LOGO PWDKA.png" // Replace with the actual path to your logo
+            src="/imgs/LOGO PWDKA.png"
             alt="Logo"
             className="w-26 h-19 object-contain"
           />
@@ -234,6 +234,14 @@ const AdminViewAdmin = () => {
 
       <main className="flex-grow p-8">
         <h1 className="text-xl font-bold text-gray-700">View All Admins</h1>
+
+        {/* Floating Sign Up Button */}
+        <button
+          onClick={() => navigate("/admin/signup")} // Replace with your actual signup route
+          className="fixed top-8 right-8 bg-blue-500 text-white text-sm px-4 py-2 rounded-full shadow-md hover:bg-blue-700 transition duration-200"
+        >
+          Sign Up Admin
+        </button>
 
         <div className="overflow-x-auto mt-4">
           <table className="min-w-full bg-white rounded-lg shadow-lg overflow-hidden">
