@@ -3,7 +3,6 @@ import Navbar from "../components/Navbar.jsx";
 import Footer from "../components/Footer.jsx";
 import DashboardAdmin from "../components/Admin/AdminDash.jsx";
 
-
 function Dashboard() {
   return (
     <div className="bg-[#E3EDF7] min-h-screen flex flex-col">
@@ -11,11 +10,11 @@ function Dashboard() {
         <Navbar />
       </header> */}
       <main className="flex-1 flex">
-       <DashboardAdmin/>
+        <DashboardAdmin />
       </main>
-      <footer>
+      {/* <footer>
         <Footer />
-      </footer>
+      </footer> */}
     </div>
   );
 }

@@ -237,7 +237,7 @@ const AdminViewAdmin = () => {
 
         {/* Floating Sign Up Button */}
         <button
-          onClick={() => navigate("/admin/signup")} // Replace with your actual signup route
+          onClick={() => navigate("/admin/dashboard/AdminSignup")} // Replace with your actual signup route
           className="fixed top-8 right-8 bg-blue-500 text-white text-sm px-4 py-2 rounded-full shadow-md hover:bg-blue-700 transition duration-200"
         >
           Sign Up Admin

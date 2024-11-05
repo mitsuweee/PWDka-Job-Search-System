@@ -264,19 +264,6 @@ const PostJob = () => {
           Account
         </h2>
         <hr className="border-gray-400 w-full mb-4" />
-        <a
-          href="/dashboard/viewadmin"
-          className={`${
-            window.location.pathname === "/dashboard/viewadmin"
-              ? "bg-blue-900 text-gray-200"
-              : "bg-gray-200 text-blue-900"
-          } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
-        >
-          <span className="material-symbols-outlined text-xl mr-4">
-            manage_accounts
-          </span>
-          <span className="flex-grow text-center">Admin Management</span>
-        </a>
 
         {/* Logout Button */}
         <button
