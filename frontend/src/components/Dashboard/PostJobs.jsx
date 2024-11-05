@@ -557,7 +557,7 @@ const PostJob = () => {
                       key={category}
                       className="flex items-center space-x-3"
                     >
-                      <div className="relative">
+                      <div className="relative w-6 h-6">
                         <input
                           type="checkbox"
                           value={category}
