@@ -537,33 +537,46 @@ const PostJob = () => {
               </div>
             )} */}
             {showDisabilityOptions && (
-              <div className="col-span-1 bg-gray-100 p-4 rounded-lg shadow-md border border-gray-300">
-                <label className="block mb-2 text-gray-700 font-bold">
+              <div className="col-span-1 bg-white p-6 rounded-lg shadow-lg border border-gray-200 transition duration-200 ease-in-out">
+                <label className="block mb-4 text-gray-800 text-lg font-semibold">
                   Disability Categories
                 </label>
                 <button
                   type="button"
                   onClick={handleSelectAll}
-                  className="mb-2 p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                  className="mb-4 py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 active:bg-blue-800 transition duration-200 ease-in-out transform hover:scale-105"
                 >
                   {jobDetails.disabilityCategories.length ===
                   disabilityCategories.length
                     ? "Deselect All"
                     : "Select All"}
                 </button>
-                <div className="flex flex-col space-y-2">
+                <div className="grid grid-cols-1 gap-3">
                   {disabilityCategories.map((category) => (
-                    <label key={category} className="flex items-center">
-                      <input
-                        type="checkbox"
-                        value={category}
-                        checked={jobDetails.disabilityCategories.includes(
-                          category
+                    <label
+                      key={category}
+                      className="flex items-center space-x-3"
+                    >
+                      <div className="relative">
+                        <input
+                          type="checkbox"
+                          value={category}
+                          checked={jobDetails.disabilityCategories.includes(
+                            category
+                          )}
+                          onChange={handleCheckboxChange}
+                          className="appearance-none w-6 h-6 border-2 border-gray-400 rounded-md transition duration-200 checked:bg-blue-600 checked:border-blue-600 focus:outline-none"
+                        />
+                        {/* Centered Checkmark Icon */}
+                        {jobDetails.disabilityCategories.includes(category) && (
+                          <span className="absolute inset-0 flex items-center justify-center text-white text-lg font-bold">
+                            ✓
+                          </span>
                         )}
-                        onChange={handleCheckboxChange}
-                        className="mr-2"
-                      />
-                      {category}
+                      </div>
+                      <span className="text-gray-700 font-medium">
+                        {category}
+                      </span>
                     </label>
                   ))}
                 </div>
