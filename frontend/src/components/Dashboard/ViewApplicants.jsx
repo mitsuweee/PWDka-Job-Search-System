@@ -328,16 +328,11 @@ const ViewApplicants = () => {
 
           {/* Filter and Status Selection */}
           <div className="flex items-center space-x-3 w-full sm:w-auto">
-            <button
-              className="py-2 px-4 w-full sm:w-auto rounded-lg bg-blue-600 text-white"
-              onClick={() => setIsFilterOpen(!isFilterOpen)}
-            >
-              Filter
-            </button>
+            {/* Status Filter Dropdown */}
             <select
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value)}
-              className="py-2 px-4 border border-gray-300 rounded-lg shadow-md bg-blue-600 text-white"
+              className="py-2 px-4 border border-gray-300 rounded-lg shadow-md bg-custom-blue text-white"
             >
               <option value="All">All</option>
               <option value="Reviewed">Reviewed</option>
@@ -345,44 +340,20 @@ const ViewApplicants = () => {
               <option value="Rejected">Rejected</option>
             </select>
 
-            {/* Dropdown menu for Filter Options */}
-            {isFilterOpen && (
-              <div
-                className="absolute right-0 mt-2 space-y-2 bg-white p-4 shadow-lg rounded-lg w-48 sm:w-auto"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <button
-                  className={`py-2 px-4 rounded-lg w-full ${
-                    sortOption === "newest"
-                      ? "bg-blue-600 text-white"
-                      : "bg-gray-200 text-blue-900"
-                  }`}
-                  onClick={() => handleSortChange("newest")}
-                >
-                  Newest
-                </button>
-                <button
-                  className={`py-2 px-4 rounded-lg w-full ${
-                    sortOption === "oldest"
-                      ? "bg-blue-600 text-white"
-                      : "bg-gray-200 text-blue-900"
-                  }`}
-                  onClick={() => handleSortChange("oldest")}
-                >
-                  Oldest
-                </button>
-                <button
-                  className={`py-2 px-4 rounded-lg w-full ${
-                    sortOption === "a-z"
-                      ? "bg-blue-600 text-white"
-                      : "bg-gray-200 text-blue-900"
-                  }`}
-                  onClick={() => handleSortChange("a-z")}
-                >
-                  A-Z
-                </button>
-              </div>
-            )}
+            {/* Sorting Options Dropdown */}
+            <select
+              onChange={(e) => handleSortChange(e.target.value)}
+              className="py-2 px-4 border border-gray-300 rounded-lg shadow-md bg-custom-blue text-white"
+              defaultValue="Sort"
+            >
+              <option disabled value="Sort">
+                Sort By
+              </option>
+              <option value="newest">Newest</option>
+              <option value="oldest">Oldest</option>
+              <option value="a-z">A-Z</option>
+              <option value="z-a">Z-A</option>
+            </select>
           </div>
         </div>
 
