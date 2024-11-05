@@ -145,6 +145,28 @@ const PostJob = () => {
       }));
     }
   };
+  const disabilityCategories = [
+    "Visual Disability",
+    "Deaf or Hard of Hearing",
+    "Learning Disability",
+    "Mental Disability",
+    "Physical Disability (Orthopedic)",
+    "Psychosocial Disability",
+    "Speech and Language Impairment",
+    "Intellectual Disability",
+    "Cancer (RA11215)",
+    "Rare Disease (RA10747)",
+  ];
+
+  const handleSelectAll = () => {
+    setJobDetails((prevDetails) => ({
+      ...prevDetails,
+      disabilityCategories:
+        prevDetails.disabilityCategories.length === disabilityCategories.length
+          ? []
+          : disabilityCategories,
+    }));
+  };
 
   const toggleDisabilityOptions = () => {
     setShowDisabilityOptions(!showDisabilityOptions);
@@ -390,7 +412,7 @@ const PostJob = () => {
                   }
                 }}
                 className="p-3 w-full border-2 border-blue-300 rounded-lg shadow-sm h-28 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                placeholder="Qualification1/ Qualification2/ Qualification3 *Enter Every Qualification*"
+                placeholder="Qualification1 | Qualification2 | Qualification3 *Enter Every Qualification*"
                 required
               />
             </div>
@@ -486,12 +508,22 @@ const PostJob = () => {
               </button>
             </div>
 
-            {showDisabilityOptions && (
+            {/* {showDisabilityOptions && (
               <div className="col-span-1 bg-gray-100 p-4 rounded-lg shadow-md border border-gray-300">
                 <label className="block mb-2 text-gray-700 font-bold">
                   Disability Categories
                 </label>
                 <div className="flex flex-col space-y-2">
+                  <button
+                    type="button"
+                    onClick={handleSelectAll}
+                    className="mb-2 p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                  >
+                    {jobDetails.disabilityCategories.length ===
+                    disabilityCategories.length
+                      ? "Deselect All"
+                      : "Select All"}
+                  </button>
                   {[
                     "Visual Disability",
                     "Deaf or Hard of Hearing",
@@ -508,6 +540,39 @@ const PostJob = () => {
                       <input
                         type="checkbox"
                         value={category}
+                        onChange={handleCheckboxChange}
+                        className="mr-2"
+                      />
+                      {category}
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )} */}
+            {showDisabilityOptions && (
+              <div className="col-span-1 bg-gray-100 p-4 rounded-lg shadow-md border border-gray-300">
+                <label className="block mb-2 text-gray-700 font-bold">
+                  Disability Categories
+                </label>
+                <button
+                  type="button"
+                  onClick={handleSelectAll}
+                  className="mb-2 p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                >
+                  {jobDetails.disabilityCategories.length ===
+                  disabilityCategories.length
+                    ? "Deselect All"
+                    : "Select All"}
+                </button>
+                <div className="flex flex-col space-y-2">
+                  {disabilityCategories.map((category) => (
+                    <label key={category} className="flex items-center">
+                      <input
+                        type="checkbox"
+                        value={category}
+                        checked={jobDetails.disabilityCategories.includes(
+                          category
+                        )}
                         onChange={handleCheckboxChange}
                         className="mr-2"
                       />

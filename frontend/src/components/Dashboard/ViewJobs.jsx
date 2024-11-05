@@ -98,6 +98,27 @@ const ViewJobs = () => {
   //   setIsUpdateModalOpen(true);
   // };
 
+  const disabilityCategories = [
+    "Visual Disability",
+    "Deaf or Hard of Hearing",
+    "Learning Disability",
+    "Mental Disability",
+    "Physical Disability (Orthopedic)",
+    "Psychosocial Disability",
+    "Speech and Language Impairment",
+    "Intellectual Disability",
+    "Cancer (RA11215)",
+    "Rare Disease (RA10747)",
+  ];
+
+  const handleSelectAll = () => {
+    setSelectedDisabilityCategories((prevSelected) =>
+      prevSelected.length === disabilityCategories.length
+        ? []
+        : disabilityCategories.map((category) => normalizeText(category))
+    );
+  };
+
   const normalizeText = (text) => text.toLowerCase().trim();
 
   const handleUpdateJob = (jobData) => {
@@ -945,6 +966,16 @@ const ViewJobs = () => {
                     <label className="block mb-1 text-gray-700 font-bold">
                       Disability Categories
                     </label>
+                    <button
+                      type="button"
+                      onClick={handleSelectAll}
+                      className="mb-2 p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                    >
+                      {selectedDisabilityCategories.length ===
+                      disabilityCategories.length
+                        ? "Deselect All"
+                        : "Select All"}
+                    </button>
                     <div className="flex flex-wrap gap-4">
                       {[
                         "Deaf or Hard of Hearing",
