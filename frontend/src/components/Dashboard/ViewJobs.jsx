@@ -786,9 +786,29 @@ const ViewJobs = () => {
                   <textarea
                     name="requirements"
                     value={jobUpdate.requirements}
-                    onChange={handleChange}
-                    className="p-2 w-full border-2 border-blue-300 rounded-lg shadow-sm h-20 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    placeholder="Requirement1, Requirement2, Requirement3"
+                    onChange={(e) => {
+                      let value = e.target.value;
+                      // If the last characters are " | ", remove them
+                      if (value.endsWith(" | ")) {
+                        value = value.slice(0, -3);
+                      }
+                      handleChange({ target: { name: "requirements", value } });
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        let value = jobUpdate.requirements;
+                        if (!value.endsWith(" | ")) {
+                          value += " | ";
+                        }
+                        value += "\n";
+                        handleChange({
+                          target: { name: "requirements", value },
+                        });
+                      }
+                    }}
+                    className="p-3 w-full border-2 border-blue-300 rounded-lg shadow-sm h-28 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    placeholder="Requirement1 | Requirement2 | Requirement3 *Enter Every Requirement*"
                     required
                   />
                 </div>
@@ -800,9 +820,31 @@ const ViewJobs = () => {
                   <textarea
                     name="qualification"
                     value={jobUpdate.qualification}
-                    onChange={handleChange}
-                    className="p-2 w-full border-2 border-blue-300 rounded-lg shadow-sm h-20 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    placeholder="Qualification1, Qualification2, Qualification3"
+                    onChange={(e) => {
+                      let value = e.target.value;
+                      // If the last character is a slash, remove it
+                      if (value.endsWith(" | ")) {
+                        value = value.slice(0, -1);
+                      }
+                      handleChange({
+                        target: { name: "qualification", value },
+                      });
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        let value = jobUpdate.qualification;
+                        if (!value.endsWith(" | ")) {
+                          value += " | ";
+                        }
+                        value += "\n";
+                        handleChange({
+                          target: { name: "qualification", value },
+                        });
+                      }
+                    }}
+                    className="p-3 w-full border-2 border-blue-300 rounded-lg shadow-sm h-28 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    placeholder="Qualification1 | Qualification2 | Qualification3 *Enter Every Qualification*"
                     required
                   />
                 </div>
