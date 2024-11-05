@@ -178,10 +178,12 @@ const UserProf = () => {
         toast.success("Password updated successfully!");
         setIsModalOpen(false);
       })
-      .catch(function () {
-        toast.error(
-          "Failed to update password. Please check your current password."
-        );
+      .catch(function (error) {
+        const errorMessage =
+          error.response && error.response.data && error.response.data.message
+            ? error.response.data.message
+            : "Failed to update password. Please check your current password.";
+        toast.error(errorMessage);
       });
   };
 

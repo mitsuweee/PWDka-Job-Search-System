@@ -190,10 +190,11 @@ const ViewJobs = () => {
       })
       .catch((error) => {
         console.error(error);
-        toast.error("Error updating job.");
-      })
-      .finally(() => {
-        setIsLoading(false);
+        const errorMessage =
+          error.response && error.response.data && error.response.data.message
+            ? error.response.data.message
+            : "Error updating job. Please try again.";
+        toast.error(errorMessage);
       });
   };
 
