@@ -17,6 +17,7 @@ const ViewJobs = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredJobListings, setFilteredJobListings] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [sortOrder, setSortOrder] = useState("Newest");
   const [showDisabilityOptions, setShowDisabilityOptions] = useState(false);
   const [selectedDisabilityCategories, setSelectedDisabilityCategories] =
     useState([]);
@@ -50,6 +51,10 @@ const ViewJobs = () => {
         setIsLoading(false);
       });
   }, []);
+
+  useEffect(() => {
+    handleSearch({ target: { value: searchTerm } });
+  }, [sortOrder]);
 
   const handleViewJob = (jobId) => {
     const config = {
@@ -117,6 +122,27 @@ const ViewJobs = () => {
         ? []
         : disabilityCategories.map((category) => normalizeText(category))
     );
+  };
+
+  const handleSearch = (e) => {
+    const searchValue = e.target.value.toLowerCase();
+    setSearchTerm(searchValue);
+
+    const filteredJobs = jobListings
+      .filter((job) => job.position_name.toLowerCase().includes(searchValue))
+      .sort((a, b) => {
+        if (sortOrder === "A-Z")
+          return a.position_name.localeCompare(b.position_name);
+        if (sortOrder === "Z-A")
+          return b.position_name.localeCompare(a.position_name);
+        if (sortOrder === "Newest")
+          return new Date(b.date_created) - new Date(a.date_created);
+        if (sortOrder === "Oldest")
+          return new Date(a.date_created) - new Date(b.date_created);
+        return 0;
+      });
+
+    setFilteredJobListings(filteredJobs);
   };
 
   const normalizeText = (text) => text.toLowerCase().trim();
@@ -281,16 +307,6 @@ const ViewJobs = () => {
     setJobUpdate({});
   };
 
-  const handleSearch = (e) => {
-    const searchValue = e.target.value.toLowerCase();
-    setSearchTerm(searchValue);
-
-    const filteredJobs = jobListings.filter((job) =>
-      job.position_name.toLowerCase().includes(searchValue)
-    );
-    setFilteredJobListings(filteredJobs);
-  };
-
   const handleViewApplicants = (jobId) => {
     navigate(`/company/viewapplicants?id=${jobId}`);
   };
@@ -427,14 +443,30 @@ const ViewJobs = () => {
           View All Job Listings
         </h1>
 
-        <div className="flex justify-center my-4">
+        <div className="flex items-center justify-center mt-6 mb-4 p-4 bg-white rounded-lg shadow-md space-x-4">
           <input
             type="text"
+            placeholder="Search job listings..."
             value={searchTerm}
             onChange={handleSearch}
-            placeholder="Search job listings..."
-            className="p-2 border-2 border-blue-300 rounded-lg w-full md:w-1/2"
+            className="w-1/2 px-4 py-2 border border-gray-300 bg-gray-100 text-black rounded-lg focus:outline-none focus:border-blue-500 shadow-inner"
+            style={{ boxShadow: "inset 0px 4px 8px rgba(0, 0, 0, 0.1)" }}
           />
+          <div className="relative">
+            <select
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value)}
+              className="px-3 py-2 w-[130px] border border-gray-300 rounded-lg bg-blue-500 text-white font-semibold hover:bg-blue-600 focus:outline-none focus:border-blue-500 transition duration-200"
+            >
+              <option value="A-Z">A-Z</option>
+              <option value="Z-A">Z-A</option>
+              <option value="Newest">Newest</option>
+              <option value="Oldest">Oldest</option>
+            </select>
+            <span className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+              <span className="material-symbols-outlined text-white">sort</span>
+            </span>
+          </div>
         </div>
 
         {/* Table */}
@@ -963,21 +995,21 @@ const ViewJobs = () => {
                 </div>
 
                 {showDisabilityOptions && (
-                  <div className="col-span-2 bg-gray-100 p-3 rounded-lg shadow-md border border-gray-300">
-                    <label className="block mb-1 text-gray-700 font-bold">
+                  <div className="col-span-1 bg-white p-6 rounded-lg shadow-lg border border-gray-200 transition duration-200 ease-in-out">
+                    <label className="block mb-4 text-gray-800 text-lg font-semibold">
                       Disability Categories
                     </label>
                     <button
                       type="button"
                       onClick={handleSelectAll}
-                      className="mb-2 p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                      className="mb-4 py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 active:bg-blue-800 transition duration-200 ease-in-out transform hover:scale-105"
                     >
                       {selectedDisabilityCategories.length ===
                       disabilityCategories.length
                         ? "Deselect All"
                         : "Select All"}
                     </button>
-                    <div className="flex flex-wrap gap-4">
+                    <div className="grid grid-cols-1 gap-3">
                       {[
                         "Deaf or Hard of Hearing",
                         "Intellectual Disability",
@@ -990,17 +1022,31 @@ const ViewJobs = () => {
                         "Cancer (RA11215)",
                         "Rare Disease (RA10747)",
                       ].map((category) => (
-                        <label key={category} className="flex items-center">
-                          <input
-                            type="checkbox"
-                            value={category}
-                            checked={selectedDisabilityCategories.includes(
+                        <label
+                          key={category}
+                          className="flex items-center space-x-3"
+                        >
+                          <div className="relative w-6 h-6">
+                            <input
+                              type="checkbox"
+                              value={category}
+                              checked={selectedDisabilityCategories.includes(
+                                normalizeText(category)
+                              )}
+                              onChange={handleCheckboxChange}
+                              className="appearance-none w-6 h-6 border-2 border-gray-400 rounded-md transition duration-200 checked:bg-blue-600 checked:border-blue-600 focus:outline-none"
+                            />
+                            {selectedDisabilityCategories.includes(
                               normalizeText(category)
+                            ) && (
+                              <span className="absolute inset-0 flex items-center justify-center text-white text-lg font-bold">
+                                ✓
+                              </span>
                             )}
-                            onChange={handleCheckboxChange}
-                            className="mr-2"
-                          />
-                          {category}
+                          </div>
+                          <span className="text-gray-700 font-medium">
+                            {category}
+                          </span>
                         </label>
                       ))}
                     </div>
