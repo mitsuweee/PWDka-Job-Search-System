@@ -270,7 +270,8 @@ const viewCompanies = async (req, res, next) => {
         "city",
         "contact_number",
         "email",
-        "profile_picture"
+        "profile_picture",
+        "date_created"
       )
       .where("status", "VERIFIED");
 

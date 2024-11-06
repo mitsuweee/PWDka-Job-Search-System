@@ -113,8 +113,10 @@ const AdminViewComp = () => {
       if (sortOrder === "A-Z") return a.name.localeCompare(b.name);
       if (sortOrder === "Z-A") return b.name.localeCompare(a.name);
       if (sortOrder === "Newest")
-        return new Date(b.created_at) - new Date(a.created_at);
-      return new Date(a.created_at) - new Date(b.created_at);
+        return new Date(b.date_created) - new Date(a.date_created);
+      if (sortOrder === "Oldest")
+        return new Date(a.date_created) - new Date(b.date_created);
+      return 0;
     });
 
   const currentCompanies = filteredCompanies.slice(
