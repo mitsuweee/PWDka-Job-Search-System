@@ -261,11 +261,25 @@ const AdminViewAdmin = () => {
                     className="border-b border-gray-200 hover:bg-gray-50 transition duration-300"
                   >
                     <td className="py-4 px-6 text-gray-800 text-sm md:text-base break-words">
-                      {admin.first_name}
+                      {admin.first_name
+                        .toLowerCase()
+                        .split(" ")
+                        .map(
+                          (word) => word.charAt(0).toUpperCase() + word.slice(1)
+                        )
+                        .join(" ")}
                     </td>
+
                     <td className="py-4 px-6 text-gray-800 text-sm md:text-base break-words">
-                      {admin.last_name}
+                      {admin.last_name
+                        .toLowerCase()
+                        .split(" ")
+                        .map(
+                          (word) => word.charAt(0).toUpperCase() + word.slice(1)
+                        )
+                        .join(" ")}
                     </td>
+
                     <td className="py-4 px-6 text-gray-800 text-sm md:text-base break-words">
                       {admin.email}
                     </td>
@@ -324,15 +338,25 @@ const AdminViewAdmin = () => {
                 <strong className="mr-2 text-black font-semibold">
                   First Name:
                 </strong>{" "}
-                {admin.first_name}
+                {admin.first_name
+                  .toLowerCase()
+                  .split(" ")
+                  .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                  .join(" ")}
               </p>
+
               <p className="flex items-center shadow-inner text-gray-600 bg-gray-100 p-4 rounded-lg">
                 <span className="material-symbols-outlined mr-2">badge</span>
                 <strong className="mr-2 text-black font-semibold">
                   Last Name:
                 </strong>{" "}
-                {admin.last_name}
+                {admin.last_name
+                  .toLowerCase()
+                  .split(" ")
+                  .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                  .join(" ")}
               </p>
+
               <p className="flex items-center shadow-inner text-gray-600 bg-gray-100 p-4 rounded-lg">
                 <span className="material-symbols-outlined mr-2">mail</span>
                 <strong className="mr-2 text-black font-semibold">

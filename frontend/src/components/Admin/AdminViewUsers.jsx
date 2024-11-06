@@ -70,12 +70,13 @@ const AdminViewUsers = () => {
   const formatUserData = (userData) => ({
     id: userData.id,
     firstName: userData.first_name,
-    middleInitial: userData.middle_initial || "", // default to empty if not present
+    middleInitial: userData.middle_initial || "",
     lastName: userData.last_name,
     disability: userData.type,
     address: userData.address,
     city: userData.city,
     birthdate: new Date(userData.birth_date).toLocaleDateString("en-US"),
+    dateCreated: userData.date_created,
     contactNumber: userData.contact_number,
     email: userData.email,
     profilePicture: `data:image/png;base64,${userData.formal_picture}`,
@@ -143,9 +144,9 @@ const AdminViewUsers = () => {
       if (sortOrder === "A-Z") return a.first_name.localeCompare(b.first_name);
       if (sortOrder === "Z-A") return b.first_name.localeCompare(a.first_name);
       if (sortOrder === "Newest")
-        return new Date(b.date_created) - new Date(a.date_created); // Updated to use date_created
+        return new Date(b.date_created) - new Date(a.date_created);
       if (sortOrder === "Oldest")
-        return new Date(a.date_created) - new Date(b.date_created); // Updated to use date_created
+        return new Date(a.date_created) - new Date(b.date_created);
       return 0;
     });
 
