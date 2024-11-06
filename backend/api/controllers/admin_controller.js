@@ -300,6 +300,8 @@ const viewCompanies = async (req, res, next) => {
 };
 
 const viewAllJobListingNewestToOldest = async (req, res, next) => {
+  const { order } = req.query; // New code: get order parameter from frontend
+  const sortOrder = order === "Oldest" ? "asc" : "desc"; // New code: determine sort order
   try {
     const rows = await knex("job_listing")
       .join(
@@ -354,7 +356,7 @@ const viewAllJobListingNewestToOldest = async (req, res, next) => {
         "company.profile_picture",
         "company.name"
       )
-      .orderBy("job_listing.date_created", "desc");
+       .orderBy("job_listing.date_created", sortOrder); // New code: apply dynamic sort order
 
     if (rows.length === 0) {
       return res.status(404).json({

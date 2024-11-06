@@ -41,7 +41,7 @@ const AdminViewUsers = () => {
         toast.error("Failed to load users");
         console.error(error);
       });
-  }, []);
+  }, [sortOrder]);
 
   const handleViewUser = (userId) => {
     const config = {
