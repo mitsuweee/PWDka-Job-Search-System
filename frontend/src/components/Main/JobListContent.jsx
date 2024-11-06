@@ -566,14 +566,18 @@ const JobListing = () => {
                           .join(". ")}
                       </p>
 
-                      <p className="text-sm font-medium text-gray-800 mt-4">
+                      {/* Qualifications Section */}
+                      <p className="text-sm md:text-lg font-medium text-gray-800 mt-4">
                         Qualifications
                       </p>
                       {job?.qualifications &&
                       job.qualifications.includes("|") ? (
-                        <ul className="text-gray-700 list-disc pl-4 text-sm">
+                        <ul className="text-gray-700 list-disc pl-4 text-sm md:text-base">
                           {job.qualifications
                             .split("|")
+                            .filter(
+                              (qualification) => qualification.trim() !== ""
+                            ) // Ensure non-empty items
                             .map((qualification, index) => (
                               <li key={index}>
                                 {qualification.trim().charAt(0).toUpperCase() +
@@ -582,26 +586,32 @@ const JobListing = () => {
                             ))}
                         </ul>
                       ) : (
-                        <p className="text-gray-700 text-sm">
+                        <p className="text-gray-700 text-sm md:text-base">
                           No qualifications listed
                         </p>
                       )}
 
-                      <p className="text-sm font-medium text-gray-800 mt-4">
+                      {/* Requirements Section */}
+                      <p className="text-sm md:text-lg font-medium text-gray-800 mt-4">
                         Requirements
                       </p>
-                      <ul className="text-gray-600 mt-2 text-xs leading-relaxed bg-gray-100 p-3 rounded-lg shadow-inner list-disc pl-4">
-                        {job?.requirement
-                          ? job.requirement
-                              .split("|")
-                              .map((part, index) => (
-                                <li key={index}>
-                                  {part.trim().charAt(0).toUpperCase() +
-                                    part.trim().slice(1).toLowerCase()}
-                                </li>
-                              ))
-                          : null}
-                      </ul>
+                      {job?.requirement && job.requirement.includes("|") ? (
+                        <ul className="text-gray-600 mt-2 text-xs md:text-sm leading-relaxed bg-gray-100 p-3 rounded-lg shadow-inner list-disc pl-4 max-h-40 overflow-y-auto">
+                          {job.requirement
+                            .split("|")
+                            .filter((part) => part.trim() !== "") // Ensure non-empty items
+                            .map((part, index) => (
+                              <li key={index}>
+                                {part.trim().charAt(0).toUpperCase() +
+                                  part.trim().slice(1).toLowerCase()}
+                              </li>
+                            ))}
+                        </ul>
+                      ) : (
+                        <p className="text-gray-600 text-xs md:text-sm">
+                          No specific requirements listed
+                        </p>
+                      )}
 
                       <div className="mt-4 flex flex-col md:flex-row md:space-x-4 items-center space-y-3 md:space-y-0">
                         <a
