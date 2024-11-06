@@ -195,7 +195,8 @@ const viewAdmins = async (req, res, next) => {
       "id",
       "first_name",
       "last_name",
-      "email"
+      "email",
+      "date_created"
     );
 
     return res.status(200).json({
@@ -221,6 +222,7 @@ const viewUsers = async (req, res, next) => {
         "user.first_name",
         "user.middle_initial",
         "user.last_name",
+        "user.date_created",
         "email",
         "address",
         "city",
@@ -266,6 +268,7 @@ const viewCompanies = async (req, res, next) => {
         "id",
         "name",
         "description",
+        "date_created",
         "address",
         "city",
         "contact_number",
@@ -322,6 +325,7 @@ const viewAllJobListingNewestToOldest = async (req, res, next) => {
         "job_listing.position_name",
         "job_listing.level",
         "job_listing.description",
+        "job_listing.date_created",
         "job_listing.qualification",
         "job_listing.requirement",
         "job_listing.minimum_salary",
@@ -339,6 +343,7 @@ const viewAllJobListingNewestToOldest = async (req, res, next) => {
         "job_listing.position_name",
         "job_listing.level",
         "job_listing.description",
+        "job_listing.date_created",
         "job_listing.qualification",
         "job_listing.requirement",
         "job_listing.minimum_salary",
@@ -413,6 +418,7 @@ const viewJobListing = async (req, res, next) => {
           "job_listing.position_name",
           "job_listing.level",
           "job_listing.description",
+          "job_listing.date_created",
           "job_listing.qualification",
           "job_listing.requirement",
           "job_listing.minimum_salary",
@@ -430,6 +436,8 @@ const viewJobListing = async (req, res, next) => {
           "job_listing.id",
           "job_listing.position_name",
           "job_listing.description",
+          "job_listing.date_created",
+
           "job_listing.qualification",
           "job_listing.requirement",
           "job_listing.minimum_salary",

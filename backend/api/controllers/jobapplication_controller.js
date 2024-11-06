@@ -89,6 +89,7 @@ const viewAllUsersApplicationsViaJobListingId = async (req, res, next) => {
       const applications = await knex("job_application")
         .select(
           "job_application.id",
+          "job_application.date_created",
           "disability.type",
           "user.first_name",
           "user.middle_initial",
