@@ -437,7 +437,6 @@ const viewJobListing = async (req, res, next) => {
           "job_listing.position_name",
           "job_listing.description",
           "job_listing.date_created",
-
           "job_listing.qualification",
           "job_listing.requirement",
           "job_listing.minimum_salary",
