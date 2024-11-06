@@ -286,9 +286,10 @@ const Footer = () => {
                         d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                       />
                     </svg>
-                    <address className="flex-1 text-gray-700 not-italic">
+                    <address className="flex-1 text-gray-700 not-italic whitespace-nowrap">
                       1638 Taguig - Makati Philippines
                     </address>
+
                     {copiedItem === "address" && (
                       <span className="text-blue-500 text-xs ml-2">
                         Copied!
