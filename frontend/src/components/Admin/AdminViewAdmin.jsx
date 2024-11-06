@@ -10,6 +10,8 @@ const AdminViewAdmin = () => {
   const [loading, setLoading] = useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortOrder, setSortOrder] = useState("A-Z");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -237,11 +239,38 @@ const AdminViewAdmin = () => {
 
         {/* Floating Sign Up Button */}
         <button
-          onClick={() => navigate("/admin/dashboard/AdminSignup")} // Replace with your actual signup route
+          onClick={() => navigate("/admin/dashboard/AdminSignup")}
           className="fixed top-8 right-8 bg-blue-500 text-white text-sm px-4 py-2 rounded-full shadow-md hover:bg-blue-700 transition duration-200"
         >
           Sign Up Admin
         </button>
+
+        {/* Search and Filter Bar */}
+        <div className="flex items-center justify-center mt-6 mb-4 p-4 bg-white rounded-lg shadow-md space-x-4">
+          <input
+            type="text"
+            placeholder="Search companies"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-1/2 px-4 py-2 border border-gray-300 bg-gray-100 text-black rounded-lg focus:outline-none focus:border-blue-500 shadow-inner"
+            style={{ boxShadow: "inset 0px 4px 8px rgba(0, 0, 0, 0.1)" }}
+          />
+          <div className="relative">
+            <select
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value)}
+              className="px-3 py-2 w-[130px] border border-gray-300 rounded-lg bg-blue-500 text-white font-semibold hover:bg-blue-600 focus:outline-none focus:border-blue-500 transition duration-200"
+            >
+              <option value="A-Z">A-Z</option>
+              <option value="Z-A">Z-A</option>
+              <option value="Newest">Newest</option>
+              <option value="Oldest">Oldest</option>
+            </select>
+            <span className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+              <span className="material-symbols-outlined text-white">sort</span>
+            </span>
+          </div>
+        </div>
 
         <div className="overflow-x-auto mt-4">
           <table className="min-w-full bg-white rounded-lg shadow-lg overflow-hidden">
@@ -269,7 +298,6 @@ const AdminViewAdmin = () => {
                         )
                         .join(" ")}
                     </td>
-
                     <td className="py-4 px-6 text-gray-800 text-sm md:text-base break-words">
                       {admin.last_name
                         .toLowerCase()
@@ -279,7 +307,6 @@ const AdminViewAdmin = () => {
                         )
                         .join(" ")}
                     </td>
-
                     <td className="py-4 px-6 text-gray-800 text-sm md:text-base break-words">
                       {admin.email}
                     </td>
