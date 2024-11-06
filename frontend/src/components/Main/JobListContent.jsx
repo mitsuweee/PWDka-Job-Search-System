@@ -364,8 +364,8 @@ const JobListing = () => {
       <div className="flex flex-col lg:flex-row w-full h-full mt-6">
         <div className="lg:w-1/2 p-4 overflow-auto">
           <div className="flex items-center justify-between mb-4">
-            <h1 className="text-2xl font-bold text-custom-blue flex items-center">
-              <span className="material-symbols-outlined text-2xl mr-2">
+            <h1 className="text-xl md:text-2xl font-bold text-custom-blue flex items-center">
+              <span className="material-symbols-outlined text-xl md:text-2xl mr-2">
                 work_update
               </span>
               Jobs for You,{" "}
@@ -373,7 +373,7 @@ const JobListing = () => {
             </h1>
             <button
               onClick={fetchApplicationHistory}
-              className="ml-4 px-5 py-2 bg-gradient-to-r from-blue-400 to-blue-600 text-white font-semibold rounded-lg shadow-md hover:from-blue-500 hover:to-blue-700 hover:shadow-lg transform hover:-translate-y-0.5 transition duration-200 ease-in-out"
+              className="ml-4 px-4 md:px-5 py-1 md:py-2 bg-gradient-to-r from-blue-400 to-blue-600 text-white font-semibold rounded-lg shadow-md hover:from-blue-500 hover:to-blue-700 hover:shadow-lg transform hover:-translate-y-0.5 transition duration-200 ease-in-out text-sm md:text-base"
             >
               Application History
             </button>
@@ -384,21 +384,24 @@ const JobListing = () => {
               currentJobs.map((job) => (
                 <div key={job.id}>
                   <div
-                    className="p-4 bg-blue-500 rounded-lg shadow-3xl cursor-pointer hover:bg-blue-600 transition transform hover:scale-95 flex items-center"
+                    className="p-3 md:p-4 bg-blue-500 rounded-lg shadow-lg cursor-pointer hover:bg-blue-600 transition transform hover:scale-95 flex flex-col md:flex-row items-start md:items-center relative"
                     onClick={() => {
                       setSelectedJobId(job.id);
                       setIsDetailsVisible(true);
                       setIsMoreInfoVisible(false);
                     }}
                   >
+                    {/* Image positioned on the left in desktop */}
                     <img
                       src={job.companyImage}
                       alt="Company Logo"
-                      className="w-20 h-20 lg:w-32 lg:h-32 object-cover rounded-xl mr-4 shadow-xl border-4 border-blue-700"
+                      className="w-16 h-16 md:w-20 md:h-20 lg:w-32 lg:h-32 object-cover rounded-lg shadow-md border-2 md:border-4 border-blue-700 
+      absolute top-3 right-3 md:static md:order-first md:mr-4"
                     />
-                    <div className="flex-1">
-                      <h2 className="text-xl font-bold text-white">
-                        <span className="material-symbols-outlined mr-2">
+
+                    <div className="flex-1 space-y-1 md:space-y-2">
+                      <h2 className="text-lg md:text-xl font-semibold text-white">
+                        <span className="material-symbols-outlined text-base md:text-xl mr-1">
                           work
                         </span>
                         {job.jobName
@@ -410,8 +413,8 @@ const JobListing = () => {
                           )
                           .join(" ")}
                       </h2>
-                      <p className="text-white">
-                        <span className="material-symbols-outlined mr-2">
+                      <p className="text-xs md:text-base text-white flex items-center">
+                        <span className="material-symbols-outlined text-sm md:text-base mr-1">
                           location_on
                         </span>
                         {job.companyLocation
@@ -423,9 +426,9 @@ const JobListing = () => {
                           )
                           .join(" ")}
                       </p>
-                      <p className="text-white">
-                        <span className="material-symbols-outlined mr-2">
-                          location_on
+                      <p className="text-xs md:text-base text-white flex items-center">
+                        <span className="material-symbols-outlined text-sm md:text-base mr-1">
+                          location_city
                         </span>
                         {job.companyCity
                           .split(" ")
@@ -436,38 +439,42 @@ const JobListing = () => {
                           )
                           .join(" ")}
                       </p>
-                      <p className="font-semibold text-white">
-                        <span className="material-symbols-outlined mr-2">
+                      <p className="font-semibold text-xs md:text-base text-white flex items-center">
+                        <span className="material-symbols-outlined text-sm md:text-base mr-1">
                           schedule
                         </span>
                         {toSentenceCase(job.positionType)}
                       </p>
                       {job.salaryVisibility === "SHOW" ? (
-                        <p className="font-semibold text-white">
-                          <span className="material-symbols-outlined mr-2">
+                        <p className="font-semibold text-xs md:text-base text-white flex items-center">
+                          <span className="material-symbols-outlined text-sm md:text-base mr-1">
                             payments
                           </span>
                           {job.salary}
                         </p>
                       ) : (
-                        <p className="font-semibold text-white">
-                          <span className="material-symbols-outlined mr-2">
+                        <p className="font-semibold text-xs md:text-base text-white flex items-center">
+                          <span className="material-symbols-outlined text-sm md:text-base mr-1">
                             payments
                           </span>
                           Salary: Hidden
                         </p>
                       )}
                     </div>
+
                     {userDisabilityType !== "Deaf or Hard of Hearing" && (
                       <button
-                        onClick={() => handleToggleVoice(job)}
-                        className={`ml-4 px-4 py-2 rounded-full transition-colors duration-200 ${
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleToggleVoice(job);
+                        }}
+                        className={`absolute bottom-3 right-3 md:static md:ml-4 px-2 md:px-4 py-1 md:py-2 rounded-full transition-colors duration-200 ${
                           isVoiceEnabled && selectedJobId === job.id
                             ? "bg-blue-500 text-white"
                             : "bg-gray-300 text-black"
                         } hover:bg-blue-600`}
                       >
-                        <span className="material-symbols-outlined text-2xl">
+                        <span className="material-symbols-outlined text-lg md:text-2xl">
                           {isVoiceEnabled && selectedJobId === job.id
                             ? "volume_up"
                             : "volume_off"}
@@ -478,9 +485,9 @@ const JobListing = () => {
 
                   {/* Job Details Modal for Mobile (appears below the selected job listing) */}
                   {selectedJobId === job.id && isDetailsVisible && (
-                    <div className="lg:hidden p-6 bg-white rounded-lg shadow-2xl mt-4 relative">
+                    <div className="lg:hidden p-4 bg-white rounded-lg shadow-2xl mt-4 relative">
                       <button
-                        className="absolute -top-4 -right-4 bg-blue-600 border-2 border-blue-600 text-white text-2xl font-bold py-1 px-3 rounded-full shadow-md hover:bg-transparent hover:text-blue-600 hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                        className="absolute -top-3 -right-3 bg-blue-600 border-2 border-blue-600 text-white text-xl font-bold py-1 px-2 rounded-full shadow-md hover:bg-transparent hover:text-blue-600 hover:shadow-lg transition-all duration-300 transform hover:scale-105"
                         onClick={() => {
                           if (isVoiceEnabled) handleToggleVoice(null);
                           setSelectedJobId(null);
@@ -490,7 +497,7 @@ const JobListing = () => {
                         &times;
                       </button>
 
-                      <h2 className="text-2xl font-semibold mb-4 text-blue-600">
+                      <h2 className="text-xl font-semibold mb-3 text-blue-600">
                         {job.jobName
                           .split(" ")
                           .map(
@@ -500,8 +507,8 @@ const JobListing = () => {
                           )
                           .join(" ")}
                       </h2>
-                      <p className="text-lg mb-2 text-gray-700 flex items-center">
-                        <span className="material-symbols-outlined mr-2">
+                      <p className="text-sm mb-2 text-gray-700 flex items-center">
+                        <span className="material-symbols-outlined mr-1 text-base">
                           work
                         </span>
                         {job.companyName
@@ -513,8 +520,8 @@ const JobListing = () => {
                           )
                           .join(" ")}
                       </p>
-                      <p className="text-lg mb-4 text-gray-500 flex items-center">
-                        <span className="material-symbols-outlined mr-2">
+                      <p className="text-sm mb-2 text-gray-500 flex items-center">
+                        <span className="material-symbols-outlined mr-1 text-base">
                           location_on
                         </span>
                         {job.companyLocation
@@ -526,29 +533,29 @@ const JobListing = () => {
                           )
                           .join(" ")}
                       </p>
-                      <p className="text-lg mb-2 text-gray-700 flex items-center">
-                        <span className="material-symbols-outlined mr-2">
+                      <p className="text-sm mb-2 text-gray-700 flex items-center">
+                        <span className="material-symbols-outlined mr-1 text-base">
                           schedule
                         </span>
                         {toSentenceCase(job.positionType)}
                       </p>
                       {job.salaryVisibility === "SHOW" ? (
-                        <p className="text-lg mb-4 text-gray-700 flex items-center">
-                          <span className="material-symbols-outlined mr-2">
+                        <p className="text-sm mb-2 text-gray-700 flex items-center">
+                          <span className="material-symbols-outlined mr-1 text-base">
                             payments
                           </span>
                           {job.salary}
                         </p>
                       ) : (
-                        <p className="text-lg mb-4 text-gray-700 flex items-center">
-                          <span className="material-symbols-outlined mr-2">
+                        <p className="text-sm mb-2 text-gray-700 flex items-center">
+                          <span className="material-symbols-outlined mr-1 text-base">
                             payments
                           </span>
                           Salary: Hidden
                         </p>
                       )}
 
-                      <p className="text-lg font-medium text-gray-600 mt-6">
+                      <p className="text-sm font-medium text-gray-600 mt-4 leading-relaxed">
                         {job.description
                           .split(". ")
                           .map(
@@ -559,14 +566,14 @@ const JobListing = () => {
                           .join(". ")}
                       </p>
 
-                      <p className="text-lg font-medium text-gray-800 mt-6">
+                      <p className="text-sm font-medium text-gray-800 mt-4">
                         Qualifications
                       </p>
                       {job?.qualifications &&
                       job.qualifications.includes("|") ? (
-                        <ul className="text-gray-700 list-disc pl-4">
+                        <ul className="text-gray-700 list-disc pl-4 text-sm">
                           {job.qualifications
-                            .split("|") // Split by "|", handling any spaces around it
+                            .split("|")
                             .map((qualification, index) => (
                               <li key={index}>
                                 {qualification.trim().charAt(0).toUpperCase() +
@@ -575,15 +582,15 @@ const JobListing = () => {
                             ))}
                         </ul>
                       ) : (
-                        <p className="text-gray-700">
-                          {job?.qualifications || "No qualifications listed"}
+                        <p className="text-gray-700 text-sm">
+                          No qualifications listed
                         </p>
                       )}
 
-                      <p className="text-lg font-medium text-gray-800 mt-6">
+                      <p className="text-sm font-medium text-gray-800 mt-4">
                         Requirements
                       </p>
-                      <ul className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner list-disc pl-4">
+                      <ul className="text-gray-600 mt-2 text-xs leading-relaxed bg-gray-100 p-3 rounded-lg shadow-inner list-disc pl-4">
                         {job?.requirement
                           ? job.requirement
                               .split("|")
@@ -596,13 +603,13 @@ const JobListing = () => {
                           : null}
                       </ul>
 
-                      <div className="mt-6 flex flex-col md:flex-row md:space-x-4 items-center space-y-4 md:space-y-0">
+                      <div className="mt-4 flex flex-col md:flex-row md:space-x-4 items-center space-y-3 md:space-y-0">
                         <a
                           href={`/apply?id=${job.id}`}
                           className="w-full md:w-auto"
                         >
                           <button
-                            className={`w-full md:w-auto py-3 px-6 rounded-lg transition-all duration-300 ${
+                            className={`w-full md:w-auto py-2 px-4 rounded-lg transition-all duration-300 ${
                               job.isApplied
                                 ? "bg-gray-400 cursor-not-allowed text-gray-200"
                                 : "bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg"
@@ -613,7 +620,7 @@ const JobListing = () => {
                           </button>
                         </a>
                         <button
-                          className="w-full md:w-auto bg-transparent border-2 border-blue-600 text-blue-600 py-3 px-6 rounded-lg shadow-md hover:bg-blue-600 hover:text-white hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                          className="w-full md:w-auto bg-transparent border-2 border-blue-600 text-blue-600 py-2 px-4 rounded-lg shadow-md hover:bg-blue-600 hover:text-white hover:shadow-lg transition-all duration-300 transform hover:scale-105"
                           onClick={() =>
                             setIsMoreInfoVisible(!isMoreInfoVisible)
                           }
@@ -624,16 +631,16 @@ const JobListing = () => {
 
                       {/* Learn More Section for Mobile (appears below the details card) */}
                       {isMoreInfoVisible && (
-                        <div className="mt-6 p-8 bg-white rounded-lg shadow-2xl">
+                        <div className="mt-4 p-6 bg-white rounded-lg shadow-2xl">
                           <img
                             src={job.companyImage}
                             alt="Company"
-                            className="w-24 h-24 object-cover rounded-full border-4 border-blue-600 absolute top-4 right-4 shadow-lg"
+                            className="w-20 h-20 object-cover rounded-full border-4 border-blue-600 shadow-lg mx-auto mb-4"
                           />
-                          <h3 className="text-2xl font-semibold text-blue-600 mb-6">
+                          <h3 className="text-xl font-semibold text-blue-600 mb-4">
                             Company Overview
                           </h3>
-                          <div className="text-gray-700 space-y-4">
+                          <div className="text-gray-700 space-y-2 text-sm">
                             <p className="flex items-center">
                               <span className="material-symbols-outlined mr-2 text-blue-600">
                                 business
@@ -672,7 +679,7 @@ const JobListing = () => {
                               {job.companyCity}
                             </p>
                           </div>
-                          <div className="text-gray-600 mt-6 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
+                          <div className="text-gray-600 mt-4 text-xs leading-relaxed bg-gray-100 p-3 rounded-lg shadow-inner">
                             {job.companyDescription.charAt(0).toUpperCase() +
                               job.companyDescription.slice(1).toLowerCase()}
                           </div>
