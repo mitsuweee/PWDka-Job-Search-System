@@ -12,7 +12,7 @@ const JobListing = () => {
   const [locationSearchTerm, setLocationSearchTerm] = useState(""); // For location search
   const [jobType, setJobType] = useState(""); // For full-time or part-time filter
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortOption, setSortOption] = useState("newest");
+  const [sortOption, setSortOption] = useState("Newest");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isVoiceEnabled, setIsVoiceEnabled] = useState(false);
   const [userFullName, setUserFullName] = useState("");
@@ -55,24 +55,19 @@ const JobListing = () => {
         });
     };
 
-    const fetchJobs = (city, position_name, position_type) => {
+    const fetchJobs = (city, position_name, position_type, sortOption) => {
       setLoading(true);
       const searchParams = {
         city: city || "",
         position_name: position_name || "",
         position_type: position_type || "",
+        sortOption: sortOption || "Newest", // Include sortOption here
       };
 
-      const config = {
-        method: "get",
-        url: `/joblisting/view/newesttooldest/${userId}`,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        data: searchParams,
-      };
-
-      axios(config)
+      axios
+        .get(`/joblisting/view/newesttooldest/${userId}`, {
+          params: searchParams, // Use params for GET requests
+        })
         .then((response) => {
           const fetchedJobs = response.data.data.map((job) => ({
             id: job.id,
@@ -81,7 +76,7 @@ const JobListing = () => {
             positionType: job.position_type,
             salary: `${job.minimum_salary}-${job.maximum_salary}`,
             salaryVisibility: job.salary_visibility,
-            dateCreated: job.date_created,
+            dateCreated: job.date_created, // Ensure dateCreated is included
             description: job.description,
             requirements: job.requirement,
             qualifications: job.qualification,
@@ -108,9 +103,10 @@ const JobListing = () => {
         });
     };
 
+    // Pass sortOption when calling fetchJobs
     fetchUserFullName();
-    fetchJobs();
-  }, []);
+    fetchJobs("", "", "", sortOption);
+  }, [sortOption]);
 
   const fetchApplicationHistory = async () => {
     const userId = localStorage.getItem("Id");
@@ -299,9 +295,9 @@ const JobListing = () => {
               onClick={() => setIsFilterOpen(!isFilterOpen)}
             >
               <span className="material-symbols-outlined text-xl mr-2">
-                filter_alt
+                sort
               </span>
-              Filter
+              Sort
             </button>
             {isFilterOpen && (
               <div
@@ -329,7 +325,7 @@ const JobListing = () => {
                   Oldest
                 </button>
                 <button
-                  className={`w-full py-2 px-4 rounded-lg ${
+                  className={`w-full py-2 px-4 rounded-lg mb-2 ${
                     sortOption === "A-Z"
                       ? "bg-blue-600 text-white"
                       : "bg-gray-200 text-blue-900"
@@ -339,7 +335,7 @@ const JobListing = () => {
                   A-Z
                 </button>
                 <button
-                  className={`w-full py-2 px-4 rounded-lg ${
+                  className={`w-full py-2 px-4 rounded-lg mb-2 ${
                     sortOption === "Z-A"
                       ? "bg-blue-600 text-white"
                       : "bg-gray-200 text-blue-900"

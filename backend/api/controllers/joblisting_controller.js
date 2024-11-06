@@ -225,6 +225,7 @@ const viewJobListingViaUserNewestToOldest = async (req, res, next) => {
   const page = 1; // Default to page 1 if not provided
   const limit = 1000; // Default to 1000 listings per page if not provided
   const offset = (page - 1) * limit; // Calculate offset for pagination
+   const sortOption = req.query.sortOption || "Newest";
 
   if (!id) {
     return res.status(404).json({
@@ -279,7 +280,23 @@ const viewJobListingViaUserNewestToOldest = async (req, res, next) => {
       if (position_type) {
         baseQuery.where("position_type.type", "like", `%${position_type}%`);
       }
-
+  // Adjust sorting based on sortOption
+      switch (sortOption) {
+        case "Newest":
+          baseQuery.orderBy("job_listing.date_created", "desc"); // Newest first
+          break;
+        case "Oldest":
+          baseQuery.orderBy("job_listing.date_created", "asc"); // Oldest first
+          break;
+        case "A-Z":
+          baseQuery.orderBy("job_listing.position_name", "asc"); // Alphabetical by job name
+          break;
+        case "Z-A":
+          baseQuery.orderBy("job_listing.position_name", "desc"); // Reverse alphabetical by job name
+          break;
+        default:
+          baseQuery.orderBy("job_listing.date_created", "desc"); // Default to Newest if no valid sortOption
+      }
       // Fetch job listings with pagination and sort order
       const rows = await baseQuery
         .select(
