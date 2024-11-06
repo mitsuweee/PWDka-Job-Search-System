@@ -81,6 +81,7 @@ const JobListing = () => {
             positionType: job.position_type,
             salary: `${job.minimum_salary}-${job.maximum_salary}`,
             salaryVisibility: job.salary_visibility,
+            dateCreated: job.date_created,
             description: job.description,
             requirements: job.requirement,
             qualifications: job.qualification,
@@ -198,16 +199,17 @@ const JobListing = () => {
         jobType === "" ||
         job.positionType.toLowerCase() === jobType.toLowerCase();
 
-      // Apply all three filters: job name, city, and job type
       return jobNameMatch && cityMatch && jobTypeMatch;
     })
     .sort((a, b) => {
-      if (sortOption === "newest") {
-        return b.id - a.id;
-      } else if (sortOption === "oldest") {
-        return a.id - b.id;
-      } else if (sortOption === "a-z") {
-        return a.jobName.localeCompare(b.jobName);
+      if (sortOption === "Newest") {
+        return new Date(b.date_created) - new Date(a.date_created); // Newest first
+      } else if (sortOption === "Oldest") {
+        return new Date(a.date_created) - new Date(b.date_created); // Oldest first
+      } else if (sortOption === "A-Z") {
+        return (a.jobName || "").localeCompare(b.jobName || ""); // Alphabetical by jobName
+      } else if (sortOption === "Z-A") {
+        return (b.jobName || "").localeCompare(a.jobName || ""); // Reverse alphabetical
       }
       return 0;
     });
@@ -308,33 +310,43 @@ const JobListing = () => {
               >
                 <button
                   className={`w-full py-2 px-4 rounded-lg mb-2 ${
-                    sortOption === "newest"
+                    sortOption === "Newest"
                       ? "bg-blue-600 text-white"
                       : "bg-gray-200 text-blue-900"
                   }`}
-                  onClick={() => setSortOption("newest")}
+                  onClick={() => setSortOption("Newest")}
                 >
                   Newest
                 </button>
                 <button
                   className={`w-full py-2 px-4 rounded-lg mb-2 ${
-                    sortOption === "oldest"
+                    sortOption === "Oldest"
                       ? "bg-blue-600 text-white"
                       : "bg-gray-200 text-blue-900"
                   }`}
-                  onClick={() => setSortOption("oldest")}
+                  onClick={() => setSortOption("Oldest")}
                 >
                   Oldest
                 </button>
                 <button
                   className={`w-full py-2 px-4 rounded-lg ${
-                    sortOption === "a-z"
+                    sortOption === "A-Z"
                       ? "bg-blue-600 text-white"
                       : "bg-gray-200 text-blue-900"
                   }`}
-                  onClick={() => setSortOption("a-z")}
+                  onClick={() => setSortOption("A-Z")}
                 >
                   A-Z
+                </button>
+                <button
+                  className={`w-full py-2 px-4 rounded-lg ${
+                    sortOption === "Z-A"
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-200 text-blue-900"
+                  }`}
+                  onClick={() => setSortOption("Z-A")}
+                >
+                  Z-A
                 </button>
               </div>
             )}

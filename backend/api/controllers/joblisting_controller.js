@@ -293,6 +293,7 @@ const viewJobListingViaUserNewestToOldest = async (req, res, next) => {
           "job_listing.minimum_salary",
           "job_listing.maximum_salary",
           "job_listing.salary_visibility",
+          "job_listing.date_created", // Added date_created field
           "position_type.type AS position_type",
           "company.name AS company_name",
           "company.profile_picture AS company_profile_picture",

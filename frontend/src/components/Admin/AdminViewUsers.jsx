@@ -143,9 +143,10 @@ const AdminViewUsers = () => {
       if (sortOrder === "A-Z") return a.first_name.localeCompare(b.first_name);
       if (sortOrder === "Z-A") return b.first_name.localeCompare(a.first_name);
       if (sortOrder === "Newest")
-        return new Date(b.created_at) - new Date(a.created_at);
+        return new Date(b.date_created) - new Date(a.date_created); // Updated to use date_created
       if (sortOrder === "Oldest")
-        return new Date(a.created_at) - new Date(b.created_at);
+        return new Date(a.date_created) - new Date(b.date_created); // Updated to use date_created
+      return 0;
     });
 
   const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);

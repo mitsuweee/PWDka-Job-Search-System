@@ -174,12 +174,14 @@ const ViewApplicants = () => {
   };
 
   const sortedApplicants = filteredApplicants.sort((a, b) => {
-    if (sortOption === "newest") {
-      return b.id - a.id;
-    } else if (sortOption === "oldest") {
-      return a.id - b.id;
-    } else if (sortOption === "a-z") {
-      return a.fullName.localeCompare(b.fullName);
+    if (sortOption === "Newest") {
+      return new Date(b.date_created) - new Date(a.date_created); // Sort by date_created (newest first)
+    } else if (sortOption === "Oldest") {
+      return new Date(a.date_created) - new Date(b.date_created); // Sort by date_created (oldest first)
+    } else if (sortOption === "A-Z") {
+      return a.fullName.localeCompare(b.fullName); // Sort alphabetically by fullName
+    } else if (sortOption === "Z-A") {
+      return b.fullName.localeCompare(a.fullName); // Sort alphabetically by fullName in reverse
     }
     return 0;
   });
