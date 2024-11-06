@@ -549,8 +549,16 @@ const JobListing = () => {
                       )}
 
                       <p className="text-lg font-medium text-gray-600 mt-6">
-                        {toSentenceCase(job.description)}
+                        {job.description
+                          .split(". ")
+                          .map(
+                            (sentence) =>
+                              sentence.charAt(0).toUpperCase() +
+                              sentence.slice(1).toLowerCase()
+                          )
+                          .join(". ")}
                       </p>
+
                       <p className="text-lg font-medium text-gray-800 mt-6">
                         Qualifications
                       </p>
