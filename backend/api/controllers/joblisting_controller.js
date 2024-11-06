@@ -42,11 +42,11 @@ const postJobs = async (req, res, next) => {
       successful: false,
       message: "Position name must not contain special characters",
     });
-  } else if (!util.checkNumbers(minimum_salary) || minimum_salary < 14800) {
+  } else if (!util.checkNumbers(minimum_salary) || minimum_salary < 12900) {
     return res.status(400).json({
       successful: false,
       message:
-        "Minimum Salary must only contain numbers that are greater than or equal to The Minimum wage (₱14800)",
+        "Minimum Salary must only contain numbers that are greater than or equal to The Minimum wage (₱12900)",
     });
   } else if (
     !util.checkNumbers(maximum_salary) ||
@@ -225,7 +225,7 @@ const viewJobListingViaUserNewestToOldest = async (req, res, next) => {
   const page = 1; // Default to page 1 if not provided
   const limit = 1000; // Default to 1000 listings per page if not provided
   const offset = (page - 1) * limit; // Calculate offset for pagination
-   const sortOption = req.query.sortOption || "Newest";
+  const sortOption = req.query.sortOption || "Newest";
 
   if (!id) {
     return res.status(404).json({
@@ -280,7 +280,7 @@ const viewJobListingViaUserNewestToOldest = async (req, res, next) => {
       if (position_type) {
         baseQuery.where("position_type.type", "like", `%${position_type}%`);
       }
-  // Adjust sorting based on sortOption
+      // Adjust sorting based on sortOption
       switch (sortOption) {
         case "Newest":
           baseQuery.orderBy("job_listing.date_created", "desc"); // Newest first
@@ -504,11 +504,11 @@ const updateJobListing = async (req, res, next) => {
       successful: false,
       message: "Position name must not contain special characters",
     });
-  } else if (!util.checkNumbers(minimum_salary) || minimum_salary < 14800) {
+  } else if (!util.checkNumbers(minimum_salary) || minimum_salary < 12900) {
     return res.status(400).json({
       successful: false,
       message:
-        "Minimum Salary must only contain numbers that are greater than or equal to The Minimum wage (₱14800)",
+        "Minimum Salary must only contain numbers that are greater than or equal to The Minimum wage (₱12900)",
     });
   } else if (
     !util.checkNumbers(maximum_salary) ||

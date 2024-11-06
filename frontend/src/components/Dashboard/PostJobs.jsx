@@ -46,8 +46,8 @@ const PostJob = () => {
     e.preventDefault();
 
     // Validation for minimum salary
-    if (parseFloat(jobDetails.minSalary) < 14800) {
-      toast.error("Minimum Salary must be at least ₱14800.");
+    if (parseFloat(jobDetails.minSalary) < 12900) {
+      toast.error("Minimum Salary must be at least ₱12900.");
       return;
     }
 
