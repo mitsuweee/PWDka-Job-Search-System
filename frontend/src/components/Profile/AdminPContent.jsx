@@ -14,6 +14,8 @@ const AdminProf = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
+  const [isPasswordChanging, setIsPasswordChanging] = useState(false);
+  const [isEmailChanging, setIsEmailChanging] = useState(false);
   const [isEditing, setIsEditing] = useState(true);
   const [passwords, setPasswords] = useState({
     currentPassword: "",
@@ -74,11 +76,21 @@ const AdminProf = () => {
 
   const handleEdit = () => {
     setIsEditing(true);
+    setIsPasswordChanging(false);
+    setIsEmailChanging(false);
     setIsModalOpen(true);
   };
 
   const handlePasswordToggle = () => {
     setIsEditing(false);
+    setIsPasswordChanging(true);
+    setIsEmailChanging(false);
+    setIsModalOpen(true);
+  };
+  const handleEmailToggle = () => {
+    setIsEditing(false);
+    setIsPasswordChanging(false);
+    setIsEmailChanging(true);
     setIsModalOpen(true);
   };
 
@@ -416,7 +428,7 @@ const AdminProf = () => {
                 </button>
 
                 <button
-                  onClick={() => setIsEmailModalOpen(true)}
+                  onClick={handleEmailToggle}
                   className="w-full sm:w-auto px-4 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:shadow-lg hover:bg-blue-700 transition duration-300 flex items-center justify-center"
                 >
                   <span className="material-symbols-outlined text-xl mr-2">
@@ -463,13 +475,17 @@ const AdminProf = () => {
         </main>
       </div>
 
-      {/* Edit Profile & Change Password Modal */}
+      {/* Edit Profile, Change Email & Change Password Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
             <div className="flex justify-between items-center border-b pb-3 mb-4">
               <h2 className="text-2xl font-semibold text-gray-800">
-                {isEditing ? "Edit Profile" : "Change Password"}
+                {isEditing
+                  ? "Edit Profile"
+                  : isEmailChanging
+                  ? "Change Email"
+                  : "Change Password"}
               </h2>
               <button
                 onClick={() => setIsModalOpen(false)}
@@ -491,6 +507,8 @@ const AdminProf = () => {
                 </svg>
               </button>
             </div>
+
+            {/* Toggle Buttons */}
             <div className="flex justify-between mb-4">
               <button
                 className={`py-2 px-4 ${
@@ -498,23 +516,46 @@ const AdminProf = () => {
                     ? "bg-blue-500 text-white"
                     : "bg-gray-200 text-gray-700"
                 } rounded-lg`}
-                onClick={() => setIsEditing(true)}
+                onClick={() => {
+                  setIsEditing(true);
+                  setIsEmailChanging(false);
+                  setIsPasswordChanging(false);
+                }}
               >
                 Edit Profile
               </button>
               <button
                 className={`py-2 px-4 ${
-                  !isEditing
+                  isEmailChanging
                     ? "bg-blue-500 text-white"
                     : "bg-gray-200 text-gray-700"
                 } rounded-lg`}
-                onClick={() => setIsEditing(false)}
+                onClick={() => {
+                  setIsEditing(false);
+                  setIsEmailChanging(true);
+                  setIsPasswordChanging(false);
+                }}
+              >
+                Change Email
+              </button>
+              <button
+                className={`py-2 px-4 ${
+                  isPasswordChanging
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-200 text-gray-700"
+                } rounded-lg`}
+                onClick={() => {
+                  setIsEditing(false);
+                  setIsEmailChanging(false);
+                  setIsPasswordChanging(true);
+                }}
               >
                 Change Password
               </button>
             </div>
 
-            {isEditing ? (
+            {/* Content Sections */}
+            {isEditing && (
               <div className="grid grid-cols-1 gap-6">
                 <div>
                   <label className="block text-gray-600 font-semibold">
@@ -541,7 +582,23 @@ const AdminProf = () => {
                   />
                 </div>
               </div>
-            ) : (
+            )}
+
+            {isEmailChanging && (
+              <div className="mb-4">
+                <label className="block text-gray-600 font-semibold">
+                  New Email:
+                </label>
+                <input
+                  type="email"
+                  value={newEmail}
+                  onChange={(e) => setNewEmail(e.target.value)}
+                  className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                />
+              </div>
+            )}
+
+            {isPasswordChanging && (
               <div className="grid grid-cols-1 gap-6">
                 <div>
                   <label className="block text-gray-600 font-semibold">
@@ -633,6 +690,7 @@ const AdminProf = () => {
               </div>
             )}
 
+            {/* Action Buttons */}
             <div className="flex justify-end mt-6 space-x-4">
               <button
                 onClick={() => setIsModalOpen(false)}
@@ -641,67 +699,20 @@ const AdminProf = () => {
                 Back
               </button>
               <button
-                onClick={isEditing ? handleUpdate : handlePasswordUpdate}
+                onClick={
+                  isEditing
+                    ? handleUpdate
+                    : isEmailChanging
+                    ? handleEmailUpdate
+                    : handlePasswordUpdate
+                }
                 className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
               >
-                {isEditing ? "Update Profile" : "Save New Password"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Change Email Modal */}
-      {isEmailModalOpen && (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
-            <div className="flex justify-between items-center border-b pb-3 mb-4">
-              <h2 className="text-2xl font-semibold text-gray-800">
-                Change Email
-              </h2>
-              <button
-                onClick={() => setIsEmailModalOpen(false)}
-                className="text-gray-500 hover:text-gray-800 transition duration-200"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-600 font-semibold">
-                New Email:
-              </label>
-              <input
-                type="email"
-                value={newEmail}
-                onChange={(e) => setNewEmail(e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-              />
-            </div>
-            <div className="flex justify-end space-x-4">
-              <button
-                onClick={() => setIsEmailModalOpen(false)}
-                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-200"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleEmailUpdate}
-                className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
-              >
-                Update Email
+                {isEditing
+                  ? "Update Profile"
+                  : isEmailChanging
+                  ? "Update Email"
+                  : "Save New Password"}
               </button>
             </div>
           </div>
