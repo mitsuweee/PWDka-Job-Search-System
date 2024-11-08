@@ -129,7 +129,11 @@ const ViewJobs = () => {
     setSearchTerm(searchValue);
 
     const filteredJobs = jobListings
-      .filter((job) => job.position_name.toLowerCase().includes(searchValue))
+      .filter((job) => {
+        const combinedFields =
+          `${job.position_name} ${job.position_type}`.toLowerCase();
+        return combinedFields.includes(searchValue.toLowerCase());
+      })
       .sort((a, b) => {
         if (sortOrder === "A-Z")
           return a.position_name.localeCompare(b.position_name);
@@ -446,7 +450,7 @@ const ViewJobs = () => {
         <div className="flex items-center justify-center mt-6 mb-4 p-4 bg-white rounded-lg shadow-md space-x-4">
           <input
             type="text"
-            placeholder="Search job listings..."
+            placeholder="Search"
             value={searchTerm}
             onChange={handleSearch}
             className="w-1/2 px-4 py-2 border border-gray-300 bg-gray-100 text-black rounded-lg focus:outline-none focus:border-blue-500 shadow-inner"
