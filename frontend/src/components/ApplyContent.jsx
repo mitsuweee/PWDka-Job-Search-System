@@ -138,24 +138,24 @@ const ApplyPage = () => {
 
   return (
     <div
-      className="min-h-screen bg-cover bg-center flex items-center justify-center"
+      className="min-h-screen bg-cover bg-center flex items-center justify-center px-4 sm:px-0"
       style={{ backgroundImage: `url('./imgs/pft.png')` }}
     >
-      <div className="max-w-4xl mx-auto my-10 p-10 bg-white rounded-2xl shadow-2xl space-y-8 transition-transform transform hover:scale-105 hover:shadow-3xl">
+      <div className="w-full max-w-lg sm:max-w-4xl mx-auto my-10 p-6 sm:p-16 bg-white rounded-3xl shadow-3xl space-y-8 sm:space-y-10 transition-transform transform hover:scale-105 hover:shadow-4xl">
         <Toaster position="top-center" reverseOrder={false} />
 
         {submitSuccess ? (
-          <div className="text-center space-y-6">
-            <h2 className="text-3xl font-bold text-blue-600">
+          <div className="text-center space-y-6 sm:space-y-8">
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-blue-600">
               Thank You for Applying!
             </h2>
-            <p className="text-lg text-gray-700">
+            <p className="text-base sm:text-lg text-gray-700 leading-relaxed">
               Your application has been successfully submitted. We’ve received
               your resume, and the company will review it soon. Keep an eye on
               your email for updates regarding your application.
             </p>
             <button
-              className="mt-8 py-3 px-6 bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-full shadow-lg hover:shadow-2xl transform hover:scale-105 transition duration-300"
+              className="mt-6 sm:mt-10 py-2 sm:py-4 px-6 sm:px-8 bg-gradient-to-r from-blue-600 to-blue-800 text-white font-bold rounded-full shadow-lg hover:shadow-2xl transform hover:scale-105 transition duration-300"
               onClick={() => navigate("/joblist")}
             >
               Go back to home
@@ -163,14 +163,14 @@ const ApplyPage = () => {
           </div>
         ) : (
           <>
-            <div className="flex justify-between items-center mb-8">
-              <h2 className="text-4xl font-bold text-blue-700">
+            <div className="flex flex-col sm:flex-row justify-between items-center mb-6 sm:mb-10 space-y-4 sm:space-y-0">
+              <h2 className="text-2xl sm:text-4xl font-extrabold text-blue-700">
                 Apply for the Job
               </h2>
               {userDisabilityType !== "Deaf or Hard of Hearing" && (
                 <button
                   onClick={handleToggleVoice}
-                  className={`ml-4 p-3 rounded-full transition-colors duration-300 shadow-lg transform hover:scale-110 ${
+                  className={`p-2 sm:p-3 rounded-full transition-colors duration-300 shadow-lg transform hover:scale-105 sm:hover:scale-110 ${
                     isVoiceEnabled
                       ? "bg-blue-600 text-white"
                       : "bg-gray-300 text-black"
@@ -181,59 +181,59 @@ const ApplyPage = () => {
                       : "Enable voice instructions"
                   }
                 >
-                  <span className="material-symbols-outlined text-2xl">
+                  <span className="material-symbols-outlined text-xl sm:text-2xl">
                     {isVoiceEnabled ? "volume_up" : "volume_off"}
                   </span>
                 </button>
               )}
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-8">
+            <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-10">
               <div>
-                <label className="block text-gray-700 font-semibold mb-3">
+                <label className="block text-gray-700 font-semibold mb-2 sm:mb-4">
                   Upload Your Resume (PDF only):
                 </label>
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 cursor-pointer hover:border-blue-500 transition-all">
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 sm:p-8 cursor-pointer hover:border-blue-500 transition-all">
                   <input
                     type="file"
                     accept="application/pdf"
                     onChange={handleFileChange}
                     className="w-full text-gray-800"
                   />
-                  <div className="flex items-center space-x-2 mt-3">
+                  <div className="flex items-center space-x-2 mt-2 sm:mt-4">
                     <span className="material-symbols-outlined text-gray-500">
                       file_upload
                     </span>
                     <span className="text-gray-600">Choose a PDF</span>
                   </div>
-                  <small className="block text-gray-500 mt-2">
+                  <small className="block text-gray-500 mt-2 sm:mt-3">
                     Max file size: 16MB
                   </small>
                 </div>
-                {error && <p className="text-red-500 mt-2">{error}</p>}
+                {error && <p className="text-red-500 mt-2 sm:mt-3">{error}</p>}
                 {isUploading && <div className="loader">Uploading...</div>}
               </div>
 
               {pdfPreviewUrl && (
                 <div>
-                  <label className="block text-gray-700 font-semibold mb-3">
+                  <label className="block text-gray-700 font-semibold mb-3 sm:mb-4">
                     Preview Your Resume:
                   </label>
                   <iframe
-                    className="w-full h-72 border border-gray-300 rounded-lg shadow-sm"
+                    className="w-full h-48 sm:h-80 border border-gray-300 rounded-lg shadow-md"
                     src={pdfPreviewUrl}
                     title="PDF Preview"
                   ></iframe>
-                  <div className="flex justify-between mt-4">
+                  <div className="flex justify-between mt-4 sm:mt-6">
                     <a
                       href={pdfPreviewUrl}
                       download="resume.pdf"
-                      className="text-blue-600 hover:underline"
+                      className="text-blue-600 hover:underline font-medium"
                     >
                       Download PDF
                     </a>
                     <button
-                      className="text-red-500 hover:underline"
+                      className="text-red-500 hover:underline font-medium"
                       onClick={() => setResume(null)}
                     >
                       Remove PDF
@@ -244,13 +244,13 @@ const ApplyPage = () => {
 
               <button
                 type="submit"
-                className="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-800 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition duration-300"
+                className="w-full py-4 sm:py-5 bg-gradient-to-r from-blue-600 to-blue-800 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition duration-300"
               >
                 Submit Application
               </button>
               <button
                 type="reset"
-                className="w-full py-4 mt-4 bg-gradient-to-r from-red-500 to-red-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition duration-300"
+                className="w-full py-4 sm:py-5 mt-4 sm:mt-5 bg-gradient-to-r from-red-500 to-red-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition duration-300"
                 onClick={() => {
                   setResume(null);
                   setPdfPreviewUrl(null);
