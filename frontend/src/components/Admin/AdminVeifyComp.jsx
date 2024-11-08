@@ -180,7 +180,12 @@ const AdminVerifyComp = () => {
       <aside
         className={`bg-custom-blue w-full md:w-[300px] lg:w-[250px] p-4 flex flex-col items-center md:relative fixed top-0 left-0 min-h-screen h-full transition-transform transform ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } md:translate-x-0 z-50 md:z-auto `}
+        } md:translate-x-0 z-50 md:z-auto ${
+          isSidebarOpen ? "overflow-y-auto" : "" // Apply overflow-y-auto only when sidebar is open
+        }`}
+        style={{
+          maxHeight: isSidebarOpen ? "100vh" : "none", // Set max height only when sidebar is open
+        }}
       >
         {/* Logo Section */}
         <div className="w-full flex justify-center items-center mb-6 p-2 bg-white rounded-lg">
@@ -208,7 +213,7 @@ const AdminVerifyComp = () => {
           href="/admin/dashboard"
           className={`${
             window.location.pathname === "/admin/dashboard"
-              ? "bg-blue-900 text-gray-200" // Active style for Dashboard
+              ? "bg-blue-900 text-gray-200" // Active style
               : "bg-gray-200 text-blue-900"
           } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
           style={{
@@ -245,7 +250,7 @@ const AdminVerifyComp = () => {
           href="/admin/dashboard/VerifyComps"
           className={`${
             window.location.pathname === "/admin/dashboard/VerifyComps"
-              ? "bg-blue-900 text-gray-200" // Active style for Verify Companies
+              ? "bg-blue-900 text-gray-200"
               : "bg-gray-200 text-blue-900"
           } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
         >
@@ -317,6 +322,20 @@ const AdminVerifyComp = () => {
             manage_accounts
           </span>
           <span className="flex-grow text-center">Admin Management</span>
+        </a>
+
+        <a
+          href="/adminprofile"
+          className={`${
+            window.location.pathname === "/adminprofile"
+              ? "bg-blue-900 text-gray-200"
+              : "bg-gray-200 text-blue-900"
+          } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
+        >
+          <span className="material-symbols-outlined text-xl mr-4">
+            server_person
+          </span>
+          <span className="flex-grow text-center">Profile</span>
         </a>
 
         <button

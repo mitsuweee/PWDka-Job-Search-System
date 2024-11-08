@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 
 const AdminProf = () => {
@@ -12,6 +12,7 @@ const AdminProf = () => {
 
   const [newEmail, setNewEmail] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(true);
   const [passwords, setPasswords] = useState({
@@ -194,59 +195,268 @@ const AdminProf = () => {
   const handleBack = () => {
     navigate("/admin/dashboard");
   };
-
   return (
-    <div className="max-w-4xl mx-auto mb-10 mt-10 p-8 bg-white rounded-lg shadow-lg">
+    <>
       <Toaster position="top-center" reverseOrder={false} />
-      <div className="ml-6">
-        <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
-          {admin.firstName} {admin.lastName}
-        </h2>
-        <div className="flex mt-2">
-          <p className="text-gray-600">Email: {admin.email}</p>
-        </div>
-        <div className="flex flex-col md:flex-row mt-4">
-          <button
-            onClick={handleEdit}
-            className="w-full md:w-auto px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300 flex items-center justify-center mb-4 md:mb-0 md:mr-4"
-          >
-            <span className="material-symbols-outlined text-xl mr-2">edit</span>
-            Edit Profile
-          </button>
+
+      {/* Layout Container */}
+      <div className="flex flex-col md:flex-row">
+        {/* Sidebar */}
+        <aside
+          className={`bg-custom-blue w-full md:w-[300px] lg:w-[250px] p-4 flex flex-col items-center md:relative fixed top-0 left-0 min-h-screen h-full transition-transform transform ${
+            isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          } md:translate-x-0 z-50 md:z-auto ${
+            isSidebarOpen ? "overflow-y-auto" : "" // Apply overflow-y-auto only when sidebar is open
+          }`}
+          style={{
+            maxHeight: isSidebarOpen ? "100vh" : "none", // Set max height only when sidebar is open
+          }}
+        >
+          {/* Logo Section */}
+          <div className="w-full flex justify-center items-center mb-6 p-2 bg-white rounded-lg">
+            <img
+              src="/imgs/LOGO PWDKA.png" // Replace with the actual path to your logo
+              alt="Logo"
+              className="w-26 h-19 object-contain"
+            />
+          </div>
 
           <button
-            onClick={() => setIsEmailModalOpen(true)}
-            className="w-full md:w-auto px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300 flex items-center justify-center mb-4 md:mb-0 md:mr-4"
+            className="text-white md:hidden self-end size-10"
+            onClick={() => setIsSidebarOpen(false)}
           >
-            <span className="material-symbols-outlined text-xl mr-2">
-              email
+            &times;
+          </button>
+
+          {/* Dashboard Section */}
+          <h2 className="text-white text-lg font-semibold mb-2 mt-4 w-full text-left">
+            Dashboard
+          </h2>
+          <hr className="border-gray-400 w-full mb-4" />
+
+          <a
+            href="/admin/dashboard"
+            className={`${
+              window.location.pathname === "/admin/dashboard"
+                ? "bg-blue-900 text-gray-200" // Active style
+                : "bg-gray-200 text-blue-900"
+            } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
+            style={{
+              boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
+            }}
+          >
+            <span className="material-symbols-outlined text-xl mr-4">
+              dashboard
             </span>
-            Change Email
-          </button>
+            <span className="flex-grow text-center">Dashboard</span>
+          </a>
+
+          {/* Verification Section */}
+          <h2 className="text-white text-lg font-semibold mb-2 mt-4 w-full text-left">
+            Verification
+          </h2>
+          <hr className="border-gray-400 w-full mb-4" />
+
+          <a
+            href="/admin/dashboard/VerifyUsers"
+            className={`${
+              window.location.pathname === "/admin/dashboard/VerifyUsers"
+                ? "bg-blue-900 text-gray-200"
+                : "bg-gray-200 text-blue-900"
+            } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
+          >
+            <span className="material-symbols-outlined text-xl mr-4">
+              how_to_reg
+            </span>
+            <span className="flex-grow text-center">Verify Applicants</span>
+          </a>
+
+          <a
+            href="/admin/dashboard/VerifyComps"
+            className={`${
+              window.location.pathname === "/admin/dashboard/VerifyComps"
+                ? "bg-blue-900 text-gray-200"
+                : "bg-gray-200 text-blue-900"
+            } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
+          >
+            <span className="material-symbols-outlined text-xl mr-4">
+              apartment
+            </span>
+            <span className="flex-grow text-center">Verify Companies</span>
+          </a>
+
+          {/* View Section */}
+          <h2 className="text-white text-lg font-semibold mb-2 mt-4 w-full text-left">
+            View Records
+          </h2>
+          <hr className="border-gray-400 w-full mb-4" />
+
+          <a
+            href="/admin/dashboard/ViewUsers"
+            className={`${
+              window.location.pathname === "/admin/dashboard/ViewUsers"
+                ? "bg-blue-900 text-gray-200"
+                : "bg-gray-200 text-blue-900"
+            } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
+          >
+            <span className="material-symbols-outlined text-xl mr-4">
+              group
+            </span>
+            <span className="flex-grow text-center">View All Applicants</span>
+          </a>
+
+          <a
+            href="/admin/dashboard/ViewCompany"
+            className={`${
+              window.location.pathname === "/admin/dashboard/ViewCompany"
+                ? "bg-blue-900 text-gray-200"
+                : "bg-gray-200 text-blue-900"
+            } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
+          >
+            <span className="material-symbols-outlined text-xl mr-4">
+              source_environment
+            </span>
+            <span className="flex-grow text-center">View All Companies</span>
+          </a>
+
+          <a
+            href="/admin/dashboard/ViewJobs"
+            className={`${
+              window.location.pathname === "/admin/dashboard/ViewJobs"
+                ? "bg-blue-900 text-gray-200"
+                : "bg-gray-200 text-blue-900"
+            } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
+          >
+            <span className="material-symbols-outlined text-xl mr-4">work</span>
+            <span className="flex-grow text-center">View All Job Listings</span>
+          </a>
+
+          {/* Account Section */}
+          <h2 className="text-white text-lg font-semibold mb-2 mt-4 w-full text-left">
+            Account
+          </h2>
+          <hr className="border-gray-400 w-full mb-4" />
+
+          <a
+            href="/admin/dashboard/viewadmin"
+            className={`${
+              window.location.pathname === "/admin/dashboard/viewadmin"
+                ? "bg-blue-900 text-gray-200"
+                : "bg-gray-200 text-blue-900"
+            } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
+          >
+            <span className="material-symbols-outlined text-xl mr-4">
+              manage_accounts
+            </span>
+            <span className="flex-grow text-center">Admin Management</span>
+          </a>
+
+          <a
+            href="/adminprofile"
+            className={`${
+              window.location.pathname === "/adminprofile"
+                ? "bg-blue-900 text-gray-200"
+                : "bg-gray-200 text-blue-900"
+            } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
+          >
+            <span className="material-symbols-outlined text-xl mr-4">
+              server_person
+            </span>
+            <span className="flex-grow text-center">Profile</span>
+          </a>
 
           <button
-            onClick={handlePasswordToggle}
-            className="w-full md:w-auto px-4 py-2 bg-custom-blue text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 transition duration-300 flex items-center justify-center"
+            className="bg-red-600 text-white rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-red-500 transition-all duration-200 ease-in-out mt-6"
+            onClick={handleLogout}
           >
-            <span className="material-symbols-outlined text-xl mr-2">lock</span>
-            Change Password
+            Logout
           </button>
-        </div>
-      </div>
+        </aside>
 
-      <div className="mt-6 space-y-4">
+        {/* Mobile Toggle Button */}
         <button
-          className="w-full bg-red-600 text-white py-2 px-4 rounded-lg shadow-md hover:shadow-xl hover:bg-red-500 transition-all duration-200 ease-in-out"
-          onClick={handleLogout}
+          className={`md:hidden bg-custom-blue text-white p-4 fixed top-4 left-4 z-50 rounded-xl transition-transform ${
+            isSidebarOpen ? "hidden" : ""
+          }`}
+          onClick={() => setIsSidebarOpen(true)}
         >
-          Logout
+          &#9776;
         </button>
-        <button
-          className="w-full bg-gray-300 text-gray-900 py-2 px-4 rounded-lg shadow-md hover:bg-gray-400 transition-all duration-200 ease-in-out"
-          onClick={handleBack}
-        >
-          Back to Dashboard
-        </button>
+
+        {/* Main Content */}
+        <main className="flex-grow p-4 sm:p-8 w-full max-w-6xl mx-auto mt-0 md:mt-10 md:ml-[300px]">
+          {/* Center Container */}
+          <div className="flex flex-col items-center md:items-start">
+            {/* Profile Card */}
+            <div className="w-full max-w-4xl mb-10 p-6 sm:p-8 bg-white rounded-lg shadow-lg">
+              {/* Header Section */}
+              <div className="text-center md:text-left">
+                <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
+                  {admin.firstName} {admin.lastName}
+                </h2>
+                <p className="text-gray-600 text-lg mt-2">
+                  Email: {admin.email}
+                </p>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4 mt-6 justify-center md:justify-start">
+                <button
+                  onClick={handleEdit}
+                  className="w-full sm:w-auto px-4 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:shadow-lg hover:bg-blue-700 transition duration-300 flex items-center justify-center"
+                >
+                  <span className="material-symbols-outlined text-xl mr-2">
+                    edit
+                  </span>
+                  Edit Profile
+                </button>
+
+                <button
+                  onClick={() => setIsEmailModalOpen(true)}
+                  className="w-full sm:w-auto px-4 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:shadow-lg hover:bg-blue-700 transition duration-300 flex items-center justify-center"
+                >
+                  <span className="material-symbols-outlined text-xl mr-2">
+                    email
+                  </span>
+                  Change Email
+                </button>
+
+                <button
+                  onClick={handlePasswordToggle}
+                  className="w-full sm:w-auto px-4 py-3 bg-yellow-600 text-white font-semibold rounded-lg shadow-md hover:shadow-lg hover:bg-yellow-700 transition duration-300 flex items-center justify-center"
+                >
+                  <span className="material-symbols-outlined text-xl mr-2">
+                    lock
+                  </span>
+                  Change Password
+                </button>
+              </div>
+
+              {/* Navigation Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4 mt-6 border-t pt-6 border-gray-300 justify-center md:justify-start">
+                <button
+                  onClick={() => navigate("/admin/dashboard")}
+                  className="w-full sm:w-auto px-4 py-3 bg-gray-300 text-gray-900 font-semibold rounded-lg shadow-md hover:shadow-lg hover:bg-gray-400 transition duration-300 flex items-center justify-center"
+                >
+                  <span className="material-symbols-outlined text-xl mr-2">
+                    arrow_back
+                  </span>
+                  Back to Dashboard
+                </button>
+
+                <button
+                  onClick={handleLogout}
+                  className="w-full sm:w-auto px-4 py-3 bg-red-600 text-white font-semibold rounded-lg shadow-md hover:shadow-lg hover:bg-red-700 transition duration-300 flex items-center justify-center"
+                >
+                  <span className="material-symbols-outlined text-xl mr-2">
+                    logout
+                  </span>
+                  Logout
+                </button>
+              </div>
+            </div>
+          </div>
+        </main>
       </div>
 
       {/* Edit Profile & Change Password Modal */}
@@ -545,7 +755,7 @@ const AdminProf = () => {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

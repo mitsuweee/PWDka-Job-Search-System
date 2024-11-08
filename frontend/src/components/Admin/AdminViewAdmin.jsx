@@ -110,9 +110,10 @@ const AdminViewAdmin = () => {
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 z-50 md:z-auto `}
       >
+        {/* Logo Section */}
         <div className="w-full flex justify-center items-center mb-6 p-2 bg-white rounded-lg">
           <img
-            src="/imgs/LOGO PWDKA.png"
+            src="/imgs/LOGO PWDKA.png" // Replace with the actual path to your logo
             alt="Logo"
             className="w-26 h-19 object-contain"
           />
@@ -125,6 +126,7 @@ const AdminViewAdmin = () => {
           &times;
         </button>
 
+        {/* Dashboard Section */}
         <h2 className="text-white text-lg font-semibold mb-2 mt-4 w-full text-left">
           Dashboard
         </h2>
@@ -134,7 +136,7 @@ const AdminViewAdmin = () => {
           href="/admin/dashboard"
           className={`${
             window.location.pathname === "/admin/dashboard"
-              ? "bg-blue-900 text-gray-200"
+              ? "bg-blue-900 text-gray-200" // Active style
               : "bg-gray-200 text-blue-900"
           } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
           style={{
@@ -147,6 +149,7 @@ const AdminViewAdmin = () => {
           <span className="flex-grow text-center">Dashboard</span>
         </a>
 
+        {/* Verification Section */}
         <h2 className="text-white text-lg font-semibold mb-2 mt-4 w-full text-left">
           Verification
         </h2>
@@ -180,6 +183,7 @@ const AdminViewAdmin = () => {
           <span className="flex-grow text-center">Verify Companies</span>
         </a>
 
+        {/* View Section */}
         <h2 className="text-white text-lg font-semibold mb-2 mt-4 w-full text-left">
           View Records
         </h2>
@@ -223,6 +227,7 @@ const AdminViewAdmin = () => {
           <span className="flex-grow text-center">View All Job Listings</span>
         </a>
 
+        {/* Account Section */}
         <h2 className="text-white text-lg font-semibold mb-2 mt-4 w-full text-left">
           Account
         </h2>
@@ -240,6 +245,20 @@ const AdminViewAdmin = () => {
             manage_accounts
           </span>
           <span className="flex-grow text-center">Admin Management</span>
+        </a>
+
+        <a
+          href="/adminprofile"
+          className={`${
+            window.location.pathname === "/adminprofile"
+              ? "bg-blue-900 text-gray-200"
+              : "bg-gray-200 text-blue-900"
+          } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
+        >
+          <span className="material-symbols-outlined text-xl mr-4">
+            server_person
+          </span>
+          <span className="flex-grow text-center">Profile</span>
         </a>
 
         <button
