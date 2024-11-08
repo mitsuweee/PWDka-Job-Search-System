@@ -9,8 +9,6 @@ const AdminViewUsers = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [deleteUserId, setDeleteUserId] = useState(null);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
@@ -83,42 +81,6 @@ const AdminViewUsers = () => {
     pictureWithId: `data:image/png;base64,${userData.picture_with_id}`,
     pictureOfPwdId: `data:image/png;base64,${userData.picture_of_pwd_id}`,
   });
-
-  const handleDeleteUser = (userId) => {
-    setDeleteUserId(userId);
-    setIsDeleteModalOpen(true);
-  };
-
-  const confirmDelete = () => {
-    const config = {
-      method: "delete",
-      url: `/admin/delete/user/${deleteUserId}`,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-
-    setLoading(true);
-    axios(config)
-      .then(() => {
-        toast.success("User deleted successfully", { position: "top-center" });
-        setUsers((prevUsers) =>
-          prevUsers.filter((user) => user.id !== deleteUserId)
-        );
-        setLoading(false);
-        setIsDeleteModalOpen(false);
-      })
-      .catch((error) => {
-        setLoading(false);
-        toast.error("An error occurred while deleting the user", {
-          position: "top-center",
-        });
-        setIsDeleteModalOpen(false);
-        console.error(error);
-      });
-  };
-
-  const closeDeleteModal = () => setIsDeleteModalOpen(false);
 
   const handleLogout = () => setIsLogoutModalOpen(true);
 
@@ -402,12 +364,6 @@ const AdminViewUsers = () => {
                       >
                         View
                       </button>
-                      <button
-                        onClick={() => handleDeleteUser(user.id)}
-                        className="bg-red-500 text-white text-xs md:text-sm px-2 md:px-3 py-1 rounded-full shadow-sm hover:bg-red-700 transition duration-200 font-medium"
-                      >
-                        Delete
-                      </button>
                     </div>
                   </td>
                 </tr>
@@ -573,58 +529,6 @@ const AdminViewUsers = () => {
                   {user.email}
                 </p>
               </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {isDeleteModalOpen && (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
-            <div className="flex justify-between items-center border-b pb-3 mb-4">
-              <h2 className="text-2xl font-semibold text-gray-800">
-                Delete Confirmation
-              </h2>
-              <button
-                onClick={closeDeleteModal}
-                className="text-gray-500 hover:text-gray-800 transition duration-200"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-            </div>
-            <div className="mb-6">
-              <p className="text-lg text-gray-600">
-                Are you sure you want to delete this user? This action cannot be
-                undone.
-              </p>
-            </div>
-
-            <div className="flex justify-end space-x-4">
-              <button
-                onClick={closeDeleteModal}
-                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-200"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={confirmDelete}
-                className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
-              >
-                Delete
-              </button>
             </div>
           </div>
         </div>
