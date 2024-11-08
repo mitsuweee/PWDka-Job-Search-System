@@ -1040,39 +1040,86 @@ const JobListing = () => {
                       <th className="py-2 px-2 sm:px-4 text-left">Date</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    {applicationHistory.map((application, index) => (
-                      <tr
-                        key={index}
-                        className="hover:bg-gray-50 transition duration-150 text-gray-800 text-xs sm:text-sm"
-                      >
-                        <td className="py-2 px-2 sm:px-4">
-                          {application.position_name}
-                        </td>
-                        <td className="py-2 px-2 sm:px-4">
-                          {application.company_name}
-                        </td>
-                        <td className="py-2 px-2 sm:px-4">
-                          <span
-                            className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                              application.status === "Approved"
-                                ? "bg-green-100 text-green-600"
-                                : application.status === "Pending"
-                                ? "bg-yellow-100 text-yellow-600"
-                                : "bg-red-100 text-red-600"
-                            }`}
-                          >
-                            {application.status}
-                          </span>
-                        </td>
-                        <td className="py-2 px-2 sm:px-4">
-                          {new Date(
-                            application.date_created
-                          ).toLocaleDateString()}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
+                  {/* Application History Modal */}
+                  {isApplicationHistoryModalOpen && (
+                    <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-3 sm:p-4">
+                      <div className="bg-white p-3 sm:p-6 rounded-xl shadow-xl relative w-full max-w-xs sm:max-w-lg lg:max-w-2xl border border-gray-200">
+                        <button
+                          onClick={() =>
+                            setIsApplicationHistoryModalOpen(false)
+                          }
+                          className="absolute top-2 right-2 text-gray-400 hover:text-gray-700 transition duration-200 text-sm sm:text-2xl focus:outline-none"
+                          aria-label="Close modal"
+                        >
+                          &times;
+                        </button>
+                        <h3 className="text-xs sm:text-2xl font-semibold text-gray-800 mb-2 sm:mb-6 text-center">
+                          Application History
+                        </h3>
+                        {applicationHistory.length > 0 ? (
+                          <div className="overflow-hidden sm:overflow-y-auto max-h-48 sm:max-h-80 border-t border-gray-200 pt-2 sm:pt-4">
+                            <table className="w-full bg-white text-left">
+                              <thead>
+                                <tr className="bg-gray-50 text-gray-600 text-[10px] sm:text-sm uppercase tracking-wider">
+                                  <th className="py-1 px-1 sm:py-2 sm:px-4">
+                                    Position
+                                  </th>
+                                  <th className="py-1 px-1 sm:py-2 sm:px-4">
+                                    Company
+                                  </th>
+                                  <th className="py-1 px-1 sm:py-2 sm:px-4">
+                                    Status
+                                  </th>
+                                  <th className="py-1 px-1 sm:py-2 sm:px-4">
+                                    Date
+                                  </th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {applicationHistory.map(
+                                  (application, index) => (
+                                    <tr
+                                      key={index}
+                                      className="hover:bg-gray-100 transition duration-150 text-gray-700 text-[10px] sm:text-sm"
+                                    >
+                                      <td className="py-1 px-1 sm:py-2 sm:px-4 whitespace-nowrap">
+                                        {application.position_name}
+                                      </td>
+                                      <td className="py-1 px-1 sm:py-2 sm:px-4 whitespace-nowrap">
+                                        {application.company_name}
+                                      </td>
+                                      <td className="py-1 px-1 sm:py-2 sm:px-4 whitespace-nowrap">
+                                        <span
+                                          className={`inline-block px-1 py-0.5 rounded-full text-[9px] sm:text-xs font-medium ${
+                                            application.status === "Approved"
+                                              ? "bg-green-100 text-green-700"
+                                              : application.status === "Pending"
+                                              ? "bg-yellow-100 text-yellow-700"
+                                              : "bg-red-100 text-red-700"
+                                          }`}
+                                        >
+                                          {application.status}
+                                        </span>
+                                      </td>
+                                      <td className="py-1 px-1 sm:py-2 sm:px-4 whitespace-nowrap">
+                                        {new Date(
+                                          application.date_created
+                                        ).toLocaleDateString()}
+                                      </td>
+                                    </tr>
+                                  )
+                                )}
+                              </tbody>
+                            </table>
+                          </div>
+                        ) : (
+                          <p className="text-center text-gray-500 mt-4 sm:mt-6 text-[10px] sm:text-sm">
+                            No application history found.
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </table>
               </div>
             ) : (
