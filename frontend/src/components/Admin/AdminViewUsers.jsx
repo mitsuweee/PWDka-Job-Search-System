@@ -16,6 +16,7 @@ const AdminViewUsers = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedJobId, setSelectedJobId] = useState(null);
   const [sortOrder, setSortOrder] = useState("A-Z");
+  const [filteredJobListings, setFilteredJobListings] = useState([]);
   const usersPerPage = 10;
   const navigate = useNavigate();
 
@@ -70,13 +71,12 @@ const AdminViewUsers = () => {
   const formatUserData = (userData) => ({
     id: userData.id,
     firstName: userData.first_name,
-    middleInitial: userData.middle_initial || "",
+    middleInitial: userData.middle_initial || "", // default to empty if not present
     lastName: userData.last_name,
     disability: userData.type,
     address: userData.address,
     city: userData.city,
     birthdate: new Date(userData.birth_date).toLocaleDateString("en-US"),
-    dateCreated: userData.date_created,
     contactNumber: userData.contact_number,
     email: userData.email,
     profilePicture: `data:image/png;base64,${userData.formal_picture}`,
@@ -137,18 +137,16 @@ const AdminViewUsers = () => {
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
 
   const filteredUsers = users
-    .filter((user) => {
-      const combinedFields =
-        `${user.first_name} ${user.last_name} ${user.type}`.toLowerCase();
-      return combinedFields.includes(searchTerm.toLowerCase());
-    })
+    .filter((user) =>
+      user.first_name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
     .sort((a, b) => {
       if (sortOrder === "A-Z") return a.first_name.localeCompare(b.first_name);
       if (sortOrder === "Z-A") return b.first_name.localeCompare(a.first_name);
       if (sortOrder === "Newest")
-        return new Date(b.date_created) - new Date(a.date_created);
+        return new Date(b.date_created) - new Date(a.date_created); // Updated to use date_created
       if (sortOrder === "Oldest")
-        return new Date(a.date_created) - new Date(b.date_created);
+        return new Date(a.date_created) - new Date(b.date_created); // Updated to use date_created
       return 0;
     });
 
@@ -170,7 +168,12 @@ const AdminViewUsers = () => {
       <aside
         className={`bg-custom-blue w-full md:w-[300px] lg:w-[250px] p-4 flex flex-col items-center md:relative fixed top-0 left-0 min-h-screen h-full transition-transform transform ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } md:translate-x-0 z-50 md:z-auto`}
+        } md:translate-x-0 z-50 md:z-auto ${
+          isSidebarOpen ? "overflow-y-auto" : "" // Apply overflow-y-auto only when sidebar is open
+        }`}
+        style={{
+          maxHeight: isSidebarOpen ? "100vh" : "none", // Set max height only when sidebar is open
+        }}
       >
         {/* Logo Section */}
         <div className="w-full flex justify-center items-center mb-6 p-2 bg-white rounded-lg">
@@ -198,7 +201,7 @@ const AdminViewUsers = () => {
           href="/admin/dashboard"
           className={`${
             window.location.pathname === "/admin/dashboard"
-              ? "bg-blue-900 text-gray-200"
+              ? "bg-blue-900 text-gray-200" // Active style
               : "bg-gray-200 text-blue-900"
           } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
           style={{
@@ -255,7 +258,7 @@ const AdminViewUsers = () => {
           href="/admin/dashboard/ViewUsers"
           className={`${
             window.location.pathname === "/admin/dashboard/ViewUsers"
-              ? "bg-blue-900 text-gray-200" // Active style for View All Applicants
+              ? "bg-blue-900 text-gray-200"
               : "bg-gray-200 text-blue-900"
           } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
         >
@@ -309,6 +312,20 @@ const AdminViewUsers = () => {
           <span className="flex-grow text-center">Admin Management</span>
         </a>
 
+        <a
+          href="/adminprofile"
+          className={`${
+            window.location.pathname === "/adminprofile"
+              ? "bg-blue-900 text-gray-200"
+              : "bg-gray-200 text-blue-900"
+          } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
+        >
+          <span className="material-symbols-outlined text-xl mr-4">
+            server_person
+          </span>
+          <span className="flex-grow text-center">Profile</span>
+        </a>
+
         <button
           className="bg-red-600 text-white rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-red-500 transition-all duration-200 ease-in-out mt-6"
           onClick={handleLogout}
@@ -334,7 +351,7 @@ const AdminViewUsers = () => {
         <div className="flex items-center justify-center mt-6 mb-4 p-4 bg-white rounded-lg shadow-md space-x-4">
           <input
             type="text"
-            placeholder="Search"
+            placeholder="Search by Name"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-1/2 px-4 py-2 border border-gray-300 bg-gray-100 text-black rounded-lg focus:outline-none focus:border-blue-500 shadow-inner"
