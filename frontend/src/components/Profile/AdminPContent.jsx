@@ -392,8 +392,12 @@ const AdminProf = () => {
               {/* Header Section */}
               <div className="text-center md:text-left">
                 <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
-                  {admin.firstName} {admin.lastName}
+                  {admin.firstName.charAt(0).toUpperCase() +
+                    admin.firstName.slice(1)}{" "}
+                  {admin.lastName.charAt(0).toUpperCase() +
+                    admin.lastName.slice(1)}
                 </h2>
+
                 <p className="text-gray-600 text-lg mt-2">
                   Email: {admin.email}
                 </p>
