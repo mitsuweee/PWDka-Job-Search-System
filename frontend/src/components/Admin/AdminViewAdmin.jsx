@@ -12,6 +12,8 @@ const AdminViewAdmin = () => {
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOrder, setSortOrder] = useState("A-Z");
+  const [currentPage, setCurrentPage] = useState(1);
+  const adminsPerPage = 10;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -65,6 +67,34 @@ const AdminViewAdmin = () => {
     setIsLogoutModalOpen(false);
   };
 
+  const indexOfLastAdmin = currentPage * adminsPerPage;
+  const indexOfFirstAdmin = indexOfLastAdmin - adminsPerPage;
+
+  const filteredAdmins = admins
+    .filter((admin) => {
+      const combinedFields =
+        `${admin.first_name} ${admin.last_name} ${admin.email}`.toLowerCase();
+      return combinedFields.includes(searchTerm.toLowerCase());
+    })
+
+    .sort((a, b) => {
+      if (sortOrder === "A-Z") return a.first_name.localeCompare(b.first_name);
+      if (sortOrder === "Z-A") return b.first_name.localeCompare(a.first_name);
+      if (sortOrder === "Newest")
+        return new Date(b.date_created) - new Date(a.date_created);
+      if (sortOrder === "Oldest")
+        return new Date(a.date_created) - new Date(b.date_created);
+      return 0;
+    });
+
+  const currentAdmins = filteredAdmins.slice(
+    indexOfFirstAdmin,
+    indexOfLastAdmin
+  );
+  const totalPages = Math.ceil(filteredAdmins.length / adminsPerPage);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-blue-100">
       <Toaster position="top-center" reverseOrder={false} />
@@ -80,7 +110,6 @@ const AdminViewAdmin = () => {
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 z-50 md:z-auto `}
       >
-        {/* Logo Section */}
         <div className="w-full flex justify-center items-center mb-6 p-2 bg-white rounded-lg">
           <img
             src="/imgs/LOGO PWDKA.png"
@@ -96,7 +125,6 @@ const AdminViewAdmin = () => {
           &times;
         </button>
 
-        {/* Dashboard Section */}
         <h2 className="text-white text-lg font-semibold mb-2 mt-4 w-full text-left">
           Dashboard
         </h2>
@@ -106,7 +134,7 @@ const AdminViewAdmin = () => {
           href="/admin/dashboard"
           className={`${
             window.location.pathname === "/admin/dashboard"
-              ? "bg-blue-900 text-gray-200" // Active style for Dashboard
+              ? "bg-blue-900 text-gray-200"
               : "bg-gray-200 text-blue-900"
           } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
           style={{
@@ -119,7 +147,6 @@ const AdminViewAdmin = () => {
           <span className="flex-grow text-center">Dashboard</span>
         </a>
 
-        {/* Verification Section */}
         <h2 className="text-white text-lg font-semibold mb-2 mt-4 w-full text-left">
           Verification
         </h2>
@@ -143,7 +170,7 @@ const AdminViewAdmin = () => {
           href="/admin/dashboard/VerifyComps"
           className={`${
             window.location.pathname === "/admin/dashboard/VerifyComps"
-              ? "bg-blue-900 text-gray-200" // Active style for Verify Companies
+              ? "bg-blue-900 text-gray-200"
               : "bg-gray-200 text-blue-900"
           } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
         >
@@ -153,7 +180,6 @@ const AdminViewAdmin = () => {
           <span className="flex-grow text-center">Verify Companies</span>
         </a>
 
-        {/* View Section */}
         <h2 className="text-white text-lg font-semibold mb-2 mt-4 w-full text-left">
           View Records
         </h2>
@@ -197,7 +223,6 @@ const AdminViewAdmin = () => {
           <span className="flex-grow text-center">View All Job Listings</span>
         </a>
 
-        {/* Account Section */}
         <h2 className="text-white text-lg font-semibold mb-2 mt-4 w-full text-left">
           Account
         </h2>
@@ -237,19 +262,10 @@ const AdminViewAdmin = () => {
       <main className="flex-grow p-8">
         <h1 className="text-xl font-bold text-gray-700">View All Admins</h1>
 
-        {/* Floating Sign Up Button */}
-        <button
-          onClick={() => navigate("/admin/dashboard/AdminSignup")}
-          className="fixed top-8 right-8 bg-blue-500 text-white text-sm px-4 py-2 rounded-full shadow-md hover:bg-blue-700 transition duration-200"
-        >
-          Sign Up Admin
-        </button>
-
-        {/* Search and Filter Bar */}
         <div className="flex items-center justify-center mt-6 mb-4 p-4 bg-white rounded-lg shadow-md space-x-4">
           <input
             type="text"
-            placeholder="Search companies"
+            placeholder="Search"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-1/2 px-4 py-2 border border-gray-300 bg-gray-100 text-black rounded-lg focus:outline-none focus:border-blue-500 shadow-inner"
@@ -283,8 +299,8 @@ const AdminViewAdmin = () => {
               </tr>
             </thead>
             <tbody>
-              {admins && admins.length > 0 ? (
-                admins.map((admin) => (
+              {currentAdmins.length > 0 ? (
+                currentAdmins.map((admin) => (
                   <tr
                     key={admin.id}
                     className="border-b border-gray-200 hover:bg-gray-50 transition duration-300"
@@ -338,6 +354,47 @@ const AdminViewAdmin = () => {
               )}
             </tbody>
           </table>
+        </div>
+
+        <div className="flex justify-center mt-6">
+          <ol className="flex justify-center gap-1 text-xs font-medium">
+            <li>
+              <button
+                onClick={() => currentPage > 1 && paginate(currentPage - 1)}
+                className="inline-flex size-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900"
+                disabled={currentPage === 1}
+              >
+                Prev
+              </button>
+            </li>
+
+            {Array.from({ length: totalPages }, (_, index) => (
+              <li key={index + 1}>
+                <button
+                  onClick={() => paginate(index + 1)}
+                  className={`block size-8 rounded border text-center leading-8 ${
+                    currentPage === index + 1
+                      ? "border-blue-600 bg-blue-600 text-white"
+                      : "border-gray-100 bg-white text-gray-900"
+                  }`}
+                >
+                  {index + 1}
+                </button>
+              </li>
+            ))}
+
+            <li>
+              <button
+                onClick={() =>
+                  currentPage < totalPages && paginate(currentPage + 1)
+                }
+                className="inline-flex size-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900"
+                disabled={currentPage === totalPages}
+              >
+                Next
+              </button>
+            </li>
+          </ol>
         </div>
       </main>
 

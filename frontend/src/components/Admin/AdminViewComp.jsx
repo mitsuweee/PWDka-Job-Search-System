@@ -106,9 +106,10 @@ const AdminViewComp = () => {
   const indexOfFirstCompany = indexOfLastCompany - companiesPerPage;
 
   const filteredCompanies = companies
-    .filter((company) =>
-      company.name.toLowerCase().includes(searchTerm.toLowerCase())
-    )
+    .filter((company) => {
+      const combinedFields = `${company.name} ${company.city}`.toLowerCase();
+      return combinedFields.includes(searchTerm.toLowerCase());
+    })
     .sort((a, b) => {
       if (sortOrder === "A-Z") return a.name.localeCompare(b.name);
       if (sortOrder === "Z-A") return b.name.localeCompare(a.name);
@@ -303,7 +304,7 @@ const AdminViewComp = () => {
         <div className="flex items-center justify-center mt-6 mb-4 p-4 bg-white rounded-lg shadow-md space-x-4">
           <input
             type="text"
-            placeholder="Search companies"
+            placeholder="Search"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-1/2 px-4 py-2 border border-gray-300 bg-gray-100 text-black rounded-lg focus:outline-none focus:border-blue-500 shadow-inner"

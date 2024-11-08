@@ -21,7 +21,6 @@ const AdminViewJobs = () => {
       method: "get",
       url: "/admin/view/all/joblisting/newesttooldest",
       headers: {
-        "User-Agent": "Apidog/1.0.0 (https://apidog.com)",
         "Content-Type": "application/json",
       },
     };
@@ -99,9 +98,11 @@ const AdminViewJobs = () => {
   const indexOfFirstJob = indexOfLastJob - jobsPerPage;
 
   const filteredJobs = jobListings
-    .filter((job) =>
-      job.position_name.toLowerCase().includes(searchTerm.toLowerCase())
-    )
+    .filter((job) => {
+      const combinedFields =
+        `${job.position_name} ${job.company_name}`.toLowerCase();
+      return combinedFields.includes(searchTerm.toLowerCase());
+    })
     .sort((a, b) => {
       if (sortOrder === "A-Z")
         return a.position_name.localeCompare(b.position_name);
@@ -300,7 +301,7 @@ const AdminViewJobs = () => {
         <div className="flex items-center justify-center mt-6 mb-4 p-4 bg-white rounded-lg shadow-md space-x-4">
           <input
             type="text"
-            placeholder="Search jobs"
+            placeholder="Search"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-1/2 px-4 py-2 border border-gray-300 bg-gray-100 text-black rounded-lg focus:outline-none focus:border-blue-500 shadow-inner"
