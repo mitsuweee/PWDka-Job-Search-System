@@ -356,7 +356,7 @@ const viewAllJobListingNewestToOldest = async (req, res, next) => {
         "company.profile_picture",
         "company.name"
       )
-       .orderBy("job_listing.date_created", sortOrder); // New code: apply dynamic sort order
+      .orderBy("job_listing.date_created", sortOrder); // New code: apply dynamic sort order
 
     if (rows.length === 0) {
       return res.status(404).json({
@@ -572,11 +572,6 @@ const updateAdmin = async (req, res, next) => {
     return res.status(400).json({
       successful: false,
       message: "Special characters or numbers are not allowed in name fields",
-    });
-  } else if (!util.checkEmail(email)) {
-    return res.status(400).json({
-      successful: false,
-      message: "Invalid Email Format",
     });
   } else {
     try {
