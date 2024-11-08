@@ -707,6 +707,47 @@ const JobListing = () => {
               </div>
             )}
           </div>
+          {/* Pagination */}
+          <div className="flex justify-center mt-6">
+            <ol className="flex justify-center gap-1 text-xs font-medium">
+              <li>
+                <button
+                  onClick={() => currentPage > 1 && paginate(currentPage - 1)}
+                  className="inline-flex size-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900"
+                  disabled={currentPage === 1}
+                >
+                  Prev
+                </button>
+              </li>
+
+              {Array.from({ length: totalPages }, (_, index) => (
+                <li key={index + 1}>
+                  <button
+                    onClick={() => paginate(index + 1)}
+                    className={`block size-8 rounded border text-center leading-8 ${
+                      currentPage === index + 1
+                        ? "border-blue-600 bg-blue-600 text-white"
+                        : "border-gray-100 bg-white text-gray-900"
+                    }`}
+                  >
+                    {index + 1}
+                  </button>
+                </li>
+              ))}
+
+              <li>
+                <button
+                  onClick={() =>
+                    currentPage < totalPages && paginate(currentPage + 1)
+                  }
+                  className="inline-flex size-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900"
+                  disabled={currentPage === totalPages}
+                >
+                  Next
+                </button>
+              </li>
+            </ol>
+          </div>
         </div>
 
         {/* Job Details on Desktop */}
@@ -973,6 +1014,7 @@ const JobListing = () => {
           </div>
         </div>
       )}
+
       {/* Application History Modal */}
       {isApplicationHistoryModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4">

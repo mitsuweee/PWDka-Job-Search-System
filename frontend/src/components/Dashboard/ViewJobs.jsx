@@ -701,19 +701,38 @@ const ViewJobs = () => {
                 </ul>
               </div>
 
-              <div className="flex justify-between bg-gray-100 p-4 rounded-lg shadow-inner">
-                <span className="text-black font-semibold flex items-center">
-                  Min Salary:
-                  <span className="text-gray-600 ml-2">
-                    ₱ {job?.minimum_salary}
-                  </span>
-                </span>
-                <span className="text-black font-semibold flex items-center">
-                  Max Salary:
-                  <span className="text-gray-600 ml-2">
-                    ₱ {job?.maximum_salary}
-                  </span>
-                </span>
+              <div className="bg-gray-100 p-3 rounded-lg shadow-inner">
+                <div className="flex flex-col sm:flex-row justify-start items-start sm:items-start sm:justify-start text-left space-y-1 sm:space-y-0">
+                  <div className="flex flex-row w-full sm:w-auto justify-start items-center">
+                    {/* Payments Icon */}
+                    <span className="material-symbols-outlined text-black text-base sm:text-sm mr-2">
+                      payments
+                    </span>
+
+                    <div className="flex flex-col items-start">
+                      <span className="text-black font-semibold text-sm sm:text-base">
+                        Min Salary
+                      </span>
+                      <span className="text-gray-600 text-xs sm:text-sm">
+                        ₱ {job?.minimum_salary}
+                      </span>
+                    </div>
+
+                    {/* Dash separator */}
+                    <span className="text-black font-semibold text-sm mx-2">
+                      -
+                    </span>
+
+                    <div className="flex flex-col items-start">
+                      <span className="text-black font-semibold text-sm sm:text-base">
+                        Max Salary
+                      </span>
+                      <span className="text-gray-600 text-xs sm:text-sm">
+                        ₱ {job?.maximum_salary}
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <div className="bg-gray-100 p-4 rounded-lg shadow-inner">
