@@ -39,15 +39,20 @@ const AdminViewAdmin = () => {
     setIsModalOpen(true);
   };
 
-  const handleDeleteAdmin = async (adminId) => {
-    try {
-      await axios.delete(`/delete/admin/${adminId}`);
-      setAdmins(admins.filter((admin) => admin.id !== adminId));
-      toast.success("Admin deleted successfully");
-    } catch (error) {
-      toast.error("Failed to delete admin");
-      console.error(error);
-    }
+  const handleDeleteAdmin = (adminId) => {
+    axios
+      .delete(`/admin/delete/admin/${adminId}`)
+      .then(() => {
+        toast.success("Admin deleted successfully!");
+        setAdmins((prevAdmins) =>
+          prevAdmins.filter((admin) => admin.id !== adminId)
+        );
+      })
+      .catch((error) => {
+        const errorMessage =
+          error.response?.data?.message || "Failed to delete admin";
+        toast.error(errorMessage);
+      });
   };
 
   const handleLogout = () => {
