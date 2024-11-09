@@ -30,6 +30,8 @@ io.on("connection", (socket) => {
   });
 });
 
+global.io = io;
+
 server.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
 });

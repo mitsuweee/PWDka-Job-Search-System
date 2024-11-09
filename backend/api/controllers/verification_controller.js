@@ -127,6 +127,9 @@ const verifyCompany = async (req, res, next) => {
 
     await transporter.sendMail(mailOptions);
 
+    // Emit real-time event using Socket.io
+    global.io.emit("companyVerified", { id, status: "VERIFIED" });
+
     return res.status(200).json({
       successful: true,
       message: "Successfully Verified Company!",
