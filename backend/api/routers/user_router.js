@@ -15,4 +15,6 @@ userRouter.put("/update/picture/:id", userController.updateUserProfilePicture); 
 
 userRouter.put("/update/password/:id", userController.userChangePassword); // Change User Password
 
+userRouter.put("/update/deactivate/:id", userController.deactivateUser); // Deactivate User
+
 module.exports = userRouter;

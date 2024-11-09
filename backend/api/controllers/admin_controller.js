@@ -341,6 +341,7 @@ const viewAllJobListingNewestToOldest = async (req, res, next) => {
           "GROUP_CONCAT(disability.type SEPARATOR ', ') AS disability_types"
         )
       )
+      .where("company.status", "VERIFIED")
       .groupBy(
         "job_listing.id",
         "job_listing.position_name",
@@ -998,6 +999,40 @@ const updateAdminEmail = async (req, res, next) => {
   }
 };
 
+const deactivateAdmin = async (req, res, next) => {
+  const id = req.params.id;
+
+  if (!id) {
+    return res.status(404).json({
+      successful: false,
+      message: "ID is missing",
+    });
+  }
+
+  try {
+    const user = await knex("admin").where({ id }).first();
+
+    if (!user) {
+      return res.status(404).json({
+        successful: false,
+        message: "Admin not found",
+      });
+    }
+
+    await knex("admin").where({ id }).update({ status: "DEACTIVATE" });
+
+    return res.status(200).json({
+      successful: true,
+      message: "Successfully Deactivated Admin!",
+    });
+  } catch (err) {
+    return res.status(500).json({
+      successful: false,
+      message: err.message,
+    });
+  }
+};
+
 module.exports = {
   registerAdmin,
   loginAdmin,
@@ -1018,4 +1053,5 @@ module.exports = {
   updateJobListing,
   sendEmailConcern,
   updateAdminEmail,
+  deactivateAdmin,
 };

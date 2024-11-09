@@ -16,63 +16,71 @@ const login = async (req, res, next) => {
       successful: false,
       message: "Email or Password is missing",
     });
-  }
+  } else {
+    try {
+      // Retrieve user from one of the tables
+      const user =
+        (await knex("user")
+          .select("id", "email", "password", "role", "status")
+          .where({ email })
+          .first()) ||
+        (await knex("admin")
+          .select("id", "email", "password", "role", "status")
+          .where({ email })
+          .first()) ||
+        (await knex("company")
+          .select("id", "email", "password", "role", "status")
+          .where({ email })
+          .first());
 
-  try {
-    const user =
-      (await knex("user")
-        .select("id", "email", "password", "role", "status")
-        .where({ email })
-        .first()) ||
-      (await knex("admin")
-        .select("id", "email", "password", "role")
-        .where({ email })
-        .first()) ||
-      (await knex("company")
-        .select("id", "email", "password", "role", "status")
-        .where({ email })
-        .first());
+      // If no user is found
+      if (!user) {
+        return res.status(400).json({
+          successful: false,
+          message: "Invalid Credentials",
+        });
+      }
 
-    if (!user) {
-      return res.status(400).json({
-        successful: false,
-        message: "Invalid Credentials",
-      });
-    } else {
+      // Check if the password matches
       const passwordMatch = await bcrypt.compare(password, user.password);
       if (!passwordMatch) {
         return res.status(400).json({
           successful: false,
           message: "Invalid Credentials",
         });
+      } else if (user.status == "DEACTIVATE") {
+        return res.status(400).json({
+          successful: false,
+          message: "Account is DEACTIVATED",
+        });
+      } else if (user.status === "PENDING" && user.role !== "admin") {
+        return res.status(400).json({
+          successful: false,
+          message: `Account is under verification. Please wait for email confirmation.`,
+        });
       } else {
-        if (user.status === "PENDING" && user.role !== "admin") {
-          return res.status(400).json({
-            successful: false,
-            message: `Account is under verification. Please wait for email confirmation.`,
-          });
-        } else {
-          const token = jwt.sign({ id: user.id, role: user.role }, SECRET_KEY, {
-            expiresIn: "2h",
-          });
+        // Generate a JWT token
+        const token = jwt.sign({ id: user.id, role: user.role }, SECRET_KEY, {
+          expiresIn: "2h",
+        });
 
-          return res.status(200).json({
-            successful: true,
-            role: user.role,
-            id: user.id,
-            token: token,
-            message: `Successfully Logged In as ${
-              user.role.charAt(0).toUpperCase() + user.role.slice(1)
-            }.`,
-          });
-        }
+        // Successful login response
+        return res.status(200).json({
+          successful: true,
+          role: user.role,
+          id: user.id,
+          token: token,
+          message: `Successfully Logged In as ${
+            user.role.charAt(0).toUpperCase() + user.role.slice(1)
+          }.`,
+        });
       }
+    } catch (err) {
+      return res.status(500).json({
+        successful: false,
+        message: err.message,
+      });
     }
-  } catch (err) {
-    return res.status(500).json({
-      successful: false,
-      message: err.message,
-    });
   }
 };
 

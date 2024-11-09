@@ -516,6 +516,40 @@ const updateCompanyEmail = async (req, res, next) => {
   }
 };
 
+const deactivateCompany = async (req, res, next) => {
+  const id = req.params.id;
+
+  if (!id) {
+    return res.status(404).json({
+      successful: false,
+      message: "ID is missing",
+    });
+  }
+
+  try {
+    const user = await knex("company").where({ id }).first();
+
+    if (!user) {
+      return res.status(404).json({
+        successful: false,
+        message: "Company not found",
+      });
+    }
+
+    await knex("company").where({ id }).update({ status: "DEACTIVATE" });
+
+    return res.status(200).json({
+      successful: true,
+      message: "Successfully Deactivated company!",
+    });
+  } catch (err) {
+    return res.status(500).json({
+      successful: false,
+      message: err.message,
+    });
+  }
+};
+
 module.exports = {
   registerCompany,
   loginCompany,
@@ -524,4 +558,5 @@ module.exports = {
   companyChangePassword,
   viewCompanyViaId,
   updateCompanyEmail,
+  deactivateCompany,
 };

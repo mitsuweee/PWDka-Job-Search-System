@@ -323,6 +323,7 @@ const viewJobListingViaUserNewestToOldest = async (req, res, next) => {
             "CASE WHEN job_application.id IS NOT NULL THEN true ELSE false END AS is_applied"
           )
         )
+        .where("company.status", "VERIFIED")
         .orderBy("job_listing.date_created", "desc")
         .limit(limit)
         .offset(offset);

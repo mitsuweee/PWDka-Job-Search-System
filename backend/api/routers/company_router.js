@@ -13,6 +13,11 @@ companyRouter.put("/update/:id", companyController.updateCompany); // Update Com
 companyRouter.put("/update/email/:id", companyController.updateCompanyEmail); // Update Company Email
 
 companyRouter.put(
+  "/update/deactivate/:id",
+  companyController.deactivateCompany
+); // Deactivate Company
+
+companyRouter.put(
   "/update/picture/:id",
   companyController.updateCompanyProfilePicture
 ); // Update Company Picture

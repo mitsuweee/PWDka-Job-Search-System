@@ -614,6 +614,41 @@ const updateUserEmail = async (req, res, next) => {
     }
   }
 };
+
+const deactivateUser = async (req, res, next) => {
+  const id = req.params.id;
+
+  if (!id) {
+    return res.status(404).json({
+      successful: false,
+      message: "ID is missing",
+    });
+  }
+
+  try {
+    const user = await knex("user").where({ id }).first();
+
+    if (!user) {
+      return res.status(404).json({
+        successful: false,
+        message: "User not found",
+      });
+    }
+
+    await knex("user").where({ id }).update({ status: "DEACTIVATE" });
+
+    return res.status(200).json({
+      successful: true,
+      message: "Successfully Deactivated User!",
+    });
+  } catch (err) {
+    return res.status(500).json({
+      successful: false,
+      message: err.message,
+    });
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
@@ -622,4 +657,5 @@ module.exports = {
   userChangePassword,
   viewUserViaId,
   updateUserEmail,
+  deactivateUser,
 };

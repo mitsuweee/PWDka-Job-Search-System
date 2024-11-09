@@ -167,6 +167,7 @@ const viewUserJobApplicationStatus = async (req, res, next) => {
           .select(
             "job_listing.position_name",
             "company.name as company_name",
+            "company.status",
             "job_application.status",
             "job_application.date_created"
           )
@@ -177,7 +178,8 @@ const viewUserJobApplicationStatus = async (req, res, next) => {
           )
           .join("company", "job_listing.company_id", "company.id")
           .where("job_application.user_id", user_id)
-          .orderBy("job_listing.date_created", "desc");
+          .andWhere("company.status", "VERIFIED")
+          .orderBy("job_application.date_created", "desc");
 
         if (applications.length === 0) {
           return res.status(404).json({
@@ -445,7 +447,8 @@ const getAllApplicantsByStatus = async (req, res) => {
       .join("user", "job_application.user_id", "user.id")
       .join("disability", "user.disability_id", "disability.id")
       .join("job_listing", "job_application.joblisting_id", "job_listing.id")
-      .where("job_application.joblisting_id", jobListingId);
+      .where("job_application.joblisting_id", jobListingId)
+      .andWhere("user.status", "VERIFIED");
 
     if (applicants.length === 0) {
       return res.status(404).json({
