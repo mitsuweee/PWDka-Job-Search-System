@@ -19,9 +19,17 @@ const AdminViewAdmin = () => {
   useEffect(() => {
     const fetchAdmins = async () => {
       setLoading(true);
+      const currentAdminId = localStorage.getItem("Id"); // Get current admin ID from localStorage
+
       try {
         const response = await axios.get("/admin/view/admins");
-        setAdmins(response.data.data);
+        // Filter out deactivated admins and the current admin by checking id as a string
+        const activeAdmins = response.data.data.filter(
+          (admin) =>
+            admin.status !== "DEACTIVATE" &&
+            admin.id.toString() !== currentAdminId
+        );
+        setAdmins(activeAdmins);
         toast.success("Admins loaded successfully");
       } catch (error) {
         toast.error("Failed to load admins");
@@ -39,18 +47,16 @@ const AdminViewAdmin = () => {
     setIsModalOpen(true);
   };
 
-  const handleDeleteAdmin = (adminId) => {
+  const handleDeactivateAdmin = (adminId) => {
     axios
-      .delete(`/admin/delete/admin/${adminId}`)
+      .put(`/admin/update/deactivate/${adminId}`)
       .then(() => {
-        toast.success("Admin deleted successfully!");
-        setAdmins((prevAdmins) =>
-          prevAdmins.filter((admin) => admin.id !== adminId)
-        );
+        toast.success("Admin deactivated successfully!");
+        window.location.reload(); // Reloads the page immediately after showing the toast
       })
       .catch((error) => {
         const errorMessage =
-          error.response?.data?.message || "Failed to delete admin";
+          error.response?.data?.message || "Failed to deactivate admin";
         toast.error(errorMessage);
       });
   };
@@ -364,10 +370,10 @@ const AdminViewAdmin = () => {
                         View
                       </button>
                       <button
-                        onClick={() => handleDeleteAdmin(admin.id)}
-                        className="bg-red-500 text-white text-xs md:text-sm px-3 py-1 rounded-full shadow-sm hover:bg-red-700 transition duration-200 font-medium"
+                        onClick={() => handleDeactivateAdmin(admin.id)}
+                        className="bg-yellow-500 text-white text-xs md:text-sm px-3 py-1 rounded-full shadow-sm hover:bg-yellow-700 transition duration-200 font-medium"
                       >
-                        Delete
+                        Deactivate
                       </button>
                     </td>
                   </tr>

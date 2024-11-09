@@ -17,6 +17,7 @@ const UserProf = () => {
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeactivateModalOpen, setIsDeactivateModalOpen] = useState(false); // New state for deactivate modal
   const [isEditing, setIsEditing] = useState(true);
   const [isProfilePictureModalOpen, setIsProfilePictureModalOpen] =
     useState(false);
@@ -264,6 +265,27 @@ const UserProf = () => {
     setIsLogoutModalOpen(true);
   };
 
+  const handleDeactivateUser = () => {
+    const userId = localStorage.getItem("Id");
+
+    axios
+      .put(`/user/update/deactivate/${userId}`)
+      .then(() => {
+        toast.success("Account deactivated successfully!");
+        setIsDeactivateModalOpen(false);
+        confirmLogout(); // Log the user out after deactivation
+      })
+      .catch((error) => {
+        const errorMessage =
+          error.response?.data?.message || "Failed to deactivate account";
+        toast.error(errorMessage);
+      });
+  };
+
+  const closeDeactivateModal = () => {
+    setIsDeactivateModalOpen(false);
+  };
+
   const confirmLogout = () => {
     localStorage.removeItem("Id");
     localStorage.removeItem("Role");
@@ -336,6 +358,13 @@ const UserProf = () => {
                 lock
               </span>
               Change Password
+            </button>
+
+            <button
+              onClick={() => setIsDeactivateModalOpen(true)} // Open deactivate modal
+              className="w-full md:w-auto px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition duration-300 mt-4 md:mt-0 md:ml-4"
+            >
+              Deactivate Account
             </button>
           </div>
         </div>
@@ -489,6 +518,43 @@ const UserProf = () => {
                 className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
               >
                 Update Picture
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Deactivate Modal */}
+      {isDeactivateModalOpen && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
+            <div className="flex justify-between items-center border-b pb-3 mb-4">
+              <h2 className="text-2xl font-semibold text-gray-800">
+                Deactivate Account
+              </h2>
+              <button
+                onClick={closeDeactivateModal}
+                className="text-gray-500 hover:text-gray-800 transition duration-200"
+              >
+                ✕
+              </button>
+            </div>
+            <p className="text-lg text-gray-600 mb-6">
+              Are you sure you want to deactivate your account? This action
+              cannot be undone.
+            </p>
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={closeDeactivateModal}
+                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-200"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeactivateUser}
+                className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
+              >
+                Deactivate
               </button>
             </div>
           </div>

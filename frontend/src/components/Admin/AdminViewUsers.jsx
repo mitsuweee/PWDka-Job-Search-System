@@ -66,6 +66,20 @@ const AdminViewUsers = () => {
       });
   };
 
+  const handleDeactivateUser = (userId) => {
+    axios
+      .put(`/user/update/deactivate/${userId}`)
+      .then(() => {
+        toast.success("User deactivated successfully!");
+        window.location.reload(); // Reloads the page immediately after showing the toast
+      })
+      .catch((error) => {
+        const errorMessage =
+          error.response?.data?.message || "Failed to deactivate user";
+        toast.error(errorMessage);
+      });
+  };
+
   const formatUserData = (userData) => ({
     id: userData.id,
     firstName: userData.first_name,
@@ -380,6 +394,12 @@ const AdminViewUsers = () => {
                         className="bg-blue-500 text-white text-xs md:text-sm px-2 md:px-3 py-1 rounded-full shadow-sm hover:bg-blue-700 transition duration-200 font-medium"
                       >
                         View
+                      </button>
+                      <button
+                        onClick={() => handleDeactivateUser(user.id)}
+                        className="bg-yellow-500 text-white text-xs md:text-sm px-3 py-1 rounded-full shadow-sm hover:bg-yellow-700 transition duration-200 font-medium"
+                      >
+                        Deactivate
                       </button>
                     </div>
                   </td>

@@ -65,6 +65,20 @@ const AdminViewComp = () => {
       });
   };
 
+  const handleDeactivateCompany = (companyId) => {
+    axios
+      .put(`/company/update/deactivate/${companyId}`)
+      .then(() => {
+        toast.success("Company deactivated successfully!");
+        window.location.reload(); // Reloads the page immediately after showing the toast
+      })
+      .catch((error) => {
+        const errorMessage =
+          error.response?.data?.message || "Failed to deactivate company";
+        toast.error(errorMessage);
+      });
+  };
+
   const formatCompanyData = (companyData) => ({
     id: companyData.id,
     companyName: companyData.name,
@@ -388,6 +402,12 @@ const AdminViewComp = () => {
                       className="bg-blue-500 text-white text-xs md:text-sm px-3 py-1 rounded-full shadow-sm hover:bg-blue-700 transition duration-200 font-medium"
                     >
                       View
+                    </button>
+                    <button
+                      onClick={() => handleDeactivateCompany(company.id)}
+                      className="bg-yellow-500 text-white text-xs md:text-sm px-3 py-1 rounded-full shadow-sm hover:bg-yellow-700 transition duration-200 font-medium"
+                    >
+                      Deactivate
                     </button>
                   </td>
                 </tr>

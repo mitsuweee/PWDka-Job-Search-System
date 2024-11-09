@@ -191,17 +191,13 @@ const viewCounts = async (req, res, next) => {
 
 const viewAdmins = async (req, res, next) => {
   try {
-    const rows = await knex("admin").select(
-      "id",
-      "first_name",
-      "last_name",
-      "email",
-      "date_created"
-    );
+    const rows = await knex("admin")
+      .select("id", "first_name", "last_name", "email", "date_created")
+      .where({ status: "ACTIVE" }); // Filter to only include ACTIVE admins
 
     return res.status(200).json({
       successful: true,
-      message: "Successfully Retrieved Admins",
+      message: "Successfully Retrieved Active Admins",
       data: rows,
     });
   } catch (err) {
