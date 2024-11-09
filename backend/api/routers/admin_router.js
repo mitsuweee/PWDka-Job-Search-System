@@ -24,6 +24,11 @@ adminRouter.put("/update/password/:id", adminController.adminChangePassword); //
 adminRouter.put("/update/email/:id", adminController.updateAdminEmail); //Admin Change email
 adminRouter.put("/update/details/:id", adminController.updateAdmin); //Admin Details
 adminRouter.put("/update/deactivate/:id", adminController.deactivateAdmin); //Deactivate Admin
+adminRouter.put("/update/deactivate/user/:id", adminController.deactivateUser); //Deactivate User
+adminRouter.put(
+  "/update/deactivate/company/:id",
+  adminController.deactivateCompany
+); //Deactivate User
 
 adminRouter.delete("/delete/user/:id", adminController.deleteUser); // Delete User
 adminRouter.delete("/delete/admin/:id", adminController.deleteAdmin); // Delete Admin

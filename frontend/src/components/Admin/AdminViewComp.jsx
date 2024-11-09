@@ -67,7 +67,7 @@ const AdminViewComp = () => {
 
   const handleDeactivateCompany = (companyId) => {
     axios
-      .put(`/company/update/deactivate/${companyId}`)
+      .put(`/admin/update/deactivate/company/${companyId}`)
       .then(() => {
         toast.success("Company deactivated successfully!");
         window.location.reload(); // Reloads the page immediately after showing the toast

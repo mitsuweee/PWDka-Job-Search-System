@@ -1029,6 +1029,74 @@ const deactivateAdmin = async (req, res, next) => {
   }
 };
 
+const deactivateUser = async (req, res, next) => {
+  const id = req.params.id;
+
+  if (!id) {
+    return res.status(404).json({
+      successful: false,
+      message: "ID is missing",
+    });
+  }
+
+  try {
+    const user = await knex("user").where({ id }).first();
+
+    if (!user) {
+      return res.status(404).json({
+        successful: false,
+        message: "User not found",
+      });
+    }
+
+    await knex("user").where({ id }).update({ status: "DEACTIVATE" });
+
+    return res.status(200).json({
+      successful: true,
+      message: "Successfully Deactivated User!",
+    });
+  } catch (err) {
+    return res.status(500).json({
+      successful: false,
+      message: err.message,
+    });
+  }
+};
+
+const deactivateCompany = async (req, res, next) => {
+  const id = req.params.id;
+
+  if (!id) {
+    return res.status(404).json({
+      successful: false,
+      message: "ID is missing",
+    });
+  }
+
+  try {
+    const user = await knex("company").where({ id }).first();
+
+    if (!user) {
+      return res.status(404).json({
+        successful: false,
+        message: "Company not found",
+      });
+    }
+
+    await knex("company").where({ id }).update({ status: "DEACTIVATE" });
+
+    return res.status(200).json({
+      successful: true,
+      message: "Successfully Deactivated company!",
+    });
+  } catch (err) {
+    return res.status(500).json({
+      successful: false,
+      message: err.message,
+    });
+  }
+};
+
 module.exports = {
   registerAdmin,
   loginAdmin,
@@ -1050,4 +1118,6 @@ module.exports = {
   sendEmailConcern,
   updateAdminEmail,
   deactivateAdmin,
+  deactivateUser,
+  deactivateCompany,
 };

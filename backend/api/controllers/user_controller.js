@@ -617,35 +617,53 @@ const updateUserEmail = async (req, res, next) => {
 
 const deactivateUser = async (req, res, next) => {
   const id = req.params.id;
+  const password = req.body.password;
+  const confirmPassword = req.body.confirm_password;
 
-  if (!id) {
+  if (!id || !password || !confirmPassword) {
     return res.status(404).json({
       successful: false,
-      message: "ID is missing",
+      message: "One or more details missing",
     });
-  }
+  } else if (password !== confirmPassword) {
+    return res.status(400).json({
+      successful: false,
+      message: "Password does not match",
+    });
+  } else {
+    try {
+      const user = await knex("user")
+        .select("id", "password")
+        .where({ id })
+        .first();
 
-  try {
-    const user = await knex("user").where({ id }).first();
+      if (!user) {
+        return res.status(404).json({
+          successful: false,
+          message: "User not found",
+        });
+      } else {
+        const passwordMatch = await bcrypt.compare(password, user.password);
+        if (!passwordMatch) {
+          return res.status(400).json({
+            successful: false,
+            message: "Invalid Credentials",
+          });
+        } else {
+          await knex("user").where({ id }).update({ status: "DEACTIVATE" });
 
-    if (!user) {
-      return res.status(404).json({
+          return res.status(200).json({
+            successful: true,
+            message: "Successfully Deactivated User!",
+          });
+        }
+      }
+    } catch (err) {
+      return res.status(500).json({
         successful: false,
-        message: "User not found",
+        message: err.message,
       });
     }
-
-    await knex("user").where({ id }).update({ status: "DEACTIVATE" });
-
-    return res.status(200).json({
-      successful: true,
-      message: "Successfully Deactivated User!",
-    });
-  } catch (err) {
-    return res.status(500).json({
-      successful: false,
-      message: err.message,
-    });
   }
 };
 

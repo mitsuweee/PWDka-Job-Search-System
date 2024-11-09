@@ -68,7 +68,7 @@ const AdminViewUsers = () => {
 
   const handleDeactivateUser = (userId) => {
     axios
-      .put(`/user/update/deactivate/${userId}`)
+      .put(`/admin/update/deactivate/user/${userId}`)
       .then(() => {
         toast.success("User deactivated successfully!");
         window.location.reload(); // Reloads the page immediately after showing the toast
