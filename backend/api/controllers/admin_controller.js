@@ -1097,6 +1097,48 @@ const deactivateCompany = async (req, res, next) => {
   }
 };
 
+const verifyAdminStatus = async (req, res, next) => {
+  const id = req.params.id;
+
+  if (!id) {
+    return res.status(404).json({
+      successful: false,
+      message: "Id is missing",
+    });
+  } else {
+    try {
+      const admin = await knex("admin")
+        .select("id", "status")
+        .where({ id })
+        .first();
+
+      if (!admin) {
+        return res.status(404).json({
+          successful: false,
+          message: "Admin not found",
+        });
+      } else {
+        if (admin.status === "ACTIVE") {
+          return res.status(200).json({
+            successful: true,
+            message: "Admin is still Active",
+          });
+        } else {
+          return res.status(200).json({
+            successful: true,
+            message: "User is Deactivated",
+          });
+        }
+      }
+    } catch (err) {
+      return res.status(500).json({
+        successful: false,
+        message: err.message,
+      });
+    }
+  }
+};
+
 module.exports = {
   registerAdmin,
   loginAdmin,
@@ -1120,4 +1162,5 @@ module.exports = {
   deactivateAdmin,
   deactivateUser,
   deactivateCompany,
+  verifyAdminStatus,
 };
