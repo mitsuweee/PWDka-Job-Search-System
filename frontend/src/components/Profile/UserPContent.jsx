@@ -399,16 +399,16 @@ const UserProf = () => {
         </div>
 
         {/* Back and Logout Buttons */}
-        <div className="flex flex-col md:flex-row md:items-center md:space-x-4 space-y-4 md:space-y-0 mt-4 md:mt-0">
+        <div className="flex flex-row md:flex-row md:items-center md:space-x-4 space-x-4 space-y-0 mt-4 md:mt-0">
           <button
             onClick={handleGoBack}
-            className="w-full md:w-auto px-4 py-2 bg-gray-100 text-blue-900 font-semibold rounded-lg shadow-md hover:bg-gray-300 transition duration-300"
+            className="w-1/2 md:w-auto px-4 py-2 bg-gray-100 text-blue-900 font-semibold rounded-lg shadow-md hover:bg-gray-300 transition duration-300"
           >
             Back
           </button>
           <button
             onClick={handleLogout}
-            className="w-full md:w-auto px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition duration-300 flex items-center justify-center"
+            className="w-1/2 md:w-auto px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition duration-300 flex items-center justify-center"
           >
             <span className="material-symbols-outlined text-xl mr-2">
               logout
