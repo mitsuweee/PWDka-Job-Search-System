@@ -442,13 +442,13 @@ const AdminViewComp = () => {
                   <td className="py-4 px-6 text-center">
                     <button
                       onClick={() => handleViewCompany(company.id)}
-                      className="bg-blue-500 text-white text-xs md:text-sm px-3 py-1 rounded-full shadow-sm hover:bg-blue-700 transition duration-200 font-medium"
+                      className="bg-blue-500 text-white text-xs md:text-sm px-3 py-1 rounded-full shadow-sm hover:bg-blue-700 transition duration-200 font-medium "
                     >
                       View
                     </button>
                     <button
                       onClick={() => handleDeactivateCompany(company.id)}
-                      className="bg-yellow-500 text-white text-xs md:text-sm px-3 py-1 rounded-full shadow-sm hover:bg-yellow-700 transition duration-200 font-medium"
+                      className="bg-yellow-500 text-white text-xs md:text-sm px-3 py-1 rounded-full shadow-sm hover:bg-yellow-700 transition duration-200 font-medium ml-2"
                     >
                       Deactivate
                     </button>
