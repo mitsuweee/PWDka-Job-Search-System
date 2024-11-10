@@ -15,19 +15,10 @@ const ViewApplicants = () => {
   const [selectedResume, setSelectedResume] = useState(null);
   const [selectedProfile, setSelectedProfile] = useState(null);
   const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
-  const [companyName, setCompanyName] = useState("");
-  const [jobDetails, setJobDetails] = useState({
-    companyName: "",
-    positionName: "",
-    jobDescription: "",
-    requirements: "",
-    qualifications: "",
-    minSalary: "",
-    maxSalary: "",
-    positionType: "full-time",
-    disabilityCategories: [],
-    salaryVisibility: "HIDE", // Default to "HIDE"
-    level: "",
+  const [admin, setAdmin] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
   });
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
