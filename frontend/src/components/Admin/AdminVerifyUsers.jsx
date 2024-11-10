@@ -122,6 +122,7 @@ const AdminVerifyUsers = () => {
   const openDeclineModal = (userId) => {
     setSelectedUser(userId);
     setShowDeclineModal(true);
+    setShowModal(false);
   };
 
   const confirmDecline = () => {
@@ -142,8 +143,8 @@ const AdminVerifyUsers = () => {
           prevUsers.filter((user) => user.id !== selectedUser)
         );
         setSelectedUser(null);
+        setShowDeclineModal(true);
         setShowModal(false);
-        setShowDeclineModal(false);
         setLoading(false);
         setDeclineReason(""); // Reset decline reason
       })
