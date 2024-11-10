@@ -111,7 +111,6 @@ const AdminVerifyComp = () => {
   const openDeclineModal = (companyId) => {
     setSelectedCompany(companyId);
     setShowDeclineModal(true);
-    setShowModal(false);
   };
 
   const confirmDecline = () => {
