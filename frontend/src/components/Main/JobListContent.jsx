@@ -128,10 +128,18 @@ const JobListing = () => {
         });
     };
 
-    // Pass sortOption when calling fetchJobs
+    // Fetch user data and jobs
     fetchUserFullName();
     fetchJobs("", "", "", sortOption);
-  }, [sortOption]);
+
+    // Check user status every 5 seconds
+    const interval = setInterval(() => {
+      checkUserStatus();
+    }, 5000);
+
+    // Clean up the interval on component unmount
+    return () => clearInterval(interval);
+  }, [sortOption, navigate]); // No need to include checkUserStatus as it is outside now
 
   const fetchApplicationHistory = async () => {
     const userId = localStorage.getItem("Id");
