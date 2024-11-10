@@ -15,6 +15,20 @@ const ViewApplicants = () => {
   const [selectedResume, setSelectedResume] = useState(null);
   const [selectedProfile, setSelectedProfile] = useState(null);
   const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
+  const [companyName, setCompanyName] = useState("");
+  const [jobDetails, setJobDetails] = useState({
+    companyName: "",
+    positionName: "",
+    jobDescription: "",
+    requirements: "",
+    qualifications: "",
+    minSalary: "",
+    maxSalary: "",
+    positionType: "full-time",
+    disabilityCategories: [],
+    salaryVisibility: "HIDE", // Default to "HIDE"
+    level: "",
+  });
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [deleteApplicantId, setDeleteApplicantId] = useState(null);
@@ -28,6 +42,32 @@ const ViewApplicants = () => {
   const filteredApplicants = applicants.filter((applicant) =>
     selectedStatus === "All" ? true : applicant.status === selectedStatus
   );
+
+  useEffect(() => {
+    const Id = localStorage.getItem("Id");
+    if (Id) {
+      const fetchCompanyData = async () => {
+        try {
+          // Fetch company name
+          const companyResponse = await axios.get(`/company/view/${Id}`);
+          if (companyResponse.data.successful) {
+            setCompanyName(companyResponse.data.data.name);
+          } else {
+            console.error(
+              "Error fetching company name:",
+              companyResponse.data.message
+            );
+          }
+        } catch (error) {
+          console.error("Error fetching company data:", error);
+        }
+      };
+
+      fetchCompanyData();
+    } else {
+      console.error("Company ID is not available in session storage");
+    }
+  }, []);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -227,15 +267,6 @@ const ViewApplicants = () => {
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 z-50 md:z-auto`}
       >
-        {/* Logo Section */}
-        <div className="w-full flex justify-center items-center mb-6 p-2 bg-white rounded-lg">
-          <img
-            src="/imgs/LOGO PWDKA.png"
-            alt="Logo"
-            className="w-26 h-19 object-contain"
-          />
-        </div>
-
         {/* Close Button for Mobile */}
         <button
           className="text-white md:hidden self-end text-3xl"
@@ -243,6 +274,10 @@ const ViewApplicants = () => {
         >
           &times;
         </button>
+
+        <h2 className="text-2xl md:text-3xl font-bold text-white">
+          Welcome, {companyName || "Company"}!
+        </h2>
 
         {/* Dashboard Section */}
         <h2 className="text-white text-lg font-semibold mb-2 mt-4 w-full text-left">

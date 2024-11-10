@@ -19,6 +19,20 @@ const ViewJobs = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [sortOrder, setSortOrder] = useState("Newest");
   const [showDisabilityOptions, setShowDisabilityOptions] = useState(false);
+  const [companyName, setCompanyName] = useState("");
+  const [jobDetails, setJobDetails] = useState({
+    companyName: "",
+    positionName: "",
+    jobDescription: "",
+    requirements: "",
+    qualifications: "",
+    minSalary: "",
+    maxSalary: "",
+    positionType: "full-time",
+    disabilityCategories: [],
+    salaryVisibility: "HIDE", // Default to "HIDE"
+    level: "",
+  });
   const [selectedDisabilityCategories, setSelectedDisabilityCategories] =
     useState([]);
 
@@ -50,6 +64,32 @@ const ViewJobs = () => {
       .finally(() => {
         setIsLoading(false);
       });
+  }, []);
+
+  useEffect(() => {
+    const Id = localStorage.getItem("Id");
+    if (Id) {
+      const fetchCompanyData = async () => {
+        try {
+          // Fetch company name
+          const companyResponse = await axios.get(`/company/view/${Id}`);
+          if (companyResponse.data.successful) {
+            setCompanyName(companyResponse.data.data.name);
+          } else {
+            console.error(
+              "Error fetching company name:",
+              companyResponse.data.message
+            );
+          }
+        } catch (error) {
+          console.error("Error fetching company data:", error);
+        }
+      };
+
+      fetchCompanyData();
+    } else {
+      console.error("Company ID is not available in session storage");
+    }
   }, []);
 
   useEffect(() => {
@@ -335,15 +375,6 @@ const ViewJobs = () => {
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 z-50 md:z-auto`}
       >
-        {/* Logo Section */}
-        <div className="w-full flex justify-center items-center mb-6 p-2 bg-white rounded-lg">
-          <img
-            src="/imgs/LOGO PWDKA.png" // Replace with the actual path to your logo
-            alt="Logo"
-            className="w-26 h-19 object-contain"
-          />
-        </div>
-
         {/* Close Button for Mobile */}
         <button
           className="text-white md:hidden self-end text-3xl"
@@ -352,11 +383,19 @@ const ViewJobs = () => {
           &times;
         </button>
 
+        <h2 className="text-xl md:text-xl font-bold text-white">
+          Welcome,{" "}
+          <span className="text-2xl md:text-3xl text-white font-bold">
+            {companyName || "Company"}
+          </span>
+          !
+        </h2>
+
         {/* Dashboard Section */}
         <h2 className="text-white text-lg font-semibold mb-2 mt-4 w-full text-left">
           Dashboard
         </h2>
-        <hr className="border-gray-400 w-full mb-4" />
+        <hr className="border-2 border-white w-full mb-4" />
         <a
           href="/dashc"
           className={`${
@@ -378,7 +417,7 @@ const ViewJobs = () => {
         <h2 className="text-white text-lg font-semibold mb-2 mt-4 w-full text-left">
           Job Management
         </h2>
-        <hr className="border-gray-400 w-full mb-4" />
+        <hr className="border-2 border-white w-full mb-4" />
 
         <a
           href="/dashboard/postjob"
@@ -414,7 +453,7 @@ const ViewJobs = () => {
         <h2 className="text-white text-lg font-semibold mb-2 mt-4 w-full text-left">
           Account
         </h2>
-        <hr className="border-gray-400 w-full mb-4" />
+        <hr className="border-2 border-white w-full mb-4" />
 
         {/* Logout Button */}
         <button

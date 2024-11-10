@@ -5,6 +5,8 @@ import axios from "axios";
 const CompanyDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const companyId = localStorage.getItem("Id");
+  const [companyName, setCompanyName] = useState("");
   const [companyCounts, setCompanyCounts] = useState({
     job_listings: 0,
     job_applications: 0,
@@ -18,29 +20,41 @@ const CompanyDashboard = () => {
   useEffect(() => {
     const Id = localStorage.getItem("Id");
     if (Id) {
-      const fetchCompanyCounts = async () => {
+      const fetchCompanyData = async () => {
         try {
-          const response = await axios.get(`/joblisting/view/count/${Id}`);
+          // Fetch company name
+          const companyResponse = await axios.get(`/company/view/${Id}`);
+          if (companyResponse.data.successful) {
+            setCompanyName(companyResponse.data.data.name);
+          } else {
+            console.error(
+              "Error fetching company name:",
+              companyResponse.data.message
+            );
+          }
 
-          if (response.data.successful) {
-            setCompanyCounts(response.data.data);
+          // Fetch company counts
+          const countsResponse = await axios.get(
+            `/joblisting/view/count/${Id}`
+          );
+          if (countsResponse.data.successful) {
+            setCompanyCounts(countsResponse.data.data);
           } else {
             console.error(
               "Error fetching company counts:",
-              response.data.message
+              countsResponse.data.message
             );
           }
         } catch (error) {
-          console.error("Error fetching company counts:", error);
+          console.error("Error fetching company data:", error);
         }
       };
 
-      fetchCompanyCounts();
+      fetchCompanyData();
     } else {
       console.error("Company ID is not available in session storage");
     }
   }, []);
-
   const confirmLogout = () => {
     localStorage.removeItem("Id");
     localStorage.removeItem("Role");
@@ -64,15 +78,6 @@ const CompanyDashboard = () => {
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 z-50 md:z-auto`}
       >
-        {/* Logo Section */}
-        <div className="w-full flex justify-center items-center mb-6 p-2 bg-white rounded-lg">
-          <img
-            src="/imgs/LOGO PWDKA.png" // Replace with the actual path to your logo
-            alt="Logo"
-            className="w-26 h-19 object-contain"
-          />
-        </div>
-
         {/* Close Button for Mobile */}
         <button
           className="text-white md:hidden self-end text-3xl"
@@ -80,6 +85,10 @@ const CompanyDashboard = () => {
         >
           &times;
         </button>
+
+        <h2 className="text-2xl md:text-3xl font-bold text-white">
+          Welcome, {companyName || "Company"}!
+        </h2>
 
         {/* Dashboard Section */}
         <h2 className="text-white text-lg font-semibold mb-2 mt-4 w-full text-left">
