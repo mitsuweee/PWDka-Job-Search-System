@@ -8,7 +8,7 @@ companyRouter.post("/login", companyController.loginCompany); // Login Company
 
 companyRouter.get("/view/:id", companyController.viewCompanyViaId); // Search Company ID
 companyRouter.get(
-  "/view/verify/status/:id",
+  "/view/verify/status:id",
   companyController.verifyCompanyStatus
 ); // Verify Comp Status
 

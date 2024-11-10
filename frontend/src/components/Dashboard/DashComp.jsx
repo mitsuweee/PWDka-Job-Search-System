@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import toast, { Toaster } from "react-hot-toast";
 
 const CompanyDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -17,81 +16,45 @@ const CompanyDashboard = () => {
 
   const navigate = useNavigate();
 
-  const checkCompanyStatus = async () => {
-    const companyId = localStorage.getItem("Id");
-    try {
-      const response = await axios.get(
-        `/company/view/verify/status${companyId}`
-      );
-      if (
-        response.data.successful &&
-        response.data.message === "Company is Deactivated"
-      ) {
-        toast.error("Your company account has been deactivated. Logging out.", {
-          duration: 5000, // Display the toast for 5 seconds
-        });
-
-        // Wait for the toast to finish before logging out
-        setTimeout(() => {
-          localStorage.removeItem("Id");
-          localStorage.removeItem("Role");
-          localStorage.removeItem("Token");
-          navigate("/login");
-        }, 5000); // Wait for 5 seconds (the toast duration)
-      }
-    } catch (error) {
-      toast.error("Failed to check company status.");
-    }
-  };
-
+  // Fetch counts from the backend using Id from localStorage
   useEffect(() => {
-    const companyId = localStorage.getItem("Id");
+    const Id = localStorage.getItem("Id");
+    if (Id) {
+      const fetchCompanyData = async () => {
+        try {
+          // Fetch company name
+          const companyResponse = await axios.get(`/company/view/${Id}`);
+          if (companyResponse.data.successful) {
+            setCompanyName(companyResponse.data.data.name);
+          } else {
+            console.error(
+              "Error fetching company name:",
+              companyResponse.data.message
+            );
+          }
 
-    // Fetch company data (name and counts) function
-    const fetchCompanyData = async () => {
-      setLoading(true);
-      try {
-        // Fetch company name
-        const companyResponse = await axios.get(`/company/view/${companyId}`);
-        if (companyResponse.data.successful) {
-          setCompanyName(companyResponse.data.data.name);
-        } else {
-          console.error(
-            "Error fetching company name:",
-            companyResponse.data.message
+          // Fetch company counts
+          const countsResponse = await axios.get(
+            `/joblisting/view/count/${Id}`
           );
+          if (countsResponse.data.successful) {
+            setCompanyCounts(countsResponse.data.data);
+          } else {
+            console.error(
+              "Error fetching company counts:",
+              countsResponse.data.message
+            );
+          }
+        } catch (error) {
+          console.error("Error fetching company data:", error);
         }
+      };
 
-        // Fetch company counts
-        const countsResponse = await axios.get(
-          `/joblisting/view/count/${companyId}`
-        );
-        if (countsResponse.data.successful) {
-          setCompanyCounts(countsResponse.data.data);
-        } else {
-          console.error(
-            "Error fetching company counts:",
-            countsResponse.data.message
-          );
-        }
-
-        // Check company status
-        checkCompanyStatus(companyId); // Call checkCompanyStatus here
-      } catch (error) {
-        console.error("Error fetching company data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    // Ensure the company ID is available
-    if (companyId) {
       fetchCompanyData();
     } else {
-      console.error("Company ID is not available in localStorage");
+      console.error("Company ID is not available in session storage");
     }
-  }, []); // Empty dependency array means it runs only once on mount
-
+  }, []);
   const confirmLogout = () => {
     localStorage.removeItem("Id");
     localStorage.removeItem("Role");
