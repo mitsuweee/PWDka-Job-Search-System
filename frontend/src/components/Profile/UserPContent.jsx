@@ -21,6 +21,7 @@ const UserProf = () => {
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false); // Controls second password modal
   const [deactivationPassword, setDeactivationPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
   const [isChangingEmail, setIsChangingEmail] = useState(false);
 
   const [isOptionsModalOpen, setIsOptionsModalOpen] = useState(false);
@@ -738,9 +739,9 @@ const UserProf = () => {
       <div>
         {isModalOpen && (
           <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
-            <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
-              <div className="flex justify-between items-center border-b pb-3 mb-4">
-                <h2 className="text-2xl font-semibold text-gray-800">
+            <div className="bg-white p-8 rounded-lg shadow-2xl max-w-lg w-full">
+              <div className="flex justify-between items-center border-b pb-4 mb-6">
+                <h2 className="text-3xl font-bold text-gray-800">
                   {isEditing
                     ? "Edit Profile"
                     : isChangingEmail
@@ -749,7 +750,7 @@ const UserProf = () => {
                 </h2>
                 <button
                   onClick={() => setIsModalOpen(false)}
-                  className="text-gray-500 hover:text-gray-800 transition duration-200"
+                  className="text-gray-500 focus:outline-none"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -769,13 +770,13 @@ const UserProf = () => {
               </div>
 
               {/* Toggle Buttons */}
-              <div className="flex justify-between mb-4">
+              <div className="flex justify-between mb-6">
                 <button
-                  className={`py-2 px-4 ${
+                  className={`py-2 px-4 rounded-lg font-semibold ${
                     isEditing
-                      ? "bg-blue-500 text-white"
+                      ? "bg-blue-600 text-white"
                       : "bg-gray-200 text-gray-700"
-                  } rounded-lg`}
+                  }`}
                   onClick={() => {
                     setIsEditing(true);
                     setIsChangingEmail(false);
@@ -783,13 +784,12 @@ const UserProf = () => {
                 >
                   Edit Profile
                 </button>
-
                 <button
-                  className={`py-2 px-4 ${
+                  className={`py-2 px-4 rounded-lg font-semibold ${
                     isChangingEmail
-                      ? "bg-blue-500 text-white"
+                      ? "bg-green-600 text-white"
                       : "bg-gray-200 text-gray-700"
-                  } rounded-lg`}
+                  }`}
                   onClick={() => {
                     setIsEditing(false);
                     setIsChangingEmail(true);
@@ -797,13 +797,12 @@ const UserProf = () => {
                 >
                   Change Email
                 </button>
-
                 <button
-                  className={`py-2 px-4 ${
+                  className={`py-2 px-4 rounded-lg font-semibold ${
                     !isEditing && !isChangingEmail
-                      ? "bg-blue-500 text-white"
+                      ? "bg-yellow-500 text-white"
                       : "bg-gray-200 text-gray-700"
-                  } rounded-lg`}
+                  }`}
                   onClick={() => {
                     setIsEditing(false);
                     setIsChangingEmail(false);
@@ -826,7 +825,7 @@ const UserProf = () => {
                       name="address"
                       value={user.address}
                       onChange={handleChange}
-                      className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                      className="w-full p-3 border border-gray-300 rounded-lg shadow-inner"
                     />
                   </div>
                   <div>
@@ -838,7 +837,7 @@ const UserProf = () => {
                       name="city"
                       value={user.city}
                       onChange={handleChange}
-                      className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                      className="w-full p-3 border border-gray-300 rounded-lg shadow-inner"
                     />
                   </div>
                   <div>
@@ -851,7 +850,7 @@ const UserProf = () => {
                       value={user.contactNumber}
                       onChange={handleChange}
                       pattern="[0-9]{10,11}"
-                      className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                      className="w-full p-3 border border-gray-300 rounded-lg shadow-inner"
                     />
                   </div>
                 </div>
@@ -866,7 +865,7 @@ const UserProf = () => {
                       type="email"
                       value={newEmail}
                       onChange={(e) => setNewEmail(e.target.value)}
-                      className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                      className="w-full p-3 border border-gray-300 rounded-lg shadow-inner"
                     />
                   </div>
                   <div>
@@ -884,11 +883,11 @@ const UserProf = () => {
                         onChange={(e) =>
                           setCurrentPasswordForEmail(e.target.value)
                         }
-                        className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                        className="w-full p-3 border border-gray-300 rounded-lg shadow-inner"
                       />
                       <button
                         type="button"
-                        className="absolute inset-y-0 right-3 flex items-center"
+                        className="absolute inset-y-0 right-3 text-gray-500"
                         onClick={() =>
                           setPasswordVisibility({
                             ...passwordVisibility,
@@ -923,11 +922,11 @@ const UserProf = () => {
                         name="currentPassword"
                         value={passwords.currentPassword}
                         onChange={handlePasswordChange}
-                        className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                        className="w-full p-3 border border-gray-300 rounded-lg shadow-inner"
                       />
                       <button
                         type="button"
-                        className="absolute inset-y-0 right-3 flex items-center"
+                        className="absolute inset-y-0 right-3 text-gray-500"
                         onClick={() =>
                           togglePasswordVisibility("currentPassword")
                         }
@@ -952,11 +951,11 @@ const UserProf = () => {
                         name="newPassword"
                         value={passwords.newPassword}
                         onChange={handlePasswordChange}
-                        className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                        className="w-full p-3 border border-gray-300 rounded-lg shadow-inner"
                       />
                       <button
                         type="button"
-                        className="absolute inset-y-0 right-3 flex items-center"
+                        className="absolute inset-y-0 right-3 text-gray-500"
                         onClick={() => togglePasswordVisibility("newPassword")}
                       >
                         <span className="material-symbols-outlined">
@@ -981,11 +980,11 @@ const UserProf = () => {
                         name="confirmNewPassword"
                         value={passwords.confirmNewPassword}
                         onChange={handlePasswordChange}
-                        className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                        className="w-full p-3 border border-gray-300 rounded-lg shadow-inner"
                       />
                       <button
                         type="button"
-                        className="absolute inset-y-0 right-3 flex items-center"
+                        className="absolute inset-y-0 right-3 text-gray-500"
                         onClick={() =>
                           togglePasswordVisibility("confirmNewPassword")
                         }
@@ -1001,10 +1000,11 @@ const UserProf = () => {
                 </div>
               )}
 
+              {/* Action Buttons */}
               <div className="flex justify-end mt-6 space-x-4">
                 <button
                   onClick={() => setIsModalOpen(false)}
-                  className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-200"
+                  className="bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg"
                 >
                   Back
                 </button>
@@ -1016,7 +1016,7 @@ const UserProf = () => {
                       ? handleUserEmailUpdate
                       : handlePasswordUpdate
                   }
-                  className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
+                  className="bg-green-600 text-white font-semibold py-2 px-4 rounded-lg"
                 >
                   {isEditing
                     ? "Update Profile"
