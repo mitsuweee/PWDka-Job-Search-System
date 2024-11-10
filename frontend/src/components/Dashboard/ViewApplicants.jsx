@@ -15,7 +15,11 @@ const ViewApplicants = () => {
   const [selectedResume, setSelectedResume] = useState(null);
   const [selectedProfile, setSelectedProfile] = useState(null);
   const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
-  const [companyName, setCompanyName] = useState("");
+  const [admin, setAdmin] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+  });
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [deleteApplicantId, setDeleteApplicantId] = useState(null);

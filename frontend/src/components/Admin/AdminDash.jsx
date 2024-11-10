@@ -14,6 +14,20 @@ const AdminDashboard = () => {
     total_job_listings: 0,
     total_job_application: 0,
   });
+  const [companyName, setCompanyName] = useState("");
+  const [jobDetails, setJobDetails] = useState({
+    companyName: "",
+    positionName: "",
+    jobDescription: "",
+    requirements: "",
+    qualifications: "",
+    minSalary: "",
+    maxSalary: "",
+    positionType: "full-time",
+    disabilityCategories: [],
+    salaryVisibility: "HIDE", // Default to "HIDE"
+    level: "",
+  });
   const [admin, setAdmin] = useState({
     firstName: "",
     lastName: "",
@@ -43,11 +57,9 @@ const AdminDashboard = () => {
         setNewEmail(adminData.email);
       })
       .catch(function (error) {
-        // Only show the error message if there is a specific message
-        const errorMessage = error.response?.data?.message;
-        if (errorMessage) {
-          toast.error(errorMessage); // Show the server-specific error message
-        }
+        const errorMessage =
+          error.response?.data?.message || "An error occurred";
+        toast.error(errorMessage);
       });
   }, []);
 

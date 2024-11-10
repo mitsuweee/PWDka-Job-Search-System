@@ -5,11 +5,7 @@ import toast, { Toaster } from "react-hot-toast";
 
 const AdminViewAdmin = () => {
   const [admins, setAdmins] = useState([]);
-  const [admin, setAdmin] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-  });
+  const [admin, setAdmin] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -17,46 +13,23 @@ const AdminViewAdmin = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOrder, setSortOrder] = useState("A-Z");
   const [currentPage, setCurrentPage] = useState(1);
-
   const adminsPerPage = 10;
-
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const adminId = localStorage.getItem("Id");
-    const config = {
-      method: "get",
-      url: `/admin/view/${adminId}`,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-
-    axios(config)
-      .then(function (response) {
-        const adminData = response.data.data;
-        setAdmin({
-          firstName: adminData.first_name,
-          lastName: adminData.last_name,
-          email: adminData.email,
-        });
-        setNewEmail(adminData.email);
-      })
-      .catch(function (error) {
-        // Only show the error message if there is a specific message
-        const errorMessage = error.response?.data?.message;
-        if (errorMessage) {
-          toast.error(errorMessage); // Show the server-specific error message
-        }
-      });
-  }, []);
 
   useEffect(() => {
     const fetchAdmins = async () => {
       setLoading(true);
+      const currentAdminId = localStorage.getItem("Id"); // Get current admin ID from localStorage
+
       try {
         const response = await axios.get("/admin/view/admins");
-        setAdmins(response.data.data);
+        // Filter out deactivated admins and the current admin by checking id as a string
+        const activeAdmins = response.data.data.filter(
+          (admin) =>
+            admin.status !== "DEACTIVATE" &&
+            admin.id.toString() !== currentAdminId
+        );
+        setAdmins(activeAdmins);
         toast.success("Admins loaded successfully");
       } catch (error) {
         toast.error("Failed to load admins");
@@ -74,15 +47,18 @@ const AdminViewAdmin = () => {
     setIsModalOpen(true);
   };
 
-  const handleDeleteAdmin = async (adminId) => {
-    try {
-      await axios.delete(`/delete/admin/${adminId}`);
-      setAdmins(admins.filter((admin) => admin.id !== adminId));
-      toast.success("Admin deleted successfully");
-    } catch (error) {
-      toast.error("Failed to delete admin");
-      console.error(error);
-    }
+  const handleDeactivateAdmin = (adminId) => {
+    axios
+      .put(`/admin/update/deactivate/${adminId}`)
+      .then(() => {
+        toast.success("Admin deactivated successfully!");
+        window.location.reload(); // Reloads the page immediately after showing the toast
+      })
+      .catch((error) => {
+        const errorMessage =
+          error.response?.data?.message || "Failed to deactivate admin";
+        toast.error(errorMessage);
+      });
   };
 
   const handleLogout = () => {
@@ -143,12 +119,7 @@ const AdminViewAdmin = () => {
       <aside
         className={`bg-custom-blue w-full md:w-[300px] lg:w-[250px] p-4 flex flex-col items-center md:relative fixed top-0 left-0 min-h-screen h-full transition-transform transform ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } md:translate-x-0 z-50 md:z-auto ${
-          isSidebarOpen ? "overflow-y-auto" : "" // Apply overflow-y-auto only when sidebar is open
-        }`}
-        style={{
-          maxHeight: isSidebarOpen ? "100vh" : "none", // Set max height only when sidebar is open
-        }}
+        } md:translate-x-0 z-50 md:z-auto `}
       >
         {/* Logo Section */}
         <div className="w-full flex justify-center items-center mb-6 p-2 bg-white rounded-lg">
@@ -165,14 +136,6 @@ const AdminViewAdmin = () => {
         >
           &times;
         </button>
-
-        <h2 className="text-2xl md:text-3xl font-bold text-white">
-          Welcome,{" "}
-          <span className="text-2xl md:text-3xl font-bold">
-            {admin.firstName} {admin.lastName}
-          </span>
-          !
-        </h2>
 
         {/* Dashboard Section */}
         <h2 className="text-white text-lg font-semibold mb-2 mt-4 w-full text-left">
@@ -407,10 +370,10 @@ const AdminViewAdmin = () => {
                         View
                       </button>
                       <button
-                        onClick={() => handleDeleteAdmin(admin.id)}
-                        className="bg-red-500 text-white text-xs md:text-sm px-3 py-1 rounded-full shadow-sm hover:bg-red-700 transition duration-200 font-medium"
+                        onClick={() => handleDeactivateAdmin(admin.id)}
+                        className="bg-yellow-500 text-white text-xs md:text-sm px-3 py-1 rounded-full shadow-sm hover:bg-yellow-700 transition duration-200 font-medium"
                       >
-                        Delete
+                        Deactivate
                       </button>
                     </td>
                   </tr>
