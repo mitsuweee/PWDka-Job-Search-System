@@ -345,7 +345,7 @@ const UserProf = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto mb-10 mt-10 p-8 bg-white rounded-lg shadow-lg">
+    <div className="max-w-4xl mx-auto mb-10 mt-10 p-8 bg-white rounded-lg shadow-xl">
       <Toaster position="top-center" reverseOrder={false} />
       <div className="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0 md:space-x-8">
         {/* Profile Picture with Edit Button */}
@@ -417,82 +417,87 @@ const UserProf = () => {
         </div>
       </div>
 
-      {/* Profile Details */}
-      <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 text-left text-gray-800">
-        <div>
-          <div className="mb-4">
-            <p className="text-lg font-semibold text-gray-800 flex items-center">
-              <span className="material-symbols-outlined text-2xl mr-2">
-                home
-              </span>
-              Address:
-            </p>
-            <p className="text-gray-600 bg-gray-200 p-5 rounded-lg capitalize">
-              {user.address}
-            </p>
+      {/* Profile Details Card */}
+      <div className="mt-8 p-8 bg-gray-50 rounded-lg shadow-2xl">
+        <h2 className="text-2xl font-bold text-custom-blue mb-6">
+          Profile Details
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left text-gray-800">
+          <div>
+            <div className="mb-6">
+              <p className="text-lg font-semibold text-gray-800 flex items-center">
+                <span className="material-symbols-outlined text-xl text-black mr-3">
+                  home
+                </span>
+                Address:
+              </p>
+              <p className="text-gray-600 bg-gray-200 p-5 rounded-lg shadow-inner capitalize">
+                {user.address}
+              </p>
+            </div>
+            <div className="mb-6">
+              <p className="text-lg font-semibold text-gray-800 flex items-center">
+                <span className="material-symbols-outlined text-xl text-black mr-3">
+                  location_city
+                </span>
+                City:
+              </p>
+              <p className="text-gray-600 bg-gray-200 p-5 rounded-lg shadow-inner">
+                {user.city
+                  .split(" ")
+                  .map(
+                    (word) =>
+                      word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+                  )
+                  .join(" ")}
+              </p>
+            </div>
+            <div className="mb-6">
+              <p className="text-lg font-semibold text-gray-800 flex items-center">
+                <span className="material-symbols-outlined text-xl text-black mr-3">
+                  phone
+                </span>
+                Contact Number:
+              </p>
+              <p className="text-gray-600 bg-gray-200 p-5 rounded-lg shadow-inner">
+                {user.contactNumber}
+              </p>
+            </div>
+            <div className="mb-6">
+              <p className="text-lg font-semibold text-gray-800 flex items-center">
+                <span className="material-symbols-outlined text-xl text-black mr-3">
+                  person
+                </span>
+                Gender:
+              </p>
+              <p className="text-gray-600 bg-gray-200 p-5 rounded-lg shadow-inner capitalize">
+                {user.gender}
+              </p>
+            </div>
           </div>
-          <div className="mb-4">
-            <p className="text-lg font-semibold text-gray-800 flex items-center">
-              <span className="material-symbols-outlined text-2xl mr-2">
-                location_city
-              </span>
-              City:
-            </p>
-            <p className="text-gray-600 bg-gray-200 p-5 rounded-lg">
-              {user.city
-                .split(" ")
-                .map(
-                  (word) =>
-                    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-                )
-                .join(" ")}
-            </p>
-          </div>
-          <div className="mb-4">
-            <p className="text-lg font-semibold text-gray-800 flex items-center">
-              <span className="material-symbols-outlined text-2xl mr-2">
-                phone
-              </span>
-              Contact Number:
-            </p>
-            <p className="text-gray-600 bg-gray-200 p-5 rounded-lg">
-              {user.contactNumber}
-            </p>
-          </div>
-          <div className="mb-4">
-            <p className="text-lg font-semibold text-gray-800 flex items-center">
-              <span className="material-symbols-outlined text-2xl mr-2">
-                person
-              </span>
-              Gender:
-            </p>
-            <p className="text-gray-600 bg-gray-200 p-5 rounded-lg capitalize">
-              {user.gender}
-            </p>
-          </div>
-        </div>
-        <div>
-          <div className="mb-4">
-            <p className="text-lg font-semibold text-gray-800 flex items-center">
-              <span className="material-symbols-outlined text-2xl mr-2">
-                calendar_today
-              </span>
-              Birthdate:
-            </p>
-            <p className="text-gray-600 bg-gray-200 p-5 rounded-lg">
-              {user.birthdate}
-            </p>
-          </div>
-          <div className="mb-4">
-            <p className="text-lg font-semibold text-gray-800 flex items-center">
-              <span className="material-symbols-outlined text-2xl mr-2">
-                email
-              </span>
-              Email:
-            </p>
-            <p className="text-gray-600 bg-gray-200 p-5 rounded-md">
-              {user.email}
-            </p>
+          <div>
+            <div className="mb-6">
+              <p className="text-lg font-semibold text-gray-800 flex items-center">
+                <span className="material-symbols-outlined text-xl text-black mr-3">
+                  calendar_today
+                </span>
+                Birthdate:
+              </p>
+              <p className="text-gray-600 bg-gray-200 p-5 rounded-lg shadow-inner">
+                {user.birthdate}
+              </p>
+            </div>
+            <div className="mb-6">
+              <p className="text-lg font-semibold text-gray-800 flex items-center">
+                <span className="material-symbols-outlined text-xl text-black mr-3">
+                  email
+                </span>
+                Email:
+              </p>
+              <p className="text-gray-600 bg-gray-200 p-5 rounded-lg shadow-inner">
+                {user.email}
+              </p>
+            </div>
           </div>
         </div>
       </div>
