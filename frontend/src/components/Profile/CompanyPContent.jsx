@@ -362,12 +362,12 @@ const CompanyProf = () => {
           <h4 className="text-sm md:text-lg font-bold text-gray-400">
             {company.email}
           </h4>
-          <div className="flex flex-col md:flex-row mt-4">
+          <div className="flex flex-col md:flex-row mt-4 space-y-2 md:space-y-0 md:space-x-4">
             <button
               onClick={handleEdit}
-              className="w-full md:w-auto px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300 flex items-center justify-center mb-4 md:mb-0 md:mr-4"
+              className="w-full md:w-auto px-5 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-200 flex items-center justify-center"
             >
-              <span className="material-symbols-outlined text-xl mr-2">
+              <span className="material-symbols-outlined text-lg mr-2">
                 edit
               </span>
               Edit Profile
@@ -375,17 +375,21 @@ const CompanyProf = () => {
 
             <button
               onClick={handlePasswordToggle}
-              className="w-full md:w-auto px-4 py-2 bg-custom-blue text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 transition duration-300 flex items-center justify-center"
+              className="w-full md:w-auto px-5 py-3 bg-yellow-500 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 transition duration-200 flex items-center justify-center"
             >
-              <span className="material-symbols-outlined text-xl mr-2">
+              <span className="material-symbols-outlined text-lg mr-2">
                 lock
               </span>
               Change Password
             </button>
+
             <button
-              onClick={() => setIsDeactivateModalOpen(true)} // Open deactivate modal
-              className="w-full md:w-auto px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition duration-300 mt-4 md:mt-0 md:ml-4"
+              onClick={() => setIsDeactivateModalOpen(true)}
+              className="w-full md:w-auto px-5 py-3 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition duration-200 flex items-center justify-center"
             >
+              <span className="material-symbols-outlined text-lg mr-2">
+                cancel
+              </span>
               Deactivate Account
             </button>
           </div>
@@ -792,26 +796,31 @@ const CompanyProf = () => {
                   <label className="block text-gray-600 font-semibold">
                     Current Password:
                   </label>
-                  <input
-                    type={
-                      passwordVisibility.currentPassword ? "text" : "password"
-                    }
-                    value={currentPasswordForEmail}
-                    onChange={(e) => setCurrentPasswordForEmail(e.target.value)}
-                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                  />
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setPasswordVisibility((prev) => ({
-                        ...prev,
-                        currentPassword: !prev.currentPassword,
-                      }))
-                    }
-                    className="text-blue-500 mt-1"
-                  >
-                    {passwordVisibility.currentPassword ? "Hide" : "Show"}
-                  </button>
+                  <div className="relative">
+                    <input
+                      type={
+                        passwordVisibility.currentPassword ? "text" : "password"
+                      }
+                      value={currentPasswordForEmail}
+                      onChange={(e) =>
+                        setCurrentPasswordForEmail(e.target.value)
+                      }
+                      className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                    />
+                    <button
+                      type="button"
+                      className="absolute inset-y-0 right-3 flex items-center"
+                      onClick={() =>
+                        togglePasswordVisibility("currentPassword")
+                      }
+                    >
+                      <span className="material-symbols-outlined">
+                        {passwordVisibility.currentPassword
+                          ? "visibility"
+                          : "visibility_off"}
+                      </span>
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
@@ -883,7 +892,7 @@ const CompanyProf = () => {
                 Account Deactivation
               </h2>
               <p className="text-lg text-gray-600 mt-2">
-                Enter your current password to confirm account deactivation.
+                Enter your password to confirm account deactivation.
               </p>
             </div>
             <div className="mb-4">
