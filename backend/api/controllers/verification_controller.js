@@ -249,9 +249,6 @@ const verifyUser = async (req, res, next) => {
 
     await transporter.sendMail(mailOptions);
 
-    // Emit real-time event using Socket.io
-    global.io.emit("userVerified", { id, status: "VERIFIED" });
-
     return res.status(200).json({
       successful: true,
       message: "Successfully Verified User!",
