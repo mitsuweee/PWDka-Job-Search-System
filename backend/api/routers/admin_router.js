@@ -16,7 +16,7 @@ adminRouter.get(
 ); //get all Job Listing Newest To Oldest
 adminRouter.get("/view/joblisting/:id", adminController.viewJobListing); //get Job Listing
 adminRouter.get("/view/:id", adminController.viewAdminViaId); //View Company Via ID
-adminRouter.get("/view/verify/status:id", adminController.verifyAdminStatus); //Verify Admin Status
+adminRouter.get("/view/verify/status/:id", adminController.verifyAdminStatus); //Verify Admin Status
 
 adminRouter.get("/view/user/:first_name", adminController.searchUser); //Search User
 
