@@ -667,6 +667,48 @@ const deactivateUser = async (req, res, next) => {
   }
 };
 
+const verifyUserStatus = async (req, res, next) => {
+  const id = req.params.id;
+
+  if (!id) {
+    return res.status(404).json({
+      successful: false,
+      message: "Id is missing",
+    });
+  } else {
+    try {
+      const user = await knex("user")
+        .select("id", "status")
+        .where({ id })
+        .first();
+
+      if (!user) {
+        return res.status(404).json({
+          successful: false,
+          message: "User not found",
+        });
+      } else {
+        if (user.status === "VERIFIED") {
+          return res.status(200).json({
+            successful: true,
+            message: "User is still Verified",
+          });
+        } else {
+          return res.status(200).json({
+            successful: true,
+            message: "User is Deactivated",
+          });
+        }
+      }
+    } catch (err) {
+      return res.status(500).json({
+        successful: false,
+        message: err.message,
+      });
+    }
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
@@ -676,4 +718,5 @@ module.exports = {
   viewUserViaId,
   updateUserEmail,
   deactivateUser,
+  verifyUserStatus,
 };
