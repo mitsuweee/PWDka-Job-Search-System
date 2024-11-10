@@ -831,7 +831,7 @@ const ViewJobs = () => {
       {/* Modal for editing job details */}
       {isUpdateModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 overflow-y-auto">
-          <div className="relative max-w-5xl w-full mx-auto mb-6 mt-6 p-6 bg-white rounded-xl shadow-lg space-y-6 transform transition-all hover:shadow-2xl max-h-[90vh] overflow-y-auto">
+          <div className="relative max-w-5xl w-full mx-auto mb-6 mt-6 p-4 md:p-6 bg-white rounded-xl shadow-lg space-y-6 transform transition-all hover:shadow-2xl max-h-[90vh] overflow-y-auto">
             {/* Close Button */}
             <button
               className="absolute top-3 right-4 text-gray-500 hover:text-gray-700 transition"
@@ -841,14 +841,14 @@ const ViewJobs = () => {
             </button>
 
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-custom-blue">
+              <h2 className="text-xl md:text-2xl font-bold text-custom-blue">
                 Update Job Details
               </h2>
               <form
                 onSubmit={handleSubmitUpdate}
-                className="bg-white p-4 rounded-xl shadow-lg text-left grid grid-cols-2 gap-6 border border-gray-200"
+                className="bg-white p-4 rounded-xl shadow-lg text-left grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 border border-gray-200"
               >
-                <div className="col-span-2">
+                <div className="col-span-1 sm:col-span-2">
                   <label className="block mb-1 text-gray-700 font-semibold">
                     Position Name <span className="text-red-500">*</span>
                   </label>
@@ -862,7 +862,7 @@ const ViewJobs = () => {
                   />
                 </div>
 
-                <div className="col-span-2">
+                <div className="col-span-1 sm:col-span-2">
                   <label className="block mb-1 text-gray-700 font-semibold">
                     Job Description <span className="text-red-500">*</span>
                   </label>
@@ -874,6 +874,7 @@ const ViewJobs = () => {
                     required
                   />
                 </div>
+
                 {/* Level */}
                 <div className="col-span-1">
                   <label className="block mb-1 text-gray-700 font-semibold">
@@ -887,7 +888,8 @@ const ViewJobs = () => {
                     className="p-2 w-full border-2 border-blue-300 rounded-lg shadow-sm"
                   />
                 </div>
-                <div className="col-span-2">
+
+                <div className="col-span-1 sm:col-span-2">
                   <label className="block mb-1 text-gray-700 font-semibold">
                     Requirements <span className="text-red-500">*</span>
                   </label>
@@ -896,7 +898,6 @@ const ViewJobs = () => {
                     value={jobUpdate.requirements}
                     onChange={(e) => {
                       let value = e.target.value;
-                      // If the last characters are " | ", remove them
                       if (value.endsWith(" | ")) {
                         value = value.slice(0, -3);
                       }
@@ -921,7 +922,7 @@ const ViewJobs = () => {
                   />
                 </div>
 
-                <div className="col-span-2">
+                <div className="col-span-1 sm:col-span-2">
                   <label className="block mb-1 text-gray-700 font-semibold">
                     Qualifications <span className="text-red-500">*</span>
                   </label>
@@ -930,9 +931,8 @@ const ViewJobs = () => {
                     value={jobUpdate.qualification}
                     onChange={(e) => {
                       let value = e.target.value;
-                      // If the last character is a slash, remove it
                       if (value.endsWith(" | ")) {
-                        value = value.slice(0, -1);
+                        value = value.slice(0, -3);
                       }
                       handleChange({
                         target: { name: "qualification", value },
@@ -957,7 +957,7 @@ const ViewJobs = () => {
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
                   <div>
                     <label className="block mb-1 text-gray-700 font-semibold">
                       Min-Salary <span className="text-red-500">*</span>
@@ -987,45 +987,47 @@ const ViewJobs = () => {
                   </div>
                 </div>
 
-                <div className="col-span-1">
-                  <label className="block mb-1 text-gray-700 font-semibold">
-                    Salary Visibility <span className="text-red-500">*</span>
-                  </label>
-                  <select
-                    name="salaryVisibility"
-                    value={jobUpdate.salaryVisibility}
-                    onChange={handleChange}
-                    className="p-2 w-full border-2 border-blue-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    required
-                  >
-                    <option value="SHOW">Show</option>
-                    <option value="HIDE">Hide</option>
-                  </select>
+                <div className="col-span-1 sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+                  <div>
+                    <label className="block mb-1 text-gray-700 font-semibold">
+                      Salary Visibility <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      name="salaryVisibility"
+                      value={jobUpdate.salaryVisibility}
+                      onChange={handleChange}
+                      className="p-2 w-full border-2 border-blue-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                      required
+                    >
+                      <option value="SHOW">Show</option>
+                      <option value="HIDE">Hide</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block mb-1 text-gray-700 font-semibold">
+                      Joblisting Status <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      name="status"
+                      value={jobUpdate.status}
+                      onChange={handleChange}
+                      className="p-2 w-full border-2 border-blue-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                      required
+                    >
+                      <option value="ACTIVE">Active</option>
+                      <option value="INACTIVE">Inactive</option>
+                    </select>
+                  </div>
                 </div>
 
-                <div className="col-span-1">
-                  <label className="block mb-1 text-gray-700 font-semibold">
-                    Joblisting Status <span className="text-red-500">*</span>
-                  </label>
-                  <select
-                    name="status"
-                    value={jobUpdate.status}
-                    onChange={handleChange}
-                    className="p-2 w-full border-2 border-blue-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    required
-                  >
-                    <option value="ACTIVE">Active</option>
-                    <option value="INACTIVE">Inactive</option>
-                  </select>
-                </div>
-
-                <div className="col-span-1">
+                <div className="col-span-1 sm:col-span-2">
                   <label className="block mb-1 text-gray-700 font-semibold">
                     Position Type <span className="text-red-500">*</span>
                   </label>
                   <select
                     name="positionType"
-                    value={jobUpdate.positionType} // Ensure this has the correct initial value
+                    value={jobUpdate.positionType}
                     onChange={handleChange}
                     className="p-2 w-full border-2 border-blue-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                     required
@@ -1036,11 +1038,11 @@ const ViewJobs = () => {
                   </select>
                 </div>
 
-                <div className="col-span-2">
+                <div className="col-span-1 sm:col-span-2">
                   <button
                     type="button"
                     onClick={toggleDisabilityOptions}
-                    className="bg-blue-600 text-white px-3 py-2 rounded shadow-lg hover:bg-blue-700 transition"
+                    className="bg-blue-600 text-white px-3 py-2 rounded shadow-lg hover:bg-blue-700 transition w-full sm:w-auto"
                   >
                     {showDisabilityOptions
                       ? "Hide Disability Options"
@@ -1049,21 +1051,21 @@ const ViewJobs = () => {
                 </div>
 
                 {showDisabilityOptions && (
-                  <div className="col-span-1 bg-white p-6 rounded-lg shadow-lg border border-gray-200 transition duration-200 ease-in-out">
+                  <div className="col-span-1 sm:col-span-2 bg-white p-4 md:p-6 rounded-lg shadow-lg border border-gray-200 transition duration-200 ease-in-out">
                     <label className="block mb-4 text-gray-800 text-lg font-semibold">
                       Disability Categories
                     </label>
                     <button
                       type="button"
                       onClick={handleSelectAll}
-                      className="mb-4 py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 active:bg-blue-800 transition duration-200 ease-in-out transform hover:scale-105"
+                      className="w-full sm:w-auto mb-4 py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 active:bg-blue-800 transition duration-200 ease-in-out transform hover:scale-105"
                     >
                       {selectedDisabilityCategories.length ===
                       disabilityCategories.length
                         ? "Deselect All"
                         : "Select All"}
                     </button>
-                    <div className="grid grid-cols-1 gap-3">
+                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:gap-3">
                       {[
                         "Deaf or Hard of Hearing",
                         "Intellectual Disability",
@@ -1078,9 +1080,9 @@ const ViewJobs = () => {
                       ].map((category) => (
                         <label
                           key={category}
-                          className="flex items-center space-x-3"
+                          className="flex items-center space-x-2 sm:space-x-3"
                         >
-                          <div className="relative w-6 h-6">
+                          <div className="relative w-5 h-5 sm:w-6 sm:h-6">
                             <input
                               type="checkbox"
                               value={category}
@@ -1088,17 +1090,17 @@ const ViewJobs = () => {
                                 normalizeText(category)
                               )}
                               onChange={handleCheckboxChange}
-                              className="appearance-none w-6 h-6 border-2 border-gray-400 rounded-md transition duration-200 checked:bg-blue-600 checked:border-blue-600 focus:outline-none"
+                              className="appearance-none w-5 h-5 sm:w-6 sm:h-6 border-2 border-gray-400 rounded-md transition duration-200 checked:bg-blue-600 checked:border-blue-600 focus:outline-none"
                             />
                             {selectedDisabilityCategories.includes(
                               normalizeText(category)
                             ) && (
-                              <span className="absolute inset-0 flex items-center justify-center text-white text-lg font-bold">
+                              <span className="absolute inset-0 flex items-center justify-center text-white text-base sm:text-lg font-bold">
                                 ✓
                               </span>
                             )}
                           </div>
-                          <span className="text-gray-700 font-medium">
+                          <span className="text-gray-700 font-medium text-sm sm:text-base">
                             {category}
                           </span>
                         </label>
@@ -1107,10 +1109,10 @@ const ViewJobs = () => {
                   </div>
                 )}
 
-                <div className="col-span-2 flex justify-end">
+                <div className="col-span-1 sm:col-span-2 flex justify-end">
                   <button
                     type="submit"
-                    className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-green-600 transition"
+                    className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-green-600 transition w-full sm:w-auto"
                   >
                     Update Job
                   </button>
