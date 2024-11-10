@@ -448,7 +448,7 @@ const AdminViewComp = () => {
                     </button>
                     <button
                       onClick={() => handleDeactivateCompany(company.id)}
-                      className="bg-yellow-500 text-white text-xs md:text-sm px-3 py-1 rounded-full shadow-sm hover:bg-yellow-700 transition duration-200 font-medium ml-2"
+                      className="bg-yellow-500 text-white text-xs md:text-sm px-3 py-1 rounded-full shadow-sm hover:bg-yellow-700 transition duration-200 font-medium"
                     >
                       Deactivate
                     </button>

@@ -291,53 +291,54 @@ const JobListing = () => {
         <div className="flex flex-col sm:flex-row items-center justify-center space-y-3 sm:space-y-0 sm:space-x-2">
           <div className="relative w-full sm:w-auto">
             <button
-              className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-500 transition flex items-center justify-center space-x-1"
+              className="w-full sm:w-auto px-6 py-2 bg-blue-600 text-white ml-2 rounded-lg shadow-md hover:bg-blue-400 transition flex items-center justify-center"
               onClick={() => setIsFilterOpen(!isFilterOpen)}
             >
-              <span className="material-symbols-outlined text-lg">sort</span>
-              <span className="text-sm sm:text-base">Sort</span>
+              <span className="material-symbols-outlined text-xl mr-2">
+                sort
+              </span>
+              Sort
             </button>
-
             {isFilterOpen && (
               <div
-                className="absolute right-0 sm:left-0 top-full mt-1 w-full sm:w-48 bg-white p-3 shadow-lg rounded-lg z-50"
+                className="absolute right-0 sm:left-0 top-full mt-2 w-full sm:w-48 bg-white p-4 shadow-lg rounded-lg z-50"
                 onClick={(e) => e.stopPropagation()}
               >
                 <button
-                  className={`w-full py-2 rounded mb-1 text-sm font-medium ${
+                  className={`w-full py-2 px-4 rounded-lg mb-2 ${
                     sortOption === "Newest"
                       ? "bg-blue-600 text-white"
-                      : "bg-gray-100 text-blue-900"
+                      : "bg-gray-200 text-blue-900"
                   }`}
                   onClick={() => setSortOption("Newest")}
                 >
                   Newest
                 </button>
                 <button
-                  className={`w-full py-2 rounded mb-1 text-sm font-medium ${
+                  className={`w-full py-2 px-4 rounded-lg mb-2 ${
                     sortOption === "Oldest"
                       ? "bg-blue-600 text-white"
-                      : "bg-gray-100 text-blue-900"
+                      : "bg-gray-200 text-blue-900"
                   }`}
                   onClick={() => setSortOption("Oldest")}
                 >
                   Oldest
                 </button>
                 <button
-                  className={`w-full py-2 rounded mb-1 text-sm font-medium ${
+                  className={`w-full py-2 px-4 rounded-lg mb-2 ${
                     sortOption === "A-Z"
                       ? "bg-blue-600 text-white"
-                      : "bg-gray-100 text-blue-900"
+                      : "bg-gray-200 text-blue-900"
                   }`}
                   onClick={() => setSortOption("A-Z")}
                 >
                   A-Z
                 </button>
                 <button
-                  className={`w-full py-2 rounded text-sm font-medium ${
+                  className={`w-full py-2 px-4 rounded-lg mb-2 ${
                     sortOption === "Z-A"
                       ? "bg-blue-600 text-white"
-                      : "bg-gray-100 text-blue-900"
+                      : "bg-gray-200 text-blue-900"
                   }`}
                   onClick={() => setSortOption("Z-A")}
                 >
