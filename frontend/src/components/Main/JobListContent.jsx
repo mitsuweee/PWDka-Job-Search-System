@@ -33,6 +33,31 @@ const JobListing = () => {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
   };
 
+  const checkUserStatus = async () => {
+    const userId = localStorage.getItem("Id");
+    try {
+      const response = await axios.get(`/user/view/verify/status/${userId}`);
+      if (
+        response.data.successful &&
+        response.data.message === "User is Deactivated"
+      ) {
+        toast.error("Your account has been deactivated. Logging out.", {
+          duration: 5000, // Display the toast for 5 seconds
+        });
+
+        // Wait for the toast to finish before logging out
+        setTimeout(() => {
+          localStorage.removeItem("Id");
+          localStorage.removeItem("Role");
+          localStorage.removeItem("Token");
+          navigate("/login");
+        }, 3000); // Wait for 5 seconds (the toast duration)
+      }
+    } catch (error) {
+      toast.error("Failed to check user status.");
+    }
+  };
+
   useEffect(() => {
     const userId = localStorage.getItem("Id");
 
@@ -103,10 +128,18 @@ const JobListing = () => {
         });
     };
 
-    // Pass sortOption when calling fetchJobs
+    // Fetch user data and jobs
     fetchUserFullName();
     fetchJobs("", "", "", sortOption);
-  }, [sortOption]);
+
+    // Check user status every 5 seconds
+    const interval = setInterval(() => {
+      checkUserStatus();
+    }, 5000);
+
+    // Clean up the interval on component unmount
+    return () => clearInterval(interval);
+  }, [sortOption, navigate]); // No need to include checkUserStatus as it is outside now
 
   const fetchApplicationHistory = async () => {
     const userId = localStorage.getItem("Id");
