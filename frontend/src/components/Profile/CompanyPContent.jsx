@@ -39,6 +39,12 @@ const CompanyProf = () => {
   const [newEmail, setNewEmail] = useState("");
   const navigate = useNavigate();
   const [isDeactivateModalOpen, setIsDeactivateModalOpen] = useState(false); // New state for deactivate modal
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+  const [deactivationPassword, setDeactivationPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [deactivationPasswordVisible, setDeactivationPasswordVisible] =
+    useState(false);
+  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
   useEffect(() => {
     const userId = localStorage.getItem("Id");
@@ -73,22 +79,52 @@ const CompanyProf = () => {
   const handleDeactivateCompany = () => {
     const userId = localStorage.getItem("Id");
 
-    axios
-      .put(`/company/update/deactivate/${userId}`)
+    // Validate that both passwords match before making the request
+    if (deactivationPassword !== confirmPassword) {
+      toast.error("Passwords do not match. Please try again.");
+      return;
+    }
+
+    const config = {
+      method: "put",
+      url: `/company/update/deactivate/${userId}`,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: {
+        password: deactivationPassword,
+        confirm_password: confirmPassword,
+      },
+    };
+
+    axios(config)
       .then(() => {
-        toast.success("Company deactivated successfully!");
-        setIsDeactivateModalOpen(false);
-        confirmLogout(); // Optionally log the user out after deactivation
+        toast.success("Account deactivated successfully!");
+        setIsPasswordModalOpen(false);
+        confirmLogout(); // Log out the user after deactivation
       })
       .catch((error) => {
         const errorMessage =
-          error.response?.data?.message || "Failed to deactivate company";
+          error.response?.data?.message || "Failed to deactivate account.";
         toast.error(errorMessage);
       });
   };
 
+  const closePasswordModal = () => {
+    setIsPasswordModalOpen(false);
+    setDeactivationPassword("");
+    setConfirmPassword("");
+    setDeactivationPasswordVisible(false);
+    setConfirmPasswordVisible(false);
+  };
+
   const closeDeactivateModal = () => {
     setIsDeactivateModalOpen(false);
+  };
+
+  const handleConfirmDeactivate = () => {
+    setIsDeactivateModalOpen(false); // Close warning modal
+    setIsPasswordModalOpen(true); // Open password modal
   };
 
   const MAX_FILE_SIZE = 16777215;
@@ -338,13 +374,6 @@ const CompanyProf = () => {
             </button>
 
             <button
-              onClick={() => setIsDeactivateModalOpen(true)} // Open deactivate modal
-              className="w-full md:w-auto px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition duration-300 mt-4 md:mt-0 md:ml-4"
-            >
-              Deactivate Account
-            </button>
-
-            <button
               onClick={handlePasswordToggle}
               className="w-full md:w-auto px-4 py-2 bg-custom-blue text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 transition duration-300 flex items-center justify-center"
             >
@@ -352,6 +381,12 @@ const CompanyProf = () => {
                 lock
               </span>
               Change Password
+            </button>
+            <button
+              onClick={() => setIsDeactivateModalOpen(true)} // Open deactivate modal
+              className="w-full md:w-auto px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition duration-300 mt-4 md:mt-0 md:ml-4"
+            >
+              Deactivate Account
             </button>
           </div>
         </div>
@@ -809,37 +844,112 @@ const CompanyProf = () => {
         </div>
       )}
 
-      {/* Deactivate Modal */}
+      {/* Deactivation Modal */}
       {isDeactivateModalOpen && (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
-            <div className="flex justify-between items-center border-b pb-3 mb-4">
-              <h2 className="text-2xl font-semibold text-gray-800">
-                Deactivate Account
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50 px-4">
+          <div className="bg-white p-8 rounded-lg shadow-2xl max-w-lg w-full">
+            <div className="text-center mb-6">
+              <h2 className="text-2xl font-semibold text-gray-800 leading-snug">
+                Are you sure you want to deactivate your account?
               </h2>
-              <button
-                onClick={closeDeactivateModal}
-                className="text-gray-500 hover:text-gray-800 transition duration-200"
-              >
-                ✕
-              </button>
+              <p className="text-lg text-gray-600 mt-2">
+                This action cannot be undone.
+              </p>
             </div>
-            <p className="text-lg text-gray-600 mb-6">
-              Are you sure you want to deactivate your company account? This
-              action cannot be undone.
-            </p>
-            <div className="flex justify-end space-x-4">
+            <div className="flex justify-center space-x-4">
               <button
-                onClick={closeDeactivateModal}
-                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-200"
+                onClick={() => setIsDeactivateModalOpen(false)}
+                className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-2 px-6 rounded-lg transition-colors"
               >
                 Cancel
               </button>
               <button
-                onClick={handleDeactivateCompany}
-                className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
+                onClick={handleConfirmDeactivate}
+                className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-6 rounded-lg transition-colors"
               >
                 Deactivate
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Password Confirmation Modal */}
+      {isPasswordModalOpen && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50 px-4">
+          <div className="bg-white p-8 rounded-lg shadow-2xl max-w-lg w-full">
+            <div className="text-center mb-6">
+              <h2 className="text-2xl font-semibold text-gray-800 leading-snug">
+                Account Deactivation
+              </h2>
+              <p className="text-lg text-gray-600 mt-2">
+                Enter your current password to confirm account deactivation.
+              </p>
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-600 font-medium mb-1">
+                Password
+              </label>
+              <div className="relative">
+                <input
+                  type={deactivationPasswordVisible ? "text" : "password"}
+                  value={deactivationPassword}
+                  onChange={(e) => setDeactivationPassword(e.target.value)}
+                  className="w-full p-3 border border-gray-300 rounded-lg shadow-inner focus:ring-2 focus:ring-blue-500"
+                  placeholder="Enter your password"
+                />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-3 flex items-center text-gray-500"
+                  onClick={() =>
+                    setDeactivationPasswordVisible(!deactivationPasswordVisible)
+                  }
+                >
+                  <span className="material-symbols-outlined">
+                    {deactivationPasswordVisible
+                      ? "visibility"
+                      : "visibility_off"}
+                  </span>
+                </button>
+              </div>
+            </div>
+            <div className="mb-6">
+              <label className="block text-gray-600 font-medium mb-1">
+                Confirm Password
+              </label>
+              <div className="relative">
+                <input
+                  type={confirmPasswordVisible ? "text" : "password"}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="w-full p-3 border border-gray-300 rounded-lg shadow-inner focus:ring-2 focus:ring-blue-500"
+                  placeholder="Confirm your password"
+                />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-3 flex items-center text-gray-500"
+                  onClick={() =>
+                    setConfirmPasswordVisible(!confirmPasswordVisible)
+                  }
+                >
+                  <span className="material-symbols-outlined">
+                    {confirmPasswordVisible ? "visibility" : "visibility_off"}
+                  </span>
+                </button>
+              </div>
+            </div>
+            <div className="flex justify-center space-x-4">
+              <button
+                onClick={closePasswordModal}
+                className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-2 px-6 rounded-lg transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeactivateCompany} // Calls deactivation function
+                className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-6 rounded-lg transition-colors"
+              >
+                Confirm Deactivation
               </button>
             </div>
           </div>
