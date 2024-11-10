@@ -81,28 +81,6 @@ const ViewJobs = () => {
       });
   };
 
-  // const handleUpdateJob = (jobData) => {
-  //   setJobUpdate({
-  //     id: jobData.id,
-  //     jobName: jobData.position_name,
-  //     description: jobData.description,
-  //     requirements: jobData.requirement,
-  //     qualification: jobData.qualification,
-  //     minimumSalary: jobData.minimum_salary,
-  //     maximumSalary: jobData.maximum_salary,
-  //     salaryVisibility: jobData.salary_visibility || "HIDE",
-  //     level: jobData.level,
-  //     status: jobData.status || "ACTIVE",
-  //     positionType: jobData.positiontype_id === 1 ? "fulltime" : "parttime",
-  //     disabilityCategories: jobData.disability_ids || [], // Set an empty array if undefined
-  //   });
-
-  //   // Make sure to initialize selectedDisabilityCategories as an array
-  //   setSelectedDisabilityCategories(jobData.disability_types || []);
-
-  //   setIsUpdateModalOpen(true);
-  // };
-
   const disabilityCategories = [
     "Visual Disability",
     "Deaf or Hard of Hearing",
@@ -152,6 +130,8 @@ const ViewJobs = () => {
   const normalizeText = (text) => text.toLowerCase().trim();
 
   const handleUpdateJob = (jobData) => {
+    console.log("Received jobData object:", jobData);
+
     setJobUpdate({
       id: jobData.id,
       jobName: jobData.position_name,
@@ -163,11 +143,16 @@ const ViewJobs = () => {
       salaryVisibility: jobData.salary_visibility || "HIDE",
       level: jobData.level,
       status: jobData.status || "ACTIVE",
-      positionType: jobData.positiontype_id === 1 ? "fulltime" : "parttime",
+      positionType: jobData.position_type || "full-time",
       disabilityCategories: jobData.disability_types
-        ? jobData.disability_types.split(",").map((item) => item.trim()) // Split and trim each item
+        ? jobData.disability_types.split(",").map((item) => item.trim())
         : [],
     });
+
+    console.log(
+      "Mapped Position Type after setting jobUpdate:",
+      jobData.position_type || ""
+    );
 
     setSelectedDisabilityCategories(
       jobData.disability_types
@@ -201,10 +186,11 @@ const ViewJobs = () => {
         salary_visibility: jobUpdate.salaryVisibility,
         level: jobUpdate.level,
         status: jobUpdate.status,
+
         positiontype_id:
-          jobUpdate.positionType === "fulltime"
+          jobUpdate.positionType === "full-time"
             ? 1
-            : jobUpdate.positionType === "parttime"
+            : jobUpdate.positionType === "part-time"
             ? 2
             : null,
         disability_ids: selectedDisabilityCategories,
@@ -508,9 +494,19 @@ const ViewJobs = () => {
                           .join(" ")
                       : ""}
                   </td>
-                  <td className="py-4 px-2 md:px-4 text-gray-800 text-xs md:text-sm">
-                    {job.position_type || "N/A"}
+                  <td className="py-4 px-2 md:px-4 text-gray-800 text-xs md:text-sm break-words">
+                    {job.position_type
+                      ? job.position_type
+                          .split(" ")
+                          .map(
+                            (word) =>
+                              word.charAt(0).toUpperCase() +
+                              word.slice(1).toLowerCase()
+                          )
+                          .join(" ")
+                      : "N/A"}
                   </td>
+
                   <td className="py-4 px-2 md:px-4 text-gray-800 text-xs md:text-sm">
                     {job.minimum_salary && job.maximum_salary
                       ? `₱${job.minimum_salary} - ₱${job.maximum_salary}`
@@ -994,14 +990,14 @@ const ViewJobs = () => {
                   </label>
                   <select
                     name="positionType"
-                    value={jobUpdate.positionType}
+                    value={jobUpdate.positionType} // Ensure this has the correct initial value
                     onChange={handleChange}
                     className="p-2 w-full border-2 border-blue-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                     required
                   >
                     <option value="">Select Position Type</option>
-                    <option value="fulltime">Full-time</option>
-                    <option value="parttime">Part-time</option>
+                    <option value="full-time">Full-time</option>
+                    <option value="part-time">Part-time</option>
                   </select>
                 </div>
 
