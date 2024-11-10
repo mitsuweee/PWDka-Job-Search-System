@@ -15,32 +15,6 @@ const ApplyPage = () => {
 
   const MAX_FILE_SIZE = 16777215; //16MB
 
-  // Function to check user status and log out if deactivated
-  const checkUserStatus = async () => {
-    const userId = localStorage.getItem("Id");
-    try {
-      const response = await axios.get(`/user/view/verify/status/${userId}`);
-      if (
-        response.data.successful &&
-        response.data.message === "User is Deactivated"
-      ) {
-        toast.error("Your account has been deactivated. Logging out.", {
-          duration: 5000, // Display the toast for 5 seconds
-        });
-
-        // Wait for the toast to finish before logging out
-        setTimeout(() => {
-          localStorage.removeItem("Id");
-          localStorage.removeItem("Role");
-          localStorage.removeItem("Token");
-          navigate("/login");
-        }, 3000); // Wait for 5 seconds (the toast duration)
-      }
-    } catch (error) {
-      toast.error("Failed to check user status.");
-    }
-  };
-
   useEffect(() => {
     const userId = localStorage.getItem("Id");
 
@@ -57,15 +31,7 @@ const ApplyPage = () => {
     };
 
     fetchUserDetails();
-
-    // Check user status every 5 seconds
-    const interval = setInterval(() => {
-      checkUserStatus();
-    }, 5000);
-
-    // Clean up the interval on component unmount
-    return () => clearInterval(interval);
-  }, []); // Empty dependency array to run only once
+  }, []);
 
   const playIntroMessage = () => {
     if (userDisabilityType === "Deaf or Hard of Hearing") return;
