@@ -162,6 +162,10 @@ const UserProf = () => {
     setIsEditing(false);
     setIsModalOpen(true);
   };
+  const handleEmailModal = () => {
+    setIsEditing(false);
+    setIsModalOpen(true);
+  };
 
   const handlePasswordUpdate = () => {
     const userId = localStorage.getItem("Id");
@@ -1055,7 +1059,7 @@ const UserProf = () => {
                       setIsOptionsModalOpen(false);
                       handleEdit(); // Open Edit Profile modal
                     }}
-                    className="w-full px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-700 hover:shadow-xl transition duration-300 flex items-center justify-center"
+                    className="w-full px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-700 hover:shadow-xl transition duration-300 flex items-center justify-center"
                   >
                     <span className="material-symbols-outlined text-xl mr-2">
                       edit
@@ -1068,12 +1072,25 @@ const UserProf = () => {
                       setIsOptionsModalOpen(false);
                       handlePasswordToggle(); // Open Change Password modal
                     }}
-                    className="w-full px-6 py-3 bg-yellow-500 text-white font-semibold rounded-lg shadow-lg hover:bg-yellow-600 hover:shadow-xl transition duration-300 flex items-center justify-center"
+                    className="w-full px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-lg hover:bg-yellow-600 hover:shadow-xl transition duration-300 flex items-center justify-center"
                   >
                     <span className="material-symbols-outlined text-xl mr-2">
                       lock
                     </span>
                     Change Password
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setIsOptionsModalOpen(false);
+                      handleEmailModal();
+                    }}
+                    className="w-full px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-lg hover:bg-yellow-600 hover:shadow-xl transition duration-300 flex items-center justify-center"
+                  >
+                    <span className="material-symbols-outlined text-xl mr-2">
+                      mail
+                    </span>
+                    Change Email
                   </button>
 
                   <button

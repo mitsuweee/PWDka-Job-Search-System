@@ -525,11 +525,11 @@ const CompanyProf = () => {
         <div className="fixed inset-0 bg-gray-900 bg-opacity-80 flex justify-center items-center z-50 px-4">
           <div className="bg-white p-8 rounded-xl shadow-2xl max-w-md w-full">
             {/* Modal Header */}
-            <div className="flex items-center justify-center mb-8">
+            <div className="flex items-center justify-center mb-8  ">
               <span className="material-symbols-outlined text-blue-600 text-4xl mr-2">
                 settings
               </span>
-              <h2 className="text-3xl font-semibold text-gray-800">
+              <h2 className="text-2xl font-semibold text-gray-800">
                 Company Account Settings
               </h2>
             </div>
@@ -545,7 +545,7 @@ const CompanyProf = () => {
                     setIsSettingsModalOpen(false);
                     handleEdit(); // Open Edit Profile modal
                   }}
-                  className="w-full px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-700 hover:shadow-xl transition duration-300 flex items-center justify-center"
+                  className="w-full px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-700 hover:shadow-xl transition duration-300 flex items-center justify-center"
                 >
                   <span className="material-symbols-outlined text-xl mr-2">
                     edit
@@ -558,12 +558,25 @@ const CompanyProf = () => {
                     setIsSettingsModalOpen(false);
                     handlePasswordToggle(); // Open Change Password modal
                   }}
-                  className="w-full px-6 py-3 bg-yellow-500 text-white font-semibold rounded-lg shadow-lg hover:bg-yellow-600 hover:shadow-xl transition duration-300 flex items-center justify-center"
+                  className="w-full px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-lg hover:bg-yellow-600 hover:shadow-xl transition duration-300 flex items-center justify-center"
                 >
                   <span className="material-symbols-outlined text-xl mr-2">
                     lock
                   </span>
                   Change Password
+                </button>
+
+                <button
+                  onClick={() => {
+                    setIsSettingsModalOpen(false);
+                    handleEmailToggle();
+                  }}
+                  className="w-full px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-lg hover:bg-yellow-600 hover:shadow-xl transition duration-300 flex items-center justify-center"
+                >
+                  <span className="material-symbols-outlined text-xl mr-2">
+                    mail
+                  </span>
+                  Change Email
                 </button>
 
                 <button
