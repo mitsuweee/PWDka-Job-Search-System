@@ -568,6 +568,48 @@ const deactivateCompany = async (req, res, next) => {
   }
 };
 
+const verifyCompanyStatus = async (req, res, next) => {
+  const id = req.params.id;
+
+  if (!id) {
+    return res.status(404).json({
+      successful: false,
+      message: "Id is missing",
+    });
+  } else {
+    try {
+      const company = await knex("company")
+        .select("id", "status")
+        .where({ id })
+        .first();
+
+      if (!company) {
+        return res.status(404).json({
+          successful: false,
+          message: "company not found",
+        });
+      } else {
+        if (company.status === "VERIFIED") {
+          return res.status(200).json({
+            successful: true,
+            message: "Company is still Verified",
+          });
+        } else {
+          return res.status(200).json({
+            successful: true,
+            message: "Company is Deactivated",
+          });
+        }
+      }
+    } catch (err) {
+      return res.status(500).json({
+        successful: false,
+        message: err.message,
+      });
+    }
+  }
+};
+
 module.exports = {
   registerCompany,
   loginCompany,
@@ -577,4 +619,5 @@ module.exports = {
   viewCompanyViaId,
   updateCompanyEmail,
   deactivateCompany,
+  verifyCompanyStatus,
 };
