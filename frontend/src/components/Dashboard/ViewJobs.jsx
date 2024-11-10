@@ -369,12 +369,8 @@ const ViewJobs = () => {
           &times;
         </button>
 
-        <h2 className="text-xl md:text-xl font-bold text-white">
-          Welcome,{" "}
-          <span className="text-2xl md:text-3xl text-white font-bold">
-            {companyName || "Company"}
-          </span>
-          !
+        <h2 className="text-2xl md:text-3xl font-bold text-white">
+          Welcome, {companyName || "Company"}!
         </h2>
 
         {/* Dashboard Section */}
