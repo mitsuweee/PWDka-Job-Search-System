@@ -38,6 +38,31 @@ const ViewJobs = () => {
 
   const navigate = useNavigate();
 
+  const checkCompanyStatus = async () => {
+    try {
+      const compId = localStorage.getItem("Id");
+      const response = await axios.get(`/company/view/verify/status/${compId}`);
+      if (
+        response.data.successful &&
+        response.data.message === "Company is Deactivated"
+      ) {
+        toast.error("Your company account has been deactivated. Logging out.", {
+          duration: 5000, // Display the toast for 5 seconds
+        });
+
+        // Wait for the toast to finish before logging out
+        setTimeout(() => {
+          localStorage.removeItem("Id");
+          localStorage.removeItem("Role");
+          localStorage.removeItem("Token");
+          navigate("/login");
+        }, 5000); // Wait for 5 seconds (the toast duration)
+      }
+    } catch (error) {
+      console.error("Error checking company status:", error);
+    }
+  };
+
   useEffect(() => {
     const companyId = localStorage.getItem("Id");
     const config = {
@@ -64,6 +89,13 @@ const ViewJobs = () => {
       .finally(() => {
         setIsLoading(false);
       });
+
+    const interval = setInterval(() => {
+      checkCompanyStatus();
+    }, 5000);
+
+    // Clean up the interval on component unmount
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {

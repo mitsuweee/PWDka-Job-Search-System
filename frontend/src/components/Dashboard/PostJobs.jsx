@@ -38,13 +38,42 @@ const PostJob = () => {
     localStorage.removeItem("Token");
     window.location.href = "/login";
   };
+
+  // Function to check company status
+  const checkCompanyStatus = async (companyId) => {
+    try {
+      const response = await axios.get(
+        `/company/view/verify/status/${companyId}`
+      );
+      if (
+        response.data.successful &&
+        response.data.message === "Company is Deactivated"
+      ) {
+        toast.error("Your company account has been deactivated. Logging out.", {
+          duration: 5000, // Display the toast for 5 seconds
+        });
+
+        // Wait for the toast to finish before logging out
+        setTimeout(() => {
+          localStorage.removeItem("Id");
+          localStorage.removeItem("Role");
+          localStorage.removeItem("Token");
+          navigate("/login");
+        }, 5000); // Wait for 5 seconds (the toast duration)
+      }
+    } catch (error) {
+      console.error("Error checking company status:", error);
+    }
+  };
+
+  // Fetch company data and check company status
   useEffect(() => {
-    const Id = localStorage.getItem("Id");
-    if (Id) {
+    const companyId = localStorage.getItem("Id");
+    if (companyId) {
       const fetchCompanyData = async () => {
         try {
           // Fetch company name
-          const companyResponse = await axios.get(`/company/view/${Id}`);
+          const companyResponse = await axios.get(`/company/view/${companyId}`);
           if (companyResponse.data.successful) {
             setCompanyName(companyResponse.data.data.name);
           } else {
@@ -53,6 +82,9 @@ const PostJob = () => {
               companyResponse.data.message
             );
           }
+
+          // Check company status (whether it's deactivated or not)
+          checkCompanyStatus(companyId);
         } catch (error) {
           console.error("Error fetching company data:", error);
         }
@@ -62,7 +94,17 @@ const PostJob = () => {
     } else {
       console.error("Company ID is not available in session storage");
     }
-  }, []);
+
+    // Set an interval to check company status every 5 seconds
+    const interval = setInterval(() => {
+      if (companyId) {
+        checkCompanyStatus(companyId);
+      }
+    }, 5000);
+
+    // Clean up the interval on component unmount
+    return () => clearInterval(interval);
+  }, []); // Empty dependency array ensures this only runs on mount
 
   const closeModal = () => {
     setIsModalOpen(false);

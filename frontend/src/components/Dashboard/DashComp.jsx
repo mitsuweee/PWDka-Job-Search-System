@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
 
 const CompanyDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -15,6 +16,33 @@ const CompanyDashboard = () => {
   });
 
   const navigate = useNavigate();
+
+  const checkCompanyStatus = async () => {
+    const companyId = localStorage.getItem("Id");
+    try {
+      const response = await axios.get(
+        `/company/view/verify/status/${companyId}`
+      );
+      if (
+        response.data.successful &&
+        response.data.message === "Company is Deactivated"
+      ) {
+        toast.error("Your company has been deactivated. Logging out.", {
+          duration: 5000, // Display the toast for 5 seconds
+        });
+
+        // Wait for the toast to finish before logging out
+        setTimeout(() => {
+          localStorage.removeItem("Id");
+          localStorage.removeItem("Role");
+          localStorage.removeItem("Token");
+          navigate("/login");
+        }, 3000); // Wait for 5 seconds (the toast duration)
+      }
+    } catch (error) {
+      toast.error("Failed to check company status.");
+    }
+  };
 
   // Fetch counts from the backend using Id from localStorage
   useEffect(() => {
@@ -45,6 +73,17 @@ const CompanyDashboard = () => {
               countsResponse.data.message
             );
           }
+
+          // Check company status initially
+          checkCompanyStatus(Id); // Call checkCompanyStatus after fetching company data
+
+          // Set up an interval to check company status every 5 seconds
+          const interval = setInterval(() => {
+            checkCompanyStatus(Id); // Call checkCompanyStatus periodically
+          }, 5000); // 5000 milliseconds = 5 seconds
+
+          // Clean up the interval when the component unmounts
+          return () => clearInterval(interval);
         } catch (error) {
           console.error("Error fetching company data:", error);
         }
@@ -55,6 +94,7 @@ const CompanyDashboard = () => {
       console.error("Company ID is not available in session storage");
     }
   }, []);
+
   const confirmLogout = () => {
     localStorage.removeItem("Id");
     localStorage.removeItem("Role");
