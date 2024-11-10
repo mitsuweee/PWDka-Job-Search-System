@@ -13,6 +13,11 @@ const AdminViewJobs = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOrder, setSortOrder] = useState("Newest");
+  const [admin, setAdmin] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+  });
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // Controls delete modal visibility
   const [selectedJobId, setSelectedJobId] = useState(null); // Holds the job ID to be deleted
 
@@ -40,6 +45,35 @@ const AdminViewJobs = () => {
         setLoading(false);
         toast.error("Failed to load job listings");
         console.error(error);
+      });
+  }, []);
+
+  useEffect(() => {
+    const adminId = localStorage.getItem("Id");
+    const config = {
+      method: "get",
+      url: `/admin/view/${adminId}`,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    axios(config)
+      .then(function (response) {
+        const adminData = response.data.data;
+        setAdmin({
+          firstName: adminData.first_name,
+          lastName: adminData.last_name,
+          email: adminData.email,
+        });
+        setNewEmail(adminData.email);
+      })
+      .catch(function (error) {
+        // Only show the error message if there is a specific message
+        const errorMessage = error.response?.data?.message;
+        if (errorMessage) {
+          toast.error(errorMessage); // Show the server-specific error message
+        }
       });
   }, []);
 
@@ -202,6 +236,15 @@ const AdminViewJobs = () => {
         >
           &times;
         </button>
+
+        <h2 className="text-2xl md:text-3xl font-bold text-white">
+          Welcome,{" "}
+          <span className="text-2xl md:text-3xl font-bold">
+            {admin.firstName.charAt(0).toUpperCase() + admin.firstName.slice(1)}{" "}
+            {admin.lastName.charAt(0).toUpperCase() + admin.lastName.slice(1)}
+          </span>
+          !
+        </h2>
 
         {/* Dashboard Section */}
         <h2 className="text-white text-lg font-semibold mb-2 mt-4 w-full text-left">
