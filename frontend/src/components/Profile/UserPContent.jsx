@@ -16,20 +16,22 @@ const UserProf = () => {
     profilePicture: "",
   });
 
-  //deactivation modals
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeactivateModalOpen, setIsDeactivateModalOpen] = useState(false); // Controls first warning modal
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false); // Controls second password modal
   const [deactivationPassword, setDeactivationPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [isChangingEmail, setIsChangingEmail] = useState(false);
+
+  const [isOptionsModalOpen, setIsOptionsModalOpen] = useState(false);
+
   const [deactivationPasswordVisible, setDeactivationPasswordVisible] =
     useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
-  //edit profile, change email and change password modals
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(true);
-  const [isPasswordChanging, setIsPasswordChanging] = useState(false);
-  const [isEmailChanging, setIsEmailChanging] = useState(false);
+  const [isProfilePictureModalOpen, setIsProfilePictureModalOpen] =
+    useState(false);
   const [passwords, setPasswords] = useState({
     currentPassword: "",
     newPassword: "",
@@ -41,36 +43,6 @@ const UserProf = () => {
     newPassword: false,
     confirmNewPassword: false,
   });
-
-  const [newEmail, setNewEmail] = useState("");
-  const [currentPasswordForEmail, setCurrentPasswordForEmail] = useState("");
-
-  // Toggle to edit profile
-  const handleEdit = () => {
-    setIsEditing(true);
-    setIsPasswordChanging(false);
-    setIsEmailChanging(false);
-    setIsModalOpen(true);
-  };
-
-  // Toggle to change password
-  const handlePasswordToggle = () => {
-    setIsEditing(false);
-    setIsPasswordChanging(true);
-    setIsEmailChanging(false);
-    setIsModalOpen(true);
-  };
-
-  // Toggle to change email
-  const handleEmailToggle = () => {
-    setIsEditing(false);
-    setIsPasswordChanging(false);
-    setIsEmailChanging(true);
-    setIsModalOpen(true);
-  };
-
-  const [isProfilePictureModalOpen, setIsProfilePictureModalOpen] =
-    useState(false);
 
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const navigate = useNavigate();
@@ -180,6 +152,16 @@ const UserProf = () => {
     }));
   };
 
+  const handleEdit = () => {
+    setIsEditing(true);
+    setIsModalOpen(true);
+  };
+
+  const handlePasswordToggle = () => {
+    setIsEditing(false);
+    setIsModalOpen(true);
+  };
+
   const handlePasswordUpdate = () => {
     const userId = localStorage.getItem("Id");
 
@@ -250,6 +232,10 @@ const UserProf = () => {
       window.location.reload();
     }, 2000);
   };
+
+  const [newEmail, setNewEmail] = useState("");
+  const [currentPasswordForEmail, setCurrentPasswordForEmail] = useState("");
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
 
   const handleUserEmailUpdate = () => {
     const userId = localStorage.getItem("Id");
@@ -361,8 +347,9 @@ const UserProf = () => {
   return (
     <div className="max-w-4xl mx-auto mb-10 mt-10 p-8 bg-white rounded-lg shadow-lg">
       <Toaster position="top-center" reverseOrder={false} />
-      <div className="flex flex-col md:flex-row items-center justify-between">
-        <div className="relative w-32 h-32">
+      <div className="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0 md:space-x-8">
+        {/* Profile Picture with Edit Button */}
+        <div className="relative w-32 h-32 flex-shrink-0">
           <img
             src={user.profilePicture}
             alt="Profile"
@@ -376,7 +363,8 @@ const UserProf = () => {
           </button>
         </div>
 
-        <div className="ml-6">
+        {/* User Information and Google Options Button */}
+        <div className="flex-1 text-center md:text-left">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
             {user.firstName &&
               user.lastName &&
@@ -392,48 +380,28 @@ const UserProf = () => {
                 user.lastName.slice(1).toLowerCase()
               }`}
           </h2>
-          <div className="flex mt-2">
+          <div className="flex justify-center md:justify-start mt-2">
             <p className="bg-blue-100 text-blue-700 text-sm font-semibold mr-2 px-2.5 py-0.5 rounded">
               Disability:
             </p>
             <p className="text-gray-600">{user.disability}</p>
           </div>
-          <div className="flex flex-col md:flex-row mt-4 space-y-2 md:space-y-0 md:space-x-4">
-            <button
-              onClick={handleEdit}
-              className="w-full md:w-auto px-5 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-200 flex items-center justify-center"
-            >
-              <span className="material-symbols-outlined text-lg mr-2">
-                edit
-              </span>
-              Edit Profile
-            </button>
-
-            <button
-              onClick={handlePasswordToggle}
-              className="w-full md:w-auto px-5 py-3 bg-yellow-500 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 transition duration-200 flex items-center justify-center"
-            >
-              <span className="material-symbols-outlined text-lg mr-2">
-                lock
-              </span>
-              Change Password
-            </button>
-
-            <button
-              onClick={() => setIsDeactivateModalOpen(true)}
-              className="w-full md:w-auto px-5 py-3 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition duration-200 flex items-center justify-center"
-            >
-              <span className="material-symbols-outlined text-lg mr-2">
-                cancel
-              </span>
-              Deactivate Account
-            </button>
-          </div>
+          <button
+            onClick={() => setIsOptionsModalOpen(true)}
+            className="w-full md:w-auto mt-4 px-3 py-1.5 bg-blue-600 text-white font-medium rounded-md shadow-md hover:bg-blue-700 transition duration-300 flex items-center justify-center"
+          >
+            <span className="material-symbols-outlined text-lg mr-1.5">
+              settings
+            </span>
+            Settings
+          </button>
         </div>
-        <div className="flex flex-col md:flex-row mt-4">
+
+        {/* Back and Logout Buttons */}
+        <div className="flex flex-col md:flex-row md:items-center md:space-x-4 space-y-4 md:space-y-0 mt-4 md:mt-0">
           <button
             onClick={handleGoBack}
-            className="w-full md:w-auto px-4 py-2 bg-gray-100 text-blue-900 font-semibold rounded-lg shadow-md hover:bg-gray-300 transition duration-300 mb-4 md:mb-0 md:mr-4"
+            className="w-full md:w-auto px-4 py-2 bg-gray-100 text-blue-900 font-semibold rounded-lg shadow-md hover:bg-gray-300 transition duration-300"
           >
             Back
           </button>
@@ -589,25 +557,37 @@ const UserProf = () => {
       {/* Deactivation Modal */}
       {isDeactivateModalOpen && (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50 px-4">
-          <div className="bg-white p-8 rounded-lg shadow-2xl max-w-lg w-full">
-            <div className="text-center mb-6">
-              <h2 className="text-2xl font-semibold text-gray-800 leading-snug">
-                Are you sure you want to deactivate your account?
+          <div className="bg-white p-10 rounded-xl shadow-2xl max-w-lg w-full relative">
+            {/* Icon Background */}
+            <div className="absolute -top-12 left-1/2 transform -translate-x-1/2">
+              <div className="flex items-center justify-center w-20 h-20 bg-red-100 rounded-full shadow-lg">
+                <span className="material-symbols-outlined text-red-600 text-5xl">
+                  warning
+                </span>
+              </div>
+            </div>
+
+            {/* Header */}
+            <div className="text-center mt-10 mb-6">
+              <h2 className="text-3xl font-semibold text-gray-800 leading-snug">
+                Are you sure?
               </h2>
-              <p className="text-lg text-gray-600 mt-2">
-                This action cannot be undone.
+              <p className="text-gray-600 mt-4 text-md">
+                Deactivating your account is permanent and cannot be undone.
               </p>
             </div>
-            <div className="flex justify-center space-x-4">
+
+            {/* Button Section */}
+            <div className="flex justify-center space-x-4 mt-8">
               <button
                 onClick={() => setIsDeactivateModalOpen(false)}
-                className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-2 px-6 rounded-lg transition-colors"
+                className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-2 px-6 rounded-lg transition-colors shadow-md"
               >
                 Cancel
               </button>
               <button
                 onClick={handleConfirmDeactivate}
-                className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-6 rounded-lg transition-colors"
+                className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-6 rounded-lg transition-colors shadow-md transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
               >
                 Deactivate
               </button>
@@ -625,7 +605,7 @@ const UserProf = () => {
                 Account Deactivation
               </h2>
               <p className="text-lg text-gray-600 mt-2">
-                Enter your password to confirm account deactivation.
+                Enter your current password to confirm account deactivation.
               </p>
             </div>
             <div className="mb-4">
@@ -750,216 +730,406 @@ const UserProf = () => {
         </div>
       )}
 
-      {/* Edit Profile, Change Password & Change Email Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50 ">
-          <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-center border-b pb-3 mb-4">
-              <h2 className="text-2xl font-semibold text-gray-800">
-                {isEditing
-                  ? "Edit Profile"
-                  : isPasswordChanging
-                  ? "Change Password"
-                  : "Change Email"}
-              </h2>
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="text-gray-500 hover:text-gray-800 transition duration-200"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  stroke="currentColor"
-                  className="w-6 h-6"
+      <div>
+        {isModalOpen && (
+          <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
+              <div className="flex justify-between items-center border-b pb-3 mb-4">
+                <h2 className="text-2xl font-semibold text-gray-800">
+                  {isEditing
+                    ? "Edit Profile"
+                    : isChangingEmail
+                    ? "Change Email"
+                    : "Change Password"}
+                </h2>
+                <button
+                  onClick={() => setIsModalOpen(false)}
+                  className="text-gray-500 hover:text-gray-800 transition duration-200"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-            </div>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2}
+                    stroke="currentColor"
+                    className="w-6 h-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
 
-            {/* Modal Navigation */}
-            <div className="flex flex-col md:flex-row mt-4 justify-center">
-              <button
-                onClick={handleEdit}
-                className={`w-full md:w-auto px-2 py-1 bg-blue-600 text-white text-sm font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300 flex items-center justify-center mb-2 md:mb-0 md:mr-2 ${
-                  isEditing && "bg-blue-700"
-                }`}
-              >
-                <span className="material-symbols-outlined text-base mr-1">
-                  edit
-                </span>
-                Edit Profile
-              </button>
+              {/* Toggle Buttons */}
+              <div className="flex justify-between mb-4">
+                <button
+                  className={`py-2 px-4 ${
+                    isEditing
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-200 text-gray-700"
+                  } rounded-lg`}
+                  onClick={() => {
+                    setIsEditing(true);
+                    setIsChangingEmail(false);
+                  }}
+                >
+                  Edit Profile
+                </button>
 
-              <button
-                onClick={handleEmailToggle}
-                className={`w-full md:w-auto px-2 py-1 bg-green-500 text-white text-sm font-semibold rounded-lg shadow-md hover:bg-green-600 transition duration-300 flex items-center justify-center mb-2 md:mb-0 md:mr-2 ${
-                  isEmailChanging && "bg-green-600"
-                }`}
-              >
-                <span className="material-symbols-outlined text-base mr-1">
-                  mail
-                </span>
-                Change Email
-              </button>
+                <button
+                  className={`py-2 px-4 ${
+                    isChangingEmail
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-200 text-gray-700"
+                  } rounded-lg`}
+                  onClick={() => {
+                    setIsEditing(false);
+                    setIsChangingEmail(true);
+                  }}
+                >
+                  Change Email
+                </button>
 
-              <button
-                onClick={handlePasswordToggle}
-                className={`w-full md:w-auto px-2 py-1 bg-custom-blue text-white text-sm font-semibold rounded-lg shadow-md hover:bg-yellow-600 transition duration-300 flex items-center justify-center ${
-                  isPasswordChanging && "bg-yellow-600"
-                }`}
-              >
-                <span className="material-symbols-outlined text-base mr-1">
-                  lock
-                </span>
-                Change Password
-              </button>
-            </div>
+                <button
+                  className={`py-2 px-4 ${
+                    !isEditing && !isChangingEmail
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-200 text-gray-700"
+                  } rounded-lg`}
+                  onClick={() => {
+                    setIsEditing(false);
+                    setIsChangingEmail(false);
+                  }}
+                >
+                  Change Password
+                </button>
+              </div>
 
-            {/* Edit Profile Form */}
-            {isEditing && (
-              <div className="grid grid-cols-1 gap-6 mt-6 ">
-                <div>
-                  <label className="block text-gray-600 font-semibold">
-                    Address:
-                  </label>
-                  <input
-                    type="text"
-                    name="address"
-                    value={user.address}
-                    onChange={handleChange}
-                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                  />
+              {/* Conditional Content */}
+              {isEditing ? (
+                // Edit Profile Form
+                <div className="grid grid-cols-1 gap-6">
+                  <div>
+                    <label className="block text-gray-600 font-semibold">
+                      Address:
+                    </label>
+                    <input
+                      type="text"
+                      name="address"
+                      value={user.address}
+                      onChange={handleChange}
+                      className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-600 font-semibold">
+                      City:
+                    </label>
+                    <input
+                      type="text"
+                      name="city"
+                      value={user.city}
+                      onChange={handleChange}
+                      className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-600 font-semibold">
+                      Contact Number:
+                    </label>
+                    <input
+                      type="text"
+                      name="contactNumber"
+                      value={user.contactNumber}
+                      onChange={handleChange}
+                      pattern="[0-9]{10,11}"
+                      className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                    />
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-gray-600 font-semibold">
-                    City:
-                  </label>
-                  <input
-                    type="text"
-                    name="city"
-                    value={user.city}
-                    onChange={handleChange}
-                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                  />
+              ) : isChangingEmail ? (
+                // Change Email Form
+                <div className="grid grid-cols-1 gap-6">
+                  <div>
+                    <label className="block text-gray-600 font-semibold">
+                      New Email:
+                    </label>
+                    <input
+                      type="email"
+                      value={newEmail}
+                      onChange={(e) => setNewEmail(e.target.value)}
+                      className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-600 font-semibold">
+                      Current Password:
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={
+                          passwordVisibility.currentPassword
+                            ? "text"
+                            : "password"
+                        }
+                        value={currentPasswordForEmail}
+                        onChange={(e) =>
+                          setCurrentPasswordForEmail(e.target.value)
+                        }
+                        className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                      />
+                      <button
+                        type="button"
+                        className="absolute inset-y-0 right-3 flex items-center"
+                        onClick={() =>
+                          setPasswordVisibility({
+                            ...passwordVisibility,
+                            currentPassword:
+                              !passwordVisibility.currentPassword,
+                          })
+                        }
+                      >
+                        <span className="material-symbols-outlined">
+                          {passwordVisibility.currentPassword
+                            ? "visibility"
+                            : "visibility_off"}
+                        </span>
+                      </button>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-gray-600 font-semibold">
-                    Contact Number:
-                  </label>
-                  <input
-                    type="text"
-                    name="contactNumber"
-                    value={user.contactNumber}
-                    onChange={handleChange}
-                    className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                  />
+              ) : (
+                // Change Password Form
+                <div className="grid grid-cols-1 gap-6">
+                  <div>
+                    <label className="block text-gray-600 font-semibold">
+                      Current Password:
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={
+                          passwordVisibility.currentPassword
+                            ? "text"
+                            : "password"
+                        }
+                        name="currentPassword"
+                        value={passwords.currentPassword}
+                        onChange={handlePasswordChange}
+                        className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                      />
+                      <button
+                        type="button"
+                        className="absolute inset-y-0 right-3 flex items-center"
+                        onClick={() =>
+                          togglePasswordVisibility("currentPassword")
+                        }
+                      >
+                        <span className="material-symbols-outlined">
+                          {passwordVisibility.currentPassword
+                            ? "visibility"
+                            : "visibility_off"}
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-gray-600 font-semibold">
+                      New Password:
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={
+                          passwordVisibility.newPassword ? "text" : "password"
+                        }
+                        name="newPassword"
+                        value={passwords.newPassword}
+                        onChange={handlePasswordChange}
+                        className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                      />
+                      <button
+                        type="button"
+                        className="absolute inset-y-0 right-3 flex items-center"
+                        onClick={() => togglePasswordVisibility("newPassword")}
+                      >
+                        <span className="material-symbols-outlined">
+                          {passwordVisibility.newPassword
+                            ? "visibility"
+                            : "visibility_off"}
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-gray-600 font-semibold">
+                      Confirm New Password:
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={
+                          passwordVisibility.confirmNewPassword
+                            ? "text"
+                            : "password"
+                        }
+                        name="confirmNewPassword"
+                        value={passwords.confirmNewPassword}
+                        onChange={handlePasswordChange}
+                        className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                      />
+                      <button
+                        type="button"
+                        className="absolute inset-y-0 right-3 flex items-center"
+                        onClick={() =>
+                          togglePasswordVisibility("confirmNewPassword")
+                        }
+                      >
+                        <span className="material-symbols-outlined">
+                          {passwordVisibility.confirmNewPassword
+                            ? "visibility"
+                            : "visibility_off"}
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div className="flex justify-end mt-6 space-x-4">
+                <button
+                  onClick={() => setIsModalOpen(false)}
+                  className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-200"
+                >
+                  Back
+                </button>
+                <button
+                  onClick={
+                    isEditing
+                      ? handleUpdate
+                      : isChangingEmail
+                      ? handleUserEmailUpdate
+                      : handlePasswordUpdate
+                  }
+                  className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
+                >
+                  {isEditing
+                    ? "Update Profile"
+                    : isChangingEmail
+                    ? "Save New Email"
+                    : "Save New Password"}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {isOptionsModalOpen && (
+          <div className="fixed inset-0 bg-gray-900 bg-opacity-80 flex justify-center items-center z-50 px-4">
+            <div className="bg-white p-8 rounded-xl shadow-2xl max-w-md w-full">
+              {/* Header */}
+              <div className="flex items-center justify-center mb-8">
+                <span className="material-symbols-outlined text-blue-600 text-4xl mr-2">
+                  settings
+                </span>
+                <h2 className="text-3xl font-semibold text-gray-800">
+                  Account Settings
+                </h2>
+              </div>
+
+              {/* Card Container for Option Buttons with Enhanced Inner Shadow */}
+              <div
+                className="bg-gray-100 p-6 rounded-lg shadow-lg"
+                style={{
+                  boxShadow: "inset 0 4px 10px rgba(0, 0, 0, 0.2)", // Custom inner shadow
+                }}
+              >
+                <div className="flex flex-col space-y-5">
+                  <button
+                    onClick={() => {
+                      setIsOptionsModalOpen(false);
+                      handleEdit(); // Open Edit Profile modal
+                    }}
+                    className="w-full px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-700 hover:shadow-xl transition duration-300 flex items-center justify-center"
+                  >
+                    <span className="material-symbols-outlined text-xl mr-2">
+                      edit
+                    </span>
+                    Edit Profile
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setIsOptionsModalOpen(false);
+                      handlePasswordToggle(); // Open Change Password modal
+                    }}
+                    className="w-full px-6 py-3 bg-yellow-500 text-white font-semibold rounded-lg shadow-lg hover:bg-yellow-600 hover:shadow-xl transition duration-300 flex items-center justify-center"
+                  >
+                    <span className="material-symbols-outlined text-xl mr-2">
+                      lock
+                    </span>
+                    Change Password
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setIsOptionsModalOpen(false);
+                      setIsDeactivateModalOpen(true); // Open Deactivate Account modal
+                    }}
+                    className="w-full px-6 py-3 bg-red-500 text-white font-semibold rounded-lg shadow-lg hover:bg-red-600 hover:shadow-xl transition duration-300 flex items-center justify-center"
+                  >
+                    <span className="material-symbols-outlined text-xl mr-2">
+                      warning
+                    </span>
+                    Deactivate Account
+                  </button>
                 </div>
               </div>
-            )}
 
-            {/* Change Password Form */}
-            {isPasswordChanging && (
-              <div className="grid grid-cols-1 gap-6 mt-6">
-                <div>
-                  <label className="block text-gray-600 font-semibold">
-                    Current Password:
-                  </label>
-                  <div className="relative">
-                    <input
-                      type={
-                        passwordVisibility.currentPassword ? "text" : "password"
-                      }
-                      name="currentPassword"
-                      value={passwords.currentPassword}
-                      onChange={handlePasswordChange}
-                      className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                    />
-                    <button
-                      type="button"
-                      className="absolute inset-y-0 right-3 flex items-center"
-                      onClick={() =>
-                        togglePasswordVisibility("currentPassword")
-                      }
-                    >
-                      <span className="material-symbols-outlined">
-                        {passwordVisibility.currentPassword
-                          ? "visibility"
-                          : "visibility_off"}
-                      </span>
-                    </button>
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-gray-600 font-semibold">
-                    New Password:
-                  </label>
-                  <div className="relative">
-                    <input
-                      type={
-                        passwordVisibility.newPassword ? "text" : "password"
-                      }
-                      name="newPassword"
-                      value={passwords.newPassword}
-                      onChange={handlePasswordChange}
-                      className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                    />
-                    <button
-                      type="button"
-                      className="absolute inset-y-0 right-3 flex items-center"
-                      onClick={() => togglePasswordVisibility("newPassword")}
-                    >
-                      <span className="material-symbols-outlined">
-                        {passwordVisibility.newPassword
-                          ? "visibility"
-                          : "visibility_off"}
-                      </span>
-                    </button>
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-gray-600 font-semibold">
-                    Confirm New Password:
-                  </label>
-                  <div className="relative">
-                    <input
-                      type={
-                        passwordVisibility.confirmNewPassword
-                          ? "text"
-                          : "password"
-                      }
-                      name="confirmNewPassword"
-                      value={passwords.confirmNewPassword}
-                      onChange={handlePasswordChange}
-                      className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                    />
-                    <button
-                      type="button"
-                      className="absolute inset-y-0 right-3 flex items-center"
-                      onClick={() =>
-                        togglePasswordVisibility("confirmNewPassword")
-                      }
-                    >
-                      <span className="material-symbols-outlined">
-                        {passwordVisibility.confirmNewPassword
-                          ? "visibility"
-                          : "visibility_off"}
-                      </span>
-                    </button>
-                  </div>
-                </div>
+              {/* Close Button */}
+              <div className="flex justify-end mt-8">
+                <button
+                  onClick={() => setIsOptionsModalOpen(false)} // Close options modal
+                  className="px-6 py-2 bg-gray-300 text-gray-800 font-semibold rounded-lg shadow hover:bg-gray-400 transition duration-200"
+                >
+                  Close
+                </button>
               </div>
-            )}
+            </div>
+          </div>
+        )}
 
-            {/* Change Email Form */}
-            {isEmailChanging && (
-              <div className="grid grid-cols-1 gap-6 mt-6">
+        {/* Modal for Changing Email */}
+        {isEmailModalOpen && (
+          <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
+              <div className="flex justify-between items-center border-b pb-3 mb-4">
+                <h2 className="text-2xl font-semibold text-gray-800">
+                  Change Email
+                </h2>
+                <button
+                  onClick={() => setIsEmailModalOpen(false)}
+                  className="text-gray-500 hover:text-gray-800 transition duration-200"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2}
+                    stroke="currentColor"
+                    className="w-6 h-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 gap-6">
+                {/* Email and Password fields */}
                 <div>
                   <label className="block text-gray-600 font-semibold">
                     New Email:
@@ -990,7 +1160,10 @@ const UserProf = () => {
                       type="button"
                       className="absolute inset-y-0 right-3 flex items-center"
                       onClick={() =>
-                        togglePasswordVisibility("currentPassword")
+                        setPasswordVisibility({
+                          ...passwordVisibility,
+                          currentPassword: !passwordVisibility.currentPassword,
+                        })
                       }
                     >
                       <span className="material-symbols-outlined">
@@ -1002,35 +1175,25 @@ const UserProf = () => {
                   </div>
                 </div>
               </div>
-            )}
 
-            <div className="flex justify-end mt-6 space-x-4">
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-200"
-              >
-                Back
-              </button>
-              <button
-                onClick={
-                  isEditing
-                    ? handleUpdate
-                    : isPasswordChanging
-                    ? handlePasswordUpdate
-                    : handleUserEmailUpdate
-                }
-                className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
-              >
-                {isEditing
-                  ? "Update Profile"
-                  : isPasswordChanging
-                  ? "Save New Password"
-                  : "Update Email"}
-              </button>
+              <div className="flex justify-end mt-6 space-x-4">
+                <button
+                  onClick={() => setIsEmailModalOpen(false)}
+                  className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-200"
+                >
+                  Back
+                </button>
+                <button
+                  onClick={handleUserEmailUpdate}
+                  className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
+                >
+                  Save New Email
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
