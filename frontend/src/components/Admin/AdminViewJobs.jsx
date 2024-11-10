@@ -13,6 +13,9 @@ const AdminViewJobs = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOrder, setSortOrder] = useState("Newest");
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // Controls delete modal visibility
+  const [selectedJobId, setSelectedJobId] = useState(null); // Holds the job ID to be deleted
+
   const jobsPerPage = 10;
   const navigate = useNavigate();
 
@@ -59,6 +62,47 @@ const AdminViewJobs = () => {
         toast.error("Failed to load job details");
         console.error(error);
       });
+  };
+
+  const handleDeleteJobListing = (jobId) => {
+    setSelectedJobId(jobId); // Sets the ID of the job to delete
+    setIsDeleteModalOpen(true); // Opens the delete modal
+  };
+
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false); // Closes the delete modal
+    setSelectedJobId(null); // Resets selected job ID
+  };
+
+  const confirmDelete = () => {
+    if (selectedJobId) {
+      // Checks if a job ID is selected
+      const config = {
+        method: "delete",
+        url: `/admin/delete/joblisting/${selectedJobId}`, // API endpoint for deleting a job listing
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      setLoading(true); // Shows loading indicator
+      axios(config)
+        .then(() => {
+          toast.success("Job listing deleted successfully!"); // Shows success message
+          setJobListings(
+            (prevListings) =>
+              prevListings.filter((job) => job.id !== selectedJobId) // Removes deleted job from list
+          );
+        })
+        .catch(() => {
+          toast.error("An error occurred while deleting the job listing."); // Shows error message
+        })
+        .finally(() => {
+          setLoading(false); // Hides loading indicator
+          setIsDeleteModalOpen(false); // Closes delete modal
+          setSelectedJobId(null); // Resets selected job ID
+        });
+    }
   };
 
   const formatJobData = (jobData) => ({
@@ -387,6 +431,12 @@ const AdminViewJobs = () => {
                     >
                       View
                     </button>
+                    <button
+                      onClick={() => handleDeleteJobListing(job.id)} // Opens delete modal with job ID
+                      className="bg-red-500 text-white text-xs md:text-sm px-3 py-1 ml-2 rounded-full shadow-sm hover:bg-red-700 transition duration-200 font-medium"
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -593,6 +643,34 @@ const AdminViewJobs = () => {
                 className="bg-gray-500 text-white px-4 py-2 rounded-lg  hover:bg-gray-600 transition duration-200 font-medium"
               >
                 Back
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {isDeleteModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+            <h3 className="text-xl font-semibold mb-4 text-center">
+              Confirm Deletion
+            </h3>
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to delete this job listing? This will also
+              delete all job applications for this listing.
+            </p>
+            <div className="flex justify-center space-x-4">
+              <button
+                onClick={confirmDelete} // Confirms deletion
+                className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors"
+              >
+                Confirm
+              </button>
+              <button
+                onClick={closeDeleteModal} // Cancels deletion
+                className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400 transition-colors"
+              >
+                Cancel
               </button>
             </div>
           </div>
