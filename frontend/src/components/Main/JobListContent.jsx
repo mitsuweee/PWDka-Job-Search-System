@@ -45,7 +45,7 @@ const JobListing = () => {
           duration: 5000, // Display the toast for 5 seconds
         });
 
-        // Wait for the toast to finish before logging out
+        // Wait for the toast to finish before logging out HAHAHA
         setTimeout(() => {
           localStorage.removeItem("Id");
           localStorage.removeItem("Role");
