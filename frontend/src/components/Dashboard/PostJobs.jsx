@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
@@ -22,6 +22,7 @@ const PostJob = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [companyName, setCompanyName] = useState("");
   const [isSuccessCardVisible, setIsSuccessCardVisible] = useState(false);
   const [showSalaryDetails, setShowSalaryDetails] = useState(false);
 
@@ -37,6 +38,31 @@ const PostJob = () => {
     localStorage.removeItem("Token");
     window.location.href = "/login";
   };
+  useEffect(() => {
+    const Id = localStorage.getItem("Id");
+    if (Id) {
+      const fetchCompanyData = async () => {
+        try {
+          // Fetch company name
+          const companyResponse = await axios.get(`/company/view/${Id}`);
+          if (companyResponse.data.successful) {
+            setCompanyName(companyResponse.data.data.name);
+          } else {
+            console.error(
+              "Error fetching company name:",
+              companyResponse.data.message
+            );
+          }
+        } catch (error) {
+          console.error("Error fetching company data:", error);
+        }
+      };
+
+      fetchCompanyData();
+    } else {
+      console.error("Company ID is not available in session storage");
+    }
+  }, []);
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -198,19 +224,15 @@ const PostJob = () => {
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 z-50 md:z-auto`}
       >
-        <div className="w-full flex justify-center items-center mb-6 p-2 bg-white rounded-lg">
-          <img
-            src="/imgs/LOGO PWDKA.png" // Replace with the actual path to your logo
-            alt="Logo"
-            className="w-26 h-19 object-contain"
-          />
-        </div>
         <button
           className="text-white md:hidden self-end text-3xl"
           onClick={() => setIsSidebarOpen(false)}
         >
           &times;
         </button>
+        <h2 className="text-2xl md:text-3xl font-bold text-white">
+          Welcome, {companyName || "Company"}!
+        </h2>
 
         {/* Dashboard Section */}
         <h2 className="text-white text-lg font-semibold mb-2 mt-4 w-full text-left">
