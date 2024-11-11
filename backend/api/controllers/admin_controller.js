@@ -720,6 +720,14 @@ const deleteJob = async (req, res, next) => {
 
     await knex("job_listing").where({ id }).del();
 
+    // Emit real-time notification using Socket.IO
+    if (global.io) {
+      global.io.emit("job_deleted", {
+        id,
+        message: "Job listing has been deleted",
+      });
+    }
+
     return res.status(200).json({
       successful: true,
       message: "Successfully deleted job listing",
