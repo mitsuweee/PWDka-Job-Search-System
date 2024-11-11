@@ -209,7 +209,7 @@ const AdminViewJobs = () => {
   const filteredJobs = jobListings
     .filter((job) => {
       const combinedFields =
-        `${job.position_name} ${job.company_name}`.toLowerCase();
+        `${job.position_name} ${job.company_name} ${job.level}`.toLowerCase();
       return combinedFields.includes(searchTerm.toLowerCase());
     })
     .sort((a, b) => {

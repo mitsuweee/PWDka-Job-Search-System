@@ -930,7 +930,6 @@ const ViewJobs = () => {
                     onChange={handleChange}
                     className="p-2 w-full border-2 border-blue-300 rounded-lg shadow-sm"
                   >
-                    <option value="">Select Job Level</option>
                     <option value="Entry-Level">Entry-Level</option>
                     <option value="Junior">Junior</option>
                     <option value="Associate">Associate</option>
