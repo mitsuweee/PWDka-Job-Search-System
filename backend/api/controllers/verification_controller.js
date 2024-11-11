@@ -197,6 +197,15 @@ PWDKA TEAM`,
     };
 
     await transporter.sendMail(mailOptions);
+    // Emit a real-time notification using Socket.IO
+    if (global.io) {
+      global.io.emit("company_declined", {
+        id,
+        email: company.email,
+        reason,
+        message: "Company verification has been declined",
+      });
+    }
 
     return res.status(200).json({
       successful: true,
@@ -319,6 +328,16 @@ PWDKA TEAM`,
     };
 
     await transporter.sendMail(mailOptions);
+
+    // Emit a real-time notification using Socket.IO
+    if (global.io) {
+      global.io.emit("user_declined", {
+        id,
+        email: user.email,
+        reason,
+        message: "User verification has been declined",
+      });
+    }
 
     return res.status(200).json({
       successful: true,
