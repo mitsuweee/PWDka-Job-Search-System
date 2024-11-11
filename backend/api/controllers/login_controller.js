@@ -51,7 +51,7 @@ const login = async (req, res, next) => {
       } else if (user.status == "DEACTIVATE") {
         return res.status(400).json({
           successful: false,
-          message: "Account is DEACTIVATED",
+          message: "Account Does Not Exist",
         });
       } else if (user.status === "PENDING" && user.role !== "admin") {
         return res.status(400).json({
