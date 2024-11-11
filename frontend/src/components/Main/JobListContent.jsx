@@ -58,6 +58,19 @@ const JobListing = () => {
     }
   };
 
+  const handleJobClick = (positionName) => {
+    // Find the job by the position name
+    const selectedJob = currentJobs.find(
+      (job) => job.jobName.toLowerCase() === positionName.toLowerCase()
+    );
+
+    if (selectedJob) {
+      setSelectedJobId(selectedJob.id); // Set the selected job ID
+      setIsDetailsVisible(true); // Show the job details
+      setIsApplicationHistoryModalOpen(false);
+    }
+  };
+
   useEffect(() => {
     const userId = localStorage.getItem("Id");
 
@@ -1113,7 +1126,14 @@ const JobListing = () => {
                                       key={index}
                                       className="hover:bg-gray-100 transition duration-150 text-gray-700 text-[10px] sm:text-sm"
                                     >
-                                      <td className="py-1 px-1 sm:py-2 sm:px-4 whitespace-nowrap">
+                                      <td
+                                        className="py-1 px-1 sm:py-2 sm:px-4 whitespace-nowrap cursor-pointer text-blue-500 hover:underline"
+                                        onClick={() =>
+                                          handleJobClick(
+                                            application.position_name
+                                          )
+                                        } // Handle the click
+                                      >
                                         {application.position_name}
                                       </td>
                                       <td className="py-1 px-1 sm:py-2 sm:px-4 whitespace-nowrap">
