@@ -396,6 +396,7 @@ const ViewApplicants = () => {
               className="py-2 px-4 border border-gray-300 rounded-lg shadow-md bg-custom-blue text-white"
             >
               <option value="All">All</option>
+              <option vlaue="Under Review">Under Review</option>
               <option value="Reviewed">Reviewed</option>
               <option value="Pending">Pending</option>
               <option value="Rejected">Rejected</option>
