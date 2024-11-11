@@ -229,6 +229,16 @@ const AdminProf = () => {
     setIsLogoutModalOpen(false);
   };
 
+  const closeAdminSettings = () => {
+    setIsModalOpen(false);
+    setNewEmail(""); // Reset email field
+    setPasswords({
+      currentPassword: "",
+      newPassword: "",
+      confirmNewPassword: "",
+    }); // Reset password fields
+  };
+
   const closeLogoutModal = () => {
     setIsLogoutModalOpen(false);
   };
@@ -732,7 +742,7 @@ const AdminProf = () => {
             {/* Action Buttons */}
             <div className="flex justify-end mt-6 space-x-4">
               <button
-                onClick={() => setIsModalOpen(false)}
+                onClick={closeAdminSettings}
                 className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-200"
               >
                 Back

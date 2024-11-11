@@ -23,6 +23,7 @@ const UserProf = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const [isChangingEmail, setIsChangingEmail] = useState(false);
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
 
   const [isOptionsModalOpen, setIsOptionsModalOpen] = useState(false);
 
@@ -187,15 +188,21 @@ const UserProf = () => {
 
   const handleEdit = () => {
     setIsEditing(true);
+    setIsChangingPassword(false);
+    setIsChangingEmail(false);
     setIsModalOpen(true);
   };
 
   const handlePasswordToggle = () => {
     setIsEditing(false);
+    setIsChangingPassword(true);
+    setIsChangingEmail(false);
     setIsModalOpen(true);
   };
   const handleEmailModal = () => {
     setIsEditing(false);
+    setIsChangingPassword(false);
+    setIsChangingEmail(true);
     setIsModalOpen(true);
   };
 
@@ -376,7 +383,17 @@ const UserProf = () => {
     navigate("/login");
     toast.success("Logged out successfully!");
   };
-
+  const closeUserSettings = () => {
+    setIsModalOpen(false);
+    setIsOptionsModalOpen(true);
+    setNewEmail(""); // Reset email field
+    setCurrentPasswordForEmail("");
+    setPasswords({
+      currentPassword: "",
+      newPassword: "",
+      confirmNewPassword: "",
+    }); // Reset password fields
+  };
   const closeLogoutModal = () => {
     setIsLogoutModalOpen(false);
   };
@@ -1039,7 +1056,7 @@ const UserProf = () => {
               {/* Action Buttons */}
               <div className="flex justify-end mt-6 space-x-4">
                 <button
-                  onClick={() => setIsModalOpen(false)}
+                  onClick={closeUserSettings}
                   className="bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg"
                 >
                   Back
