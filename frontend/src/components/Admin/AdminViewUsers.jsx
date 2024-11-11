@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
+import { io } from "socket.io-client"; // Import Socket.io client
 
 const AdminViewUsers = () => {
   const [users, setUsers] = useState([]);
@@ -22,6 +23,31 @@ const AdminViewUsers = () => {
     lastName: "",
     email: "",
   });
+
+  useEffect(() => {
+    // Initialize Socket.io connection
+    const socket = io("https://pwdka.com.ph"); // Ensure this URL matches your backend server URL
+
+    socket.on("connect", () => {
+      console.log("Connected to socket server with ID:", socket.id);
+    });
+
+    socket.on("connect_error", (error) => {
+      console.error("Socket connection error:", error);
+    });
+
+    // Listen for the userDeactivated event
+    socket.on("userDeactivated", (data) => {
+      setUsers((prevUsers) => prevUsers.filter((user) => user.id !== data.id));
+      toast.success(`User ID ${data.id} has been deactivated`);
+      window.location.reload();
+    });
+
+    // Clean up socket connection on component unmount
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     const adminId = localStorage.getItem("Id");

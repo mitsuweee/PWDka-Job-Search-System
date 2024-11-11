@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
+import { io } from "socket.io-client"; // Import Socket.io client
 
 const AdminViewAdmin = () => {
   const [admins, setAdmins] = useState([]);
@@ -15,6 +16,33 @@ const AdminViewAdmin = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const adminsPerPage = 10;
   const navigate = useNavigate();
+
+  // Initialize socket connection and listen for real-time events
+  useEffect(() => {
+    const socket = io("https://pwdka.com.ph"); // Ensure this URL matches your backend server URL
+
+    socket.on("connect", () => {
+      console.log("Connected to socket server with ID:", socket.id);
+    });
+
+    socket.on("connect_error", (error) => {
+      console.error("Socket connection error:", error);
+    });
+
+    // Listen for the adminDeactivated event
+    socket.on("adminDeactivated", (data) => {
+      setAdmins((prevAdmins) =>
+        prevAdmins.filter((admin) => admin.id !== data.id)
+      );
+      toast.success(`Admin ID ${data.id} has been deactivated`);
+      window.location.reload();
+    });
+
+    // Clean up socket connection on component unmount
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   const checkAdminStatus = async () => {
     const adminId = localStorage.getItem("Id");

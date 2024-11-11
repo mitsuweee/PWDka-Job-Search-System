@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
+import { io } from "socket.io-client";
 
 const AdminVerifyUsers = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -23,6 +24,38 @@ const AdminVerifyUsers = () => {
   const [declineReason, setDeclineReason] = useState(""); // Store decline reason
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Initialize socket connection only once
+    const socket = io("https://pwdka.com.ph");
+
+    socket.on("connect", () => {
+      console.log("Connected to socket server with ID:", socket.id);
+    });
+
+    socket.on("connect_error", (error) => {
+      console.error("Socket connection error:", error);
+    });
+
+    // Listen for real-time userVerified event
+    socket.on("userVerified", (data) => {
+      setUsers((prevUsers) => prevUsers.filter((user) => user.id !== data.id));
+      toast.success(`User ID ${data.id} has been verified`);
+    });
+
+    // Listen for real-time userDeclined event
+    socket.on("user_declined", (data) => {
+      setUsers((prevUsers) => prevUsers.filter((user) => user.id !== data.id));
+      toast.error(
+        `User ID ${data.id} has been declined. Reason: ${data.reason}`
+      );
+    });
+
+    // Clean up socket connection on component unmount
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   const handleLogout = () => {
     setIsLogoutModalOpen(true);

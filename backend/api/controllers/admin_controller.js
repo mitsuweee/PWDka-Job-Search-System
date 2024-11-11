@@ -1025,6 +1025,9 @@ const deactivateAdmin = async (req, res, next) => {
 
     await knex("admin").where({ id }).update({ status: "DEACTIVATE" });
 
+    // Emit real-time event using Socket.io
+    global.io.emit("adminDeactivated", { id, status: "DEACTIVATE" });
+
     return res.status(200).json({
       successful: true,
       message: "Successfully Deactivated Admin!",
@@ -1058,6 +1061,9 @@ const deactivateUser = async (req, res, next) => {
     }
 
     await knex("user").where({ id }).update({ status: "DEACTIVATE" });
+
+    // Emit real-time event using Socket.io
+    global.io.emit("userDeactivated", { id, status: "DEACTIVATE" });
 
     return res.status(200).json({
       successful: true,
@@ -1093,9 +1099,12 @@ const deactivateCompany = async (req, res, next) => {
 
     await knex("company").where({ id }).update({ status: "DEACTIVATE" });
 
+    // Emit real-time event using Socket.io
+    global.io.emit("companyDeactivated", { id, status: "DEACTIVATE" });
+
     return res.status(200).json({
       successful: true,
-      message: "Successfully Deactivated company!",
+      message: "Successfully Deactivated Company!",
     });
   } catch (err) {
     return res.status(500).json({

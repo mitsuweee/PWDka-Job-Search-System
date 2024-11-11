@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
+import io from "socket.io-client";
 
 const AdminViewJobs = () => {
   const [jobListings, setJobListings] = useState([]);
@@ -47,6 +48,36 @@ const AdminViewJobs = () => {
       toast.error("Failed to verify admin status.");
     }
   };
+
+  useEffect(() => {
+    // Initialize socket connection
+    const socket = io("https://pwdka.com.ph"); // Ensure this URL matches your backend server URL
+
+    socket.on("connect", () => {
+      console.log("Connected to socket server with ID:", socket.id);
+    });
+
+    socket.on("connect_error", (error) => {
+      console.error("Socket connection error:", error);
+    });
+
+    // Listen for the job_deleted event
+    socket.on("job_deleted", (data) => {
+      // Remove the deleted job from the state
+      setJobListings((prevJobListings) =>
+        prevJobListings.filter((job) => job.id !== data.id)
+      );
+
+      // Display a toast notification
+      toast.error(`Job ID ${data.id} has been deleted.`);
+      window.location.reload();
+    });
+
+    // Clean up socket connection on component unmount
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     const config = {

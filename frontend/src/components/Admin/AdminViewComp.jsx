@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
+import { io } from "socket.io-client"; // Import Socket.io client
 
 const AdminViewComp = () => {
   const [companies, setCompanies] = useState([]);
@@ -21,6 +22,33 @@ const AdminViewComp = () => {
     email: "",
   });
   const navigate = useNavigate();
+
+  // Initialize socket connection and listen for real-time events
+  useEffect(() => {
+    const socket = io("https://pwdka.com.ph"); // Ensure this URL matches your backend server URL
+
+    socket.on("connect", () => {
+      console.log("Connected to socket server with ID:", socket.id);
+    });
+
+    socket.on("connect_error", (error) => {
+      console.error("Socket connection error:", error);
+    });
+
+    // Listen for the companyDeactivated event
+    socket.on("companyDeactivated", (data) => {
+      setCompanies((prevCompanies) =>
+        prevCompanies.filter((company) => company.id !== data.id)
+      );
+      toast.success(`Company ID ${data.id} has been deactivated`);
+      window.location.reload();
+    });
+
+    // Clean up socket connection on component unmount
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   const checkAdminStatus = async () => {
     const adminId = localStorage.getItem("Id");

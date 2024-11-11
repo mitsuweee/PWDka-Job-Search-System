@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
+import { io } from "socket.io-client";
 
 const AdminVerifyComp = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -20,6 +21,64 @@ const AdminVerifyComp = () => {
     lastName: "",
     email: "",
   });
+
+  useEffect(() => {
+    // Initialize socket connection
+    const socket = io("https://pwdka.com.ph"); // Ensure this URL matches your backend server URL
+
+    socket.on("connect", () => {
+      console.log("Connected to socket server with ID:", socket.id);
+    });
+
+    socket.on("connect_error", (error) => {
+      console.error("Socket connection error:", error);
+    });
+
+    // Listen for companyVerified event
+    socket.on("companyVerified", (data) => {
+      setCompanies((prevCompanies) =>
+        prevCompanies.filter((company) => company.id !== data.id)
+      );
+      toast.success(`Company ID ${data.id} has been verified`);
+      window.location.reload();
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    // Initialize socket connection
+    const socket = io("https://pwdka.com.ph"); // Ensure this URL matches your backend server URL
+
+    socket.on("connect", () => {
+      console.log("Connected to socket server with ID:", socket.id);
+    });
+
+    socket.on("connect_error", (error) => {
+      console.error("Socket connection error:", error);
+    });
+
+    // Listen for the company_declined event
+    socket.on("company_declined", (data) => {
+      // Remove the declined company from the state
+      setCompanies((prevCompanies) =>
+        prevCompanies.filter((company) => company.id !== data.id)
+      );
+
+      // Display a toast notification with the reason for declining
+      toast.error(
+        `Company ID ${data.id} has been declined. Reason: ${data.reason}`
+      );
+      window.location.reload();
+    });
+
+    // Clean up socket connection on component unmount
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   const navigate = useNavigate();
 
@@ -162,7 +221,7 @@ const AdminVerifyComp = () => {
         setSelectedCompany(null);
         setShowModal(false);
         setLoading(false);
-        setActionInProgress(false);
+        // setActionInProgress(false);
       })
       .catch(function (error) {
         setLoading(false);
