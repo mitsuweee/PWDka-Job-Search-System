@@ -39,6 +39,9 @@ const viewPendingUsers = async (req, res, next) => {
         : null,
     }));
 
+    // Emit real-time event using Socket.io
+    global.io.emit("pendingUsersRetrieved", { users });
+
     return res.status(200).json({
       successful: true,
       message: "Successfully Retrieved Users",
@@ -74,6 +77,9 @@ const viewPendingCompany = async (req, res, next) => {
         ? row.profile_picture.toString()
         : null,
     }));
+
+    // Emit real-time event using Socket.io
+    global.io.emit("pendingCompaniesRetrieved", { companies: processedRows });
 
     return res.status(200).json({
       successful: true,
