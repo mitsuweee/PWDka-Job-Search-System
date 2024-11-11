@@ -60,8 +60,8 @@ const JobListing = () => {
   };
 
   const handleJobClick = (positionName) => {
-    // Find the job by the position name
-    const selectedJob = currentJobs.find(
+    // Find the job by the position name in all jobs (filteredJobs contains all jobs)
+    const selectedJob = filteredJobs.find(
       (job) => job.jobName.toLowerCase() === positionName.toLowerCase()
     );
 
@@ -69,6 +69,19 @@ const JobListing = () => {
       setSelectedJobId(selectedJob.id); // Set the selected job ID
       setIsDetailsVisible(true); // Show the job details
       setIsApplicationHistoryModalOpen(false);
+
+      // Find the index of the job in the filtered list
+      const jobIndex = filteredJobs.findIndex(
+        (job) => job.jobName.toLowerCase() === positionName.toLowerCase()
+      );
+
+      // Calculate the page number based on the job index
+      const pageNumber = Math.floor(jobIndex / jobsPerPage) + 1;
+
+      // Update the current page to display the page containing the selected job
+      if (pageNumber !== currentPage) {
+        setCurrentPage(pageNumber); // Update the page to the correct page
+      }
     }
   };
 
