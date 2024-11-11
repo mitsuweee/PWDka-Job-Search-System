@@ -24,6 +24,30 @@ const AdminViewJobs = () => {
   const jobsPerPage = 10;
   const navigate = useNavigate();
 
+  const checkAdminStatus = async () => {
+    const adminId = localStorage.getItem("Id");
+
+    try {
+      const response = await axios.get(`/admin/view/verify/status/${adminId}`);
+      if (
+        response.data.successful &&
+        response.data.message === "User is Deactivated"
+      ) {
+        toast.error("Your account has been deactivated. Logging out.");
+
+        // Wait briefly before logging out
+        setTimeout(() => {
+          localStorage.removeItem("Id");
+          localStorage.removeItem("Role");
+          localStorage.removeItem("Token");
+          navigate("/login");
+        }, 3000);
+      }
+    } catch (error) {
+      toast.error("Failed to verify admin status.");
+    }
+  };
+
   useEffect(() => {
     const config = {
       method: "get",
@@ -46,6 +70,12 @@ const AdminViewJobs = () => {
         toast.error("Failed to load job listings");
         console.error(error);
       });
+
+    const interval = setInterval(() => {
+      checkAdminStatus(); // Calls the function that verifies admin status
+    }, 5000);
+
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -144,6 +174,7 @@ const AdminViewJobs = () => {
     companyName: jobData.company_name,
     jobName: jobData.position_name,
     description: jobData.description,
+    jobLevel: jobData.level,
     requirements: jobData.requirement,
     qualification: jobData.qualification,
     minimumSalary: jobData.minimum_salary,
@@ -436,6 +467,7 @@ const AdminViewJobs = () => {
               <tr className="bg-blue-600 text-white text-left text-xs md:text-sm uppercase tracking-wider">
                 <th className="py-4 px-6 font-semibold">Company</th>
                 <th className="py-4 px-6 font-semibold">Job Title</th>
+                <th className="py-4 px-6 font-semibold">Job Level</th>
                 <th className="py-4 px-6 text-center font-semibold">Actions</th>
               </tr>
             </thead>
@@ -458,6 +490,16 @@ const AdminViewJobs = () => {
 
                   <td className="py-4 px-6 text-gray-800 text-sm md:text-base break-words">
                     {job.position_name
+                      .split(" ")
+                      .map(
+                        (word) =>
+                          word.charAt(0).toUpperCase() +
+                          word.slice(1).toLowerCase()
+                      )
+                      .join(" ")}
+                  </td>
+                  <td className="py-4 px-6 text-gray-800 text-sm md:text-base break-words">
+                    {job.level
                       .split(" ")
                       .map(
                         (word) =>
@@ -579,6 +621,24 @@ const AdminViewJobs = () => {
                   </p>
                   <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
                     {job.jobName
+                      .split(" ")
+                      .map(
+                        (word) =>
+                          word.charAt(0).toUpperCase() +
+                          word.slice(1).toLowerCase()
+                      )
+                      .join(" ")}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-black font-semibold text-sm leading-relaxed  flex items-center">
+                    <span className="material-symbols-outlined mr-1">
+                      workspace_premium
+                    </span>{" "}
+                    Job Level:
+                  </p>
+                  <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
+                    {job.jobLevel
                       .split(" ")
                       .map(
                         (word) =>

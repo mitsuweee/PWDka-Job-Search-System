@@ -22,6 +22,31 @@ const AdminViewComp = () => {
   });
   const navigate = useNavigate();
 
+  const checkAdminStatus = async () => {
+    const adminId = localStorage.getItem("Id");
+    try {
+      const response = await axios.get(`/admin/view/verify/status/${adminId}`);
+      if (
+        response.data.successful &&
+        response.data.message === "User is Deactivated"
+      ) {
+        toast.error("Your admin account has been deactivated. Logging out.", {
+          duration: 5000, // Display the toast for 5 seconds
+        });
+
+        // Wait for the toast to finish before logging out
+        setTimeout(() => {
+          localStorage.removeItem("Id");
+          localStorage.removeItem("Role");
+          localStorage.removeItem("Token");
+          navigate("/login");
+        }, 3000); // Wait for 3 seconds before redirecting
+      }
+    } catch {
+      toast.error("Failed to check admin status.");
+    }
+  };
+
   useEffect(() => {
     const adminId = localStorage.getItem("Id");
     const config = {
@@ -73,6 +98,12 @@ const AdminViewComp = () => {
         toast.error("Failed to load companies");
         console.error(error);
       });
+
+    const interval = setInterval(() => {
+      checkAdminStatus(); // Calls the function that verifies admin status
+    }, 5000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const handleViewCompany = (companyId) => {

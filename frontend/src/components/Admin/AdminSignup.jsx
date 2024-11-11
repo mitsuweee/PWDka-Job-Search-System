@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
@@ -17,6 +17,38 @@ const AdminSignup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
+
+  const checkAdminStatus = async () => {
+    const adminId = localStorage.getItem("Id");
+    try {
+      const response = await axios.get(`/admin/view/verify/status/${adminId}`);
+      if (
+        response.data.successful &&
+        response.data.message === "User is Deactivated"
+      ) {
+        toast.error("Your admin account has been deactivated. Logging out.", {
+          duration: 5000, // Display the toast for 5 seconds
+        });
+
+        // Wait for the toast to finish before logging out
+        setTimeout(() => {
+          localStorage.removeItem("Id");
+          localStorage.removeItem("Role");
+          localStorage.removeItem("Token");
+          navigate("/login");
+        }, 3000); // Wait for 3 seconds before redirecting
+      }
+    } catch {
+      toast.error("Failed to check user status.");
+    }
+  };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      checkAdminStatus();
+    }, 5000);
+    return () => clearInterval(interval); // Clean up on unmount
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
