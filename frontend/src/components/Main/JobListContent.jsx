@@ -11,6 +11,7 @@ const JobListing = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [locationSearchTerm, setLocationSearchTerm] = useState(""); // For location search
   const [jobType, setJobType] = useState(""); // For full-time or part-time filter
+  const [jobLevel, setJobLevel] = useState(""); // New state for job level filter
   const [currentPage, setCurrentPage] = useState(1);
   const [sortOption, setSortOption] = useState("Newest");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -116,6 +117,7 @@ const JobListing = () => {
             salaryVisibility: job.salary_visibility,
             dateCreated: job.date_created, // Ensure dateCreated is included
             description: job.description,
+            level: job.level,
             requirements: job.requirement,
             qualifications: job.qualification,
             companyName: job.company_name,
@@ -185,15 +187,16 @@ const JobListing = () => {
     const jobDetails = `
       Company: ${job.companyName}.
       Job Title: ${job.jobName}.
-      Job Description: ${job.description}.
       Location: ${job.companyLocation}.
       City: ${job.companyCity}.
-      ${salaryMessage}
       Position Type: ${job.positionType}.
-      Requirements: ${job.requirements}.
+      Job Level: ${job.level}.
+      ${salaryMessage}.
+      Job Description: ${job.description}.
       Qualifications: ${job.qualifications}.
-      Company Contact Number: ${job.companyContact}.
+      Requirements: ${job.requirements}.
       Company Email: ${job.companyEmail}.
+      Company Contact Number: ${job.companyContact}.
       If you are interested, click on APPLY NOW.
     `;
 
@@ -240,8 +243,10 @@ const JobListing = () => {
       const jobTypeMatch =
         jobType === "" ||
         job.positionType.toLowerCase() === jobType.toLowerCase();
+      const jobLevelMatch =
+        jobLevel === "" || job.level.toLowerCase() === jobLevel.toLowerCase(); // New job level filter
 
-      return jobNameMatch && cityMatch && jobTypeMatch;
+      return jobNameMatch && cityMatch && jobTypeMatch && jobLevelMatch; // Include jobLevelMatch in the filter
     })
     .sort((a, b) => {
       if (sortOption === "Newest") {
@@ -300,13 +305,16 @@ const JobListing = () => {
         }}
       >
         <div className="w-full lg:w-2/3 flex flex-col sm:flex-row items-center justify-center space-y-3 sm:space-y-0 sm:space-x-2">
+          {/* for search */}
           <input
             type="text"
             placeholder="Search Job Name"
-            className="w-full sm:w-2/3 p-3 rounded-lg focus:outline-none focus:border-2 focus:border-blue-500 transition duration-200 text-lg"
+            className="w-full sm:w-2/5 p-3 rounded-lg focus:outline-none focus:border-2 focus:border-blue-500 transition duration-200 text-lg"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
+
+          {/* for search loc */}
           <input
             type="text"
             placeholder="Location"
@@ -314,6 +322,29 @@ const JobListing = () => {
             value={locationSearchTerm}
             onChange={(e) => setLocationSearchTerm(e.target.value)}
           />
+
+          {/* for job level */}
+          <select
+            className="w-full sm:w-1/4 p-3 rounded-lg focus:outline-none focus:border-2 focus:border-blue-500 transition duration-200 text-lg"
+            value={jobLevel}
+            onChange={(e) => setJobLevel(e.target.value)} // Update the jobLevel state
+          >
+            <option value="" className="text-gray-400">
+              All Levels
+            </option>
+            <option value="Entry-Level">Entry-Level</option>
+            <option value="Associate">Associate</option>
+            <option value="Junior">Junior</option>
+            <option value="Mid-Level">Mid-Level</option>
+            <option value="Senior-Level">Senior-Level</option>
+            <option value="Lead">Lead</option>
+            <option value="Managerial">Managerial</option>
+            <option value="Director">Director</option>
+            <option value="Executive">Executive</option>
+            <option value="None">None</option>
+          </select>
+
+          {/* for pos type */}
           <select
             className="w-full sm:w-1/4 p-3 rounded-lg focus:outline-none focus:border-2 focus:border-blue-500 transition duration-200 text-lg"
             value={jobType}
@@ -325,18 +356,12 @@ const JobListing = () => {
             <option value="full-time">Full-Time</option>
             <option value="part-time">Part-Time</option>
           </select>
-          <button
-            className="w-full sm:w-auto p-3 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition flex items-center justify-center"
-            onClick={handleSearch}
-          >
-            <span className="material-symbols-outlined text-2xl">search</span>
-          </button>
         </div>
-
+        {/* for sorting */}
         <div className="flex flex-col sm:flex-row items-center justify-center space-y-3 sm:space-y-0 sm:space-x-2 w-full sm:w-auto">
           <div className="relative w-full sm:w-auto flex flex-row space-x-2">
             <button
-              className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-500 transition flex items-center justify-center space-x-1"
+              className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-500 transition flex items-center justify-center space-x-1 ml-4" // Added ml-4 for left margin
               onClick={() => setIsFilterOpen(!isFilterOpen)}
             >
               <span className="material-symbols-outlined text-lg">sort</span>
@@ -489,6 +514,23 @@ const JobListing = () => {
                         </span>
                         {toSentenceCase(job.positionType)}
                       </p>
+
+                      <p className="font-semibold text-xs md:text-base text-white flex items-center">
+                        <span className="material-symbols-outlined text-sm md:text-base mr-1">
+                          workspace_premium
+                        </span>
+                        {job.level
+                          ? job.level
+                              .split("-") // Split the level by hyphen
+                              .map(
+                                (word) =>
+                                  word.charAt(0).toUpperCase() +
+                                  word.slice(1).toLowerCase()
+                              ) // Capitalize each word
+                              .join("-") // Join the words back together with a hyphen
+                          : "Level not specified"}{" "}
+                        {/* Fallback text if level is missing */}
+                      </p>
                       {job.salaryVisibility === "SHOW" ? (
                         <p className="font-semibold text-xs md:text-base text-white flex items-center">
                           <span className="material-symbols-outlined text-sm md:text-base mr-1">
@@ -564,7 +606,7 @@ const JobListing = () => {
                           )
                           .join(" ")}
                       </p>
-                      <p className="text-sm mb-2 text-gray-500 flex items-center">
+                      <p className="text-sm mb-2 text-gray-700 flex items-center">
                         <span className="material-symbols-outlined mr-1 text-base">
                           location_on
                         </span>
@@ -583,6 +625,7 @@ const JobListing = () => {
                         </span>
                         {toSentenceCase(job.positionType)}
                       </p>
+
                       {job.salaryVisibility === "SHOW" ? (
                         <p className="text-sm mb-2 text-gray-700 flex items-center">
                           <span className="material-symbols-outlined mr-1 text-base">
@@ -850,6 +893,7 @@ const JobListing = () => {
                   </span>
                   {toSentenceCase(selectedJob.positionType)}
                 </p>
+
                 {selectedJob.salaryVisibility === "SHOW" ? (
                   <p className="text-lg mb-4 text-gray-700 flex items-center">
                     <span className="material-symbols-outlined mr-2">
