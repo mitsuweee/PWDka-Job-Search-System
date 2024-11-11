@@ -39,6 +39,16 @@ const viewPendingUsers = async (req, res, next) => {
         : null,
     }));
 
+    // Emit real-time event using Socket.io
+    global.io.emit("pendingUsersUpdate", {
+      data: users,
+      pagination: {
+        total: totalPending.count,
+        currentPage: parseInt(page),
+        totalPages: Math.ceil(totalPending.count / limit),
+      },
+    });
+
     return res.status(200).json({
       successful: true,
       message: "Successfully Retrieved Users",
@@ -75,6 +85,15 @@ const viewPendingCompany = async (req, res, next) => {
         : null,
     }));
 
+    // Emit real-time event with the list of pending companies
+    global.io.emit("pendingCompaniesUpdate", {
+      data: processedRows,
+      pagination: {
+        total: totalPending.count,
+        currentPage: parseInt(page),
+        totalPages: Math.ceil(totalPending.count / limit),
+      },
+    });
     return res.status(200).json({
       successful: true,
       message: "Successfully Retrieved Companies",
@@ -127,7 +146,7 @@ const verifyCompany = async (req, res, next) => {
 
     await transporter.sendMail(mailOptions);
 
-    // Emit real-time event using Socket.io
+    // Emit real-time event using Socket.io to notify clients about the verified company
     global.io.emit("companyVerified", { id, status: "VERIFIED" });
 
     return res.status(200).json({
