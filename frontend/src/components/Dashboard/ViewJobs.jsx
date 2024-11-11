@@ -181,7 +181,7 @@ const ViewJobs = () => {
     const filteredJobs = jobListings
       .filter((job) => {
         const combinedFields =
-          `${job.position_name} ${job.position_type}`.toLowerCase();
+          `${job.position_name} ${job.position_type} ${job.level}`.toLowerCase();
         return combinedFields.includes(searchValue.toLowerCase());
       })
       .sort((a, b) => {
@@ -202,8 +202,6 @@ const ViewJobs = () => {
   const normalizeText = (text) => text.toLowerCase().trim();
 
   const handleUpdateJob = (jobData) => {
-    console.log("Received jobData object:", jobData);
-
     setJobUpdate({
       id: jobData.id,
       jobName: jobData.position_name,
@@ -531,14 +529,15 @@ const ViewJobs = () => {
           <table className="table-auto w-full bg-white mt-4 rounded-xl shadow-lg overflow-hidden">
             <thead>
               <tr className="bg-blue-600 text-white text-left text-xs md:text-sm uppercase tracking-wider">
-                <th className="py-4 px-2 md:px-4 font-semibold">Job Title</th>
-                <th className="py-4 px-2 md:px-4 font-semibold">
+                <th className="py-6 px-4 md:px-6 font-semibold">Job Title</th>
+                <th className="py-6 px-4 md:px-6 font-semibold">
                   Position Type
                 </th>
-                <th className="py-4 px-2 md:px-4 font-semibold">
+                <th className="py-6 px-4 md:px-6 font-semibold">Job Level</th>
+                <th className="py-6 px-4 md:px-6 font-semibold">
                   Salary Range
                 </th>
-                <th className="py-4 px-2 md:px-4 font-semibold text-center">
+                <th className="py-6 px-4 md:px-6 font-semibold text-center">
                   Actions
                 </th>
               </tr>
@@ -549,7 +548,7 @@ const ViewJobs = () => {
                   key={job.id}
                   className="border-b border-gray-200 hover:bg-gray-50 transition duration-300"
                 >
-                  <td className="py-4 px-2 md:px-4 text-gray-800 text-xs md:text-sm break-words">
+                  <td className="py-6 px-4 md:px-6 text-gray-800 text-xs md:text-sm break-words">
                     {job.position_name
                       ? job.position_name
                           .split(" ")
@@ -561,7 +560,7 @@ const ViewJobs = () => {
                           .join(" ")
                       : ""}
                   </td>
-                  <td className="py-4 px-2 md:px-4 text-gray-800 text-xs md:text-sm break-words">
+                  <td className="py-6 px-4 md:px-6 text-gray-800 text-xs md:text-sm break-words">
                     {job.position_type
                       ? job.position_type
                           .split(" ")
@@ -574,16 +573,29 @@ const ViewJobs = () => {
                       : "N/A"}
                   </td>
 
-                  <td className="py-4 px-2 md:px-4 text-gray-800 text-xs md:text-sm">
+                  <td className="py-6 px-4 md:px-6 text-gray-800 text-xs md:text-sm break-words">
+                    {job.level
+                      ? job.level
+                          .split(" ")
+                          .map(
+                            (word) =>
+                              word.charAt(0).toUpperCase() +
+                              word.slice(1).toLowerCase()
+                          )
+                          .join(" ")
+                      : "N/A"}
+                  </td>
+
+                  <td className="py-6 px-4 md:px-6 text-gray-800 text-xs md:text-sm">
                     {job.minimum_salary && job.maximum_salary
                       ? `₱${job.minimum_salary} - ₱${job.maximum_salary}`
                       : "Not specified"}
                   </td>
-                  <td className="py-4 px-2 md:px-4 text-center">
-                    <div className="flex justify-center items-center space-x-1 md:space-x-2">
+                  <td className="py-6 px-4 md:px-6 text-center">
+                    <div className="flex justify-center items-center space-x-2">
                       <button
                         onClick={() => handleViewJob(job.id)}
-                        className="bg-blue-500 text-white flex items-center px-1 md:px-2 py-1 rounded-full shadow-sm hover:bg-blue-700 transition duration-200"
+                        className="bg-blue-500 text-white flex items-center px-2 py-1 rounded-full shadow-sm hover:bg-blue-700 transition duration-200"
                       >
                         <span className="material-symbols-outlined text-sm md:text-base">
                           visibility
@@ -594,7 +606,7 @@ const ViewJobs = () => {
                       </button>
                       <button
                         onClick={() => handleDeleteJobListing(job.id)}
-                        className="bg-red-500 text-white flex items-center px-1 md:px-2 py-1 rounded-full shadow-sm hover:bg-red-700 transition duration-200"
+                        className="bg-red-500 text-white flex items-center px-2 py-1 rounded-full shadow-sm hover:bg-red-700 transition duration-200"
                       >
                         <span className="material-symbols-outlined text-sm md:text-base">
                           delete
@@ -605,7 +617,7 @@ const ViewJobs = () => {
                       </button>
                       <button
                         onClick={() => handleUpdateJob(job)}
-                        className="bg-yellow-500 text-white flex items-center px-1 md:px-2 py-1 rounded-full shadow-sm hover:bg-yellow-700 transition duration-200"
+                        className="bg-yellow-500 text-white flex items-center px-2 py-1 rounded-full shadow-sm hover:bg-yellow-700 transition duration-200"
                       >
                         <span className="material-symbols-outlined text-sm md:text-base">
                           edit
@@ -616,7 +628,7 @@ const ViewJobs = () => {
                       </button>
                       <button
                         onClick={() => handleViewApplicants(job.id)}
-                        className="bg-green-500 text-white flex items-center px-1 md:px-2 py-1 rounded-full shadow-sm hover:bg-green-700 transition duration-200"
+                        className="bg-green-500 text-white flex items-center px-2 py-1 rounded-full shadow-sm hover:bg-green-700 transition duration-200"
                       >
                         <span className="material-symbols-outlined text-sm md:text-base">
                           group_add
@@ -910,15 +922,26 @@ const ViewJobs = () => {
                 {/* Level */}
                 <div className="col-span-1">
                   <label className="block mb-1 text-gray-700 font-semibold">
-                    Level
+                    Level <span className="text-red-500">*</span>
                   </label>
-                  <input
-                    type="text"
+                  <select
                     name="level"
                     value={jobUpdate.level}
                     onChange={handleChange}
                     className="p-2 w-full border-2 border-blue-300 rounded-lg shadow-sm"
-                  />
+                  >
+                    <option value="">Select Job Level</option>
+                    <option value="Entry-Level">Entry-Level</option>
+                    <option value="Junior">Junior</option>
+                    <option value="Associate">Associate</option>
+                    <option value="Mid-Level">Mid-Level</option>
+                    <option value="Senior-Level">Senior-Level</option>
+                    <option value="Lead">Lead</option>
+                    <option value="Managerial">Managerial</option>
+                    <option value="Director">Director</option>
+                    <option value="Executive">Executive</option>
+                    <option value="None">None</option>
+                  </select>
                 </div>
 
                 <div className="col-span-1 sm:col-span-2">

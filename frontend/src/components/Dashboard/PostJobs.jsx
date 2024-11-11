@@ -395,13 +395,24 @@ const PostJob = () => {
               <label className="block mb-2 text-gray-700 font-semibold">
                 Job Level <span className="text-red-500">*</span>
               </label>
-              <textarea
+              <select
                 name="level"
                 value={jobDetails.level}
                 onChange={handleChange}
-                className="p-3 w-full border-2 border-blue-300 rounded-lg shadow-sm h-28 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                required
-              />
+                className="p-3 w-full border-2 border-blue-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+              >
+                <option value="">Select Job Level</option>
+                <option value="Entry-Level">Entry-Level</option>
+                <option value="Associate">Associate</option>
+                <option value="Junior">Junior</option>
+                <option value="Mid-Level">Mid-Level</option>
+                <option value="Senior-Level">Senior-Level</option>
+                <option value="Lead">Lead</option>
+                <option value="Managerial">Managerial</option>
+                <option value="Director">Director</option>
+                <option value="Executive">Executive</option>
+                <option value="None">None</option>
+              </select>
             </div>
 
             <div className="col-span-1">
