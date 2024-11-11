@@ -19,7 +19,7 @@ const AdminViewAdmin = () => {
 
   // Initialize socket connection and listen for real-time events
   useEffect(() => {
-    const socket = io("https://pwdka.com.ph"); // Ensure this URL matches your backend server URL
+    const socket = io("https://pwdka.com.ph:8080"); // Ensure this URL matches your backend server URL
 
     socket.on("connect", () => {
       console.log("Connected to socket server with ID:", socket.id);
