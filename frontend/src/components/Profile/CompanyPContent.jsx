@@ -145,7 +145,7 @@ const CompanyProf = () => {
 
   const closeCompSettings = () => {
     setIsModalOpen(false);
-    setIsOptionsModalOpen(true);
+    setIsSettingsModalOpen(true);
     setNewEmail(""); // Reset email field
     setCurrentPasswordForEmail("");
     setPasswords({
