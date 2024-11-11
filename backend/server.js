@@ -8,9 +8,11 @@ const server = HTTP.createServer(app);
 // Initialize Socket.IO
 const io = new Server(server, {
   cors: {
-    origin: "https://pwdka.com.ph:8080", // Update this with your frontend URL
+    origin: "https://pwdka.com.ph", // Your frontend URL
     methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
   },
+  transports: ["polling"], // Only use HTTP polling, not WebSocket
 });
 
 // Listen for Socket.IO connections
