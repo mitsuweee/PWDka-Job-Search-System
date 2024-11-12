@@ -19,7 +19,7 @@ const AdminViewAdmin = () => {
 
   // Initialize socket connection and listen for real-time events
   useEffect(() => {
-    const socket = io("http://127.0.0.0.1:8080");
+    const socket = io("pwdka.com.ph");
     //   transports: ["websocket", "polling"],
     // });
 
