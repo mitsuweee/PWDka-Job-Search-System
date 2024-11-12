@@ -8,7 +8,7 @@ const server = HTTP.createServer(app);
 // Initialize Socket.IO
 const io = new Server(server, {
   cors: {
-    origin: ["pwdka.com.ph"], // Your frontend URL
+    origin: ["http://127.0.0.0.1:8080"], // Your frontend URL
     methods: ["GET", "POST"],
   },
 });
