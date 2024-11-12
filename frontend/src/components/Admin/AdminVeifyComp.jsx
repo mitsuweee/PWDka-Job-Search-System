@@ -41,7 +41,7 @@ const AdminVerifyComp = () => {
       setCompanies((prevCompanies) =>
         prevCompanies.filter((company) => company.id !== data.id)
       );
-      toast.success(`Company ID ${data.id} has been verified`);
+      toast.success(`A Company Has Been Verified`);
       window.location.reload();
     });
 
@@ -52,7 +52,9 @@ const AdminVerifyComp = () => {
 
   useEffect(() => {
     // Initialize socket connection
-    const socket = io("https://pwdka.com.ph"); // Ensure this URL matches your backend server URL
+    const socket = io("https://pwdka.com.ph/", {
+      transports: ["websocket"], // Use WebSocket only for improved real-time performance
+    });
 
     socket.on("connect", () => {
       console.log("Connected to socket server with ID:", socket.id);
@@ -70,9 +72,7 @@ const AdminVerifyComp = () => {
       );
 
       // Display a toast notification with the reason for declining
-      toast.error(
-        `Company ID ${data.id} has been declined. Reason: ${data.reason}`
-      );
+      toast.error(`A Company Has Been Declined`);
       window.location.reload();
     });
 
@@ -660,7 +660,7 @@ const AdminVerifyComp = () => {
                 </div>
 
                 <div className="flex justify-end mt-6 space-x-3">
-                  <button
+                  {/* <button
                     onClick={() => handleApprove(selectedCompany.id)}
                     className="bg-green-500 text-white px-4 py-2 rounded-full shadow-md hover:bg-green-600 transition duration-200 font-medium"
                   >
@@ -671,7 +671,7 @@ const AdminVerifyComp = () => {
                     className="bg-red-500 text-white px-4 py-2 rounded-full shadow-md hover:bg-red-600 transition duration-200 font-medium"
                   >
                     Decline
-                  </button>
+                  </button> */}
                 </div>
               </div>
             </div>
