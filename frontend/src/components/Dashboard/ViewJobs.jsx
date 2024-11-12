@@ -550,6 +550,7 @@ const ViewJobs = () => {
         </div>
 
         {/* Table */}
+        {/* Table */}
         <div className="w-full overflow-x-auto">
           <table className="table-auto w-full bg-white mt-4 rounded-xl shadow-lg overflow-hidden">
             <thead>
@@ -558,8 +559,10 @@ const ViewJobs = () => {
                 <th className="py-6 px-4 md:px-6 font-semibold">
                   Position Type
                 </th>
-                <th className="py-6 px-4 md:px-6 font-semibold">Job Level</th>
-                <th className="py-6 px-4 md:px-6 font-semibold">
+                <th className="py-6 px-4 md:px-6 font-semibold hidden md:table-cell">
+                  Job Level
+                </th>
+                <th className="py-6 px-4 md:px-6 font-semibold hidden md:table-cell">
                   Salary Range
                 </th>
                 <th className="py-6 px-4 md:px-6 font-semibold text-center">
@@ -568,111 +571,124 @@ const ViewJobs = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredJobListings.map((job) => (
-                <tr
-                  key={job.id}
-                  className="border-b border-gray-200 hover:bg-gray-50 transition duration-300"
-                >
-                  <td className="py-6 px-4 md:px-6 text-gray-800 text-xs md:text-sm break-words">
-                    {job.position_name
-                      ? job.position_name
-                          .split(" ")
-                          .map(
-                            (word) =>
-                              word.charAt(0).toUpperCase() +
-                              word.slice(1).toLowerCase()
-                          )
-                          .join(" ")
-                      : ""}
-                  </td>
-                  <td className="py-6 px-4 md:px-6 text-gray-800 text-xs md:text-sm break-words">
-                    {job.position_type
-                      ? job.position_type
-                          .split(" ")
-                          .map(
-                            (word) =>
-                              word.charAt(0).toUpperCase() +
-                              word.slice(1).toLowerCase()
-                          )
-                          .join(" ")
-                      : "N/A"}
-                  </td>
-
-                  <td className="py-6 px-4 md:px-6 text-gray-800 text-xs md:text-sm break-words">
-                    {job.level
-                      ? job.level
-                          .split(" ")
-                          .map(
-                            (word) =>
-                              word.charAt(0).toUpperCase() +
-                              word.slice(1).toLowerCase()
-                          )
-                          .join(" ")
-                      : "N/A"}
-                  </td>
-
-                  <td className="py-6 px-4 md:px-6 text-gray-800 text-xs md:text-sm">
-                    {job.minimum_salary && job.maximum_salary
-                      ? `₱${job.minimum_salary} - ₱${job.maximum_salary}`
-                      : "Not specified"}
-                  </td>
-                  <td className="py-6 px-4 md:px-6 text-center">
-                    <div className="flex justify-center items-center space-x-2">
-                      <button
-                        onClick={() => handleViewJob(job.id)}
-                        className="bg-blue-500 text-white flex items-center px-2 py-1 rounded-full shadow-sm hover:bg-blue-700 transition duration-200"
-                      >
-                        <span className="material-symbols-outlined text-sm md:text-base">
-                          visibility
-                        </span>
-                        <span className="ml-1 hidden md:inline text-xs md:text-sm">
-                          View
-                        </span>
-                      </button>
-                      <button
-                        onClick={() => handleDeleteJobListing(job.id)}
-                        className="bg-red-500 text-white flex items-center px-2 py-1 rounded-full shadow-sm hover:bg-red-700 transition duration-200"
-                      >
-                        <span className="material-symbols-outlined text-sm md:text-base">
-                          delete
-                        </span>
-                        <span className="ml-1 hidden md:inline text-xs md:text-sm">
-                          Delete
-                        </span>
-                      </button>
-                      <button
-                        onClick={() => handleUpdateJob(job)}
-                        className="bg-yellow-500 text-white flex items-center px-2 py-1 rounded-full shadow-sm hover:bg-yellow-700 transition duration-200"
-                      >
-                        <span className="material-symbols-outlined text-sm md:text-base">
-                          edit
-                        </span>
-                        <span className="ml-1 hidden md:inline text-xs md:text-sm">
-                          Edit
-                        </span>
-                      </button>
-                      <button
-                        onClick={() => handleViewApplicants(job.id)}
-                        className="bg-green-500 text-white flex items-center px-2 py-1 rounded-full shadow-sm hover:bg-green-700 transition duration-200 relative"
-                      >
-                        <span className="material-symbols-outlined text-sm md:text-base">
-                          group_add
-                        </span>
-                        <span className="ml-1 hidden md:inline text-xs md:text-sm">
-                          Applicants
-                        </span>
-
-                        {/* Conditionally render the Floating Badge if the count is greater than 0 */}
-                        {applicantCounts[job.id] > 0 && (
-                          <span className="absolute top-[-7px] right-[-5px] inline-flex items-center justify-center w-[1.1rem] h-[1.1rem] text-xs font-semibold text-white bg-red-600 rounded-full border-2 border-white shadow-lg">
-                            {applicantCounts[job.id]}
-                          </span>
-                        )}
-                      </button>
-                    </div>
+              {filteredJobListings.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan="5"
+                    className="py-8 px-4 text-center text-gray-500 text-sm"
+                  >
+                    No job listings available.
                   </td>
                 </tr>
-              ))}
+              ) : (
+                filteredJobListings.map((job) => (
+                  <tr
+                    key={job.id}
+                    className="border-b border-gray-200 hover:bg-gray-50 transition duration-300"
+                  >
+                    <td className="py-4 px-4 md:px-6 text-gray-800 text-xs md:text-sm break-words">
+                      {/* Job Title */}
+                      {job.position_name
+                        ? job.position_name
+                            .split(" ")
+                            .map(
+                              (word) =>
+                                word.charAt(0).toUpperCase() +
+                                word.slice(1).toLowerCase()
+                            )
+                            .join(" ")
+                        : ""}
+
+                      {/* Additional Info for Mobile */}
+                      <div className="md:hidden mt-1 text-gray-600 text-xs">
+                        <div>{job.level ? job.level : "N/A"}</div>
+                        <div>
+                          {job.minimum_salary && job.maximum_salary
+                            ? `₱${job.minimum_salary} - ₱${job.maximum_salary}`
+                            : "Not specified"}
+                        </div>
+                      </div>
+                    </td>
+
+                    <td className="py-4 px-4 md:px-6 text-gray-800 text-xs md:text-sm break-words">
+                      {job.position_type
+                        ? job.position_type
+                            .split(" ")
+                            .map(
+                              (word) =>
+                                word.charAt(0).toUpperCase() +
+                                word.slice(1).toLowerCase()
+                            )
+                            .join(" ")
+                        : "N/A"}
+                    </td>
+
+                    {/* Job Level and Salary for Desktop */}
+                    <td className="py-4 px-4 md:px-6 text-gray-800 text-xs md:text-sm break-words hidden md:table-cell">
+                      {job.level ? job.level : "N/A"}
+                    </td>
+                    <td className="py-4 px-4 md:px-6 text-gray-800 text-xs md:text-sm break-words hidden md:table-cell">
+                      {job.minimum_salary && job.maximum_salary
+                        ? `₱${job.minimum_salary} - ₱${job.maximum_salary}`
+                        : "Not specified"}
+                    </td>
+
+                    <td className="py-4 px-4 md:px-6 text-center">
+                      <div className="flex flex-col md:flex-row justify-center items-center space-y-2 md:space-y-0 md:space-x-2">
+                        <button
+                          onClick={() => handleViewJob(job.id)}
+                          className="bg-blue-500 text-white flex items-center justify-center px-2 py-1 rounded-full shadow-sm hover:bg-blue-700 transition duration-200"
+                        >
+                          <span className="material-symbols-outlined text-sm md:text-base">
+                            visibility
+                          </span>
+                          <span className="ml-1 hidden md:inline text-xs md:text-sm">
+                            View
+                          </span>
+                        </button>
+                        <button
+                          onClick={() => handleDeleteJobListing(job.id)}
+                          className="bg-red-500 text-white flex items-center justify-center px-2 py-1 rounded-full shadow-sm hover:bg-red-700 transition duration-200"
+                        >
+                          <span className="material-symbols-outlined text-sm md:text-base">
+                            delete
+                          </span>
+                          <span className="ml-1 hidden md:inline text-xs md:text-sm">
+                            Delete
+                          </span>
+                        </button>
+                        <button
+                          onClick={() => handleUpdateJob(job)}
+                          className="bg-yellow-500 text-white flex items-center justify-center px-2 py-1 rounded-full shadow-sm hover:bg-yellow-700 transition duration-200"
+                        >
+                          <span className="material-symbols-outlined text-sm md:text-base">
+                            edit
+                          </span>
+                          <span className="ml-1 hidden md:inline text-xs md:text-sm">
+                            Edit
+                          </span>
+                        </button>
+                        <button
+                          onClick={() => handleViewApplicants(job.id)}
+                          className="bg-green-500 text-white flex items-center justify-center px-2 py-1 rounded-full shadow-sm hover:bg-green-700 transition duration-200 relative"
+                        >
+                          <span className="material-symbols-outlined text-sm md:text-base">
+                            group_add
+                          </span>
+                          <span className="ml-1 hidden md:inline text-xs md:text-sm">
+                            Applicants
+                          </span>
+                          {applicantCounts[job.id] > 0 && (
+                            <span className="absolute top-[-7px] right-[-5px] inline-flex items-center justify-center w-[1.1rem] h-[1.1rem] text-xs font-semibold text-white bg-red-600 rounded-full border-2 border-white shadow-lg">
+                              {applicantCounts[job.id]}
+                            </span>
+                          )}
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
@@ -907,7 +923,7 @@ const ViewJobs = () => {
       {/* Modal for editing job details */}
       {isUpdateModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 overflow-y-auto">
-          <div className="relative max-w-5xl w-full mx-auto mb-6 mt-6 p-4 md:p-6 bg-white rounded-xl shadow-lg space-y-6 transform transition-all hover:shadow-2xl max-h-[90vh] overflow-y-auto">
+          <div className="relative max-w-5xl w-full mx-auto mb-6 mt-6 p-4 md:p-6 sm:px-4 bg-white rounded-xl shadow-lg space-y-6 transform transition-all hover:shadow-2xl max-h-[90vh] overflow-y-auto">
             {/* Close Button */}
             <button
               className="absolute top-3 right-4 text-gray-500 hover:text-gray-700 transition"
