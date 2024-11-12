@@ -15,7 +15,7 @@ const NavbarComp = () => {
   };
 
   return (
-    <header className="relative flex flex-wrap sm:justify-start sm:flex-nowrap w-full bg-[#e3edf7] text-sm py-3 shadow-lg rounded-lg">
+    <header className="relative flex flex-wrap sm:justify-start sm:flex-nowrap w-full bg-[#e3edf7] text-sm py-3 shadow-lg">
       <nav className="max-w-[85rem] w-full mx-auto px-4 sm:flex sm:items-center sm:justify-between">
         <div className="flex items-center justify-between">
           {/* Logo (Not clickable) */}
@@ -25,7 +25,7 @@ const NavbarComp = () => {
           <div className="sm:hidden">
             <button
               type="button"
-              className="relative flex justify-center items-center gap-x-2 rounded-lg border border-gray-200 bg-[#e3edf7] text-gray-800 shadow-sm "
+              className="relative flex justify-center items-center gap-x-2 rounded-lg border  bg-white text-gray-800  "
               onClick={toggleMenu}
               aria-expanded={isMenuOpen}
               aria-controls="navbar"

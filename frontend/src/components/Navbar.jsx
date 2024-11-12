@@ -38,7 +38,7 @@ const Navbar = () => {
   };
 
   return (
-    <header className="relative flex flex-wrap sm:justify-start sm:flex-nowrap w-full bg-white text-sm py-3 shadow-2xl rounded-lg">
+    <header className="relative flex flex-wrap sm:justify-start sm:flex-nowrap w-full bg-white text-sm py-3 shadow-2xl ">
       <nav className="max-w-[85rem] w-full mx-auto px-4 sm:flex sm:items-center sm:justify-between">
         <div className="flex items-center justify-between">
           {/* Make the logo conditionally clickable */}
