@@ -191,14 +191,15 @@ const Signup = () => {
       .then((response) => {
         toast.success(response.data.message);
         setLoading(false);
-        window.location.reload();
+
+        // Reload and redirect by adding a timestamp to the URL to prevent caching
+        window.location.href = `/login?redirect=${new Date().getTime()}`;
       })
       .catch((error) => {
         setLoading(false);
 
         if (error.response) {
           const { data } = error.response;
-
           const errorMessage = data.message || "An unexpected error occurred.";
           toast.error(errorMessage);
         } else {

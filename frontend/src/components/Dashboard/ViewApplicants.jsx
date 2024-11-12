@@ -609,7 +609,7 @@ const ViewApplicants = () => {
         {/* Resume Modal */}
         {isResumeModalOpen && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-            <div className="bg-white p-4 sm:p-6 md:p-8 rounded-lg shadow-lg relative w-full max-w-sm sm:max-w-md md:max-w-4xl lg:max-w-6xl mx-4 md:mx-0">
+            <div className="bg-white p-4 sm:p-6 md:p-8 rounded-lg shadow-lg relative w-full max-w-md sm:max-w-lg md:max-w-3xl lg:max-w-5xl xl:max-w-6xl mx-4 md:mx-8">
               {/* Close Button */}
               <button
                 onClick={closeResumeModal}
@@ -630,7 +630,7 @@ const ViewApplicants = () => {
                 type="application/pdf"
                 width="100%"
                 className="w-full border rounded-lg shadow-sm"
-                style={{ height: "50vh", maxHeight: "75vh" }}
+                style={{ height: "60vh", maxHeight: "80vh" }}
                 aria-label="PDF Preview"
               >
                 {/* Fallback message */}
