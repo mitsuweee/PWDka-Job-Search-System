@@ -24,7 +24,9 @@ const AdminVerifyComp = () => {
 
   useEffect(() => {
     // Initialize socket connection
-    const socket = io("https://pwdka.com.ph"); // Ensure this URL matches your backend server URL
+    const socket = io("https://pwdka.com.ph/", {
+      transports: ["websocket"], // Use WebSocket only for improved real-time performance
+    });
 
     socket.on("connect", () => {
       console.log("Connected to socket server with ID:", socket.id);
