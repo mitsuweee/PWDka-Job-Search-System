@@ -10,6 +10,7 @@ const io = new Server(server, {
   cors: {
     origin: ["*"], // Your frontend URL
     methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   },
 });
 
