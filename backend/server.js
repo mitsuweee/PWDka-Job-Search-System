@@ -9,10 +9,8 @@ const server = HTTP.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: "https://127.0.0.1:8080", // Your frontend URL
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
+    methods: ["GET", "POST"],
   },
-  transports: ["polling"], // Only use HTTP polling, not WebSocket
 });
 
 // Listen for Socket.IO connections
