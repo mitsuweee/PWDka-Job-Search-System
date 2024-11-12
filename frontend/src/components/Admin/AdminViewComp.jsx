@@ -40,7 +40,7 @@ const AdminViewComp = () => {
       setCompanies((prevCompanies) =>
         prevCompanies.filter((company) => company.id !== data.id)
       );
-      toast.success(`Company ID ${data.id} has been deactivated`);
+      toast.success(`A Company Has Been Deactivated`);
       window.location.reload();
     });
 

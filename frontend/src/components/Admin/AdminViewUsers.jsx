@@ -39,7 +39,7 @@ const AdminViewUsers = () => {
     // Listen for the userDeactivated event
     socket.on("userDeactivated", (data) => {
       setUsers((prevUsers) => prevUsers.filter((user) => user.id !== data.id));
-      toast.success(`User ID ${data.id} has been deactivated`);
+      toast.success(`A User Has Been Deactivated`);
       window.location.reload();
     });
 
