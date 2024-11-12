@@ -301,7 +301,7 @@ const ViewApplicants = () => {
         <h2 className="text-white text-lg font-semibold mb-2 mt-4 w-full text-left">
           Dashboard
         </h2>
-        <hr className="border-gray-400 w-full mb-4" />
+        <hr className="border-white border-1 w-full mb-4" />
         <a
           href="/dashc"
           className={`${
@@ -323,7 +323,7 @@ const ViewApplicants = () => {
         <h2 className="text-white text-lg font-semibold mb-2 mt-4 w-full text-left">
           Job Management
         </h2>
-        <hr className="border-gray-400 w-full mb-4" />
+        <hr className="border-white border-1 w-full mb-4" />
 
         <a
           href="/dashboard/postjob"
@@ -359,7 +359,7 @@ const ViewApplicants = () => {
         <h2 className="text-white text-lg font-semibold mb-2 mt-4 w-full text-left">
           Account
         </h2>
-        <hr className="border-gray-400 w-full mb-4" />
+        <hr className="border-white border-1 w-full mb-4" />
 
         {/* Logout Button */}
         <button

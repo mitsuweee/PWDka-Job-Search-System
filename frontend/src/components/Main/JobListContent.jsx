@@ -1134,14 +1134,14 @@ const JobListing = () => {
               Application History
             </h3>
             {applicationHistory.length > 0 ? (
-              <div className="overflow-hidden sm:overflow-y-auto max-h-[70vh] sm:max-h-[500px] border-t border-gray-200 pt-4">
-                <table className="w-full bg-white text-left text-sm sm:text-base">
+              <div className="overflow-auto max-h-[70vh] sm:max-h-[500px] border-t border-gray-200 pt-4">
+                <table className="w-full bg-white text-left text-xs sm:text-sm md:text-base">
                   <thead>
                     <tr className="bg-gray-100 text-gray-600 uppercase tracking-wider">
-                      <th className="py-3 px-3 sm:px-4">Position</th>
-                      <th className="py-3 px-3 sm:px-4">Company</th>
-                      <th className="py-3 px-3 sm:px-4">Status</th>
-                      <th className="py-3 px-3 sm:px-4">Date</th>
+                      <th className="py-2 px-2 sm:px-4">Position</th>
+                      <th className="py-2 px-2 sm:px-4">Company</th>
+                      <th className="py-2 px-2 sm:px-4">Status</th>
+                      <th className="py-2 px-2 sm:px-4">Date</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1151,17 +1151,17 @@ const JobListing = () => {
                         className="hover:bg-gray-100 transition duration-150 text-gray-700"
                       >
                         <td
-                          className="py-2 px-3 sm:px-4 cursor-pointer text-blue-500 hover:underline"
+                          className="py-2 px-2 sm:px-4 text-blue-500 hover:underline whitespace-normal break-words"
                           onClick={() =>
                             handleJobClick(application.position_name)
                           }
                         >
                           {application.position_name}
                         </td>
-                        <td className="py-2 px-3 sm:px-4">
+                        <td className="py-2 px-2 sm:px-4 whitespace-normal break-words">
                           {application.company_name}
                         </td>
-                        <td className="py-2 px-3 sm:px-4">
+                        <td className="py-2 px-2 sm:px-4">
                           <span
                             className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
                               application.status === "Approved"
@@ -1174,7 +1174,7 @@ const JobListing = () => {
                             {application.status}
                           </span>
                         </td>
-                        <td className="py-2 px-3 sm:px-4">
+                        <td className="py-2 px-2 sm:px-4 whitespace-nowrap">
                           {new Date(
                             application.date_created
                           ).toLocaleDateString()}
