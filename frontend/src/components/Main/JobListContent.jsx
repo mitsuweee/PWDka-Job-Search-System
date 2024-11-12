@@ -317,59 +317,62 @@ const JobListing = () => {
           backgroundRepeat: "no-repeat",
         }}
       >
-        <div className="w-full lg:w-2/3 flex flex-col sm:flex-row items-center justify-center space-y-3 sm:space-y-0 sm:space-x-2">
-          {/* for search */}
-          <input
-            type="text"
-            placeholder="Search Job Name"
-            className="w-full sm:w-2/5 p-3 rounded-lg focus:outline-none focus:border-2 focus:border-blue-500 transition duration-200 text-lg"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+        <div className="w-full lg:w-2/3 p-6 rounded-xl bg-white/20 shadow-lg backdrop-blur-md">
+          <div className="flex flex-col sm:flex-row items-center justify-center space-y-3 sm:space-y-0 sm:space-x-2">
+            {/* Search Input */}
+            <input
+              type="text"
+              placeholder="Search Job Name"
+              className="w-full sm:w-2/5 p-3 rounded-lg focus:outline-none focus:border-2 focus:border-blue-500 hover:border-blue-400 transition duration-200 text-lg shadow-inner hover:shadow-md"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
 
-          {/* for search loc */}
-          <input
-            type="text"
-            placeholder="Location"
-            className="w-full sm:w-1/4 p-3 rounded-lg focus:outline-none focus:border-2 focus:border-blue-500 transition duration-200 text-lg"
-            value={locationSearchTerm}
-            onChange={(e) => setLocationSearchTerm(e.target.value)}
-          />
+            {/* Location Input */}
+            <input
+              type="text"
+              placeholder="Location"
+              className="w-full sm:w-1/4 p-3 rounded-lg focus:outline-none focus:border-2 focus:border-blue-500 hover:border-blue-400 transition duration-200 text-lg shadow-inner hover:shadow-md"
+              value={locationSearchTerm}
+              onChange={(e) => setLocationSearchTerm(e.target.value)}
+            />
 
-          {/* for job level */}
-          <select
-            className="w-full sm:w-1/4 p-3 rounded-lg focus:outline-none focus:border-2 focus:border-blue-500 transition duration-200 text-lg"
-            value={jobLevel}
-            onChange={(e) => setJobLevel(e.target.value)} // Update the jobLevel state
-          >
-            <option value="" className="text-gray-400">
-              All Levels
-            </option>
-            <option value="Entry-Level">Entry-Level</option>
-            <option value="Associate">Associate</option>
-            <option value="Junior">Junior</option>
-            <option value="Mid-Level">Mid-Level</option>
-            <option value="Senior-Level">Senior-Level</option>
-            <option value="Lead">Lead</option>
-            <option value="Managerial">Managerial</option>
-            <option value="Director">Director</option>
-            <option value="Executive">Executive</option>
-            <option value="None">None</option>
-          </select>
+            {/* Job Level Dropdown */}
+            <select
+              className="w-full sm:w-1/4 p-3 rounded-lg focus:outline-none focus:border-2 focus:border-blue-500 hover:border-blue-400 transition duration-200 text-lg shadow-inner hover:shadow-md"
+              value={jobLevel}
+              onChange={(e) => setJobLevel(e.target.value)}
+            >
+              <option value="" className="text-gray-400">
+                All Levels
+              </option>
+              <option value="Entry-Level">Entry-Level</option>
+              <option value="Associate">Associate</option>
+              <option value="Junior">Junior</option>
+              <option value="Mid-Level">Mid-Level</option>
+              <option value="Senior-Level">Senior-Level</option>
+              <option value="Lead">Lead</option>
+              <option value="Managerial">Managerial</option>
+              <option value="Director">Director</option>
+              <option value="Executive">Executive</option>
+              <option value="None">None</option>
+            </select>
 
-          {/* for pos type */}
-          <select
-            className="w-full sm:w-1/4 p-3 rounded-lg focus:outline-none focus:border-2 focus:border-blue-500 transition duration-200 text-lg"
-            value={jobType}
-            onChange={(e) => setJobType(e.target.value)}
-          >
-            <option value="" className="text-gray-400">
-              All
-            </option>
-            <option value="full-time">Full-Time</option>
-            <option value="part-time">Part-Time</option>
-          </select>
+            {/* Position Type Dropdown */}
+            <select
+              className="w-full sm:w-1/4 p-3 rounded-lg focus:outline-none focus:border-2 focus:border-blue-500 hover:border-blue-400 transition duration-200 text-lg shadow-inner hover:shadow-md"
+              value={jobType}
+              onChange={(e) => setJobType(e.target.value)}
+            >
+              <option value="" className="text-gray-400">
+                All
+              </option>
+              <option value="full-time">Full-Time</option>
+              <option value="part-time">Part-Time</option>
+            </select>
+          </div>
         </div>
+
         {/* for sorting */}
         <div className="flex flex-col sm:flex-row items-center justify-center space-y-3 sm:space-y-0 sm:space-x-2 w-full sm:w-auto">
           <div className="relative w-full sm:w-auto flex flex-row space-x-2">
@@ -1118,116 +1121,67 @@ const JobListing = () => {
 
       {/* Application History Modal */}
       {isApplicationHistoryModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4">
-          <div className="bg-white p-6 sm:p-8 rounded-xl shadow-2xl relative w-full max-w-lg sm:max-w-2xl border border-gray-200">
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4">
+          <div className="bg-white p-5 sm:p-6 rounded-2xl shadow-2xl relative w-full max-w-sm sm:max-w-lg lg:max-w-3xl border border-gray-200">
             <button
               onClick={() => setIsApplicationHistoryModalOpen(false)}
-              className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 transition duration-200 text-2xl"
+              className="absolute top-3 right-3 text-gray-400 hover:text-gray-700 transition duration-200 text-lg sm:text-2xl focus:outline-none"
               aria-label="Close modal"
             >
               &times;
             </button>
-            <h3 className="text-xl sm:text-2xl font-semibold text-gray-700 mb-4 sm:mb-6 text-center">
+            <h3 className="text-lg sm:text-2xl font-semibold text-gray-800 mb-3 sm:mb-6 text-center">
               Application History
             </h3>
             {applicationHistory.length > 0 ? (
-              <div className="overflow-y-auto max-h-64 sm:max-h-80 border-t border-gray-200 pt-4">
-                <table className="min-w-full bg-white">
+              <div className="overflow-hidden sm:overflow-y-auto max-h-[70vh] sm:max-h-[500px] border-t border-gray-200 pt-4">
+                <table className="w-full bg-white text-left text-sm sm:text-base">
                   <thead>
-                    <tr className="bg-gray-100 text-gray-600 text-xs sm:text-sm uppercase tracking-wider">
-                      <th className="py-2 px-2 sm:px-4 text-left">Position</th>
-                      <th className="py-2 px-2 sm:px-4 text-left">Company</th>
-                      <th className="py-2 px-2 sm:px-4 text-left">Status</th>
-                      <th className="py-2 px-2 sm:px-4 text-left">Date</th>
+                    <tr className="bg-gray-100 text-gray-600 uppercase tracking-wider">
+                      <th className="py-3 px-3 sm:px-4">Position</th>
+                      <th className="py-3 px-3 sm:px-4">Company</th>
+                      <th className="py-3 px-3 sm:px-4">Status</th>
+                      <th className="py-3 px-3 sm:px-4">Date</th>
                     </tr>
                   </thead>
-                  {/* Application History Modal */}
-                  {isApplicationHistoryModalOpen && (
-                    <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-3 sm:p-4">
-                      <div className="bg-white p-3 sm:p-6 rounded-xl shadow-xl relative w-full max-w-xs sm:max-w-lg lg:max-w-2xl border border-gray-200">
-                        <button
+                  <tbody>
+                    {applicationHistory.map((application, index) => (
+                      <tr
+                        key={index}
+                        className="hover:bg-gray-100 transition duration-150 text-gray-700"
+                      >
+                        <td
+                          className="py-2 px-3 sm:px-4 cursor-pointer text-blue-500 hover:underline"
                           onClick={() =>
-                            setIsApplicationHistoryModalOpen(false)
+                            handleJobClick(application.position_name)
                           }
-                          className="absolute top-2 right-2 text-gray-400 hover:text-gray-700 transition duration-200 text-sm sm:text-2xl focus:outline-none"
-                          aria-label="Close modal"
                         >
-                          &times;
-                        </button>
-                        <h3 className="text-xs sm:text-2xl font-semibold text-gray-800 mb-2 sm:mb-6 text-center">
-                          Application History
-                        </h3>
-                        {applicationHistory.length > 0 ? (
-                          <div className="overflow-hidden sm:overflow-y-auto max-h-48 sm:max-h-80 border-t border-gray-200 pt-2 sm:pt-4">
-                            <table className="w-full bg-white text-left">
-                              <thead>
-                                <tr className="bg-gray-50 text-gray-600 text-[10px] sm:text-sm uppercase tracking-wider">
-                                  <th className="py-1 px-1 sm:py-2 sm:px-4">
-                                    Position
-                                  </th>
-                                  <th className="py-1 px-1 sm:py-2 sm:px-4">
-                                    Company
-                                  </th>
-                                  <th className="py-1 px-1 sm:py-2 sm:px-4">
-                                    Status
-                                  </th>
-                                  <th className="py-1 px-1 sm:py-2 sm:px-4">
-                                    Date
-                                  </th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {applicationHistory.map(
-                                  (application, index) => (
-                                    <tr
-                                      key={index}
-                                      className="hover:bg-gray-100 transition duration-150 text-gray-700 text-[10px] sm:text-sm"
-                                    >
-                                      <td
-                                        className="py-1 px-1 sm:py-2 sm:px-4 whitespace-nowrap cursor-pointer text-blue-500 hover:underline"
-                                        onClick={() =>
-                                          handleJobClick(
-                                            application.position_name
-                                          )
-                                        } // Handle the click
-                                      >
-                                        {application.position_name}
-                                      </td>
-                                      <td className="py-1 px-1 sm:py-2 sm:px-4 whitespace-nowrap">
-                                        {application.company_name}
-                                      </td>
-                                      <td className="py-1 px-1 sm:py-2 sm:px-4 whitespace-nowrap">
-                                        <span
-                                          className={`inline-block px-1 py-0.5 rounded-full text-[9px] sm:text-xs font-medium ${
-                                            application.status === "Approved"
-                                              ? "bg-green-100 text-green-700"
-                                              : application.status === "Pending"
-                                              ? "bg-yellow-100 text-yellow-700"
-                                              : "bg-red-100 text-red-700"
-                                          }`}
-                                        >
-                                          {application.status}
-                                        </span>
-                                      </td>
-                                      <td className="py-1 px-1 sm:py-2 sm:px-4 whitespace-nowrap">
-                                        {new Date(
-                                          application.date_created
-                                        ).toLocaleDateString()}
-                                      </td>
-                                    </tr>
-                                  )
-                                )}
-                              </tbody>
-                            </table>
-                          </div>
-                        ) : (
-                          <p className="text-center text-gray-500 mt-4 sm:mt-6 text-[10px] sm:text-sm">
-                            No application history found.
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  )}
+                          {application.position_name}
+                        </td>
+                        <td className="py-2 px-3 sm:px-4">
+                          {application.company_name}
+                        </td>
+                        <td className="py-2 px-3 sm:px-4">
+                          <span
+                            className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
+                              application.status === "Approved"
+                                ? "bg-green-100 text-green-700"
+                                : application.status === "Pending"
+                                ? "bg-yellow-100 text-yellow-700"
+                                : "bg-red-100 text-red-700"
+                            }`}
+                          >
+                            {application.status}
+                          </span>
+                        </td>
+                        <td className="py-2 px-3 sm:px-4">
+                          {new Date(
+                            application.date_created
+                          ).toLocaleDateString()}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
                 </table>
               </div>
             ) : (
