@@ -19,6 +19,7 @@ const ViewJobs = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [sortOrder, setSortOrder] = useState("Newest");
   const [showDisabilityOptions, setShowDisabilityOptions] = useState(false);
+  const [applicantCounts, setApplicantCounts] = useState({}); // Store applicant counts for each job
   const [companyName, setCompanyName] = useState("");
   const [jobDetails, setJobDetails] = useState({
     companyName: "",
@@ -97,6 +98,30 @@ const ViewJobs = () => {
     // Clean up the interval on component unmount
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    const fetchApplicantCount = async (jobId) => {
+      try {
+        const response = await axios.get(`/jobapplication/count/${jobId}`);
+        const count = response.data.data.applicantCount; // Get applicant count
+
+        // Update the applicant count for the specific job
+        setApplicantCounts((prevCounts) => ({
+          ...prevCounts,
+          [jobId]: count, // Store the count by job id
+        }));
+      } catch (error) {
+        console.error("Error fetching applicant count:", error);
+      }
+    };
+
+    // Fetch applicant count only if job listings are available
+    if (jobListings.length > 0) {
+      jobListings.forEach((job) => {
+        fetchApplicantCount(job.id); // Fetch the applicant count for each job
+      });
+    }
+  }, [jobListings]); // This effect will trigger whenever jobListings changes
 
   useEffect(() => {
     const Id = localStorage.getItem("Id");
@@ -628,13 +653,18 @@ const ViewJobs = () => {
                       </button>
                       <button
                         onClick={() => handleViewApplicants(job.id)}
-                        className="bg-green-500 text-white flex items-center px-2 py-1 rounded-full shadow-sm hover:bg-green-700 transition duration-200"
+                        className="bg-green-500 text-white flex items-center px-2 py-1 rounded-full shadow-sm hover:bg-green-700 transition duration-200 relative"
                       >
                         <span className="material-symbols-outlined text-sm md:text-base">
                           group_add
                         </span>
                         <span className="ml-1 hidden md:inline text-xs md:text-sm">
                           Applicants
+                        </span>
+
+                        {/* Floating Badge with fractional size */}
+                        <span className="absolute top-[-7px] right-[-5px] inline-flex items-center justify-center w-[1.1rem] h-[1.1rem] text-xs font-semibold text-white bg-red-600 rounded-full border-2 border-white shadow-lg">
+                          {applicantCounts[job.id] || "0"}
                         </span>
                       </button>
                     </div>

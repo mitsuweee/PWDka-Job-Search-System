@@ -20,6 +20,11 @@ jobApplicationRouter.get(
 ); // View All APPLICATION VIA USER ID
 
 jobApplicationRouter.get(
+  "/count/:jobListingId",
+  jobApplicationController.getApplicantCount
+); // Get Applicant count -kael
+
+jobApplicationRouter.get(
   "/:status/:id",
   jobApplicationController.viewAllUsersByStatus
 ); // View Reviewed Applications VIA Job Listing ID

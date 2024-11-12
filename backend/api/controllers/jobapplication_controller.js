@@ -482,6 +482,51 @@ const getAllApplicantsByStatus = async (req, res) => {
   }
 };
 
+//kael
+const getApplicantCount = async (req, res) => {
+  const { jobListingId } = req.params;
+
+  if (!jobListingId) {
+    return res.status(400).json({
+      successful: false,
+      message: "Job Listing ID is missing",
+    });
+  }
+
+  try {
+    // Check if the Job Listing ID is valid
+    const jobListingExists = await knex("job_listing")
+      .where({ id: jobListingId })
+      .first();
+
+    if (!jobListingExists) {
+      return res.status(400).json({
+        successful: false,
+        message: "Invalid Job Listing ID",
+      });
+    }
+
+    // Count the number of applicants for the job listing
+    const applicantCount = await knex("job_application")
+      .where({ joblisting_id: jobListingId })
+      .count("id as count")
+      .first();
+
+    return res.status(200).json({
+      successful: true,
+      message: "Successfully retrieved applicant count",
+      data: {
+        applicantCount: applicantCount.count || 0, // Default to 0 if no applicants
+      },
+    });
+  } catch (err) {
+    return res.status(500).json({
+      successful: false,
+      message: err.message,
+    });
+  }
+};
+
 module.exports = {
   uploadResume,
   viewAllUsersApplicationsViaJobListingId,
@@ -490,4 +535,5 @@ module.exports = {
   deleteJobApplication,
   updateJobApplicationStatus,
   getAllApplicantsByStatus,
+  getApplicantCount
 };
