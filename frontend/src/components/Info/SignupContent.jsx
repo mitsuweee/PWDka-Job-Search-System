@@ -609,8 +609,8 @@ const Signup = () => {
       {/* Grouping the Log in, Sign Up, and Reset buttons below the privacy policy */}
       <div className="col-span-12 w-full">
         {/* Terms and Conditions and Privacy Policy on top */}
-        <div className="mb-4 w-full">
-          <p className="text-sm text-gray-600 whitespace-nowrap overflow-hidden text-ellipsis">
+        <div className="mb-4 w-full text-center sm:text-left">
+          <p className="text-sm text-gray-600 overflow-hidden sm:whitespace-nowrap sm:text-ellipsis">
             By creating an account, you agree to our{" "}
             <a
               href="/terms"
@@ -630,9 +630,9 @@ const Signup = () => {
         </div>
 
         {/* Grouping the Log in, Sign Up, and Reset buttons below the privacy policy */}
-        <div className="flex justify-between items-center w-full mt-4">
-          {/* Already have an account on the left */}
-          <p className="text-sm text-black">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center w-full mt-4 space-y-4 sm:space-y-0">
+          {/* Already have an account on the top (for mobile), or left (for desktop) */}
+          <p className="text-sm text-black text-center sm:text-left">
             Already have an account?{" "}
             <button
               onClick={handleLogin}
@@ -646,17 +646,17 @@ const Signup = () => {
           <div className="flex justify-center">
             <button
               type="submit"
-              className="px-6 py-2 text-md font-medium text-white bg-blue-600 rounded-md shadow-lg hover:bg-blue-700 hover:shadow-xl transition-all focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full sm:w-auto px-6 py-2 text-md font-medium text-white bg-blue-600 rounded-md shadow-lg hover:bg-blue-700 hover:shadow-xl transition-all focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               Sign Up
             </button>
           </div>
 
-          {/* Reset button on the right */}
+          {/* Reset button on the bottom (for mobile), or right (for desktop) */}
           <button
             type="button"
             onClick={handleReset}
-            className="px-4 py-2 text-md font-medium text-gray-600 bg-gray-100 rounded-md shadow-sm hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500"
+            className="w-full sm:w-auto px-4 py-2 text-md font-medium text-gray-600 bg-gray-100 rounded-md shadow-sm hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500"
           >
             Reset Form
           </button>
