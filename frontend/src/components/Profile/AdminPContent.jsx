@@ -151,6 +151,7 @@ const AdminProf = () => {
     setIsEditing(false);
     setIsPasswordChanging(false);
     setIsEmailChanging(true);
+    setNewEmail("");
     setIsModalOpen(true);
   };
 
@@ -683,6 +684,7 @@ const AdminProf = () => {
                   New Email:
                 </label>
                 <input
+                  name="newEmail"
                   type="email"
                   value={newEmail}
                   onChange={(e) => setNewEmail(e.target.value)}

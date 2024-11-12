@@ -662,10 +662,12 @@ const ViewJobs = () => {
                           Applicants
                         </span>
 
-                        {/* Floating Badge with fractional size */}
-                        <span className="absolute top-[-7px] right-[-5px] inline-flex items-center justify-center w-[1.1rem] h-[1.1rem] text-xs font-semibold text-white bg-red-600 rounded-full border-2 border-white shadow-lg">
-                          {applicantCounts[job.id] || "0"}
-                        </span>
+                        {/* Conditionally render the Floating Badge if the count is greater than 0 */}
+                        {applicantCounts[job.id] > 0 && (
+                          <span className="absolute top-[-7px] right-[-5px] inline-flex items-center justify-center w-[1.1rem] h-[1.1rem] text-xs font-semibold text-white bg-red-600 rounded-full border-2 border-white shadow-lg">
+                            {applicantCounts[job.id]}
+                          </span>
+                        )}
                       </button>
                     </div>
                   </td>
