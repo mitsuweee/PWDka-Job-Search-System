@@ -330,32 +330,37 @@ const AdminDashboard = () => {
         </div>
 
         {/* Dashboard Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6 mt-8">
           {[
             {
               title: "Total Verified Applicants",
               count: dashboardCounts.verified_users,
               icon: "verified",
+              route: "/admin/dashboard/ViewUsers",
             },
             {
               title: "Total Pending Applicants",
               count: dashboardCounts.pending_users,
               icon: "hourglass_empty",
+              route: "/admin/dashboard/VerifyUsers",
             },
             {
               title: "Total Verified Companies",
               count: dashboardCounts.verified_companies,
               icon: "business",
+              route: "/admin/dashboard/ViewCompany",
             },
             {
               title: "Total Pending Companies",
               count: dashboardCounts.pending_companies,
               icon: "pending_actions",
+              route: "/admin/dashboard/VerifyComps",
             },
             {
               title: "Total Job Listings",
               count: dashboardCounts.total_job_listings,
               icon: "work_outline",
+              route: "/admin/dashboard/ViewJobs",
             },
             {
               title: "Total Job Applications",
@@ -365,12 +370,13 @@ const AdminDashboard = () => {
           ].map((stat, index) => (
             <div
               key={index}
-              className="bg-gradient-to-br from-blue-50 to-white rounded-lg shadow-md p-6 hover:shadow-xl transition-shadow duration-300 ease-in-out relative border-t-2 border-blue-600"
+              className="bg-gradient-to-br from-blue-50 to-white rounded-lg shadow-xl p-8 hover:shadow-2xl transition-shadow duration-300 ease-in-out relative border-t-2 border-blue-600 cursor-pointer"
+              onClick={() => navigate(stat.route)} // Direct navigation on click
             >
-              <span className="material-symbols-outlined absolute top-3 right-3 text-2xl text-blue-600">
+              <span className="material-symbols-outlined absolute top-3 right-3 text-3xl text-blue-600">
                 {stat.icon}
               </span>
-              <h2 className="text-xl font-semibold text-gray-800 mb-2">
+              <h2 className="text-2xl font-semibold text-gray-800 mb-3">
                 {stat.title}
               </h2>
               <p className="text-3xl text-blue-900 font-bold">{stat.count}</p>
