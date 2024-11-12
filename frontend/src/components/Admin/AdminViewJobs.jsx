@@ -70,7 +70,7 @@ const AdminViewJobs = () => {
       );
 
       // Display a toast notification
-      toast.error(`Job ID ${data.id} has been deleted.`);
+      toast.error(`A Job Has Been Deleted`);
       window.location.reload();
     });
 

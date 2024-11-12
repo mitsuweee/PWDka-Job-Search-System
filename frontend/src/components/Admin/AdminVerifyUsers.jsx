@@ -41,15 +41,13 @@ const AdminVerifyUsers = () => {
     // Listen for real-time userVerified event
     socket.on("userVerified", (data) => {
       setUsers((prevUsers) => prevUsers.filter((user) => user.id !== data.id));
-      toast.success(`User ID ${data.id} has been verified`);
+      toast.success(`A User Has Been Verified`);
     });
 
     // Listen for real-time userDeclined event
     socket.on("user_declined", (data) => {
       setUsers((prevUsers) => prevUsers.filter((user) => user.id !== data.id));
-      toast.error(
-        `User ID ${data.id} has been declined. Reason: ${data.reason}`
-      );
+      toast.error(`A User Has Been Declined`);
     });
 
     // Clean up socket connection on component unmount
@@ -683,7 +681,7 @@ const AdminVerifyUsers = () => {
                   </div>
                 </div>
                 <div className="flex justify-end mt-6 space-x-3">
-                  <button
+                  {/* <button
                     onClick={() => handleApprove(selectedUser.id)}
                     className="bg-green-500 text-white px-4 py-2 rounded-full shadow-md hover:bg-green-600 transition duration-200 font-medium"
                   >
@@ -694,7 +692,7 @@ const AdminVerifyUsers = () => {
                     className="bg-red-500 text-white px-4 py-2 rounded-full shadow-md hover:bg-red-600 transition duration-200 font-medium"
                   >
                     Decline
-                  </button>
+                  </button> */}
                 </div>
               </div>
             </div>

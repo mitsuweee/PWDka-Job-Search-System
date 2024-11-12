@@ -36,7 +36,7 @@ const AdminViewAdmin = () => {
       setAdmins((prevAdmins) =>
         prevAdmins.filter((admin) => admin.id !== data.id)
       );
-      toast.success(`Admin ID ${data.id} has been deactivated`);
+      toast.success(`An Admin Has Been Deactivated`);
       window.location.reload();
     });
 
