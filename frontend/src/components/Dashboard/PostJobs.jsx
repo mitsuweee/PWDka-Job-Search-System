@@ -423,27 +423,20 @@ const PostJob = () => {
               <textarea
                 name="requirements"
                 value={jobDetails.requirements}
-                onChange={(e) => {
-                  let value = e.target.value;
-                  // If the last characters are " | ", remove them
-                  if (value.endsWith(" | ")) {
-                    value = value.slice(0, -3);
-                  }
-                  handleChange({ target: { name: "requirements", value } });
-                }}
+                onChange={(e) => handleChange(e)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
                     e.preventDefault();
-                    let value = jobDetails.requirements;
-                    if (!value.endsWith(" | ")) {
-                      value += " | ";
+                    let value = jobDetails.requirements.trimEnd(); // Remove any trailing whitespace or newlines
+                    if (value.split("\n").pop() !== "") {
+                      // Check if the last line is not empty
+                      value += "\n";
+                      handleChange({ target: { name: "requirements", value } });
                     }
-                    value += "\n";
-                    handleChange({ target: { name: "requirements", value } });
                   }
                 }}
                 className="p-3 w-full border-2 border-blue-300 rounded-lg shadow-sm h-28 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                placeholder="Requirement1 | Requirement2 | Requirement3 *Enter Every Requirement*"
+                placeholder="Enter each requirement and press Enter"
                 required
               />
             </div>
@@ -455,27 +448,22 @@ const PostJob = () => {
               <textarea
                 name="qualifications"
                 value={jobDetails.qualifications}
-                onChange={(e) => {
-                  let value = e.target.value;
-                  // If the last character is a slash, remove it
-                  if (value.endsWith("|")) {
-                    value = value.slice(0, -1);
-                  }
-                  handleChange({ target: { name: "qualifications", value } });
-                }}
+                onChange={(e) => handleChange(e)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
                     e.preventDefault();
-                    let value = jobDetails.qualifications;
-                    if (!value.endsWith("|")) {
-                      value += "|";
+                    let value = jobDetails.qualifications.trimEnd(); // Remove any trailing whitespace or newlines
+                    if (value.split("\n").pop() !== "") {
+                      // Check if the last line is not empty
+                      value += "\n";
+                      handleChange({
+                        target: { name: "qualifications", value },
+                      });
                     }
-                    value += "\n";
-                    handleChange({ target: { name: "qualifications", value } });
                   }
                 }}
                 className="p-3 w-full border-2 border-blue-300 rounded-lg shadow-sm h-28 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                placeholder="Qualification1 | Qualification2 | Qualification3 *Enter Every Qualification*"
+                placeholder="Enter each qualifications and press Enter"
                 required
               />
             </div>

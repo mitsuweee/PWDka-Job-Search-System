@@ -675,15 +675,19 @@ const JobListing = () => {
                       </p>
                       {job?.qualifications ? (
                         <ul className="text-gray-700 list-disc pl-4 text-sm">
-                          {(job.qualifications.includes("|")
-                            ? job.qualifications.split("|")
+                          {(job.qualifications.includes("\n")
+                            ? job.qualifications.split("\n") // Split by newline
                             : [job.qualifications]
-                          ).map((qualification, index) => (
-                            <li key={index}>
-                              {qualification.trim().charAt(0).toUpperCase() +
-                                qualification.trim().slice(1).toLowerCase()}
-                            </li>
-                          ))}
+                          )
+                            .filter(
+                              (qualification) => qualification.trim() !== ""
+                            ) // Filter out any empty lines
+                            .map((qualification, index) => (
+                              <li key={index}>
+                                {qualification.trim().charAt(0).toUpperCase() +
+                                  qualification.trim().slice(1).toLowerCase()}
+                              </li>
+                            ))}
                         </ul>
                       ) : (
                         <p className="text-gray-700 text-sm">
@@ -696,16 +700,18 @@ const JobListing = () => {
                         Requirements
                       </p>
                       {job?.requirements ? (
-                        <ul className="text-gray-700 list-disc pl-4 text-sm">
-                          {(job.requirements.includes("|")
-                            ? job.requirements.split("|")
-                            : [job.requirements]
-                          ).map((requirement, index) => (
-                            <li key={index}>
-                              {requirement.trim().charAt(0).toUpperCase() +
-                                requirement.trim().slice(1).toLowerCase()}
-                            </li>
-                          ))}
+                        <ul className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner list-disc pl-4">
+                          {job?.requirement
+                            ? job.requirement
+                                .split("\n") // Split by newline character
+                                .filter((part) => part.trim() !== "") // Filter out any empty lines
+                                .map((part, index) => (
+                                  <li key={index}>
+                                    {part.trim().charAt(0).toUpperCase() +
+                                      part.trim().slice(1).toLowerCase()}
+                                  </li>
+                                ))
+                            : null}
                         </ul>
                       ) : (
                         <p className="text-gray-700 text-sm">
@@ -933,23 +939,35 @@ const JobListing = () => {
                 </p>
                 <ul className="text-gray-700 list-disc pl-4">
                   {selectedJob.qualifications
-                    .split("|")
-                    .map((qualification, index) => (
-                      <li key={index}>
-                        {toSentenceCase(qualification.trim())}
-                      </li>
-                    ))}
+                    ? selectedJob.qualifications
+                        .split("\n") // Split by newline character
+                        .filter((qualification) => qualification.trim() !== "") // Filter out empty lines
+                        .map((qualification, index) => (
+                          <li key={index}>
+                            {qualification.trim().charAt(0).toUpperCase() +
+                              qualification.trim().slice(1).toLowerCase()}
+                          </li>
+                        ))
+                    : null}
                 </ul>
+
                 <p className="text-lg font-medium text-gray-800 mt-6">
                   Requirements
                 </p>
                 <ul className="text-gray-700 list-disc pl-4">
                   {selectedJob.requirements
-                    .split("|")
-                    .map((requirement, index) => (
-                      <li key={index}>{toSentenceCase(requirement.trim())}</li>
-                    ))}
+                    ? selectedJob.requirements
+                        .split("\n") // Split by newline character
+                        .filter((requirement) => requirement.trim() !== "") // Filter out empty lines
+                        .map((requirement, index) => (
+                          <li key={index}>
+                            {requirement.trim().charAt(0).toUpperCase() +
+                              requirement.trim().slice(1).toLowerCase()}
+                          </li>
+                        ))
+                    : null}
                 </ul>
+
                 <div className="mt-6 flex flex-col md:flex-row md:space-x-4 items-center space-y-4 md:space-y-0">
                   <a
                     href={`/apply?id=${selectedJob.id}`}

@@ -794,7 +794,8 @@ const ViewJobs = () => {
                 <ul className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner list-disc pl-4">
                   {job?.requirement
                     ? job.requirement
-                        .split("|")
+                        .split("\n") // Split by newline character
+                        .filter((part) => part.trim() !== "") // Filter out any empty lines
                         .map((part, index) => (
                           <li key={index}>
                             {part.trim().charAt(0).toUpperCase() +
@@ -807,13 +808,14 @@ const ViewJobs = () => {
 
               <div className="bg-gray-100 p-4 rounded-lg shadow-inner">
                 <p className="text-black font-semibold flex items-center">
-                  <span className="material-symbols-outlined mr-1">school</span>{" "}
-                  Qualification:
+                  <span className="material-symbols-outlined mr-1">build</span>{" "}
+                  Qualifications:
                 </p>
                 <ul className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner list-disc pl-4">
                   {job?.qualification
                     ? job.qualification
-                        .split("|")
+                        .split("\n") // Split by newline character
+                        .filter((part) => part.trim() !== "") // Filter out any empty lines
                         .map((part, index) => (
                           <li key={index}>
                             {part.trim().charAt(0).toUpperCase() +
@@ -1000,26 +1002,33 @@ const ViewJobs = () => {
                     value={jobUpdate.requirements}
                     onChange={(e) => {
                       let value = e.target.value;
-                      if (value.endsWith(" | ")) {
-                        value = value.slice(0, -3);
-                      }
                       handleChange({ target: { name: "requirements", value } });
                     }}
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
                         e.preventDefault();
-                        let value = jobUpdate.requirements;
-                        if (!value.endsWith(" | ")) {
-                          value += " | ";
+                        let value = jobUpdate.requirements.trimEnd(); // Remove trailing whitespace or newlines
+                        const lines = value.split("\n");
+
+                        // Check if the last line has content or if only one line is empty
+                        if (
+                          !(
+                            lines.length >= 2 &&
+                            lines[lines.length - 1] === "" &&
+                            lines[lines.length - 2] === ""
+                          )
+                        ) {
+                          handleChange({
+                            target: {
+                              name: "requirements",
+                              value: value + "\n",
+                            },
+                          });
                         }
-                        value += "\n";
-                        handleChange({
-                          target: { name: "requirements", value },
-                        });
                       }
                     }}
                     className="p-3 w-full border-2 border-blue-300 rounded-lg shadow-sm h-28 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    placeholder="Requirement1 | Requirement2 | Requirement3 *Enter Every Requirement*"
+                    placeholder="Enter each requirement and press Enter"
                     required
                   />
                 </div>
@@ -1033,9 +1042,6 @@ const ViewJobs = () => {
                     value={jobUpdate.qualification}
                     onChange={(e) => {
                       let value = e.target.value;
-                      if (value.endsWith(" | ")) {
-                        value = value.slice(0, -3);
-                      }
                       handleChange({
                         target: { name: "qualification", value },
                       });
@@ -1043,18 +1049,28 @@ const ViewJobs = () => {
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
                         e.preventDefault();
-                        let value = jobUpdate.qualification;
-                        if (!value.endsWith(" | ")) {
-                          value += " | ";
+                        let value = jobUpdate.qualification.trimEnd(); // Remove trailing whitespace or newlines
+                        const lines = value.split("\n");
+
+                        // Check if the last line has content or if only one line is empty
+                        if (
+                          !(
+                            lines.length >= 2 &&
+                            lines[lines.length - 1] === "" &&
+                            lines[lines.length - 2] === ""
+                          )
+                        ) {
+                          handleChange({
+                            target: {
+                              name: "qualification",
+                              value: value + "\n",
+                            },
+                          });
                         }
-                        value += "\n";
-                        handleChange({
-                          target: { name: "qualification", value },
-                        });
                       }
                     }}
                     className="p-3 w-full border-2 border-blue-300 rounded-lg shadow-sm h-28 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    placeholder="Qualification1 | Qualification2 | Qualification3 *Enter Every Qualification*"
+                    placeholder="Enter each qualification and press Enter"
                     required
                   />
                 </div>

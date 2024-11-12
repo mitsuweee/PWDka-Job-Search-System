@@ -697,33 +697,44 @@ const AdminViewJobs = () => {
 
               {/* Job Requirements and Qualifications */}
               <div>
-                <p className="text-black font-semibold text-sm leading-relaxed  flex items-center">
+                <p className="text-black font-semibold text-sm leading-relaxed flex items-center">
                   <span className="material-symbols-outlined mr-1">
                     check_circle
                   </span>{" "}
                   Requirements:
                 </p>
                 <ul className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner list-disc pl-4">
-                  {job.requirements.split("|").map((requirement, index) => (
-                    <li key={index}>
-                      {requirement.trim().charAt(0).toUpperCase() +
-                        requirement.trim().slice(1).toLowerCase()}
-                    </li>
-                  ))}
+                  {job?.requirements
+                    ? job.requirements
+                        .split("\n") // Split by newline character
+                        .filter((part) => part.trim() !== "") // Filter out any empty lines
+                        .map((part, index) => (
+                          <li key={index}>
+                            {part.trim().charAt(0).toUpperCase() +
+                              part.trim().slice(1).toLowerCase()}
+                          </li>
+                        ))
+                    : null}
                 </ul>
               </div>
+
               <div>
-                <p className="text-black font-semibold text-sm leading-relaxed  flex items-center">
+                <p className="text-black font-semibold text-sm leading-relaxed flex items-center">
                   <span className="material-symbols-outlined mr-1">school</span>{" "}
                   Qualification:
                 </p>
                 <ul className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner list-disc pl-4">
-                  {job.qualification.split("|").map((qualification, index) => (
-                    <li key={index}>
-                      {qualification.trim().charAt(0).toUpperCase() +
-                        qualification.trim().slice(1).toLowerCase()}
-                    </li>
-                  ))}
+                  {job?.qualification
+                    ? job.qualification
+                        .split("\n") // Split by newline character
+                        .filter((part) => part.trim() !== "") // Filter out any empty lines
+                        .map((part, index) => (
+                          <li key={index}>
+                            {part.trim().charAt(0).toUpperCase() +
+                              part.trim().slice(1).toLowerCase()}
+                          </li>
+                        ))
+                    : null}
                 </ul>
               </div>
 
