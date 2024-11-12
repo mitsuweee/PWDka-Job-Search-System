@@ -19,10 +19,10 @@ const AdminViewAdmin = () => {
 
   // Initialize socket connection and listen for real-time events
   useEffect(() => {
-    const socket = io("pwdka.com.ph");
-    //   transports: ["websocket", "polling"],
-    // });
-
+    // Connect to the Socket.IO server with credentials and only use WebSocket transport
+    const socket = io("https://pwdka.com.ph/", {
+      transports: ["websocket"], // Use WebSocket only for improved real-time performance
+    });
     socket.on("connect", () => {
       console.log("Connected to socket server with ID:", socket.id);
     });

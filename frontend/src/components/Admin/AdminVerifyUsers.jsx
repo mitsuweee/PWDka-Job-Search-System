@@ -26,8 +26,9 @@ const AdminVerifyUsers = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Initialize socket connection only once
-    const socket = io("https://pwdka.com.ph");
+    const socket = io("https://pwdka.com.ph/", {
+      transports: ["websocket"], // Use WebSocket only for improved real-time performance
+    });
 
     socket.on("connect", () => {
       console.log("Connected to socket server with ID:", socket.id);
