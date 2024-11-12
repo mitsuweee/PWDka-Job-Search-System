@@ -565,6 +565,10 @@ const ViewJobs = () => {
                 <th className="py-6 px-4 md:px-6 font-semibold hidden md:table-cell">
                   Salary Range
                 </th>
+                <th className="py-6 px-4 md:px-6 font-semibold hidden md:table-cell">
+                  Job Status
+                </th>{" "}
+                {/* New Job Status column header */}
                 <th className="py-6 px-4 md:px-6 font-semibold text-center">
                   Actions
                 </th>
@@ -574,7 +578,7 @@ const ViewJobs = () => {
               {filteredJobListings.length === 0 ? (
                 <tr>
                   <td
-                    colSpan="5"
+                    colSpan="6"
                     className="py-8 px-4 text-center text-gray-500 text-sm"
                   >
                     No job listings available.
@@ -631,6 +635,11 @@ const ViewJobs = () => {
                       {job.minimum_salary && job.maximum_salary
                         ? `₱${job.minimum_salary} - ₱${job.maximum_salary}`
                         : "Not specified"}
+                    </td>
+
+                    {/* Job Status */}
+                    <td className="py-4 px-4 md:px-6 text-gray-800 text-xs md:text-sm break-words hidden md:table-cell">
+                      {job.status ? job.status : "Not specified"}
                     </td>
 
                     <td className="py-4 px-4 md:px-6 text-center">
