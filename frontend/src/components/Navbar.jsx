@@ -56,7 +56,7 @@ const Navbar = () => {
           <div className="sm:hidden">
             <button
               type="button"
-              className="relative flex justify-center items-center gap-x-2 rounded-lg border border-gray-200 bg-[#e3edf7] text-gray-800 shadow-sm "
+              className="relative flex justify-center items-center gap-x-2 rounded-lg  bg-white text-gray-800  "
               onClick={toggleMenu}
               aria-expanded={isMenuOpen}
               aria-controls="navbar"

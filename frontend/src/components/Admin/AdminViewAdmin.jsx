@@ -203,7 +203,7 @@ const AdminViewAdmin = () => {
         <h2 className="text-white text-lg font-semibold mb-2 mt-4 w-full text-left">
           Dashboard
         </h2>
-        <hr className="border-gray-400 w-full mb-4" />
+        <hr className="border-white border-1 w-full mb-4" />
 
         <a
           href="/admin/dashboard"
@@ -226,7 +226,7 @@ const AdminViewAdmin = () => {
         <h2 className="text-white text-lg font-semibold mb-2 mt-4 w-full text-left">
           Verification
         </h2>
-        <hr className="border-gray-400 w-full mb-4" />
+        <hr className="border-white border-1 w-full mb-4" />
 
         <a
           href="/admin/dashboard/VerifyUsers"
@@ -260,7 +260,7 @@ const AdminViewAdmin = () => {
         <h2 className="text-white text-lg font-semibold mb-2 mt-4 w-full text-left">
           View Records
         </h2>
-        <hr className="border-gray-400 w-full mb-4" />
+        <hr className="border-white border-1 w-full mb-4" />
 
         <a
           href="/admin/dashboard/ViewUsers"
@@ -304,7 +304,7 @@ const AdminViewAdmin = () => {
         <h2 className="text-white text-lg font-semibold mb-2 mt-4 w-full text-left">
           Account
         </h2>
-        <hr className="border-gray-400 w-full mb-4" />
+        <hr className="border-white border-1 w-full mb-4" />
 
         <a
           href="/admin/dashboard/viewadmin"

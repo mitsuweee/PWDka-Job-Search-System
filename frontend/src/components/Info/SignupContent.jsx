@@ -1031,7 +1031,7 @@ const Signup = () => {
           <div className="w-full">
             <div className="switchContainer max-w-xs mx-auto shadow-xl rounded-lg p-4 bg-white flex justify-start items-center gap-4 mb-8">
               <span className="switchLabel font-bold text-lg text-blue-600">
-                Sign up as:
+                Sign Up As:
               </span>
               <div className="switchButtons flex gap-2">
                 <button

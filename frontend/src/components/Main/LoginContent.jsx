@@ -211,14 +211,17 @@ const LoginComp = () => {
               </form>
 
               {/* Links */}
-              <div className="flex items-center justify-between border-t-2 border-white mt-6 pt-6">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-t-2 border-white mt-6 pt-6 space-y-4 sm:space-y-0">
+                {/* Not a member and Sign Up */}
                 <div className="flex items-center justify-start">
                   <p className="text-sm text-gray-800">Not a member?</p>
                   <a href="/signup" className="text-sm text-[#007bff] ml-2">
                     Sign Up
                   </a>
                 </div>
-                <div className="flex items-center justify-end">
+
+                {/* Forgot Password */}
+                <div className="flex items-center justify-start sm:justify-end">
                   <a href="/forgotpassword" className="text-sm text-[#007bff]">
                     Forgot Password?
                   </a>
