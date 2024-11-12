@@ -506,9 +506,9 @@ const getApplicantCount = async (req, res) => {
       });
     }
 
-    // Count the number of applicants for the job listing
+    // Count the number of applicants with status "Under Review" for the job listing
     const applicantCount = await knex("job_application")
-      .where({ joblisting_id: jobListingId })
+      .where({ joblisting_id: jobListingId, status: "Under Review" }) // Added status condition
       .count("id as count")
       .first();
 
@@ -526,6 +526,7 @@ const getApplicantCount = async (req, res) => {
     });
   }
 };
+
 
 module.exports = {
   uploadResume,
