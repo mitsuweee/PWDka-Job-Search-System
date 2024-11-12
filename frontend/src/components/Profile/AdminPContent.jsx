@@ -480,26 +480,39 @@ const AdminProf = () => {
           {/* Center Container */}
           <div className="flex flex-col items-center md:items-start">
             {/* Profile Card */}
-            <div className="w-full max-w-4xl mb-10 p-6 sm:p-8 bg-white rounded-lg shadow-lg">
+            <div className="w-full max-w-4xl mb-10 p-8 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl shadow-xl transition duration-300 hover:shadow-2xl">
               {/* Header Section */}
-              <div className="text-center md:text-left">
-                <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
-                  {admin.firstName.charAt(0).toUpperCase() +
-                    admin.firstName.slice(1)}{" "}
-                  {admin.lastName.charAt(0).toUpperCase() +
-                    admin.lastName.slice(1)}
-                </h2>
+              <div className="flex flex-col md:flex-row items-center md:items-start mb-6 space-y-4 md:space-y-0 md:space-x-6">
+                {/* Profile Icon */}
+                <div className="flex-shrink-0">
+                  <div className="w-24 h-24 bg-blue-200 text-blue-600 rounded-full flex items-center justify-center text-5xl font-bold shadow-inner">
+                    {admin.firstName.charAt(0).toUpperCase()}
+                  </div>
+                </div>
 
-                <p className="text-gray-600 text-lg mt-2">
-                  Email: {admin.email}
-                </p>
+                {/* Profile Details */}
+                <div className="text-center md:text-left">
+                  <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+                    {`${
+                      admin.firstName.charAt(0).toUpperCase() +
+                      admin.firstName.slice(1)
+                    } ${
+                      admin.lastName.charAt(0).toUpperCase() +
+                      admin.lastName.slice(1)
+                    }`}
+                  </h2>
+                  <p className="text-gray-600 text-lg mt-2">
+                    <span className="font-medium text-gray-700">Email:</span>{" "}
+                    {admin.email}
+                  </p>
+                </div>
               </div>
 
               {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 mt-6 justify-center md:justify-start">
+              <div className="flex flex-col sm:flex-row gap-4 mt-4 justify-center md:justify-start border-t border-gray-300 pt-4">
                 <button
                   onClick={handleEdit}
-                  className="w-full sm:w-auto px-4 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:shadow-lg hover:bg-blue-700 transition duration-300 flex items-center justify-center"
+                  className="w-full sm:w-auto px-5 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:shadow-lg hover:bg-blue-700 transition duration-300 flex items-center justify-center"
                 >
                   <span className="material-symbols-outlined text-xl mr-2">
                     edit
@@ -509,7 +522,7 @@ const AdminProf = () => {
 
                 <button
                   onClick={handleEmailToggle}
-                  className="w-full sm:w-auto px-4 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:shadow-lg hover:bg-blue-700 transition duration-300 flex items-center justify-center"
+                  className="w-full sm:w-auto px-5 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:shadow-lg hover:bg-blue-700 transition duration-300 flex items-center justify-center"
                 >
                   <span className="material-symbols-outlined text-xl mr-2">
                     email
@@ -519,7 +532,7 @@ const AdminProf = () => {
 
                 <button
                   onClick={handlePasswordToggle}
-                  className="w-full sm:w-auto px-4 py-3 bg-yellow-600 text-white font-semibold rounded-lg shadow-md hover:shadow-lg hover:bg-yellow-700 transition duration-300 flex items-center justify-center"
+                  className="w-full sm:w-auto px-5 py-3 bg-yellow-600 text-white font-semibold rounded-lg shadow-md hover:shadow-lg hover:bg-yellow-700 transition duration-300 flex items-center justify-center"
                 >
                   <span className="material-symbols-outlined text-xl mr-2">
                     lock
@@ -529,10 +542,10 @@ const AdminProf = () => {
               </div>
 
               {/* Navigation Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 mt-6 border-t pt-6 border-gray-300 justify-center md:justify-start">
+              <div className="flex flex-col sm:flex-row gap-4 mt-8 border-t pt-6 border-gray-300 justify-center md:justify-start">
                 <button
                   onClick={() => navigate("/admin/dashboard")}
-                  className="w-full sm:w-auto px-4 py-3 bg-gray-300 text-gray-900 font-semibold rounded-lg shadow-md hover:shadow-lg hover:bg-gray-400 transition duration-300 flex items-center justify-center"
+                  className="w-full sm:w-auto px-5 py-3 bg-gray-200 text-gray-900 font-semibold rounded-lg shadow-md hover:shadow-lg hover:bg-gray-300 transition duration-300 flex items-center justify-center"
                 >
                   <span className="material-symbols-outlined text-xl mr-2">
                     arrow_back
@@ -542,7 +555,7 @@ const AdminProf = () => {
 
                 <button
                   onClick={handleLogout}
-                  className="w-full sm:w-auto px-4 py-3 bg-red-600 text-white font-semibold rounded-lg shadow-md hover:shadow-lg hover:bg-red-700 transition duration-300 flex items-center justify-center"
+                  className="w-full sm:w-auto px-5 py-3 bg-red-600 text-white font-semibold rounded-lg shadow-md hover:shadow-lg hover:bg-red-700 transition duration-300 flex items-center justify-center"
                 >
                   <span className="material-symbols-outlined text-xl mr-2">
                     logout

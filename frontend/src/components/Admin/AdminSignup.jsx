@@ -122,72 +122,103 @@ const AdminSignup = () => {
   };
 
   const renderAdminSignupForm = () => (
-    <div className="flex justify-center items-start min-h-screen pt-10 bg-gray-100">
-      <div className="bg-white p-8 shadow-2xl rounded-2xl w-full max-w-3xl">
-        <h1 className="text-4xl font-bold text-center text-custom-blue mb-8">
+    <div className="flex justify-center items-center min-h-screen bg-custom-bg px-4 sm:px-0">
+      <div className="bg-white p-6 sm:p-10 shadow-2xl rounded-3xl w-full max-w-md sm:max-w-3xl">
+        {/* Form Header */}
+        <h1 className="text-2xl sm:text-4xl font-bold text-center text-blue-600 mb-6 sm:mb-10 flex items-center justify-center">
+          <span className="material-symbols-outlined text-3xl sm:text-5xl mr-2 sm:mr-4">
+            shield_person
+          </span>
           Admin Signup
         </h1>
-        <form className="grid grid-cols-12 gap-6" onSubmit={handleSubmit}>
-          <div className="col-span-12 md:col-span-6">
+
+        {/* Signup Form */}
+        <form
+          className="grid grid-cols-12 gap-x-4 gap-y-6 sm:gap-6"
+          onSubmit={handleSubmit}
+        >
+          {/* First Name */}
+          <div className="col-span-12 sm:col-span-6">
             <label
               htmlFor="firstName"
-              className="block text-lg font-semibold text-gray-700"
+              className="flex items-center text-sm sm:text-lg font-semibold text-gray-700"
             >
-              First Name
+              <span className="material-symbols-outlined text-lg sm:text-xl mr-2 sm:mr-4 text-blue-500">
+                person
+              </span>
+              First Name<span className="text-red-500 ml-1">*</span>
             </label>
-            <input
-              type="text"
-              id="firstName"
-              name="firstName"
-              value={formData.firstName}
-              onChange={handleInputChange}
-              className="mt-2 w-full h-12 text-gray-600 bg-gray-200 p-3 rounded-lg shadow-md border border-gray-300 focus:border-blue-500 focus:outline-none transition duration-300"
-              required
-            />
+            <div className="relative">
+              <input
+                type="text"
+                id="firstName"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleInputChange}
+                className="mt-1 w-full h-10 sm:h-12 text-sm sm:text-base text-gray-600 bg-gray-100 p-2 sm:p-3 rounded-lg shadow-inner border border-gray-300 focus:border-blue-500 focus:outline-none transition duration-300"
+                required
+              />
+            </div>
           </div>
 
-          <div className="col-span-12 md:col-span-6">
+          {/* Last Name */}
+          <div className="col-span-12 sm:col-span-6">
             <label
               htmlFor="lastName"
-              className="block text-lg font-semibold text-gray-700"
+              className="flex items-center text-sm sm:text-lg font-semibold text-gray-700"
             >
-              Last Name
+              <span className="material-symbols-outlined text-lg sm:text-xl mr-2 sm:mr-4 text-blue-500">
+                person
+              </span>
+              Last Name<span className="text-red-500 ml-1">*</span>
             </label>
-            <input
-              type="text"
-              id="lastName"
-              name="lastName"
-              value={formData.lastName}
-              onChange={handleInputChange}
-              className="mt-2 w-full h-12 text-gray-600 bg-gray-200 p-3 rounded-lg shadow-md border border-gray-300 focus:border-blue-500 focus:outline-none transition duration-300"
-              required
-            />
+            <div className="relative">
+              <input
+                type="text"
+                id="lastName"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleInputChange}
+                className="mt-1 w-full h-10 sm:h-12 text-sm sm:text-base text-gray-600 bg-gray-100 p-2 sm:p-3 rounded-lg shadow-inner border border-gray-300 focus:border-blue-500 focus:outline-none transition duration-300"
+                required
+              />
+            </div>
           </div>
 
-          <div className="col-span-12 md:col-span-6">
+          {/* Email */}
+          <div className="col-span-12 sm:col-span-6">
             <label
               htmlFor="email"
-              className="block text-lg font-semibold text-gray-700"
+              className="flex items-center text-sm sm:text-lg font-semibold text-gray-700"
             >
-              Email
+              <span className="material-symbols-outlined text-lg sm:text-xl mr-2 sm:mr-4 text-blue-500">
+                email
+              </span>
+              Email<span className="text-red-500 ml-1">*</span>
             </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              className="mt-2 w-full h-12 text-gray-600 bg-gray-200 p-3 rounded-lg shadow-md border border-gray-300 focus:border-blue-500 focus:outline-none transition duration-300"
-              required
-            />
+            <div className="relative">
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                className="mt-1 w-full h-10 sm:h-12 text-sm sm:text-base text-gray-600 bg-gray-100 p-2 sm:p-3 rounded-lg shadow-inner border border-gray-300 focus:border-blue-500 focus:outline-none transition duration-300"
+                required
+              />
+            </div>
           </div>
 
-          <div className="col-span-12 md:col-span-6">
+          {/* Password */}
+          <div className="col-span-12 sm:col-span-6">
             <label
               htmlFor="password"
-              className="block text-lg font-semibold text-gray-700"
+              className="flex items-center text-sm sm:text-lg font-semibold text-gray-700"
             >
-              Password
+              <span className="material-symbols-outlined text-lg sm:text-xl mr-2 sm:mr-4 text-blue-500">
+                lock
+              </span>
+              Password<span className="text-red-500 ml-1">*</span>
             </label>
             <div className="relative">
               <input
@@ -196,13 +227,13 @@ const AdminSignup = () => {
                 name="password"
                 value={formData.password}
                 onChange={handleInputChange}
-                className="mt-2 w-full h-12 text-gray-600 bg-gray-200 p-3 rounded-lg shadow-md border border-gray-300 focus:border-blue-500 focus:outline-none transition duration-300"
+                className="mt-1 w-full h-10 sm:h-12 text-sm sm:text-base text-gray-600 bg-gray-100 p-2 sm:p-3 rounded-lg shadow-inner border border-gray-300 focus:border-blue-500 focus:outline-none transition duration-300"
                 required
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-600 hover:text-blue-500"
+                className="absolute inset-y-0 right-0 px-2 sm:px-3 flex items-center text-gray-400 hover:text-blue-500"
               >
                 <span className="material-symbols-outlined">
                   {showPassword ? "visibility_off" : "visibility"}
@@ -211,12 +242,16 @@ const AdminSignup = () => {
             </div>
           </div>
 
-          <div className="col-span-12 md:col-span-6">
+          {/* Confirm Password */}
+          <div className="col-span-12 sm:col-span-6">
             <label
               htmlFor="confirm_password"
-              className="block text-lg font-semibold text-gray-700"
+              className="flex items-center text-sm sm:text-lg font-semibold text-gray-700"
             >
-              Confirm Password
+              <span className="material-symbols-outlined text-lg sm:text-xl mr-2 sm:mr-4 text-blue-500">
+                lock
+              </span>
+              Confirm Password<span className="text-red-500 ml-1">*</span>
             </label>
             <div className="relative">
               <input
@@ -225,13 +260,13 @@ const AdminSignup = () => {
                 name="confirm_password"
                 value={formData.confirm_password}
                 onChange={handleInputChange}
-                className="mt-2 w-full h-12 text-gray-600 bg-gray-200 p-3 rounded-lg shadow-md border border-gray-300 focus:border-blue-500 focus:outline-none transition duration-300"
+                className="mt-1 w-full h-10 sm:h-12 text-sm sm:text-base text-gray-600 bg-gray-100 p-2 sm:p-3 rounded-lg shadow-inner border border-gray-300 focus:border-blue-500 focus:outline-none transition duration-300"
                 required
               />
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-600 hover:text-blue-500"
+                className="absolute inset-y-0 right-0 px-2 sm:px-3 flex items-center text-gray-400 hover:text-blue-500"
               >
                 <span className="material-symbols-outlined">
                   {showConfirmPassword ? "visibility_off" : "visibility"}
@@ -240,10 +275,11 @@ const AdminSignup = () => {
             </div>
           </div>
 
+          {/* Submit Button */}
           <div className="col-span-12">
             <button
               type="submit"
-              className={`w-full py-3 text-lg font-semibold text-white bg-blue-600 rounded-lg shadow-lg hover:bg-blue-700 transition-all focus:outline-none ${
+              className={`w-full py-2 sm:py-3 text-sm sm:text-lg font-semibold text-white bg-blue-600 rounded-lg shadow-lg hover:bg-blue-700 transition-all focus:outline-none ${
                 loading ? "opacity-50 cursor-not-allowed" : ""
               }`}
               disabled={loading}
@@ -263,17 +299,37 @@ const AdminSignup = () => {
       <aside
         className={`bg-custom-blue w-full md:w-[300px] lg:w-[250px] p-4 flex flex-col items-center md:relative fixed top-0 left-0 min-h-screen h-full transition-transform transform ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } md:translate-x-0 z-50 md:z-auto`}
+        } md:translate-x-0 z-50 md:z-auto overflow-y-auto `}
       >
+        {/* Logo Section */}
+        <div className="w-full flex justify-center items-center mb-6 p-2 bg-white rounded-lg">
+          <img
+            src="/imgs/LOGO PWDKA.png" // Replace with the actual path to your logo
+            alt="Logo"
+            className="w-26 h-19 object-contain"
+          />
+        </div>
+
         <button
           className="text-white md:hidden self-end size-10"
           onClick={() => setIsSidebarOpen(false)}
         >
           &times;
         </button>
+
+        {/* Dashboard Section */}
+        <h2 className="text-white text-lg font-semibold mb-2 mt-4 w-full text-left">
+          Dashboard
+        </h2>
+        <hr className="border-gray-400 w-full mb-4" />
+
         <a
           href="/admin/dashboard"
-          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
+          className={`${
+            window.location.pathname === "/admin/dashboard"
+              ? "bg-blue-900 text-gray-200" // Active style
+              : "bg-gray-200 text-blue-900"
+          } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
           style={{
             boxShadow: "0 4px 6px rgba(0, 123, 255, 0.4)",
           }}
@@ -284,9 +340,19 @@ const AdminSignup = () => {
           <span className="flex-grow text-center">Dashboard</span>
         </a>
 
+        {/* Verification Section */}
+        <h2 className="text-white text-lg font-semibold mb-2 mt-4 w-full text-left">
+          Verification
+        </h2>
+        <hr className="border-gray-400 w-full mb-4" />
+
         <a
           href="/admin/dashboard/VerifyUsers"
-          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
+          className={`${
+            window.location.pathname === "/admin/dashboard/VerifyUsers"
+              ? "bg-blue-900 text-gray-200"
+              : "bg-gray-200 text-blue-900"
+          } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
         >
           <span className="material-symbols-outlined text-xl mr-4">
             how_to_reg
@@ -296,7 +362,11 @@ const AdminSignup = () => {
 
         <a
           href="/admin/dashboard/VerifyComps"
-          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
+          className={`${
+            window.location.pathname === "/admin/dashboard/VerifyComps"
+              ? "bg-blue-900 text-gray-200"
+              : "bg-gray-200 text-blue-900"
+          } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
         >
           <span className="material-symbols-outlined text-xl mr-4">
             apartment
@@ -304,9 +374,19 @@ const AdminSignup = () => {
           <span className="flex-grow text-center">Verify Companies</span>
         </a>
 
+        {/* View Section */}
+        <h2 className="text-white text-lg font-semibold mb-2 mt-4 w-full text-left">
+          View Records
+        </h2>
+        <hr className="border-gray-400 w-full mb-4" />
+
         <a
           href="/admin/dashboard/ViewUsers"
-          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
+          className={`${
+            window.location.pathname === "/admin/dashboard/ViewUsers"
+              ? "bg-blue-900 text-gray-200"
+              : "bg-gray-200 text-blue-900"
+          } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
         >
           <span className="material-symbols-outlined text-xl mr-4">group</span>
           <span className="flex-grow text-center">View All Applicants</span>
@@ -314,7 +394,11 @@ const AdminSignup = () => {
 
         <a
           href="/admin/dashboard/ViewCompany"
-          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
+          className={`${
+            window.location.pathname === "/admin/dashboard/ViewCompany"
+              ? "bg-blue-900 text-gray-200"
+              : "bg-gray-200 text-blue-900"
+          } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
         >
           <span className="material-symbols-outlined text-xl mr-4">
             source_environment
@@ -324,19 +408,50 @@ const AdminSignup = () => {
 
         <a
           href="/admin/dashboard/ViewJobs"
-          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
+          className={`${
+            window.location.pathname === "/admin/dashboard/ViewJobs"
+              ? "bg-blue-900 text-gray-200"
+              : "bg-gray-200 text-blue-900"
+          } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
         >
           <span className="material-symbols-outlined text-xl mr-4">work</span>
           <span className="flex-grow text-center">View All Job Listings</span>
         </a>
 
+        {/* Account Section */}
+        <h2 className="text-white text-lg font-semibold mb-2 mt-4 w-full text-left">
+          Account
+        </h2>
+        <hr className="border-gray-400 w-full mb-4" />
+
         <a
-          href="/admin/dashboard/AdminSignup"
-          className="bg-gray-200 text-blue-900 rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center"
+          href="/admin/dashboard/viewadmin"
+          className={`${
+            window.location.pathname === "/admin/dashboard/viewadmin"
+              ? "bg-blue-900 text-gray-200"
+              : "bg-gray-200 text-blue-900"
+          } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
         >
-          <span className="material-symbols-outlined text-xl mr-4"> draw</span>
-          <span className="flex-grow text-center">Sign Up</span>
+          <span className="material-symbols-outlined text-xl mr-4">
+            manage_accounts
+          </span>
+          <span className="flex-grow text-center">Admin Management</span>
         </a>
+
+        <a
+          href="/adminprofile"
+          className={`${
+            window.location.pathname === "/adminprofile"
+              ? "bg-blue-900 text-gray-200"
+              : "bg-gray-200 text-blue-900"
+          } rounded-xl py-2 px-4 mb-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-gray-300 transition-all duration-200 ease-in-out flex items-center`}
+        >
+          <span className="material-symbols-outlined text-xl mr-4">
+            server_person
+          </span>
+          <span className="flex-grow text-center">Profile</span>
+        </a>
+
         <button
           className="bg-red-600 text-white rounded-xl py-2 px-4 w-full shadow-md hover:shadow-xl hover:translate-y-1 hover:bg-red-500 transition-all duration-200 ease-in-out mt-6"
           onClick={handleLogout}

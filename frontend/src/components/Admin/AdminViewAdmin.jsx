@@ -356,7 +356,7 @@ const AdminViewAdmin = () => {
           onClick={() => navigate("/admin/dashboard/AdminSignup")}
           className="fixed top-8 right-8 bg-blue-500 text-white text-sm px-4 py-2 rounded-full shadow-md hover:bg-blue-700 transition duration-200"
         >
-          Sign Up Admin
+          Create Admin+
         </button>
         <div className="flex items-center justify-center mt-6 mb-4 p-4 bg-white rounded-lg shadow-md space-x-4">
           <input
