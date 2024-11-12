@@ -1168,12 +1168,17 @@ const JobListing = () => {
                                 ? "bg-green-100 text-green-700"
                                 : application.status === "Pending"
                                 ? "bg-yellow-100 text-yellow-700"
+                                : application.status === "Under Review"
+                                ? "bg-blue-100 text-blue-700"
+                                : application.status === "Rejected"
+                                ? "bg-gray-100 text-gray-700"
                                 : "bg-red-100 text-red-700"
                             }`}
                           >
                             {application.status}
                           </span>
                         </td>
+
                         <td className="py-2 px-2 sm:px-4 whitespace-nowrap">
                           {new Date(
                             application.date_created
