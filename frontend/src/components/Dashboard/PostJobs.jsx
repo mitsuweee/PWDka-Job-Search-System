@@ -400,6 +400,7 @@ const PostJob = () => {
                 value={jobDetails.level}
                 onChange={handleChange}
                 className="p-3 w-full border-2 border-blue-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                required
               >
                 <option value="">Select Job Level</option>
                 <option value="Entry-Level">Entry-Level</option>
