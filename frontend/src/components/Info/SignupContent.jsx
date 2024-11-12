@@ -192,7 +192,7 @@ const Signup = () => {
         toast.success(response.data.message);
         setLoading(false);
 
-        // Reload and redirect by adding a timestamp to the URL to prevent caching
+        // Reload and redirect by adding a timestamp to the URL
         window.location.href = `/login?redirect=${new Date().getTime()}`;
       })
       .catch((error) => {
