@@ -355,7 +355,6 @@ const JobListing = () => {
               <option value="Managerial">Managerial</option>
               <option value="Director">Director</option>
               <option value="Executive">Executive</option>
-              <option value="None">None</option>
             </select>
 
             {/* Position Type Dropdown */}
