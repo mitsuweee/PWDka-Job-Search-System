@@ -832,20 +832,34 @@ const JobListing = () => {
                 </button>
               </li>
 
-              {Array.from({ length: totalPages }, (_, index) => (
-                <li key={index + 1}>
-                  <button
-                    onClick={() => paginate(index + 1)}
-                    className={`block size-8 rounded border text-center leading-8 ${
-                      currentPage === index + 1
-                        ? "border-blue-600 bg-blue-600 text-white"
-                        : "border-gray-100 bg-white text-gray-900"
-                    }`}
-                  >
-                    {index + 1}
-                  </button>
-                </li>
-              ))}
+              {Array.from({ length: totalPages }, (_, index) => {
+                const pageNumber = index + 1;
+
+                // Adjust the range to always show 3 buttons based on currentPage
+                const isWithinRange =
+                  (currentPage <= 2 && pageNumber <= 3) || // Show 1, 2, 3 if on page 1 or 2
+                  (currentPage >= totalPages - 1 &&
+                    pageNumber >= totalPages - 2) || // Show last 3 pages if near end
+                  (pageNumber >= currentPage - 1 &&
+                    pageNumber <= currentPage + 1); // Show current, previous, and next pages
+
+                return (
+                  isWithinRange && (
+                    <li key={pageNumber}>
+                      <button
+                        onClick={() => paginate(pageNumber)}
+                        className={`block size-8 rounded border text-center leading-8 ${
+                          currentPage === pageNumber
+                            ? "border-blue-600 bg-blue-600 text-white"
+                            : "border-gray-100 bg-white text-gray-900"
+                        }`}
+                      >
+                        {pageNumber}
+                      </button>
+                    </li>
+                  )
+                );
+              })}
 
               <li>
                 <button

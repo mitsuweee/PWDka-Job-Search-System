@@ -6,7 +6,7 @@ const termsContainerStyle = {
   margin: "0 auto",
   padding: "30px",
   fontFamily: "sfprobold",
-  color: "#333",
+  color: "#fffff",
   lineHeight: "1.6",
 };
 
@@ -122,23 +122,33 @@ function TermsAndConditions() {
         <h1 style={headerStyle}>Terms and Conditions</h1>
       </div>
 
-      <div style={{ ...commitmentStyle, textAlign: "center" }}>
+      <div
+        style={{
+          ...commitmentStyle,
+          backgroundColor: "#ffffff",
+          textAlign: "center",
+        }}
+      >
         <h2
           style={{
             fontSize: "24px",
             fontWeight: "bold",
             marginBottom: "15px",
-            color: "#007bff",
+            color: "#007bff", // Blue color for the heading
           }}
         >
           Our Commitment
         </h2>
-        <p style={{ marginBottom: "15px" }}>
+        <p style={{ marginBottom: "15px", color: "#000000" }}>
+          {" "}
+          {/* Black color for the description */}
           These terms govern your use of the PWDka platform. By accessing and
           using our services, you agree to the terms outlined in this document.
           If you do not agree, you should not use our platform.
         </p>
-        <p>
+        <p style={{ color: "#000000" }}>
+          {" "}
+          {/* Black color for the second paragraph */}
           PWDka reserves the right to amend or update these terms at any time,
           and it is your responsibility to review them regularly.
         </p>

@@ -274,10 +274,6 @@ function PrivacyPolicy() {
                 <strong>Technical Information:</strong>
                 <ul style={{ marginTop: "10px" }}>
                   <li>
-                    <strong>IP Address:</strong> To track usage patterns and
-                    improve security.
-                  </li>
-                  <li>
                     <strong>Browser Type and Version:</strong> To optimize our
                     website’s performance across different devices.
                   </li>
@@ -500,24 +496,7 @@ function PrivacyPolicy() {
         )}
       </div>
 
-      {/* Section 11: Languages */}
-      <div
-        style={collapsibleSectionStyle}
-        onClick={() => toggleSection("languages")}
-      >
-        11. Languages
-        {openSections.languages && (
-          <div style={{ ...collapsibleContentStyle, display: "block" }}>
-            <p>
-              This Privacy Policy is available in multiple languages for your
-              convenience. In the event of any discrepancies or conflicts
-              between different language versions, the English version shall
-              prevail as the authoritative document.
-            </p>
-          </div>
-        )}
-      </div>
-      {/* Section 12: Responsibility for Logging Out on Public Computers */}
+      {/* Section 11: Responsibility for Logging Out on Public Computers */}
       <div
         style={collapsibleSectionStyle}
         onClick={() => toggleSection("publicComputerResponsibility")}
@@ -541,7 +520,7 @@ function PrivacyPolicy() {
         )}
       </div>
 
-      {/* Section 13: Definitions */}
+      {/* Section 12: Definitions */}
       <div
         style={collapsibleSectionStyle}
         onClick={() => toggleSection("definitions")}
