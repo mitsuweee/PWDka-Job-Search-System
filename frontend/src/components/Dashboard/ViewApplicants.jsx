@@ -18,6 +18,9 @@ const ViewApplicants = () => {
   const [companyName, setCompanyName] = useState("");
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const applicantsPerPage = 7; // Customize this value as needed
+
   const [deleteApplicantId, setDeleteApplicantId] = useState(null);
 
   const navigate = useNavigate();
@@ -237,18 +240,29 @@ const ViewApplicants = () => {
       });
   };
 
+  // Sort filtered applicants
   const sortedApplicants = filteredApplicants.sort((a, b) => {
-    if (sortOption === "Newest") {
-      return new Date(b.date_created) - new Date(a.date_created); // Sort by date_created (newest first)
-    } else if (sortOption === "Oldest") {
-      return new Date(a.date_created) - new Date(b.date_created); // Sort by date_created (oldest first)
-    } else if (sortOption === "A-Z") {
-      return a.fullName.localeCompare(b.fullName); // Sort alphabetically by fullName
-    } else if (sortOption === "Z-A") {
-      return b.fullName.localeCompare(a.fullName); // Sort alphabetically by fullName in reverse
+    if (sortOption === "newest") {
+      return new Date(b.dateCreated) - new Date(a.dateCreated);
+    } else if (sortOption === "oldest") {
+      return new Date(a.dateCreated) - new Date(b.dateCreated);
+    } else if (sortOption === "a-z") {
+      return a.fullName.localeCompare(b.fullName);
+    } else if (sortOption === "z-a") {
+      return b.fullName.localeCompare(a.fullName);
     }
     return 0;
   });
+
+  // Paginate the sorted, filtered applicants
+  const indexOfLastApplicant = currentPage * applicantsPerPage;
+  const indexOfFirstApplicant = indexOfLastApplicant - applicantsPerPage;
+  const currentApplicants = sortedApplicants.slice(
+    indexOfFirstApplicant,
+    indexOfLastApplicant
+  );
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const openResumeModal = (resume) => {
     setSelectedResume(resume);
@@ -435,8 +449,8 @@ const ViewApplicants = () => {
 
             {/* Table Body */}
             <tbody>
-              {sortedApplicants.length > 0 ? (
-                sortedApplicants.map((applicant) => (
+              {currentApplicants.length > 0 ? (
+                currentApplicants.map((applicant) => (
                   <tr
                     key={applicant.id}
                     className="bg-gray-50 p-3 rounded-lg mb-2 shadow-md transition duration-300 sm:table-row flex flex-col"
@@ -566,6 +580,71 @@ const ViewApplicants = () => {
               )}
             </tbody>
           </table>
+        </div>
+        {/* Pagination */}
+        <div className="flex justify-center mt-6">
+          <ol className="flex justify-center gap-1 text-xs font-medium">
+            <li>
+              <button
+                onClick={() => currentPage > 1 && paginate(currentPage - 1)}
+                className="inline-flex w-8 h-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900"
+                disabled={currentPage === 1}
+              >
+                Prev
+              </button>
+            </li>
+
+            {Array.from(
+              { length: Math.ceil(applicants.length / applicantsPerPage) },
+              (_, index) => {
+                const pageNumber = index + 1;
+
+                // Adjust the range to always show 3 buttons based on currentPage
+                const isWithinRange =
+                  (currentPage <= 2 && pageNumber <= 3) || // Show 1, 2, 3 if on page 1 or 2
+                  (currentPage >=
+                    Math.ceil(applicants.length / applicantsPerPage) - 1 &&
+                    pageNumber >=
+                      Math.ceil(applicants.length / applicantsPerPage) - 2) || // Show last 3 pages if near end
+                  (pageNumber >= currentPage - 1 &&
+                    pageNumber <= currentPage + 1); // Show current, previous, and next pages
+
+                return (
+                  isWithinRange && (
+                    <li key={pageNumber}>
+                      <button
+                        onClick={() => paginate(pageNumber)}
+                        className={`block w-8 h-8 rounded border text-center leading-8 ${
+                          currentPage === pageNumber
+                            ? "border-blue-600 bg-blue-600 text-white"
+                            : "border-gray-100 bg-white text-gray-900"
+                        }`}
+                      >
+                        {pageNumber}
+                      </button>
+                    </li>
+                  )
+                );
+              }
+            )}
+
+            <li>
+              <button
+                onClick={() =>
+                  currentPage <
+                    Math.ceil(applicants.length / applicantsPerPage) &&
+                  paginate(currentPage + 1)
+                }
+                className="inline-flex w-8 h-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900"
+                disabled={
+                  currentPage ===
+                  Math.ceil(applicants.length / applicantsPerPage)
+                }
+              >
+                Next
+              </button>
+            </li>
+          </ol>
         </div>
 
         {isDeleteModalOpen && (

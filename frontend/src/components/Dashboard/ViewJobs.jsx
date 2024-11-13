@@ -22,6 +22,8 @@ const ViewJobs = () => {
   const [showDisabilityOptions, setShowDisabilityOptions] = useState(false);
   const [applicantCounts, setApplicantCounts] = useState({}); // Store applicant counts for each job
   const [companyName, setCompanyName] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const jobsPerPage = 7;
   const [jobDetails, setJobDetails] = useState({
     companyName: "",
     positionName: "",
@@ -199,6 +201,18 @@ const ViewJobs = () => {
         : disabilityCategories.map((category) => normalizeText(category))
     );
   };
+
+  const indexOfLastJob = currentPage * jobsPerPage;
+  const indexOfFirstJob = indexOfLastJob - jobsPerPage;
+
+  // Adjusted filtered job listings for current page
+  const currentJobs = filteredJobListings.slice(
+    indexOfFirstJob,
+    indexOfLastJob
+  );
+  const totalPages = Math.ceil(filteredJobListings.length / jobsPerPage);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const handleSearch = (e) => {
     const searchValue = e.target.value.toLowerCase();
@@ -605,7 +619,7 @@ const ViewJobs = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredJobListings.length === 0 ? (
+              {currentJobs.length === 0 ? (
                 <tr>
                   <td
                     colSpan="6"
@@ -615,7 +629,7 @@ const ViewJobs = () => {
                   </td>
                 </tr>
               ) : (
-                filteredJobListings.map((job) => (
+                currentJobs.map((job) => (
                   <tr
                     key={job.id}
                     className="border-b border-gray-200 hover:bg-gray-50 transition duration-300"
@@ -734,6 +748,61 @@ const ViewJobs = () => {
               )}
             </tbody>
           </table>
+        </div>
+        {/* Pagination */}
+        <div className="flex justify-center mt-6">
+          <ol className="flex justify-center gap-1 text-xs font-medium">
+            <li>
+              <button
+                onClick={() => currentPage > 1 && paginate(currentPage - 1)}
+                className="inline-flex size-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900"
+                disabled={currentPage === 1}
+              >
+                Prev
+              </button>
+            </li>
+
+            {Array.from({ length: totalPages }, (_, index) => {
+              const pageNumber = index + 1;
+
+              // Adjust the range to always show 3 buttons based on currentPage
+              const isWithinRange =
+                (currentPage <= 2 && pageNumber <= 3) || // Show 1, 2, 3 if on page 1 or 2
+                (currentPage >= totalPages - 1 &&
+                  pageNumber >= totalPages - 2) || // Show last 3 pages if near end
+                (pageNumber >= currentPage - 1 &&
+                  pageNumber <= currentPage + 1); // Show current, previous, and next pages
+
+              return (
+                isWithinRange && (
+                  <li key={pageNumber}>
+                    <button
+                      onClick={() => paginate(pageNumber)}
+                      className={`block size-8 rounded border text-center leading-8 ${
+                        currentPage === pageNumber
+                          ? "border-blue-600 bg-blue-600 text-white"
+                          : "border-gray-100 bg-white text-gray-900"
+                      }`}
+                    >
+                      {pageNumber}
+                    </button>
+                  </li>
+                )
+              );
+            })}
+
+            <li>
+              <button
+                onClick={() =>
+                  currentPage < totalPages && paginate(currentPage + 1)
+                }
+                className="inline-flex size-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900"
+                disabled={currentPage === totalPages}
+              >
+                Next
+              </button>
+            </li>
+          </ol>
         </div>
       </main>
       {/* Modal for viewing job details */}
