@@ -785,7 +785,11 @@ const AdminViewJobs = () => {
                     Salary:
                   </p>
                   <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
-                    ₱{job.minimumSalary} - ₱{job.maximumSalary}
+                    {job.minimumSalary && job.maximumSalary
+                      ? job.minimumSalary === job.maximumSalary
+                        ? `₱${job.minimumSalary.toLocaleString()}`
+                        : `₱${job.minimumSalary.toLocaleString()} - ₱${job.maximumSalary.toLocaleString()}`
+                      : "Not specified"}
                   </p>
                 </div>
                 <div>

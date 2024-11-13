@@ -126,7 +126,11 @@ const JobListing = () => {
             jobName: job.position_name,
             address: job.company_address,
             positionType: job.position_type,
-            salary: `${job.minimum_salary}-${job.maximum_salary}`,
+            salary:
+              job.minimum_salary === job.maximum_salary
+                ? `${job.minimum_salary}`
+                : `${job.minimum_salary}-${job.maximum_salary}`,
+
             salaryVisibility: job.salary_visibility,
             dateCreated: job.date_created, // Ensure dateCreated is included
             description: job.description,

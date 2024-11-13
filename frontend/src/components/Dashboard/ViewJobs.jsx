@@ -638,7 +638,9 @@ const ViewJobs = () => {
                         <div>{job.level ? job.level : "N/A"}</div>
                         <div>
                           {job.minimum_salary && job.maximum_salary
-                            ? `₱${job.minimum_salary} - ₱${job.maximum_salary}`
+                            ? job.minimum_salary === job.maximum_salary
+                              ? `₱${job.minimum_salary.toLocaleString()}`
+                              : `₱${job.minimum_salary.toLocaleString()} - ₱${job.maximum_salary.toLocaleString()}`
                             : "Not specified"}
                         </div>
                       </div>
@@ -663,7 +665,9 @@ const ViewJobs = () => {
                     </td>
                     <td className="py-4 px-4 md:px-6 text-gray-800 text-xs md:text-sm break-words hidden md:table-cell">
                       {job.minimum_salary && job.maximum_salary
-                        ? `₱${job.minimum_salary} - ₱${job.maximum_salary}`
+                        ? job.minimum_salary === job.maximum_salary
+                          ? `₱${job.minimum_salary.toLocaleString()}`
+                          : `₱${job.minimum_salary.toLocaleString()} - ₱${job.maximum_salary.toLocaleString()}`
                         : "Not specified"}
                     </td>
 
@@ -873,28 +877,41 @@ const ViewJobs = () => {
                       payments
                     </span>
 
-                    <div className="flex flex-col items-start">
-                      <span className="text-black font-semibold text-sm sm:text-base">
-                        Min Salary
-                      </span>
-                      <span className="text-gray-600 text-xs sm:text-sm">
-                        ₱ {job?.minimum_salary}
-                      </span>
-                    </div>
+                    {job.minimum_salary === job.maximum_salary ? (
+                      <div className="flex flex-col items-start">
+                        <span className="text-black font-semibold text-sm sm:text-base">
+                          Salary
+                        </span>
+                        <span className="text-gray-600 text-xs sm:text-sm">
+                          ₱ {job.minimum_salary.toLocaleString()}
+                        </span>
+                      </div>
+                    ) : (
+                      <>
+                        <div className="flex flex-col items-start">
+                          <span className="text-black font-semibold text-sm sm:text-base">
+                            Min Salary
+                          </span>
+                          <span className="text-gray-600 text-xs sm:text-sm">
+                            ₱ {job.minimum_salary.toLocaleString()}
+                          </span>
+                        </div>
 
-                    {/* Dash separator */}
-                    <span className="text-black font-semibold text-sm mx-2">
-                      -
-                    </span>
+                        {/* Dash separator */}
+                        <span className="text-black font-semibold text-sm mx-2">
+                          -
+                        </span>
 
-                    <div className="flex flex-col items-start">
-                      <span className="text-black font-semibold text-sm sm:text-base">
-                        Max Salary
-                      </span>
-                      <span className="text-gray-600 text-xs sm:text-sm">
-                        ₱ {job?.maximum_salary}
-                      </span>
-                    </div>
+                        <div className="flex flex-col items-start">
+                          <span className="text-black font-semibold text-sm sm:text-base">
+                            Max Salary
+                          </span>
+                          <span className="text-gray-600 text-xs sm:text-sm">
+                            ₱ {job.maximum_salary.toLocaleString()}
+                          </span>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
