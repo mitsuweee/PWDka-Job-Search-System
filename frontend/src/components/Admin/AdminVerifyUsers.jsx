@@ -240,7 +240,7 @@ const AdminVerifyUsers = () => {
           prevUsers.filter((user) => user.id !== selectedUser)
         );
         setSelectedUser(null);
-        setShowDeclineModal(true);
+        setShowDeclineModal(false);
         setShowModal(false);
         setLoading(false);
         setDeclineReason(""); // Reset decline reason
