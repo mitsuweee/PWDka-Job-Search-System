@@ -480,40 +480,67 @@ const AdminViewUsers = () => {
           </table>
         </div>
 
+        {/* Pagination */}
         <div className="flex justify-center mt-6">
           <ol className="flex justify-center gap-1 text-xs font-medium">
+            {/* Previous Button */}
             <li>
               <button
                 onClick={() => currentPage > 1 && paginate(currentPage - 1)}
-                className="inline-flex size-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900"
+                className="inline-flex w-8 h-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900"
                 disabled={currentPage === 1}
               >
                 Prev
               </button>
             </li>
 
-            {Array.from({ length: totalPages }, (_, index) => (
-              <li key={index + 1}>
-                <button
-                  onClick={() => paginate(index + 1)}
-                  className={`block size-8 rounded border text-center leading-8 ${
-                    currentPage === index + 1
-                      ? "border-blue-600 bg-blue-600 text-white"
-                      : "border-gray-100 bg-white text-gray-900"
-                  }`}
-                >
-                  {index + 1}
-                </button>
-              </li>
-            ))}
+            {/* Page Numbers */}
+            {Array.from(
+              { length: Math.ceil(filteredUsers.length / usersPerPage) },
+              (_, index) => {
+                const pageNumber = index + 1;
 
+                // Adjust the range to show current, previous, and next pages
+                const isWithinRange =
+                  (currentPage <= 2 && pageNumber <= 3) ||
+                  (currentPage >=
+                    Math.ceil(filteredUsers.length / usersPerPage) - 1 &&
+                    pageNumber >=
+                      Math.ceil(filteredUsers.length / usersPerPage) - 2) ||
+                  (pageNumber >= currentPage - 1 &&
+                    pageNumber <= currentPage + 1);
+
+                return (
+                  isWithinRange && (
+                    <li key={pageNumber}>
+                      <button
+                        onClick={() => paginate(pageNumber)}
+                        className={`block w-8 h-8 rounded border text-center leading-8 ${
+                          currentPage === pageNumber
+                            ? "border-blue-600 bg-blue-600 text-white"
+                            : "border-gray-100 bg-white text-gray-900"
+                        }`}
+                      >
+                        {pageNumber}
+                      </button>
+                    </li>
+                  )
+                );
+              }
+            )}
+
+            {/* Next Button */}
             <li>
               <button
                 onClick={() =>
-                  currentPage < totalPages && paginate(currentPage + 1)
+                  currentPage <
+                    Math.ceil(filteredUsers.length / usersPerPage) &&
+                  paginate(currentPage + 1)
                 }
-                className="inline-flex size-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900"
-                disabled={currentPage === totalPages}
+                className="inline-flex w-8 h-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900"
+                disabled={
+                  currentPage === Math.ceil(filteredUsers.length / usersPerPage)
+                }
               >
                 Next
               </button>
