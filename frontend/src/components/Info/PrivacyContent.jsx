@@ -517,8 +517,31 @@ function PrivacyPolicy() {
           </div>
         )}
       </div>
+      {/* Section 12: Responsibility for Logging Out on Public Computers */}
+      <div
+        style={collapsibleSectionStyle}
+        onClick={() => toggleSection("publicComputerResponsibility")}
+      >
+        13. Your Responsibility on Public and Shared Devices
+        {openSections.publicComputerResponsibility && (
+          <div style={{ ...collapsibleContentStyle, display: "block" }}>
+            <p>
+              If you access your account on a public or shared computer, it is
+              your responsibility to ensure that you log out after each session.
+              Failure to log out may result in unauthorized access to your
+              account and personal information.
+            </p>
+            <p>
+              PWDka is not liable for any consequences that may arise from
+              failing to log out of your account on a public or shared computer.
+              We recommend exercising caution and using only trusted devices to
+              access your account.
+            </p>
+          </div>
+        )}
+      </div>
 
-      {/* Section 12: Definitions */}
+      {/* Section 13: Definitions */}
       <div
         style={collapsibleSectionStyle}
         onClick={() => toggleSection("definitions")}

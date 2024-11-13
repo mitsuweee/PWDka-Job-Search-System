@@ -227,6 +227,12 @@ function TermsAndConditions() {
               liabilities related to your engagement with third-party companies
               through the platform.
             </p>
+            <p>
+              Additionally, if you access your account on a public or shared
+              device, it is your responsibility to log out after each session.
+              PWDka is not liable for any unauthorized access to your account
+              resulting from a failure to log out on such devices.
+            </p>
           </div>
         )}
       </div>
