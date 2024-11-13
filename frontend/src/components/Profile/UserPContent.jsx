@@ -50,8 +50,8 @@ const UserProf = () => {
   const navigate = useNavigate();
 
   const checkUserStatus = async () => {
-    const userId = localStorage.getItem("Id");
     try {
+      const userId = localStorage.getItem("Id");
       const response = await axios.get(`/user/view/verify/status/${userId}`);
       if (
         response.data.successful &&

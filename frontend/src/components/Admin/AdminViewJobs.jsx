@@ -14,6 +14,7 @@ const AdminViewJobs = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOrder, setSortOrder] = useState("Newest");
+  const [statusFilter, setStatusFilter] = useState("");
   const [admin, setAdmin] = useState({
     firstName: "",
     lastName: "",
@@ -207,6 +208,7 @@ const AdminViewJobs = () => {
     jobName: jobData.position_name,
     description: jobData.description,
     jobLevel: jobData.level,
+    jobStatus: jobData.status,
     requirements: jobData.requirement,
     qualification: jobData.qualification,
     minimumSalary: jobData.minimum_salary,
@@ -240,6 +242,17 @@ const AdminViewJobs = () => {
 
   const filteredJobs = jobListings
     .filter((job) => {
+      // Convert job.status to title case for comparison
+      const jobStatusTitleCase = job.status
+        .toLowerCase()
+        .replace(/^\w/, (c) => c.toUpperCase());
+
+      // Filter by job status if statusFilter is set
+      if (statusFilter && jobStatusTitleCase !== statusFilter) {
+        return false;
+      }
+
+      // Combine fields for general search
       const combinedFields =
         `${job.position_name} ${job.company_name} ${job.level}`.toLowerCase();
       return combinedFields.includes(searchTerm.toLowerCase());
@@ -491,6 +504,23 @@ const AdminViewJobs = () => {
               <span className="material-symbols-outlined text-white">sort</span>
             </span>
           </div>
+          <div className="relative">
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="px-3 py-2 w-[130px] border border-gray-300 rounded-lg bg-blue-500 text-white font-semibold hover:bg-blue-600 focus:outline-none focus:border-blue-500 transition duration-200"
+            >
+              <option value="">All</option>{" "}
+              {/* Shows all jobs if no status filter is selected */}
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+            <span className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+              <span className="material-symbols-outlined text-white">
+                filter_list
+              </span>
+            </span>
+          </div>
         </div>
 
         <div className="overflow-x-auto">
@@ -500,6 +530,8 @@ const AdminViewJobs = () => {
                 <th className="py-4 px-6 font-semibold">Company</th>
                 <th className="py-4 px-6 font-semibold">Job Title</th>
                 <th className="py-4 px-6 font-semibold">Job Level</th>
+                <th className="py-4 px-6 font-semibold">Status</th>{" "}
+                {/* New Job Status header */}
                 <th className="py-4 px-6 text-center font-semibold">Actions</th>
               </tr>
             </thead>
@@ -539,6 +571,11 @@ const AdminViewJobs = () => {
                           word.slice(1).toLowerCase()
                       )
                       .join(" ")}
+                  </td>
+
+                  {/* New Job Status Column */}
+                  <td className="py-4 px-6 text-gray-800 text-sm md:text-base break-words">
+                    {job.status ? job.status : "Not specified"}
                   </td>
 
                   <td className="py-4 px-6 text-center">

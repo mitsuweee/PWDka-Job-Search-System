@@ -173,9 +173,11 @@ const AdminViewUsers = () => {
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
 
   const filteredUsers = users
-    .filter((user) =>
-      user.first_name.toLowerCase().includes(searchTerm.toLowerCase())
-    )
+    .filter((user) => {
+      const combinedFields =
+        `${user.first_name} ${user.last_name} ${user.type}`.toLowerCase();
+      return combinedFields.includes(searchTerm.toLowerCase());
+    })
     .sort((a, b) => {
       if (sortOrder === "A-Z") return a.first_name.localeCompare(b.first_name);
       if (sortOrder === "Z-A") return b.first_name.localeCompare(a.first_name);
@@ -396,7 +398,7 @@ const AdminViewUsers = () => {
         <div className="flex items-center justify-center mt-6 mb-4 p-4 bg-white rounded-lg shadow-md space-x-4">
           <input
             type="text"
-            placeholder="Search by Name"
+            placeholder="Search"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-1/2 px-4 py-2 border border-gray-300 bg-gray-100 text-black rounded-lg focus:outline-none focus:border-blue-500 shadow-inner"

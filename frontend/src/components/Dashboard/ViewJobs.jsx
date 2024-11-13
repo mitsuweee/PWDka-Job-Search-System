@@ -18,6 +18,7 @@ const ViewJobs = () => {
   const [filteredJobListings, setFilteredJobListings] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [sortOrder, setSortOrder] = useState("Newest");
+  const [statusFilter, setStatusFilter] = useState("");
   const [showDisabilityOptions, setShowDisabilityOptions] = useState(false);
   const [applicantCounts, setApplicantCounts] = useState({}); // Store applicant counts for each job
   const [companyName, setCompanyName] = useState("");
@@ -151,7 +152,7 @@ const ViewJobs = () => {
 
   useEffect(() => {
     handleSearch({ target: { value: searchTerm } });
-  }, [sortOrder]);
+  }, [sortOrder, statusFilter]);
 
   const handleViewJob = (jobId) => {
     const config = {
@@ -205,6 +206,17 @@ const ViewJobs = () => {
 
     const filteredJobs = jobListings
       .filter((job) => {
+        // Convert job.status to title case for comparison
+        const jobStatusTitleCase = job.status
+          .toLowerCase()
+          .replace(/^\w/, (c) => c.toUpperCase());
+
+        // Filter by job status if statusFilter is set
+        if (statusFilter && jobStatusTitleCase !== statusFilter) {
+          return false;
+        }
+
+        // Combine fields for general search
         const combinedFields =
           `${job.position_name} ${job.position_type} ${job.level}`.toLowerCase();
         return combinedFields.includes(searchValue.toLowerCase());
@@ -547,6 +559,24 @@ const ViewJobs = () => {
               <span className="material-symbols-outlined text-white">sort</span>
             </span>
           </div>
+
+          <div className="relative">
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="px-3 py-2 w-[130px] border border-gray-300 rounded-lg bg-blue-500 text-white font-semibold hover:bg-blue-600 focus:outline-none focus:border-blue-500 transition duration-200"
+            >
+              <option value="">All</option>{" "}
+              {/* Shows all jobs if no status filter is selected */}
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+            <span className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+              <span className="material-symbols-outlined text-white">
+                filter_list
+              </span>
+            </span>
+          </div>
         </div>
 
         {/* Table */}
@@ -566,7 +596,7 @@ const ViewJobs = () => {
                   Salary Range
                 </th>
                 <th className="py-6 px-4 md:px-6 font-semibold hidden md:table-cell">
-                  Job Status
+                  Status
                 </th>{" "}
                 {/* New Job Status column header */}
                 <th className="py-6 px-4 md:px-6 font-semibold text-center">
