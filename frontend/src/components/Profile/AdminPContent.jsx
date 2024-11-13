@@ -10,6 +10,12 @@ const AdminProf = () => {
     email: "",
   });
 
+  const [tempAdmin, setTempAdmin] = useState({
+    firstName: admin.firstName,
+    lastName: admin.lastName,
+    email: admin.email,
+  });
+
   const [newEmail, setNewEmail] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -119,6 +125,10 @@ const AdminProf = () => {
       });
   }, []);
 
+  const handleTempChange = (e) => {
+    setTempAdmin({ ...tempAdmin, [e.target.name]: e.target.value });
+  };
+
   const handleChange = (e) => {
     setAdmin({ ...admin, [e.target.name]: e.target.value });
   };
@@ -135,6 +145,7 @@ const AdminProf = () => {
   };
 
   const handleEdit = () => {
+    setTempAdmin({ firstName: admin.firstName, lastName: admin.lastName });
     setIsEditing(true);
     setIsPasswordChanging(false);
     setIsEmailChanging(false);
@@ -182,6 +193,12 @@ const AdminProf = () => {
       .then(function () {
         toast.success("Password updated successfully!");
         setIsModalOpen(false);
+        // Clear the password fields
+        setPasswords({
+          currentPassword: "",
+          newPassword: "",
+          confirmNewPassword: "",
+        });
       })
       .catch(function () {
         toast.error(
@@ -191,10 +208,15 @@ const AdminProf = () => {
   };
 
   const handleUpdate = () => {
+    // Ensure that email is included in the update by merging it with admin.email
+    setAdmin((prevAdmin) => ({
+      ...tempAdmin,
+      email: prevAdmin.email,
+    }));
+
     const updateAdminProfile = JSON.stringify({
-      first_name: admin.firstName,
-      last_name: admin.lastName,
-      email: admin.email,
+      first_name: tempAdmin.firstName,
+      last_name: tempAdmin.lastName,
     });
 
     const adminId = localStorage.getItem("Id");
@@ -211,15 +233,10 @@ const AdminProf = () => {
       .then(function (response) {
         toast.success(response.data.message);
         setIsModalOpen(false);
-        window.location.reload();
       })
       .catch(function (error) {
         toast.error(error.response.data.message || "An error occurred");
       });
-
-    setTimeout(() => {
-      window.location.reload();
-    }, 2000);
   };
 
   const handleEmailUpdate = () => {
@@ -241,7 +258,15 @@ const AdminProf = () => {
     axios(config)
       .then(function () {
         toast.success("Email updated successfully.");
-        setIsEmailModalOpen(false);
+
+        // Update the admin state with the new email immediately
+        setAdmin((prevAdmin) => ({
+          ...prevAdmin,
+          email: newEmail,
+        }));
+
+        // Close the modal
+        setIsModalOpen(false);
       })
       .catch(function () {
         toast.error("Failed to update email.");
@@ -658,8 +683,8 @@ const AdminProf = () => {
                   <input
                     type="text"
                     name="firstName"
-                    value={admin.firstName}
-                    onChange={handleChange}
+                    value={tempAdmin.firstName}
+                    onChange={handleTempChange}
                     className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
                   />
                 </div>
@@ -670,8 +695,8 @@ const AdminProf = () => {
                   <input
                     type="text"
                     name="lastName"
-                    value={admin.lastName}
-                    onChange={handleChange}
+                    value={tempAdmin.lastName}
+                    onChange={handleTempChange}
                     className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
                   />
                 </div>
