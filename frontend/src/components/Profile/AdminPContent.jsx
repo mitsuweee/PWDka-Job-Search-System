@@ -732,7 +732,7 @@ const AdminProf = () => {
                       name="currentPassword"
                       value={passwords.currentPassword}
                       onChange={handlePasswordChange}
-                      className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                      className="w-full p-3 pr-10 border border-gray-300 rounded-lg shadow-sm"
                     />
                     <button
                       type="button"
@@ -761,7 +761,7 @@ const AdminProf = () => {
                       name="newPassword"
                       value={passwords.newPassword}
                       onChange={handlePasswordChange}
-                      className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                      className="w-full p-3 pr-10 border border-gray-300 rounded-lg shadow-sm"
                     />
                     <button
                       type="button"
@@ -790,7 +790,7 @@ const AdminProf = () => {
                       name="confirmNewPassword"
                       value={passwords.confirmNewPassword}
                       onChange={handlePasswordChange}
-                      className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                      className="w-full p-3 pr-10 border border-gray-300 rounded-lg shadow-sm"
                     />
                     <button
                       type="button"

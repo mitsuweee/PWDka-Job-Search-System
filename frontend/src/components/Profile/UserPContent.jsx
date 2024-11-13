@@ -676,7 +676,7 @@ const UserProf = () => {
                   type={deactivationPasswordVisible ? "text" : "password"}
                   value={deactivationPassword}
                   onChange={(e) => setDeactivationPassword(e.target.value)}
-                  className="w-full p-3 border border-gray-300 rounded-lg shadow-inner focus:ring-2 focus:ring-blue-500"
+                  className="w-full p-3 pr-10 border border-gray-300 rounded-lg shadow-inner focus:ring-2 focus:ring-blue-500"
                   placeholder="Enter your password"
                 />
                 <button
@@ -694,6 +694,7 @@ const UserProf = () => {
                 </button>
               </div>
             </div>
+
             <div className="mb-6">
               <label className="block text-gray-600 font-medium mb-1">
                 Confirm Password
@@ -703,7 +704,7 @@ const UserProf = () => {
                   type={confirmPasswordVisible ? "text" : "password"}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full p-3 border border-gray-300 rounded-lg shadow-inner focus:ring-2 focus:ring-blue-500"
+                  className="w-full p-3 border pr-10 border-gray-300 rounded-lg shadow-inner focus:ring-2 focus:ring-blue-500"
                   placeholder="Confirm your password"
                 />
                 <button
@@ -936,7 +937,7 @@ const UserProf = () => {
                         onChange={(e) =>
                           setCurrentPasswordForEmail(e.target.value)
                         }
-                        className="w-full p-3 border border-gray-300 rounded-lg shadow-inner"
+                        className="w-full p-3 pr-10 border border-gray-300 rounded-lg shadow-inner"
                       />
                       <button
                         type="button"
@@ -975,7 +976,7 @@ const UserProf = () => {
                         name="currentPassword"
                         value={passwords.currentPassword}
                         onChange={handlePasswordChange}
-                        className="w-full p-3 border border-gray-300 rounded-lg shadow-inner"
+                        className="w-full p-3 pr-10 border border-gray-300 rounded-lg shadow-inner"
                       />
                       <button
                         type="button"
@@ -1004,7 +1005,7 @@ const UserProf = () => {
                         name="newPassword"
                         value={passwords.newPassword}
                         onChange={handlePasswordChange}
-                        className="w-full p-3 border border-gray-300 rounded-lg shadow-inner"
+                        className="w-full p-3 pr-10 border border-gray-300 rounded-lg shadow-inner"
                       />
                       <button
                         type="button"
@@ -1033,7 +1034,7 @@ const UserProf = () => {
                         name="confirmNewPassword"
                         value={passwords.confirmNewPassword}
                         onChange={handlePasswordChange}
-                        className="w-full p-3 border border-gray-300 rounded-lg shadow-inner"
+                        className="w-full p-3 pr-10 border border-gray-300 rounded-lg shadow-inner"
                       />
                       <button
                         type="button"
@@ -1225,7 +1226,7 @@ const UserProf = () => {
                       onChange={(e) =>
                         setCurrentPasswordForEmail(e.target.value)
                       }
-                      className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                      className="w-full p-3 pr-10 border border-gray-300 rounded-lg shadow-sm"
                     />
                     <button
                       type="button"

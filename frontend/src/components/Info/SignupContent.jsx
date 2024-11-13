@@ -473,7 +473,7 @@ const Signup = () => {
                 name="password"
                 value={userFormValues.password}
                 onChange={handleInputChange}
-                className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
+                className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 pr-10 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
                 required
               />
               <button
@@ -502,7 +502,7 @@ const Signup = () => {
                 name="reEnterPassword"
                 value={userFormValues.reEnterPassword}
                 onChange={handleInputChange}
-                className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
+                className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-5 pr-10 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
                 required
               />
               <button

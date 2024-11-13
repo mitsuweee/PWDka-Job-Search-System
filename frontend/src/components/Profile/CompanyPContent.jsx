@@ -810,7 +810,7 @@ const CompanyProf = () => {
                       onChange={(e) =>
                         setCurrentPasswordForEmail(e.target.value)
                       }
-                      className="w-full p-3 border border-gray-300 rounded-lg shadow-inner focus:outline-none focus:ring-2 focus:ring-green-500"
+                      className="w-full p-3 pr-10 border border-gray-300 rounded-lg shadow-inner focus:outline-none focus:ring-2 focus:ring-green-500"
                     />
                     <button
                       type="button"
@@ -848,7 +848,7 @@ const CompanyProf = () => {
                       name="currentPassword"
                       value={passwords.currentPassword}
                       onChange={handlePasswordChange}
-                      className="w-full p-3 border border-gray-300 rounded-lg shadow-inner focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                      className="w-full p-3 pr-10 border border-gray-300 rounded-lg shadow-inner focus:outline-none focus:ring-2 focus:ring-yellow-500"
                     />
                     <button
                       type="button"
@@ -877,7 +877,7 @@ const CompanyProf = () => {
                       name="newPassword"
                       value={passwords.newPassword}
                       onChange={handlePasswordChange}
-                      className="w-full p-3 border border-gray-300 rounded-lg shadow-inner focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                      className="w-full p-3 pr-10 border border-gray-300 rounded-lg shadow-inner focus:outline-none focus:ring-2 focus:ring-yellow-500"
                     />
                     <button
                       type="button"
@@ -906,7 +906,7 @@ const CompanyProf = () => {
                       name="confirmNewPassword"
                       value={passwords.confirmNewPassword}
                       onChange={handlePasswordChange}
-                      className="w-full p-3 border border-gray-300 rounded-lg shadow-inner focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                      className="w-full p-3 pr-10 border border-gray-300 rounded-lg shadow-inner focus:outline-none focus:ring-2 focus:ring-yellow-500"
                     />
                     <button
                       type="button"
@@ -1018,7 +1018,7 @@ const CompanyProf = () => {
                   type={deactivationPasswordVisible ? "text" : "password"}
                   value={deactivationPassword}
                   onChange={(e) => setDeactivationPassword(e.target.value)}
-                  className="w-full p-3 border border-gray-300 rounded-lg shadow-inner focus:ring-2 focus:ring-blue-500"
+                  className="w-full p-3 pr-10 border border-gray-300 rounded-lg shadow-inner focus:ring-2 focus:ring-blue-500"
                   placeholder="Enter your password"
                 />
                 <button
@@ -1045,7 +1045,7 @@ const CompanyProf = () => {
                   type={confirmPasswordVisible ? "text" : "password"}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full p-3 border border-gray-300 rounded-lg shadow-inner focus:ring-2 focus:ring-blue-500"
+                  className="w-full p-3 pr-10 border border-gray-300 rounded-lg shadow-inner focus:ring-2 focus:ring-blue-500"
                   placeholder="Confirm your password"
                 />
                 <button
