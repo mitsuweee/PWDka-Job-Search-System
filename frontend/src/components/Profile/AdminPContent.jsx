@@ -166,6 +166,8 @@ const AdminProf = () => {
     setIsModalOpen(true);
   };
 
+  const [currentPasswordForEmail, setCurrentPasswordForEmail] = useState("");
+
   const handlePasswordUpdate = () => {
     const adminId = localStorage.getItem("Id");
 
@@ -244,6 +246,7 @@ const AdminProf = () => {
 
     const data = JSON.stringify({
       email: newEmail,
+      password: currentPasswordForEmail, // Include current password in request
     });
 
     const config = {
@@ -258,18 +261,10 @@ const AdminProf = () => {
     axios(config)
       .then(function () {
         toast.success("Email updated successfully.");
-
-        // Update the admin state with the new email immediately
-        setAdmin((prevAdmin) => ({
-          ...prevAdmin,
-          email: newEmail,
-        }));
-
-        // Close the modal
         setIsModalOpen(false);
       })
-      .catch(function () {
-        toast.error("Failed to update email.");
+      .catch(function (error) {
+        toast.error(error.response?.data?.message || "Failed to update email.");
       });
   };
 
@@ -704,17 +699,51 @@ const AdminProf = () => {
             )}
 
             {isEmailChanging && (
-              <div className="mb-4">
-                <label className="block text-gray-600 font-semibold">
-                  New Email:
-                </label>
-                <input
-                  name="newEmail"
-                  type="email"
-                  value={newEmail}
-                  onChange={(e) => setNewEmail(e.target.value)}
-                  className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                />
+              <div className="grid grid-cols-1 gap-6">
+                <div>
+                  <label className="block text-gray-700 font-semibold">
+                    New Email:
+                  </label>
+                  <input
+                    type="email"
+                    value={newEmail}
+                    onChange={(e) => setNewEmail(e.target.value)}
+                    className="w-full p-3 border border-gray-300 rounded-lg shadow-inner focus:outline-none focus:ring-2 focus:ring-green-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 font-semibold">
+                    Current Password:
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={
+                        passwordVisibility.currentPassword ? "text" : "password"
+                      }
+                      value={currentPasswordForEmail}
+                      onChange={(e) =>
+                        setCurrentPasswordForEmail(e.target.value)
+                      }
+                      className="w-full p-3 pr-10 border border-gray-300 rounded-lg shadow-inner focus:outline-none focus:ring-2 focus:ring-green-500"
+                    />
+                    <button
+                      type="button"
+                      className="absolute inset-y-0 right-3 flex items-center text-gray-500"
+                      onClick={() =>
+                        setPasswordVisibility({
+                          ...passwordVisibility,
+                          currentPassword: !passwordVisibility.currentPassword,
+                        })
+                      }
+                    >
+                      <span className="material-symbols-outlined">
+                        {passwordVisibility.currentPassword
+                          ? "visibility"
+                          : "visibility_off"}
+                      </span>
+                    </button>
+                  </div>
+                </div>
               </div>
             )}
 
