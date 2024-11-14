@@ -173,7 +173,6 @@ const CompanyProf = () => {
   };
 
   // Function to retrieve refresh token using the same API endpoint
-  // Function to retrieve refresh token using the same API endpoint
   const retrieveRefreshToken = async () => {
     const userId = localStorage.getItem("Id");
     const userRole = localStorage.getItem("Role");
@@ -196,7 +195,10 @@ const CompanyProf = () => {
       if (response.data.successful) {
         // Store the new refresh token in local storage
         localStorage.setItem("Token", response.data.refresh_token);
-        console.log("Refresh token retrieved and updated successfully.");
+        console.log(
+          "Refresh token retrieved and updated in local storage:",
+          response.data.refresh_token
+        );
         toast.success("Session refreshed successfully.");
 
         // Retry verification with the new token
@@ -208,7 +210,7 @@ const CompanyProf = () => {
       }
     } catch (error) {
       toast.error("Error retrieving refresh token");
-      console.error("Error:", error.message);
+      console.error("Error retrieving refresh token:", error.message);
     }
   };
 
