@@ -1,6 +1,7 @@
 const { json } = require("body-parser");
 const knex = require("../models/connection_db");
 const bcrypt = require("bcrypt");
+const crypto = require("crypto");
 
 const jwt = require("jsonwebtoken");
 const SECRET_KEY = process.env.SECRET_KEY;
@@ -59,15 +60,50 @@ const login = async (req, res, next) => {
       } else {
         // Generate a JWT token
         const token = jwt.sign({ id: user.id, role: user.role }, SECRET_KEY, {
-          expiresIn: "2h",
+          expiresIn: "2h", // Token expiration time (2 hours)
         });
 
-        // Successful login response
+        // Generate a refresh token (with a longer expiration of 1 week)
+        const refreshToken = crypto.randomBytes(64).toString("hex");
+
+        // Determine the table and field to store the refresh token
+        const tokenTable = `${user.role}_token`;
+
+        // Check if the refresh token already exists for the user
+        const existingToken = await knex(tokenTable)
+          .where({ [`${user.role}_id`]: user.id })
+          .first();
+
+        const tokenExpiration = new Date();
+        tokenExpiration.setDate(tokenExpiration.getDate() + 7); // Set expiration to 1 week
+
+        if (existingToken) {
+          // If the existing token's expiration has passed, update the token
+          if (new Date(existingToken.token_expiration) <= new Date()) {
+            // Update the existing token if the expiration date has passed
+            await knex(tokenTable)
+              .where({ [`${user.role}_id`]: user.id })
+              .update({
+                refresh_token: refreshToken,
+                token_expiration: tokenExpiration,
+              });
+          }
+        } else {
+          // If no existing token is found, insert a new one
+          await knex(tokenTable).insert({
+            [`${user.role}_id`]: user.id, // Store user ID (admin_id, user_id, company_id)
+            refresh_token: refreshToken,
+            token_expiration: tokenExpiration,
+          });
+        }
+
+        // Successful login response with both access token and refresh token
         return res.status(200).json({
           successful: true,
           role: user.role,
           id: user.id,
-          token: token,
+          token: token, // Access token
+          refreshToken: refreshToken, // Refresh token
           message: `Successfully Logged In as ${
             user.role.charAt(0).toUpperCase() + user.role.slice(1)
           }.`,
