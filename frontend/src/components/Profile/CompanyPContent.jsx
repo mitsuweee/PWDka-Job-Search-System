@@ -33,6 +33,7 @@ const CompanyProf = () => {
   });
 
   const [currentPasswordForEmail, setCurrentPasswordForEmail] = useState(""); // New state for email change
+
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(true);
   const [isEmailChanging, setIsEmailChanging] = useState(false);
@@ -47,75 +48,33 @@ const CompanyProf = () => {
     useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
+  const [tokenValid, setTokenValid] = useState(false); // New state for token validation
+  // const [refreshToken, setRefreshToken] = useState(""); // New state for refresh token
+
   const checkCompanyStatus = async () => {
     try {
-      let token = localStorage.getItem("Token");
-      if (!token) {
-        toast.error("No token found. Please log in again.");
-        navigate("/login");
-        return;
-      }
-
-      // Verify token with backend
-      const tokenResponse = await axios.post("/token/auth", { token });
-
-      if (!tokenResponse.data.successful) {
-        // If token verification fails, try refreshing it
-        token = await refreshAuthToken();
-        if (!token) return; // If token could not be refreshed, exit
-      }
-
-      // Use the (new or existing) valid token to check company status
       const companyId = localStorage.getItem("Id");
       const response = await axios.get(
-        `/company/view/verify/status/${companyId}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        `/company/view/verify/status/${companyId}`
       );
-
       if (
         response.data.successful &&
         response.data.message === "Company is Deactivated"
       ) {
         toast.error("Your account has been deactivated. Logging out.", {
-          duration: 4000,
+          duration: 4000, // Display the toast for 5 seconds
         });
+
+        // Wait for the toast to finish before logging out
         setTimeout(() => {
           localStorage.removeItem("Id");
           localStorage.removeItem("Role");
           localStorage.removeItem("Token");
           navigate("/login");
-        }, 5000);
+        }, 5000); // Wait for 5 seconds (the toast duration)
       }
     } catch (error) {
-      console.error("Error checking company status:", error.message);
-      toast.error("An error occurred while verifying your session.");
-    }
-  };
-
-  const refreshAuthToken = async () => {
-    try {
-      const userId = localStorage.getItem("Id");
-      const userRole = localStorage.getItem("Role");
-
-      const response = await axios.get("/get/token", {
-        params: { userId, userRole },
-      });
-
-      if (response.data.successful) {
-        const newToken = response.data.refresh_token;
-        localStorage.setItem("Token", newToken); // Update token in local storage
-        toast.success("Token refreshed successfully.");
-        return newToken; // Return the new token for further requests
-      } else {
-        toast.error(response.data.message || "Failed to refresh token.");
-        navigate("/login"); // Redirect to login if refreshing fails
-      }
-    } catch (error) {
-      console.error("Error refreshing token:", error.message);
-      toast.error("Failed to refresh token. Please log in again.");
-      navigate("/login");
+      console.error("Error checking company status.");
     }
   };
 
@@ -154,6 +113,80 @@ const CompanyProf = () => {
     // Clean up the interval on component unmount
     return () => clearInterval(interval);
   }, []);
+
+  // Function to verify token
+  const verifyToken = async () => {
+    const token = localStorage.getItem("Token");
+    try {
+      const response = await axios.post("/verification/token/auth", { token });
+      if (response.data.successful) {
+        setTokenValid(true);
+        console.log("Token verified successfully");
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      toast.error("Token verification failed");
+      console.error("Error verifying token:", error.message);
+    }
+  };
+
+  // // Function to retrieve refresh token
+  // const retrieveRefreshToken = async () => {
+  //   const userId = localStorage.getItem("Id");
+  //   const userRole = localStorage.getItem("Role");
+  //   try {
+  //     const response = await axios.get("/get/token", {
+  //       data: { userId, userRole },
+  //     });
+  //     if (response.data.successful) {
+  //       setRefreshToken(response.data.refresh_token);
+  //       console.log("Refresh token retrieved:", response.data.refresh_token);
+  //     } else {
+  //       toast.error(response.data.message);
+  //     }
+  //   } catch (error) {
+  //     toast.error("Failed to retrieve refresh token");
+  //     console.error("Error retrieving refresh token:", error.message);
+  //   }
+  // };
+
+  // Check token on mount
+  useEffect(() => {
+    verifyToken();
+  }, []);
+
+  // Fetch company data after token validation
+  useEffect(() => {
+    if (tokenValid) {
+      const userId = localStorage.getItem("Id");
+      const config = {
+        method: "get",
+        url: `/company/view/${userId}`,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      axios(config)
+        .then((response) => {
+          const companyData = response.data.data;
+          setCompany({
+            logo: companyData.profile_picture,
+            name: companyData.name,
+            description: companyData.description,
+            address: companyData.address,
+            city: companyData.city,
+            contactNumber: companyData.contact_number,
+            email: companyData.email,
+          });
+        })
+        .catch((error) => {
+          const errorMessage =
+            error.response?.data?.message || "An error occurred";
+          toast.error(errorMessage);
+        });
+    }
+  }, [tokenValid]);
 
   const handleDeactivateCompany = () => {
     const userId = localStorage.getItem("Id");
