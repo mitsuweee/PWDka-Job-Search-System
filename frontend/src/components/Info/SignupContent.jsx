@@ -192,11 +192,14 @@ const Signup = () => {
         toast.success(response.data.message);
         setLoading(false);
 
-        // Reload and redirect by adding a timestamp to the URL
-        window.location.href = `/login?redirect=${new Date().getTime()}`;
+        // Reload and redirect by adding a timestamp to the URL after a 3-second delay
+        setTimeout(() => {
+          window.location.href = `/login?redirect=${new Date().getTime()}`;
+        }, 3500);
       })
       .catch((error) => {
         setLoading(false);
+        // Handle error (e.g., show error toast or log the error)
 
         if (error.response) {
           const { data } = error.response;
