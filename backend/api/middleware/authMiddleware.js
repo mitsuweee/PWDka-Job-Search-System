@@ -3,7 +3,6 @@ const SECRET_KEY = process.env.SECRET_KEY;
 
 const verifyToken = (req, res, next) => {
   const token = req.params.token;
-
   if (!token) {
     return res.status(403).json({
       successful: false,

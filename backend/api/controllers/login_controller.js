@@ -1,7 +1,6 @@
 const { json } = require("body-parser");
 const knex = require("../models/connection_db");
 const bcrypt = require("bcrypt");
-const crypto = require("crypto");
 
 const jwt = require("jsonwebtoken");
 const SECRET_KEY = process.env.SECRET_KEY;
@@ -63,8 +62,14 @@ const login = async (req, res, next) => {
           expiresIn: "2h", // Token expiration time (2 hours)
         });
 
-        // Generate a refresh token (with a longer expiration of 1 week)
-        const refreshToken = crypto.randomBytes(64).toString("hex");
+        // Generate a JWT token
+        const refreshToken = jwt.sign(
+          { id: user.id, role: user.role },
+          SECRET_KEY,
+          {
+            expiresIn: "2h", // Token expiration time (2 hours)
+          }
+        );
 
         // Determine the table and field to store the refresh token
         const tokenTable = `${user.role}_token`;
