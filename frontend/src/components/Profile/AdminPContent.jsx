@@ -280,6 +280,7 @@ const AdminProf = () => {
     setIsEditing(false);
     setIsPasswordChanging(false);
     setIsEmailChanging(true);
+    setCurrentPasswordForEmail("");
     setNewEmail("");
     setIsModalOpen(true);
   };
@@ -380,6 +381,11 @@ const AdminProf = () => {
       .then(function () {
         toast.success("Email updated successfully.");
         setIsModalOpen(false);
+
+        // Reload the page to reflect the updated email
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000); // Optional delay of 1 second for a smoother experience
       })
       .catch(function (error) {
         toast.error(error.response?.data?.message || "Failed to update email.");
@@ -402,6 +408,7 @@ const AdminProf = () => {
   const closeAdminSettings = () => {
     setIsModalOpen(false);
     setNewEmail(""); // Reset email field
+    setCurrentPasswordForEmail("");
     setPasswords({
       currentPassword: "",
       newPassword: "",
