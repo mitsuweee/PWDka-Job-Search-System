@@ -59,7 +59,7 @@ const login = async (req, res, next) => {
       } else {
         // Generate a JWT token
         const token = jwt.sign({ id: user.id, role: user.role }, SECRET_KEY, {
-          expiresIn: "20s", // Token expiration time (2 hours)
+          expiresIn: "2h", // Token expiration time (2 hours)
         });
 
         // Generate a JWT Refresh token
@@ -67,7 +67,7 @@ const login = async (req, res, next) => {
           { id: user.id, role: user.role },
           SECRET_KEY,
           {
-            expiresIn: "40s", // Refresh Token expiration time (1 week)
+            expiresIn: "7ds", // Refresh Token expiration time (1 week)
           }
         );
 
