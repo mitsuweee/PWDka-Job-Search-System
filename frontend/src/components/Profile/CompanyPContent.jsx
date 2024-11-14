@@ -49,7 +49,6 @@ const CompanyProf = () => {
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
   const [tokenValid, setTokenValid] = useState(false); // New state for token validation
-  const [refreshToken, setRefreshToken] = useState(""); // New state for refresh token
 
   const checkCompanyStatus = async () => {
     try {
@@ -154,7 +153,7 @@ const CompanyProf = () => {
           response.data.message === "Invalid refresh token, token has expired"
         ) {
           console.log("Token expired. Attempting to retrieve refresh token.");
-          await retrieveRefreshToken();
+          await retrieveRefreshToken(); // Retrieve a new refresh token and retry verification
         }
       }
     } catch (error) {
@@ -165,7 +164,7 @@ const CompanyProf = () => {
         console.log(
           "Token expired or invalid. Attempting to retrieve refresh token."
         );
-        await retrieveRefreshToken();
+        await retrieveRefreshToken(); // Retrieve a new refresh token and retry verification
       } else {
         toast.error("Token verification failed");
         console.error("Error verifying token:", error.message);
@@ -198,7 +197,9 @@ const CompanyProf = () => {
         localStorage.setItem("Token", response.data.refresh_token);
         console.log("Refresh token retrieved and updated successfully.");
         toast.success("Session refreshed successfully.");
-        setTokenValid(true); // Set token as valid
+
+        // Retry verification with the new token
+        await verifyToken();
       } else {
         toast.error("Failed to retrieve refresh token");
         console.error("Error:", response.data.message);
@@ -209,6 +210,10 @@ const CompanyProf = () => {
       console.error("Error:", error.message);
     }
   };
+
+  useEffect(() => {
+    verifyToken();
+  }, []);
 
   // Fetch company data after token validation
   useEffect(() => {
@@ -241,10 +246,6 @@ const CompanyProf = () => {
         });
     }
   }, [tokenValid]);
-
-  useEffect(() => {
-    verifyToken();
-  }, []);
 
   const handleDeactivateCompany = () => {
     const userId = localStorage.getItem("Id");
