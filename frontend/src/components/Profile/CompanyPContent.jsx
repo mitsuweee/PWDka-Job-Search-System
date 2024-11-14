@@ -75,7 +75,69 @@ const CompanyProf = () => {
     }
   };
 
+  // Axios Interceptor added here to handle token expiration and retries
   useEffect(() => {
+    const interceptor = axios.interceptors.response.use(
+      (response) => response,
+      async (error) => {
+        if (error.response && error.response.status === 401) {
+          // If the error is due to an expired token, try to retrieve a new one
+          await retrieveRefreshToken();
+          const token = localStorage.getItem("Token");
+          error.config.headers["Authorization"] = `Bearer ${token}`;
+          return axios(error.config);
+        }
+        return Promise.reject(error);
+      }
+    );
+
+    // Clean up the interceptor on component unmount
+    return () => {
+      axios.interceptors.response.eject(interceptor);
+    };
+  }, []);
+
+  const retrieveRefreshToken = async () => {
+    const userId = localStorage.getItem("Id");
+    const userRole = localStorage.getItem("Role");
+
+    try {
+      const response = await axios.get("/get/token", {
+        params: {
+          userId,
+          userRole,
+        },
+      });
+      if (response.data.successful) {
+        const refreshToken = response.data.refresh_token;
+        localStorage.setItem("RefreshToken", refreshToken);
+        toast.success("Refresh token retrieved successfully!");
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      toast.error("Failed to retrieve refresh token.");
+    }
+  };
+
+  // Function to verify token on component mount
+  const verifyToken = async () => {
+    const token = localStorage.getItem("Token");
+    try {
+      const response = await axios.get(`/auth/token/${token}`);
+      if (!response.data.successful) {
+        // Handle invalid token (redirect to login)
+        toast.error(response.data.message);
+        navigate("/login");
+      }
+    } catch (error) {
+      toast.error("Error verifying token.");
+      navigate("/login");
+    }
+  };
+
+  useEffect(() => {
+    verifyToken();
     const userId = localStorage.getItem("Id");
     const config = {
       method: "get",
