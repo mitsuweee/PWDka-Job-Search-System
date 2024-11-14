@@ -48,8 +48,6 @@ const CompanyProf = () => {
     useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
-  const [tokenValid, setTokenValid] = useState(false); // New state for token validation
-
   const checkCompanyStatus = async () => {
     try {
       const companyId = localStorage.getItem("Id");
@@ -113,6 +111,7 @@ const CompanyProf = () => {
     return () => clearInterval(interval);
   }, []);
 
+  const [tokenValid, setTokenValid] = useState(false); // New state for token validation
   const verifyToken = async () => {
     const token = localStorage.getItem("Token"); // Retrieve the token from localStorage
     const userId = localStorage.getItem("Id"); // Retrieve the userId from localStorage
