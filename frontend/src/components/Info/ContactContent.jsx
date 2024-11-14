@@ -74,7 +74,7 @@ const ContactUs = () => {
     const userRole = localStorage.getItem("Role"); // Retrieve the userRole from localStorage
 
     if (!token) {
-      toast.error("No token found in local storage");
+      console.error("No token found in local storage");
       return;
     }
 
