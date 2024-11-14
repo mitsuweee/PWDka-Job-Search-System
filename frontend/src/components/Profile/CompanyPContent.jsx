@@ -113,7 +113,6 @@ const CompanyProf = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Function to verify token
   const verifyToken = async () => {
     const token = localStorage.getItem("Token"); // Retrieve the token from localStorage
     const userId = localStorage.getItem("Id"); // Retrieve the userId from localStorage
@@ -142,17 +141,18 @@ const CompanyProf = () => {
         }
       );
 
-      if (response.data.message == "Refresh token retrieved successfully") {
+      if (response.data.message === "Refresh token retrieved successfully") {
         console.log("Changed Refresh Token");
         localStorage.setItem("Token", response.data.refresh_token);
       }
+
       if (response.data.successful) {
         setTokenValid(true); // Set token as valid
         console.log("Token verified successfully");
       } else {
         toast.error(response.data.message);
 
-        // If token expired, attempt to retrieve a refresh token
+        // If token expired, show a toast message and attempt to retrieve a refresh token
         if (
           response.data.message === "Invalid refresh token, token has expired"
         ) {
@@ -208,13 +208,14 @@ const CompanyProf = () => {
         // Retry verification with the new token
         await verifyToken();
       } else {
-        toast.error("Failed to retrieve refresh token");
-        console.error("Error:", response.data.message);
-        // Optional: Redirect to login page or logout user
+        // If retrieving the refresh token fails, show a toast message and redirect to login
+        toast.error("Token expired, please log in again");
+        window.location.href = "/login"; // Redirect to login page
       }
     } catch (error) {
-      toast.error("Error retrieving refresh token");
+      toast.error("Token expired, please log in again");
       console.error("Error retrieving refresh token:", error.message);
+      window.location.href = "/login"; // Redirect to login page if refresh fails
     }
   };
 
