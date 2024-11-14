@@ -170,8 +170,14 @@ const CompanyProf = () => {
         );
         await retrieveRefreshToken(); // Retrieve a new refresh token and retry verification
       } else {
-        toast.error("Token verification failed");
+        toast.error("Session expired, logging out");
         console.error("Error verifying token:", error.message);
+        setTimeout(() => {
+          localStorage.removeItem("Id");
+          localStorage.removeItem("Role");
+          localStorage.removeItem("Token");
+          navigate("/login");
+        }, 5000);
       }
     }
   };
