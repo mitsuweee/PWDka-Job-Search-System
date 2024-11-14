@@ -35,7 +35,9 @@ const AdminViewJobs = () => {
         response.data.successful &&
         response.data.message === "User is Deactivated"
       ) {
-        toast.error("Your account has been deactivated. Logging out.");
+        toast.error("Your admin account has been deactivated. Logging out.", {
+          duration: 4000, // Display the toast for 5 seconds
+        });
 
         // Wait briefly before logging out
         setTimeout(() => {
@@ -43,10 +45,10 @@ const AdminViewJobs = () => {
           localStorage.removeItem("Role");
           localStorage.removeItem("Token");
           navigate("/login");
-        }, 3000);
+        }, 5000);
       }
     } catch (error) {
-      toast.error("Failed to verify admin status.");
+      conosole.error("Failed to verify admin status.");
     }
   };
 

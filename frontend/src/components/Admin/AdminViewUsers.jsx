@@ -24,30 +24,30 @@ const AdminViewUsers = () => {
     email: "",
   });
 
-  useEffect(() => {
-    // Initialize Socket.io connection
-    const socket = io("https://pwdka.com.ph"); // Ensure this URL matches your backend server URL
+  const checkAdminStatus = async () => {
+    try {
+      const adminId = localStorage.getItem("Id");
+      const response = await axios.get(`/admin/view/verify/status/${adminId}`);
+      if (
+        response.data.successful &&
+        response.data.message === "User is Deactivated"
+      ) {
+        toast.error("Your admin account has been deactivated. Logging out.", {
+          duration: 4000, // Display the toast for 5 seconds
+        });
 
-    socket.on("connect", () => {
-      console.log("Connected to socket server with ID:", socket.id);
-    });
-
-    socket.on("connect_error", (error) => {
-      console.error("Socket connection error:", error);
-    });
-
-    // Listen for the userDeactivated event
-    socket.on("userDeactivated", (data) => {
-      setUsers((prevUsers) => prevUsers.filter((user) => user.id !== data.id));
-      toast.success(`A User Has Been Deactivated`);
-      window.location.reload();
-    });
-
-    // Clean up socket connection on component unmount
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
+        // Wait for the toast to finish before logging out
+        setTimeout(() => {
+          localStorage.removeItem("Id");
+          localStorage.removeItem("Role");
+          localStorage.removeItem("Token");
+          navigate("/login");
+        }, 5000); // Wait for 3 seconds before redirecting
+      }
+    } catch {
+      console.error("Failed to check admin status.");
+    }
+  };
 
   useEffect(() => {
     const adminId = localStorage.getItem("Id");
@@ -76,6 +76,40 @@ const AdminViewUsers = () => {
           toast.error(errorMessage); // Show the server-specific error message
         }
       });
+
+    // Set up an interval to check company status every 5 seconds
+    const interval = setInterval(() => {
+      checkAdminStatus();
+    }, 5000);
+
+    // Clean up the interval on component unmount
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    // Initialize Socket.io connection
+    const socket = io("https://pwdka.com.ph/", {
+      transports: ["websocket"], // Use WebSocket only for improved real-time performance
+    });
+    socket.on("connect", () => {
+      console.log("Connected to socket server with ID:", socket.id);
+    });
+
+    socket.on("connect_error", (error) => {
+      console.error("Socket connection error:", error);
+    });
+
+    // Listen for the userDeactivated event
+    socket.on("userDeactivated", (data) => {
+      setUsers((prevUsers) => prevUsers.filter((user) => user.id !== data.id));
+      toast.success(`A User Has Been Deactivated`);
+      window.location.reload();
+    });
+
+    // Clean up socket connection on component unmount
+    return () => {
+      socket.disconnect();
+    };
   }, []);
 
   useEffect(() => {
