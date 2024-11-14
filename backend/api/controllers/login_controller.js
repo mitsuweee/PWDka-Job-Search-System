@@ -2,10 +2,8 @@ const { json } = require("body-parser");
 const knex = require("../models/connection_db");
 const bcrypt = require("bcrypt");
 
-const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
-
-const SECRET_KEY = crypto.randomBytes(32).toString("hex");
+const SECRET_KEY = process.env.SECRET_KEY;
 
 const login = async (req, res, next) => {
   const email = req.body.email.toLowerCase();
