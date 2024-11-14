@@ -958,11 +958,12 @@ const sendEmailConcern = async (req, res) => {
 const updateAdminEmail = async (req, res, next) => {
   const id = req.params.id;
   const email = req.body.email.toLowerCase();
+  const password = req.body.password;
 
-  if (!id || !email) {
+  if (!id || !email || !password) {
     return res.status(400).json({
       successful: false,
-      message: "ID or Email is missing",
+      message: "ID, Email, or Password is missing",
     });
   } else if (!util.checkEmail(email)) {
     return res.status(400).json({
@@ -971,31 +972,42 @@ const updateAdminEmail = async (req, res, next) => {
     });
   } else {
     try {
-      // Check if email exists in other tables
-      const adminWithEmail = await knex("admin").where({ email }).first();
-      const userWithEmail = await knex("user").where({ email }).first();
-      const companyWithEmail = await knex("company").where({ email }).first();
-
-      if (adminWithEmail || userWithEmail || companyWithEmail) {
-        return res.status(400).json({
-          successful: false,
-          message: "Email already exists in the system",
-        });
-      }
-
-      const result = await knex("admin").where({ id }).update({ email });
-
-      if (result === 0) {
+      // Check if the admin exists
+      const admin = await knex("admin")
+        .select("id", "email", "password")
+        .where({ id })
+        .first();
+      if (!admin) {
         return res.status(404).json({
           successful: false,
           message: "Admin not found",
         });
       }
 
-      return res.status(200).json({
-        successful: true,
-        message: "Admin email updated successfully",
-      });
+      // Verify the provided password
+      const passwordMatch = await bcrypt.compare(password, admin.password);
+      if (!passwordMatch) {
+        return res.status(400).json({
+          successful: false,
+          message: "Invalid Credentials",
+        });
+      }
+      const adminWithEmail = await knex("admin").where({ email }).first();
+      const userWithEmail = await knex("user").where({ email }).first();
+      const companyWithEmail = await knex("company").where({ email }).first();
+      if (adminWithEmail || userWithEmail || companyWithEmail) {
+        return res.status(400).json({
+          successful: false,
+          message: "Email already exists in the system",
+        });
+      } else {
+        const result = await knex("admin").where({ id }).update({ email });
+
+        return res.status(200).json({
+          successful: true,
+          message: "Admin email updated successfully",
+        });
+      }
     } catch (err) {
       return res.status(500).json({
         successful: false,
