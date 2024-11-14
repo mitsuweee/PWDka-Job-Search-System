@@ -18,7 +18,7 @@ const NavbarComp = () => {
     <header className="relative flex flex-wrap sm:justify-start sm:flex-nowrap w-full bg-[#e3edf7] text-sm py-3 shadow-lg">
       <nav className="max-w-[85rem] w-full mx-auto px-4 sm:flex sm:items-center sm:justify-between">
         <div className="flex items-center justify-between">
-          {/* Logo (Not clickable) */}
+          {/* Logo (Not clickables) */}
           <div className="flex-none text-xl font-semibold focus:outline-none focus:opacity-80">
             <img className="w-26 h-14" src="/imgs/LOGO PWDKA.png" alt="Logo" />
           </div>
