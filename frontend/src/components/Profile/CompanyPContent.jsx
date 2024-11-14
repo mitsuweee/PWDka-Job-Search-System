@@ -173,6 +173,7 @@ const CompanyProf = () => {
   };
 
   // Function to retrieve refresh token using the same API endpoint
+  // Function to retrieve refresh token using the same API endpoint
   const retrieveRefreshToken = async () => {
     const userId = localStorage.getItem("Id");
     const userRole = localStorage.getItem("Role");
