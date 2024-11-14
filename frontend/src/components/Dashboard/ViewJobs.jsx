@@ -667,7 +667,7 @@ const ViewJobs = () => {
                         </div>
                         <div
                           className={`text-xs ${
-                            job.status === "Active"
+                            job.status && job.status.toLowerCase() === "active"
                               ? "text-green-500"
                               : "text-red-500"
                           }`}
@@ -705,7 +705,7 @@ const ViewJobs = () => {
                     {/* Job Status with Color Coding */}
                     <td
                       className={`py-4 px-4 sm:px-6 text-xs sm:text-sm font-semibold break-words hidden sm:table-cell ${
-                        job.status === "Active"
+                        job.status && job.status.toLowerCase() === "active"
                           ? "text-green-500"
                           : "text-red-500"
                       }`}
