@@ -84,7 +84,7 @@ function TermsAndConditions() {
         }, 5000); // Wait for 4 seconds before redirecting
       }
     } catch {
-      console.error("Failed to check user status.");
+      console.error("Failed to check company status.");
     }
   };
 

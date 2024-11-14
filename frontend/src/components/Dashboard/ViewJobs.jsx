@@ -706,7 +706,7 @@ const ViewJobs = () => {
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-blue-500 text-white font-semibold hover:bg-blue-600 focus:outline-none focus:border-blue-500 transition duration-200 text-sm md:text-base"
               >
                 <option value="">
-                  {window.innerWidth < 768 ? "All" : "All Statuses"}
+                  {window.innerWidth < 768 ? "All" : "Status"}
                 </option>
                 <option value="Active">Active</option>
                 <option value="Inactive">Inactive</option>

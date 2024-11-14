@@ -629,7 +629,7 @@ const AdminViewJobs = () => {
               onChange={(e) => setStatusFilter(e.target.value)}
               className="px-3 py-2 w-[130px] border border-gray-300 rounded-lg bg-blue-500 text-white font-semibold hover:bg-blue-600 focus:outline-none focus:border-blue-500 transition duration-200"
             >
-              <option value="">All</option>{" "}
+              <option value="">Status</option>{" "}
               {/* Shows all jobs if no status filter is selected */}
               <option value="Active">Active</option>
               <option value="Inactive">Inactive</option>
@@ -693,7 +693,13 @@ const AdminViewJobs = () => {
                   </td>
 
                   {/* New Job Status Column */}
-                  <td className="py-4 px-6 text-gray-800 text-sm md:text-base break-words">
+                  <td
+                    className={`py-4 px-6 text-gray-800 text-sm md:text-base break-words ${
+                      job.status && job.status.toLowerCase() === "active"
+                        ? "text-green-500"
+                        : "text-red-500"
+                    }`}
+                  >
                     {job.status ? job.status : "Not specified"}
                   </td>
 
