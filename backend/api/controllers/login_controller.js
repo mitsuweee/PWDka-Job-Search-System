@@ -215,62 +215,62 @@ const login = async (req, res, next) => {
 //   }
 // };
 
-const verifyToken = async (req, res, next) => {
-  const id = req.params.id; // Get id from params
-  const token = req.headers["authorization"]; // Get token from headers
+// const verifyToken = async (req, res, next) => {
+//   const id = req.params.id; // Get id from params
+//   const token = req.headers["authorization"]; // Get token from headers
 
-  if (!token) {
-    return res.status(401).json({
-      successful: false,
-      message: "No token provided",
-    });
-  }
+//   if (!token) {
+//     return res.status(401).json({
+//       successful: false,
+//       message: "No token provided",
+//     });
+//   }
 
-  try {
-    // Verify if the token is valid
-    const decoded = jwt.verify(token, SECRET_KEY);
+//   try {
+//     // Verify if the token is valid
+//     const decoded = jwt.verify(token, SECRET_KEY);
 
-    // Check if the token exists in the appropriate table based on the role
-    let user;
-    if (decoded.role === "user") {
-      user = await knex("user")
-        .select("id", "login_token")
-        .where({ id })
-        .first();
-    } else if (decoded.role === "company") {
-      user = await knex("company")
-        .select("id", "login_token")
-        .where({ id })
-        .first();
-    } else if (decoded.role === "admin") {
-      user = await knex("admin")
-        .select("id", "login_token")
-        .where({ id })
-        .first();
-    }
+//     // Check if the token exists in the appropriate table based on the role
+//     let user;
+//     if (decoded.role === "user") {
+//       user = await knex("user")
+//         .select("id", "login_token")
+//         .where({ id })
+//         .first();
+//     } else if (decoded.role === "company") {
+//       user = await knex("company")
+//         .select("id", "login_token")
+//         .where({ id })
+//         .first();
+//     } else if (decoded.role === "admin") {
+//       user = await knex("admin")
+//         .select("id", "login_token")
+//         .where({ id })
+//         .first();
+//     }
 
-    // If no user is found or token does not match
-    if (!user || user.login_token !== token) {
-      return res.status(401).json({
-        successful: false,
-        message: "Invalid or expired token",
-      });
-    }
+//     // If no user is found or token does not match
+//     if (!user || user.login_token !== token) {
+//       return res.status(401).json({
+//         successful: false,
+//         message: "Invalid or expired token",
+//       });
+//     }
 
-    // Token is valid
-    return res.status(200).json({
-      successful: true,
-      message: "Token is valid",
-    });
-  } catch (err) {
-    return res.status(500).json({
-      successful: false,
-      message: err.message,
-    });
-  }
-};
+//     // Token is valid
+//     return res.status(200).json({
+//       successful: true,
+//       message: "Token is valid",
+//     });
+//   } catch (err) {
+//     return res.status(500).json({
+//       successful: false,
+//       message: err.message,
+//     });
+//   }
+// };
 
 module.exports = {
   login,
-  verifyToken,
+  // verifyToken,
 };
