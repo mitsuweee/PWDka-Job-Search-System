@@ -14,6 +14,11 @@ const AdminViewAdmin = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOrder, setSortOrder] = useState("A-Z");
   const [currentPage, setCurrentPage] = useState(1);
+  const [currentAdmin, setCurrentAdmin] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+  });
   const adminsPerPage = 10;
   const navigate = useNavigate();
 
@@ -44,6 +49,33 @@ const AdminViewAdmin = () => {
     return () => {
       socket.disconnect();
     };
+  }, []);
+
+  useEffect(() => {
+    const adminId = localStorage.getItem("Id");
+    const config = {
+      method: "get",
+      url: `/admin/view/${adminId}`,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    axios(config)
+      .then(function (response) {
+        const adminData = response.data.data;
+        setCurrentAdmin({
+          firstName: adminData.first_name,
+          lastName: adminData.last_name,
+          email: adminData.email,
+        });
+      })
+      .catch(function (error) {
+        const errorMessage = error.response?.data?.message;
+        if (errorMessage) {
+          toast.error(errorMessage);
+        }
+      });
   }, []);
 
   const checkAdminStatus = async () => {
@@ -198,6 +230,16 @@ const AdminViewAdmin = () => {
         >
           &times;
         </button>
+        <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
+          Welcome,{" "}
+          <span className="text-2xl md:text-3xl font-bold">
+            {currentAdmin.firstName.charAt(0).toUpperCase() +
+              currentAdmin.firstName.slice(1)}{" "}
+            {currentAdmin.lastName.charAt(0).toUpperCase() +
+              currentAdmin.lastName.slice(1)}
+          </span>
+          !
+        </h2>
 
         {/* Dashboard Section */}
         <h2 className="text-white text-lg font-semibold mb-2 mt-4 w-full text-left">
