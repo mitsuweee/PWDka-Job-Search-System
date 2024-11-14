@@ -59,7 +59,7 @@ const AdminProf = () => {
         }, 5000); // Wait for 3 seconds before redirecting
       }
     } catch (error) {
-      toast.error("Failed to check admin status.");
+      console.error("Failed to check admin status.");
     }
   };
 
