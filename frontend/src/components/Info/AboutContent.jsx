@@ -1,11 +1,79 @@
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import Typewriter from "typewriter-effect";
+import toast, { Toaster } from "react-hot-toast";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 const AboutContent = () => {
   const sections = useRef([]);
   const [isVoiceEnabled, setIsVoiceEnabled] = useState(false);
   const [userDisabilityType, setUserDisabilityType] = useState("");
+
+  const navigate = useNavigate(); // Initialize navigate
+
+  const checkCompanyStatus = async () => {
+    try {
+      const companyId = localStorage.getItem("Id");
+      const response = await axios.get(
+        `/company/view/verify/status/${companyId}`
+      );
+      if (
+        response.data.successful &&
+        response.data.message === "Company is Deactivated"
+      ) {
+        toast.error("Your account has been deactivated. Logging out.", {
+          duration: 4000, // Show the toast for 4 seconds
+        });
+
+        // Delay the navigation to allow the toast to be visible
+        setTimeout(() => {
+          localStorage.removeItem("Id");
+          localStorage.removeItem("Role");
+          localStorage.removeItem("Token");
+          navigate("/login");
+        }, 5000); // Wait for 4 seconds before redirecting
+      }
+    } catch {
+      console.error("Failed to check user status.");
+    }
+  };
+
+  const checkUserStatus = async () => {
+    try {
+      const userId = localStorage.getItem("Id");
+      const response = await axios.get(`/user/view/verify/status/${userId}`);
+      if (
+        response.data.successful &&
+        response.data.message === "User is Deactivated"
+      ) {
+        toast.error("Your account has been deactivated. Logging out.", {
+          duration: 4000, // Show the toast for 4 seconds
+        });
+
+        // Delay the navigation to allow the toast to be visible
+        setTimeout(() => {
+          localStorage.removeItem("Id");
+          localStorage.removeItem("Role");
+          localStorage.removeItem("Token");
+          navigate("/login");
+        }, 5000); // Wait for 4 seconds before redirecting
+      }
+    } catch {
+      console.error("Failed to check user status.");
+    }
+  };
+
+  useEffect(() => {
+    const userId = localStorage.getItem("Id");
+    const companyId = localStorage.getItem("Id");
+
+    const interval = setInterval(() => {
+      checkUserStatus(userId);
+      checkCompanyStatus(companyId);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const userId = localStorage.getItem("Id");
@@ -44,6 +112,7 @@ const AboutContent = () => {
 
   return (
     <div className="bg-[url('/imgs/pft.png')] bg-cover bg-fixed bg-center min-h-screen">
+      <Toaster position="top-center" reverseOrder={false} />
       {/* New Section with Background Image and Buttons */}
       <section className="relative bg-[url('/imgs/wheelchair.jpg')] bg-cover bg-center bg-no-repeat">
         <div className="absolute inset-0 bg-gray-900/75 sm:bg-transparent sm:from-gray-900/95 sm:to-gray-900/25 ltr:sm:bg-gradient-to-r rtl:sm:bg-gradient-to-l"></div>

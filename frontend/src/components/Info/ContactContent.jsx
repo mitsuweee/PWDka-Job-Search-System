@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Typewriter from "typewriter-effect";
+import toast, { Toaster } from "react-hot-toast";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 const ContactUs = () => {
   const [isVoiceEnabled, setIsVoiceEnabled] = useState(false);
@@ -10,6 +12,60 @@ const ContactUs = () => {
   const [body, setBody] = useState("");
   const [formError, setFormError] = useState("");
   const [formSuccess, setFormSuccess] = useState("");
+
+  const navigate = useNavigate(); // Initialize navigate
+
+  const checkCompanyStatus = async () => {
+    try {
+      const companyId = localStorage.getItem("Id");
+      const response = await axios.get(
+        `/company/view/verify/status/${companyId}`
+      );
+      if (
+        response.data.successful &&
+        response.data.message === "Company is Deactivated"
+      ) {
+        toast.error("Your account has been deactivated. Logging out.", {
+          duration: 4000, // Show the toast for 4 seconds
+        });
+
+        // Delay the navigation to allow the toast to be visible
+        setTimeout(() => {
+          localStorage.removeItem("Id");
+          localStorage.removeItem("Role");
+          localStorage.removeItem("Token");
+          navigate("/login");
+        }, 5000); // Wait for 4 seconds before redirecting
+      }
+    } catch {
+      console.error("Failed to check user status.");
+    }
+  };
+
+  const checkUserStatus = async () => {
+    try {
+      const userId = localStorage.getItem("Id");
+      const response = await axios.get(`/user/view/verify/status/${userId}`);
+      if (
+        response.data.successful &&
+        response.data.message === "User is Deactivated"
+      ) {
+        toast.error("Your account has been deactivated. Logging out.", {
+          duration: 4000, // Show the toast for 4 seconds
+        });
+
+        // Delay the navigation to allow the toast to be visible
+        setTimeout(() => {
+          localStorage.removeItem("Id");
+          localStorage.removeItem("Role");
+          localStorage.removeItem("Token");
+          navigate("/login");
+        }, 5000); // Wait for 4 seconds before redirecting
+      }
+    } catch {
+      console.error("Failed to check user status.");
+    }
+  };
 
   useEffect(() => {
     const userId = localStorage.getItem("Id");
@@ -29,6 +85,18 @@ const ContactUs = () => {
     };
 
     fetchUserDetails();
+  }, []);
+
+  useEffect(() => {
+    const userId = localStorage.getItem("Id");
+    const companyId = localStorage.getItem("Id");
+
+    const interval = setInterval(() => {
+      checkUserStatus(userId);
+      checkCompanyStatus(companyId);
+    }, 5000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const playContactMessage = () => {
@@ -72,6 +140,7 @@ const ContactUs = () => {
 
   return (
     <>
+      <Toaster position="top-center" reverseOrder={false} />
       <section
         className="overflow-hidden bg-custom-bg sm:grid sm:grid-cols-2 sm:items-center"
         style={{
