@@ -49,7 +49,7 @@ const CompanyProf = () => {
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
   const [tokenValid, setTokenValid] = useState(false); // New state for token validation
-  // const [refreshToken, setRefreshToken] = useState(""); // New state for refresh token
+  const [refreshToken, setRefreshToken] = useState(""); // New state for refresh token
 
   const checkCompanyStatus = async () => {
     try {
@@ -116,16 +116,29 @@ const CompanyProf = () => {
 
   // Function to verify token
   const verifyToken = async () => {
-    const token = localStorage.getItem("Token"); // Retrieve the token from local storage
+    const token = localStorage.getItem("Token"); // Retrieve the token from localStorage
+
     if (!token) {
       toast.error("No token found in local storage");
       return;
     }
 
     try {
-      const response = await axios.post("/verification/token/auth", {
-        token: token,
-      }); // Send token in the request body
+      console.log("Token:", token);
+
+      // Send a POST request with the token in the body
+      const response = await axios.post(
+        "/verification/token/auth",
+        {
+          token: token, // Include the token in the request body
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
       if (response.data.successful) {
         setTokenValid(true);
         console.log("Token verified successfully");
@@ -138,25 +151,38 @@ const CompanyProf = () => {
     }
   };
 
-  // // Function to retrieve refresh token
-  // const retrieveRefreshToken = async () => {
-  //   const userId = localStorage.getItem("Id");
-  //   const userRole = localStorage.getItem("Role");
-  //   try {
-  //     const response = await axios.get("/get/token", {
-  //       data: { userId, userRole },
-  //     });
-  //     if (response.data.successful) {
-  //       setRefreshToken(response.data.refresh_token);
-  //       console.log("Refresh token retrieved:", response.data.refresh_token);
-  //     } else {
-  //       toast.error(response.data.message);
-  //     }
-  //   } catch (error) {
-  //     toast.error("Failed to retrieve refresh token");
-  //     console.error("Error retrieving refresh token:", error.message);
-  //   }
-  // };
+  // Function to retrieve refresh token
+  const retrieveRefreshToken = async () => {
+    const userId = localStorage.getItem("Id");
+    const userRole = localStorage.getItem("Role");
+
+    if (!userId || !userRole) {
+      toast.error("User ID or role missing in local storage");
+      return;
+    }
+
+    try {
+      const response = await axios.get("/get/token", {
+        params: { userId, userRole }, // Pass user ID and role as query parameters
+      });
+
+      if (response.data.successful) {
+        setRefreshToken(response.data.refresh_token);
+        console.log("Refresh token retrieved:", response.data.refresh_token);
+
+        // Store the new refresh token if needed
+        localStorage.setItem("Token", response.data.refresh_token);
+
+        // Re-verify with the new token if necessary
+        setTokenValid(true);
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      toast.error("Failed to retrieve refresh token");
+      console.error("Error retrieving refresh token:", error.message);
+    }
+  };
 
   // Check token on mount
   useEffect(() => {

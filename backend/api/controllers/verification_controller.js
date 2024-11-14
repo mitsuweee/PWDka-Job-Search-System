@@ -362,38 +362,45 @@ const SECRET_KEY = process.env.SECRET_KEY;
 
 const verifyToken = (req, res, next) => {
   const token = req.body.token;
-  if (!token) {
-    return res.status(403).json({
-      successful: false,
-      message: "No token provided",
-    });
-  }
-
-  console.log("Token received for verification:", token);
-
-  jwt.verify(token, SECRET_KEY, (err, decoded) => {
-    if (err) {
-      console.error("Token verification error:", err.message);
-      return res.status(401).json({
+  try {
+    if (!token) {
+      return res.status(403).json({
         successful: false,
-        message: "Unauthorized! Invalid or expired token",
-      });
-    } else {
-      console.log("Token is valid. Decoded data:", decoded);
-
-      // Setting user info in request object
-      req.userId = decoded.id;
-      req.userRole = decoded.role;
-
-      // Send response
-      return res.status(200).json({
-        successful: true,
-        message: "Token is valid",
-        userId: req.userId, // You can include user data in the response if needed
-        userRole: req.userRole,
+        message: "No token provided",
       });
     }
-  });
+
+    console.log("Token received for verification:", token);
+
+    jwt.verify(token, SECRET_KEY, (err, decoded) => {
+      if (err) {
+        console.error("Token verification error:", err.message);
+        return res.status(401).json({
+          successful: false,
+          message: "Unauthorized! Invalid or expired token",
+        });
+      } else {
+        console.log("Token is valid. Decoded data:", decoded);
+
+        // Setting user info in request object
+        req.userId = decoded.id;
+        req.userRole = decoded.role;
+
+        // Send response
+        return res.status(200).json({
+          successful: true,
+          message: "Token is valid",
+          userId: req.userId, // You can include user data in the response if needed
+          userRole: req.userRole,
+        });
+      }
+    });
+  } catch (err) {
+    return res.status(500).json({
+      successful: false,
+      message: err.message,
+    });
+  }
 };
 module.exports = {
   verifyCompany,
