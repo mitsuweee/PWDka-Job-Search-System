@@ -117,6 +117,8 @@ const CompanyProf = () => {
   // Function to verify token
   const verifyToken = async () => {
     const token = localStorage.getItem("Token"); // Retrieve the token from localStorage
+    const userId = localStorage.getItem("Id"); // Retrieve the userid from localStorage
+    const userRole = localStorage.getItem("Role"); // Retrieve the userrole from localStorage
 
     if (!token) {
       toast.error("No token found in local storage");
@@ -130,7 +132,9 @@ const CompanyProf = () => {
       const response = await axios.post(
         "/verification/token/auth",
         {
-          token: token, // Include the token in the request body
+          token: token,
+          userId: userId,
+          userRole: userRole, // Include the token in the request body
         },
         {
           headers: {
