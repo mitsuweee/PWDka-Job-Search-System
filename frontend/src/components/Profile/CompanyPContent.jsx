@@ -117,8 +117,8 @@ const CompanyProf = () => {
   // Function to verify token
   const verifyToken = async () => {
     const token = localStorage.getItem("Token"); // Retrieve the token from localStorage
-    const userId = localStorage.getItem("Id"); // Retrieve the userid from localStorage
-    const userRole = localStorage.getItem("Role"); // Retrieve the userrole from localStorage
+    const userId = localStorage.getItem("Id"); // Retrieve the userId from localStorage
+    const userRole = localStorage.getItem("Role"); // Retrieve the userRole from localStorage
 
     if (!token) {
       toast.error("No token found in local storage");
@@ -128,13 +128,13 @@ const CompanyProf = () => {
     try {
       console.log("Token:", token);
 
-      // Send a POST request with the token in the body
+      // Send a POST request with the token, userId, and userRole in the body
       const response = await axios.post(
         "/verification/token/auth",
         {
           token: token,
           userId: userId,
-          userRole: userRole, // Include the token in the request body
+          userRole: userRole,
         },
         {
           headers: {
@@ -144,27 +144,28 @@ const CompanyProf = () => {
       );
 
       if (response.data.successful) {
-        setTokenValid(true);
+        setTokenValid(true); // Set token as valid
         console.log("Token verified successfully");
       } else {
         toast.error(response.data.message);
 
-        // Check if the response message indicates an expired or invalid token
+        // If token expired, attempt to retrieve a refresh token
         if (
-          response.data.message === "Unauthorized! Invalid or expired token"
+          response.data.message === "Invalid refresh token, token has expired"
         ) {
-          console.log("Token expired or invalid. Attempting to refresh token.");
-          await retrieveRefreshToken(); // Retrieve a new token if the current one is expired
+          console.log("Token expired. Attempting to retrieve refresh token.");
+          await retrieveRefreshToken();
         }
       }
     } catch (error) {
-      // Detect if the error is due to token expiration
       if (
         error.response &&
-        error.response.data.message === "Unauthorized! Invalid or expired token"
+        error.response.data.message === "Unauthorized! Invalid token"
       ) {
-        console.log("Token expired or invalid. Attempting to refresh token.");
-        await retrieveRefreshToken(); // Retrieve a new token if the current one is expired
+        console.log(
+          "Token expired or invalid. Attempting to retrieve refresh token."
+        );
+        await retrieveRefreshToken();
       } else {
         toast.error("Token verification failed");
         console.error("Error verifying token:", error.message);
@@ -172,44 +173,42 @@ const CompanyProf = () => {
     }
   };
 
-  // Function to retrieve refresh token
+  // Function to retrieve refresh token using the same API endpoint
   const retrieveRefreshToken = async () => {
     const userId = localStorage.getItem("Id");
     const userRole = localStorage.getItem("Role");
 
-    if (!userId || !userRole) {
-      toast.error("User ID or role missing in local storage");
-      return;
-    }
-
     try {
-      const response = await axios.get("/get/token", {
-        params: { userId, userRole }, // Pass user ID and role as query parameters
-      });
+      const response = await axios.post(
+        "/verification/token/auth",
+        {
+          token: "", // No access token is provided in this case
+          userId: userId,
+          userRole: userRole,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (response.data.successful) {
-        const newToken = response.data.refresh_token;
-        console.log("New refresh token retrieved:", newToken);
-
-        // Store the new token in localStorage
-        localStorage.setItem("Token", newToken);
-
-        // Re-verify with the new token
-        setTokenValid(true);
-        await verifyToken(); // Re-run verifyToken with the new token
+        // Store the new refresh token in local storage
+        localStorage.setItem("Token", response.data.refresh_token);
+        console.log("Refresh token retrieved and updated successfully.");
+        toast.success("Session refreshed successfully.");
+        setTokenValid(true); // Set token as valid
       } else {
-        toast.error(response.data.message);
+        toast.error("Failed to retrieve refresh token");
+        console.error("Error:", response.data.message);
+        // Optional: Redirect to login page or logout user
       }
     } catch (error) {
-      toast.error("Failed to retrieve refresh token");
-      console.error("Error retrieving refresh token:", error.message);
+      toast.error("Error retrieving refresh token");
+      console.error("Error:", error.message);
     }
   };
-
-  // Check token on mount
-  useEffect(() => {
-    verifyToken();
-  }, []);
 
   // Fetch company data after token validation
   useEffect(() => {
@@ -242,6 +241,10 @@ const CompanyProf = () => {
         });
     }
   }, [tokenValid]);
+
+  useEffect(() => {
+    verifyToken();
+  }, []);
 
   const handleDeactivateCompany = () => {
     const userId = localStorage.getItem("Id");
