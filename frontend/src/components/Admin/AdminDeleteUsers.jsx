@@ -16,7 +16,7 @@ const AdminDeleteUsers = () => {
       navigate("/login");
     }
   };
-
+  // netoy
   const handleGoBack = () => {
     navigate(-1); // This navigates back to the previous page
   };
