@@ -124,7 +124,7 @@ const LandingContent = () => {
 
       {/* How to Apply for Jobs Section */}
       <div className="bg-gray-100 py-20">
-        <h2 className="text-5xl font-bold text-center text-custom-blue mb-12">
+        <h2 className="text-4xl md:text-5xl font-bold text-center text-custom-blue mb-12 px-4 md:px-0">
           <Typewriter
             options={{
               autoStart: true,
@@ -135,45 +135,45 @@ const LandingContent = () => {
           />
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 px-8 md:px-16 lg:px-24 xl:px-32">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 lg:gap-10 px-4 md:px-12 lg:px-24 xl:px-32">
           {[
             {
               icon: "person_add",
               title: "Create an Account",
               description:
-                "Sign up by filling in your details, upload a clear photo of your government-issued ID, and take a verification selfie holding your ID.",
+                "Sign up with your details and upload your ID along with a verification selfie.",
             },
             {
               icon: "verified",
               title: "Get Verified",
               description:
-                "After providing your details, upload your ID and verification photo, and wait for an admin to review your application for access to inclusive job listings.",
+                "Upload your ID and verification photo, then wait for approval to access job listings.",
             },
             {
               icon: "pageview",
               title: "Apply Online",
               description:
-                "Select a job that matches your skills & disability and submit your application online, and wait for employer feedback.",
+                "Find jobs matching your skills and submit your application for employer review.",
             },
             {
               icon: "check_circle",
               title: "Get Hired",
               description:
-                "Companies will review your profile. Receive responses from employers and start your new journey.",
+                "Receive responses from employers and start your new journey.",
             },
           ].map((step, index) => (
             <div
               key={index}
-              className="flex flex-col items-center p-6 bg-white rounded-xl shadow-md border-4 border-blue-400 hover:border-blue-700 transition-all duration-300 transform hover:-translate-y-2"
-              style={{ height: "320px" }}
+              className="flex flex-col items-center p-4 md:p-5 lg:p-6 bg-white rounded-xl shadow-md border-4 border-blue-400 hover:border-blue-700 transition-all duration-300 transform hover:-translate-y-2"
+              style={{ minHeight: "280px", maxHeight: "340px" }}
             >
-              <span className="material-symbols-outlined text-6xl text-blue-700 mb-6">
+              <span className="material-symbols-outlined text-5xl md:text-6xl text-blue-700 mb-3 md:mb-5">
                 {step.icon}
               </span>
-              <h3 className="font-semibold text-2xl mb-2 text-gray-800">
+              <h3 className="font-semibold text-lg md:text-xl mb-2 text-gray-800 text-center">
                 {step.title}
               </h3>
-              <p className="text-gray-600 text-sm md:text-base px-4">
+              <p className="text-gray-600 text-sm md:text-base px-2 md:px-4 text-center leading-snug">
                 {step.description}
               </p>
             </div>
