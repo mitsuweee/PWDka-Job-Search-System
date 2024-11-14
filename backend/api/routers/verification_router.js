@@ -8,6 +8,7 @@ verificationRouter.get(
   verificationController.viewPendingCompany
 ); //VIEW ALL PENDING Company
 
+verificationRouter.get("/token/auth", verificationController.verifyToken); //VIEW ALL PENDING USERS
 verificationRouter.put("/company/:id", verificationController.verifyCompany); // Verify Company
 verificationRouter.delete(
   "/company/:id",
