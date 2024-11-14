@@ -144,10 +144,24 @@ const CompanyProf = () => {
         console.log("Token verified successfully");
       } else {
         toast.error(response.data.message);
+        // Check if the error message indicates an expired token
+        if (
+          response.data.message === "Unauthorized! Invalid or expired token"
+        ) {
+          await retrieveRefreshToken(); // Retrieve a new token if the current one is expired
+        }
       }
     } catch (error) {
-      toast.error("Token verification failed");
-      console.error("Error verifying token:", error.message);
+      // Detect if the error is due to token expiration
+      if (
+        error.response &&
+        error.response.data.message === "Unauthorized! Invalid or expired token"
+      ) {
+        await retrieveRefreshToken(); // Retrieve a new token if the current one is expired
+      } else {
+        toast.error("Token verification failed");
+        console.error("Error verifying token:", error.message);
+      }
     }
   };
 
@@ -167,14 +181,16 @@ const CompanyProf = () => {
       });
 
       if (response.data.successful) {
-        setRefreshToken(response.data.refresh_token);
-        console.log("Refresh token retrieved:", response.data.refresh_token);
+        const newToken = response.data.refresh_token;
+        setRefreshToken(newToken);
+        console.log("Refresh token retrieved:", newToken);
 
-        // Store the new refresh token if needed
-        localStorage.setItem("Token", response.data.refresh_token);
+        // Store the new token in localStorage
+        localStorage.setItem("Token", newToken);
 
-        // Re-verify with the new token if necessary
+        // Re-verify with the new token
         setTokenValid(true);
+        await verifyToken(); // Re-run verifyToken with the new token
       } else {
         toast.error(response.data.message);
       }
