@@ -549,47 +549,57 @@ const ViewJobs = () => {
           View All Job Listings
         </h1>
 
-        <div className="flex items-center justify-center mt-6 mb-4 p-4 bg-white rounded-lg shadow-md space-x-4">
+        <div className="flex flex-col md:flex-row items-center md:justify-between mt-4 mb-4 p-4 bg-white rounded-lg shadow-lg space-y-3 md:space-y-0 md:space-x-4">
           <input
             type="text"
             placeholder="Search"
             value={searchTerm}
             onChange={handleSearch}
-            className="w-1/2 px-4 py-2 border border-gray-300 bg-gray-100 text-black rounded-lg focus:outline-none focus:border-blue-500 shadow-inner"
+            className="w-full md:flex-grow px-4 py-2 border border-gray-300 bg-gray-100 text-black rounded-lg focus:outline-none focus:border-blue-500 shadow-inner"
             style={{ boxShadow: "inset 0px 4px 8px rgba(0, 0, 0, 0.1)" }}
           />
-          <div className="relative">
-            <select
-              value={sortOrder}
-              onChange={(e) => setSortOrder(e.target.value)}
-              className="px-3 py-2 w-[130px] border border-gray-300 rounded-lg bg-blue-500 text-white font-semibold hover:bg-blue-600 focus:outline-none focus:border-blue-500 transition duration-200"
-            >
-              <option value="A-Z">A-Z</option>
-              <option value="Z-A">Z-A</option>
-              <option value="Newest">Newest</option>
-              <option value="Oldest">Oldest</option>
-            </select>
-            <span className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-              <span className="material-symbols-outlined text-white">sort</span>
-            </span>
-          </div>
 
-          <div className="relative">
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-3 py-2 w-[130px] border border-gray-300 rounded-lg bg-blue-500 text-white font-semibold hover:bg-blue-600 focus:outline-none focus:border-blue-500 transition duration-200"
-            >
-              <option value="">All</option>{" "}
-              {/* Shows all jobs if no status filter is selected */}
-              <option value="Active">Active</option>
-              <option value="Inactive">Inactive</option>
-            </select>
-            <span className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-              <span className="material-symbols-outlined text-white">
-                filter_list
+          <div className="flex space-x-2 md:space-x-4 w-full md:w-auto">
+            <div className="relative flex-grow md:w-[130px]">
+              <select
+                value={sortOrder}
+                onChange={(e) => setSortOrder(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-blue-500 text-white font-semibold hover:bg-blue-600 focus:outline-none focus:border-blue-500 transition duration-200 text-sm md:text-base"
+              >
+                <option value="A-Z">A-Z</option>
+                <option value="Z-A">Z-A</option>
+                <option value="Newest">
+                  {window.innerWidth < 768 ? "New" : "Newest"}
+                </option>
+                <option value="Oldest">
+                  {window.innerWidth < 768 ? "Old" : "Oldest"}
+                </option>
+              </select>
+              <span className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+                <span className="material-symbols-outlined text-white">
+                  sort
+                </span>
               </span>
-            </span>
+            </div>
+
+            <div className="relative flex-grow md:w-[130px]">
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-blue-500 text-white font-semibold hover:bg-blue-600 focus:outline-none focus:border-blue-500 transition duration-200 text-sm md:text-base"
+              >
+                <option value="">
+                  {window.innerWidth < 768 ? "All" : "All Statuses"}
+                </option>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
+              <span className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+                <span className="material-symbols-outlined text-white">
+                  filter_list
+                </span>
+              </span>
+            </div>
           </div>
         </div>
 
@@ -598,22 +608,21 @@ const ViewJobs = () => {
         <div className="w-full overflow-x-auto">
           <table className="table-auto w-full bg-white mt-4 rounded-xl shadow-lg overflow-hidden">
             <thead>
-              <tr className="bg-blue-600 text-white text-left text-xs md:text-sm uppercase tracking-wider">
-                <th className="py-6 px-4 md:px-6 font-semibold">Job Title</th>
-                <th className="py-6 px-4 md:px-6 font-semibold">
+              <tr className="bg-blue-600 text-white text-left text-xs sm:text-sm uppercase tracking-wider">
+                <th className="py-4 px-4 sm:px-6 font-semibold">Job Title</th>
+                <th className="py-4 px-4 sm:px-6 font-semibold">
                   Position Type
                 </th>
-                <th className="py-6 px-4 md:px-6 font-semibold hidden md:table-cell">
+                <th className="py-4 px-4 sm:px-6 font-semibold hidden sm:table-cell">
                   Job Level
                 </th>
-                <th className="py-6 px-4 md:px-6 font-semibold hidden md:table-cell">
+                <th className="py-4 px-4 sm:px-6 font-semibold hidden sm:table-cell">
                   Salary Range
                 </th>
-                <th className="py-6 px-4 md:px-6 font-semibold hidden md:table-cell">
+                <th className="py-4 px-4 sm:px-6 font-semibold hidden sm:table-cell">
                   Status
-                </th>{" "}
-                {/* New Job Status column header */}
-                <th className="py-6 px-4 md:px-6 font-semibold text-center">
+                </th>
+                <th className="py-4 px-4 sm:px-6 font-semibold text-center">
                   Actions
                 </th>
               </tr>
@@ -634,8 +643,7 @@ const ViewJobs = () => {
                     key={job.id}
                     className="border-b border-gray-200 hover:bg-gray-50 transition duration-300"
                   >
-                    <td className="py-4 px-4 md:px-6 text-gray-800 text-xs md:text-sm break-words">
-                      {/* Job Title */}
+                    <td className="py-4 px-4 sm:px-6 text-gray-800 text-xs sm:text-sm break-words">
                       {job.position_name
                         ? job.position_name
                             .split(" ")
@@ -648,7 +656,7 @@ const ViewJobs = () => {
                         : ""}
 
                       {/* Additional Info for Mobile */}
-                      <div className="md:hidden mt-1 text-gray-600 text-xs">
+                      <div className="sm:hidden mt-1 text-gray-600 text-xs">
                         <div>{job.level ? job.level : "N/A"}</div>
                         <div>
                           {job.minimum_salary && job.maximum_salary
@@ -657,10 +665,19 @@ const ViewJobs = () => {
                               : `₱${job.minimum_salary.toLocaleString()} - ₱${job.maximum_salary.toLocaleString()}`
                             : "Not specified"}
                         </div>
+                        <div
+                          className={`text-xs ${
+                            job.status && job.status.toLowerCase() === "active"
+                              ? "text-green-500"
+                              : "text-red-500"
+                          }`}
+                        >
+                          {job.status ? job.status : "Not specified"}
+                        </div>
                       </div>
                     </td>
 
-                    <td className="py-4 px-4 md:px-6 text-gray-800 text-xs md:text-sm break-words">
+                    <td className="py-4 px-4 sm:px-6 text-gray-800 text-xs sm:text-sm break-words">
                       {job.position_type
                         ? job.position_type
                             .split(" ")
@@ -673,11 +690,11 @@ const ViewJobs = () => {
                         : "N/A"}
                     </td>
 
-                    {/* Job Level and Salary for Desktop */}
-                    <td className="py-4 px-4 md:px-6 text-gray-800 text-xs md:text-sm break-words hidden md:table-cell">
+                    {/* Job Level and Salary for Tablet/Desktop */}
+                    <td className="py-4 px-4 sm:px-6 text-gray-800 text-xs sm:text-sm break-words hidden sm:table-cell">
                       {job.level ? job.level : "N/A"}
                     </td>
-                    <td className="py-4 px-4 md:px-6 text-gray-800 text-xs md:text-sm break-words hidden md:table-cell">
+                    <td className="py-4 px-4 sm:px-6 text-gray-800 text-xs sm:text-sm break-words hidden sm:table-cell">
                       {job.minimum_salary && job.maximum_salary
                         ? job.minimum_salary === job.maximum_salary
                           ? `₱${job.minimum_salary.toLocaleString()}`
@@ -685,21 +702,27 @@ const ViewJobs = () => {
                         : "Not specified"}
                     </td>
 
-                    {/* Job Status */}
-                    <td className="py-4 px-4 md:px-6 text-gray-800 text-xs md:text-sm break-words hidden md:table-cell">
+                    {/* Job Status with Color Coding */}
+                    <td
+                      className={`py-4 px-4 sm:px-6 text-xs sm:text-sm font-semibold break-words hidden sm:table-cell ${
+                        job.status && job.status.toLowerCase() === "active"
+                          ? "text-green-500"
+                          : "text-red-500"
+                      }`}
+                    >
                       {job.status ? job.status : "Not specified"}
                     </td>
 
-                    <td className="py-4 px-4 md:px-6 text-center">
-                      <div className="flex flex-col md:flex-row justify-center items-center space-y-2 md:space-y-0 md:space-x-2">
+                    <td className="py-4 px-4 sm:px-6 text-center">
+                      <div className="flex flex-col sm:flex-row justify-center items-center space-y-2 sm:space-y-0 sm:space-x-2">
                         <button
                           onClick={() => handleViewJob(job.id)}
                           className="bg-blue-500 text-white flex items-center justify-center px-2 py-1 rounded-full shadow-sm hover:bg-blue-700 transition duration-200"
                         >
-                          <span className="material-symbols-outlined text-sm md:text-base">
+                          <span className="material-symbols-outlined text-sm sm:text-base">
                             visibility
                           </span>
-                          <span className="ml-1 hidden md:inline text-xs md:text-sm">
+                          <span className="ml-1 hidden sm:inline text-xs sm:text-sm">
                             View
                           </span>
                         </button>
@@ -707,10 +730,10 @@ const ViewJobs = () => {
                           onClick={() => handleDeleteJobListing(job.id)}
                           className="bg-red-500 text-white flex items-center justify-center px-2 py-1 rounded-full shadow-sm hover:bg-red-700 transition duration-200"
                         >
-                          <span className="material-symbols-outlined text-sm md:text-base">
+                          <span className="material-symbols-outlined text-sm sm:text-base">
                             delete
                           </span>
-                          <span className="ml-1 hidden md:inline text-xs md:text-sm">
+                          <span className="ml-1 hidden sm:inline text-xs sm:text-sm">
                             Delete
                           </span>
                         </button>
@@ -718,10 +741,10 @@ const ViewJobs = () => {
                           onClick={() => handleUpdateJob(job)}
                           className="bg-yellow-500 text-white flex items-center justify-center px-2 py-1 rounded-full shadow-sm hover:bg-yellow-700 transition duration-200"
                         >
-                          <span className="material-symbols-outlined text-sm md:text-base">
+                          <span className="material-symbols-outlined text-sm sm:text-base">
                             edit
                           </span>
-                          <span className="ml-1 hidden md:inline text-xs md:text-sm">
+                          <span className="ml-1 hidden sm:inline text-xs sm:text-sm">
                             Edit
                           </span>
                         </button>
@@ -729,10 +752,10 @@ const ViewJobs = () => {
                           onClick={() => handleViewApplicants(job.id)}
                           className="bg-green-500 text-white flex items-center justify-center px-2 py-1 rounded-full shadow-sm hover:bg-green-700 transition duration-200 relative"
                         >
-                          <span className="material-symbols-outlined text-sm md:text-base">
+                          <span className="material-symbols-outlined text-sm sm:text-base">
                             group_add
                           </span>
-                          <span className="ml-1 hidden md:inline text-xs md:text-sm">
+                          <span className="ml-1 hidden sm:inline text-xs sm:text-sm">
                             Applicants
                           </span>
                           {applicantCounts[job.id] > 0 && (
@@ -749,6 +772,7 @@ const ViewJobs = () => {
             </tbody>
           </table>
         </div>
+
         {/* Pagination */}
         <div className="flex justify-center mt-6">
           <ol className="flex justify-center gap-1 text-xs font-medium">
