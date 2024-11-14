@@ -33,7 +33,6 @@ const CompanyProf = () => {
   });
 
   const [currentPasswordForEmail, setCurrentPasswordForEmail] = useState(""); // New state for email change
-
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(true);
   const [isEmailChanging, setIsEmailChanging] = useState(false);
@@ -50,94 +49,77 @@ const CompanyProf = () => {
 
   const checkCompanyStatus = async () => {
     try {
+      let token = localStorage.getItem("Token");
+      if (!token) {
+        toast.error("No token found. Please log in again.");
+        navigate("/login");
+        return;
+      }
+
+      // Verify token with backend
+      const tokenResponse = await axios.post("/token/auth", { token });
+
+      if (!tokenResponse.data.successful) {
+        // If token verification fails, try refreshing it
+        token = await refreshAuthToken();
+        if (!token) return; // If token could not be refreshed, exit
+      }
+
+      // Use the (new or existing) valid token to check company status
       const companyId = localStorage.getItem("Id");
       const response = await axios.get(
-        `/company/view/verify/status/${companyId}`
+        `/company/view/verify/status/${companyId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
+
       if (
         response.data.successful &&
         response.data.message === "Company is Deactivated"
       ) {
         toast.error("Your account has been deactivated. Logging out.", {
-          duration: 4000, // Display the toast for 5 seconds
+          duration: 4000,
         });
-
-        // Wait for the toast to finish before logging out
         setTimeout(() => {
           localStorage.removeItem("Id");
           localStorage.removeItem("Role");
           localStorage.removeItem("Token");
           navigate("/login");
-        }, 5000); // Wait for 5 seconds (the toast duration)
+        }, 5000);
       }
     } catch (error) {
-      console.error("Error checking company status.");
+      console.error("Error checking company status:", error.message);
+      toast.error("An error occurred while verifying your session.");
     }
   };
 
-  // Axios Interceptor added here to handle token expiration and retries
-  useEffect(() => {
-    const interceptor = axios.interceptors.response.use(
-      (response) => response,
-      async (error) => {
-        if (error.response && error.response.status === 401) {
-          // If the error is due to an expired token, try to retrieve a new one
-          await retrieveRefreshToken();
-          const token = localStorage.getItem("Token");
-          error.config.headers["Authorization"] = `Bearer ${token}`;
-          return axios(error.config);
-        }
-        return Promise.reject(error);
-      }
-    );
-
-    // Clean up the interceptor on component unmount
-    return () => {
-      axios.interceptors.response.eject(interceptor);
-    };
-  }, []);
-
-  const retrieveRefreshToken = async () => {
-    const userId = localStorage.getItem("Id");
-    const userRole = localStorage.getItem("Role");
-
+  const refreshAuthToken = async () => {
     try {
+      const userId = localStorage.getItem("Id");
+      const userRole = localStorage.getItem("Role");
+
       const response = await axios.get("/get/token", {
-        params: {
-          userId,
-          userRole,
-        },
+        params: { userId, userRole },
       });
-      if (response.data.successful) {
-        const refreshToken = response.data.refresh_token;
-        localStorage.setItem("RefreshToken", refreshToken);
-        toast.success("Refresh token retrieved successfully!");
-      } else {
-        toast.error(response.data.message);
-      }
-    } catch (error) {
-      toast.error("Failed to retrieve refresh token.");
-    }
-  };
 
-  // Function to verify token on component mount
-  const verifyToken = async () => {
-    const token = localStorage.getItem("Token");
-    try {
-      const response = await axios.get(`/auth/token/${token}`);
-      if (!response.data.successful) {
-        // Handle invalid token (redirect to login)
-        toast.error(response.data.message);
-        navigate("/login");
+      if (response.data.successful) {
+        const newToken = response.data.refresh_token;
+        localStorage.setItem("Token", newToken); // Update token in local storage
+        toast.success("Token refreshed successfully.");
+        return newToken; // Return the new token for further requests
+      } else {
+        toast.error(response.data.message || "Failed to refresh token.");
+        navigate("/login"); // Redirect to login if refreshing fails
       }
     } catch (error) {
-      toast.error("Error verifying token.");
+      console.error("Error refreshing token:", error.message);
+      toast.error("Failed to refresh token. Please log in again.");
       navigate("/login");
     }
   };
 
   useEffect(() => {
-    verifyToken();
     const userId = localStorage.getItem("Id");
     const config = {
       method: "get",
