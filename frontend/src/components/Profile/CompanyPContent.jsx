@@ -142,6 +142,10 @@ const CompanyProf = () => {
         }
       );
 
+      if (response.data.message == "Refresh token retrieved successfully") {
+        console.log("Changed Refresh Token");
+        localStorage.setItem("Token", response.data.refresh_token);
+      }
       if (response.data.successful) {
         setTokenValid(true); // Set token as valid
         console.log("Token verified successfully");

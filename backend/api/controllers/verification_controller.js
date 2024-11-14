@@ -441,7 +441,6 @@ const verifyToken = (req, res, next) => {
                   "Retrieved refresh token:",
                   tokenRecord.refresh_token
                 );
-
                 // Return the refresh token from the table
                 return res.status(200).json({
                   successful: true,
