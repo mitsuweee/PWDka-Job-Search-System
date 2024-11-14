@@ -49,7 +49,7 @@ const CompanyProf = () => {
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
   const [tokenValid, setTokenValid] = useState(false); // New state for token validation
-  // const [refreshToken, setRefreshToken] = useState(""); // New state for refresh token
+  const [refreshToken, setRefreshToken] = useState(""); // New state for refresh token
 
   const checkCompanyStatus = async () => {
     try {
@@ -151,25 +151,38 @@ const CompanyProf = () => {
     }
   };
 
-  // // Function to retrieve refresh token
-  // const retrieveRefreshToken = async () => {
-  //   const userId = localStorage.getItem("Id");
-  //   const userRole = localStorage.getItem("Role");
-  //   try {
-  //     const response = await axios.get("/get/token", {
-  //       data: { userId, userRole },
-  //     });
-  //     if (response.data.successful) {
-  //       setRefreshToken(response.data.refresh_token);
-  //       console.log("Refresh token retrieved:", response.data.refresh_token);
-  //     } else {
-  //       toast.error(response.data.message);
-  //     }
-  //   } catch (error) {
-  //     toast.error("Failed to retrieve refresh token");
-  //     console.error("Error retrieving refresh token:", error.message);
-  //   }
-  // };
+  // Function to retrieve refresh token
+  const retrieveRefreshToken = async () => {
+    const userId = localStorage.getItem("Id");
+    const userRole = localStorage.getItem("Role");
+
+    if (!userId || !userRole) {
+      toast.error("User ID or role missing in local storage");
+      return;
+    }
+
+    try {
+      const response = await axios.get("/get/token", {
+        params: { userId, userRole }, // Pass user ID and role as query parameters
+      });
+
+      if (response.data.successful) {
+        setRefreshToken(response.data.refresh_token);
+        console.log("Refresh token retrieved:", response.data.refresh_token);
+
+        // Store the new refresh token if needed
+        localStorage.setItem("Token", response.data.refresh_token);
+
+        // Re-verify with the new token if necessary
+        setTokenValid(true);
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      toast.error("Failed to retrieve refresh token");
+      console.error("Error retrieving refresh token:", error.message);
+    }
+  };
 
   // Check token on mount
   useEffect(() => {
