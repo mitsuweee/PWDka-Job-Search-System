@@ -50,8 +50,8 @@ const ViewJobs = () => {
         response.data.successful &&
         response.data.message === "Company is Deactivated"
       ) {
-        toast.error("Your company account has been deactivated. Logging out.", {
-          duration: 5000, // Display the toast for 5 seconds
+        toast.error("Your account has been deactivated. Logging out.", {
+          duration: 4000, // Display the toast for 5 seconds
         });
 
         // Wait for the toast to finish before logging out
@@ -63,7 +63,7 @@ const ViewJobs = () => {
         }, 5000); // Wait for 5 seconds (the toast duration)
       }
     } catch (error) {
-      console.error("Error checking company status:", error);
+      console.error("Error checking company status.");
     }
   };
 

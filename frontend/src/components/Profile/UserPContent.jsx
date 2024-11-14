@@ -58,19 +58,19 @@ const UserProf = () => {
         response.data.message === "User is Deactivated"
       ) {
         toast.error("Your account has been deactivated. Logging out.", {
-          duration: 5000, // Display the toast for 5 seconds
+          duration: 4000, // Display the toast for 5 seconds
         });
 
-        // Wait for the toast to finish before logging out HAHAHA
+        // Wait for the toast to finish before logging out
         setTimeout(() => {
           localStorage.removeItem("Id");
           localStorage.removeItem("Role");
           localStorage.removeItem("Token");
           navigate("/login");
-        }, 3000); // Wait for 5 seconds (the toast duration)
+        }, 5000); // Wait for 5 seconds (the toast duration)
       }
     } catch (error) {
-      toast.error("Failed to check user status.");
+      console.error("Failed to check user status.");
     }
   };
 
@@ -114,6 +114,42 @@ const UserProf = () => {
     // Clean up the interval on component unmount
     return () => clearInterval(interval);
   }, []);
+
+  const handleDeactivateUser = () => {
+    const userId = localStorage.getItem("Id");
+
+    // Validate that both passwords match before making the request
+    if (deactivationPassword !== confirmPassword) {
+      toast.error("Passwords do not match. Please try again.");
+      return;
+    }
+
+    const config = {
+      method: "put",
+      url: `/user/update/deactivate/${userId}`,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: {
+        password: deactivationPassword,
+        confirm_password: confirmPassword,
+      },
+    };
+
+    axios(config)
+      .then(() => {
+        toast.success("Account deactivated successfully!");
+        setIsPasswordModalOpen(false);
+        setTimeout(() => {
+          confirmLogout(); // Log out the user after deactivation
+        }, 5000);
+      })
+      .catch((error) => {
+        const errorMessage =
+          error.response?.data?.message || "Failed to deactivate account.";
+        toast.error(errorMessage);
+      });
+  };
 
   const MAX_FILE_SIZE = 16777215; // 16MB
 
@@ -318,40 +354,6 @@ const UserProf = () => {
 
   const handleLogout = () => {
     setIsLogoutModalOpen(true);
-  };
-
-  const handleDeactivateUser = () => {
-    const userId = localStorage.getItem("Id");
-
-    // Validate that both passwords match before making the request
-    if (deactivationPassword !== confirmPassword) {
-      toast.error("Passwords do not match. Please try again.");
-      return;
-    }
-
-    const config = {
-      method: "put",
-      url: `/user/update/deactivate/${userId}`,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      data: {
-        password: deactivationPassword,
-        confirm_password: confirmPassword,
-      },
-    };
-
-    axios(config)
-      .then(() => {
-        toast.success("Account deactivated successfully!");
-        setIsPasswordModalOpen(false);
-        confirmLogout(); // Log out the user after deactivation
-      })
-      .catch((error) => {
-        const errorMessage =
-          error.response?.data?.message || "Failed to deactivate account.";
-        toast.error(errorMessage);
-      });
   };
 
   const handleOpenDeactivateModal = () => {
