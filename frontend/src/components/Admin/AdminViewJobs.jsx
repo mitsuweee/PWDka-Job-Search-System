@@ -48,7 +48,7 @@ const AdminViewJobs = () => {
         }, 5000);
       }
     } catch (error) {
-      conosole.error("Failed to verify admin status.");
+      conosole.error("Failed to check admin status.");
     }
   };
 

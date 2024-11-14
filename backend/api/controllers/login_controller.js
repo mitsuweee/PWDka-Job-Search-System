@@ -67,7 +67,7 @@ const login = async (req, res, next) => {
           { id: user.id, role: user.role },
           SECRET_KEY,
           {
-            expiresIn: "7ds", // Refresh Token expiration time (1 week)
+            expiresIn: "7d", // Refresh Token expiration time (1 week)
           }
         );
 

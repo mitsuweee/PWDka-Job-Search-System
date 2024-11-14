@@ -46,6 +46,123 @@ const AdminDashboard = () => {
     }
   };
 
+  const [tokenValid, setTokenValid] = useState(false); // New state for token validation
+  const verifyToken = async () => {
+    const token = localStorage.getItem("Token"); // Retrieve the token from localStorage
+    const userId = localStorage.getItem("Id"); // Retrieve the userId from localStorage
+    const userRole = localStorage.getItem("Role"); // Retrieve the userRole from localStorage
+
+    if (!token) {
+      toast.error("No token found in local storage");
+      return;
+    }
+
+    try {
+      console.log("Token:", token);
+
+      // Send a POST request with the token, userId, and userRole in the body
+      const response = await axios.post(
+        "/verification/token/auth",
+        {
+          token: token,
+          userId: userId,
+          userRole: userRole,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.data.message === "Refresh token retrieved successfully") {
+        console.log("Changed Refresh Token");
+        localStorage.setItem("Token", response.data.refresh_token);
+      }
+
+      if (response.data.successful) {
+        setTokenValid(true); // Set token as valid
+        console.log("Token verified successfully");
+      } else {
+        toast.error(response.data.message);
+
+        // If token expired, show a toast message and attempt to retrieve a refresh token
+        if (
+          response.data.message === "Invalid refresh token, token has expired"
+        ) {
+          console.log("Token expired. Attempting to retrieve refresh token.");
+          await retrieveRefreshToken(); // Retrieve a new refresh token and retry verification
+        }
+      }
+    } catch (error) {
+      if (
+        error.response &&
+        error.response.data.message === "Unauthorized! Invalid token"
+      ) {
+        console.log(
+          "Token expired or invalid. Attempting to retrieve refresh token."
+        );
+        await retrieveRefreshToken(); // Retrieve a new refresh token and retry verification
+      } else {
+        toast.error("Session expired, logging out");
+        console.error("Error verifying token:", error.message);
+        setTimeout(() => {
+          localStorage.removeItem("Id");
+          localStorage.removeItem("Role");
+          localStorage.removeItem("Token");
+          navigate("/login");
+        }, 5000);
+      }
+    }
+  };
+
+  // Function to retrieve refresh token using the same API endpoint
+  const retrieveRefreshToken = async () => {
+    const userId = localStorage.getItem("Id");
+    const userRole = localStorage.getItem("Role");
+
+    try {
+      const response = await axios.post(
+        "/verification/token/auth",
+        {
+          token: "", // No access token is provided in this case
+          userId: userId,
+          userRole: userRole,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.data.successful) {
+        // Store the new refresh token in local storage
+        localStorage.setItem("Token", response.data.refresh_token);
+        console.log(
+          "Refresh token retrieved and updated in local storage:",
+          response.data.refresh_token
+        );
+        toast.success("Session refreshed successfully.");
+
+        // Retry verification with the new token
+        await verifyToken();
+      } else {
+        // If retrieving the refresh token fails, show a toast message and redirect to login
+        toast.error("Token expired, please log in again");
+        window.location.href = "/login"; // Redirect to login page
+      }
+    } catch (error) {
+      toast.error("Token expired, please log in again");
+      console.error("Error retrieving refresh token:", error.message);
+      window.location.href = "/login"; // Redirect to login page if refresh fails
+    }
+  };
+
+  useEffect(() => {
+    verifyToken();
+  }, []);
+
   useEffect(() => {
     const adminId = localStorage.getItem("Id");
     const config = {
