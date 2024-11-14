@@ -116,16 +116,29 @@ const CompanyProf = () => {
 
   // Function to verify token
   const verifyToken = async () => {
-    const token = localStorage.getItem("Token"); // Retrieve the token from local storage
+    const token = localStorage.getItem("Token"); // Retrieve the token from localStorage
+
     if (!token) {
       toast.error("No token found in local storage");
       return;
     }
 
     try {
-      const response = await axios.post("/verification/token/auth", {
-        token: token,
-      }); // Send token in the request body
+      console.log("Token:", token);
+
+      // Send a POST request with the token in the body
+      const response = await axios.post(
+        "/verification/token/auth",
+        {
+          token: token, // Include the token in the request body
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
       if (response.data.successful) {
         setTokenValid(true);
         console.log("Token verified successfully");
