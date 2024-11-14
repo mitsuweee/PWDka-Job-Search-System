@@ -48,8 +48,6 @@ const CompanyProf = () => {
     useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
-  const [tokenValid, setTokenValid] = useState(false); // New state for token validation
-
   const checkCompanyStatus = async () => {
     try {
       const companyId = localStorage.getItem("Id");
@@ -113,6 +111,7 @@ const CompanyProf = () => {
     return () => clearInterval(interval);
   }, []);
 
+  const [tokenValid, setTokenValid] = useState(false); // New state for token validation
   const verifyToken = async () => {
     const token = localStorage.getItem("Token"); // Retrieve the token from localStorage
     const userId = localStorage.getItem("Id"); // Retrieve the userId from localStorage
@@ -228,38 +227,6 @@ const CompanyProf = () => {
   useEffect(() => {
     verifyToken();
   }, []);
-
-  // Fetch company data after token validation
-  useEffect(() => {
-    if (tokenValid) {
-      const userId = localStorage.getItem("Id");
-      const config = {
-        method: "get",
-        url: `/company/view/${userId}`,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-      axios(config)
-        .then((response) => {
-          const companyData = response.data.data;
-          setCompany({
-            logo: companyData.profile_picture,
-            name: companyData.name,
-            description: companyData.description,
-            address: companyData.address,
-            city: companyData.city,
-            contactNumber: companyData.contact_number,
-            email: companyData.email,
-          });
-        })
-        .catch((error) => {
-          const errorMessage =
-            error.response?.data?.message || "An error occurred";
-          toast.error(errorMessage);
-        });
-    }
-  }, [tokenValid]);
 
   const handleDeactivateCompany = () => {
     const userId = localStorage.getItem("Id");
