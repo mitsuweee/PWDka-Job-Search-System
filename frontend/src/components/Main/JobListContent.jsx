@@ -9,7 +9,7 @@ const JobListing = () => {
   const [isDetailsVisible, setIsDetailsVisible] = useState(false);
   const [isMoreInfoVisible, setIsMoreInfoVisible] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [locationSearchTerm, setLocationSearchTerm] = useState(""); // For location search
+  const [locationSearchTerm, setLocationSearchTerm] = useState("");
   const [jobType, setJobType] = useState("");
   const [jobLevel, setJobLevel] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
