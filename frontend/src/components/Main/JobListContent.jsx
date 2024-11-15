@@ -591,6 +591,14 @@ const JobListing = () => {
                   <div
                     className="p-3 md:p-4 bg-blue-500 rounded-lg shadow-lg cursor-pointer hover:bg-blue-600 transition transform hover:scale-95 flex flex-col md:flex-row items-start md:items-center relative"
                     onClick={() => {
+                      // Stop the current voice toggle if it is enabled
+                      if (isVoiceEnabled) {
+                        window.speechSynthesis.cancel();
+                        setIsSpeaking(false);
+                        setIsVoiceEnabled(false);
+                      }
+
+                      // Update selected job ID and details visibility
                       setSelectedJobId(job.id);
                       setIsDetailsVisible(true);
                       setIsMoreInfoVisible(false);
