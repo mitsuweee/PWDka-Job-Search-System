@@ -528,7 +528,13 @@ const CompanyProf = () => {
         {/* Company Information and Settings Button */}
         <div className="flex-1 text-center md:text-left">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
-            {company.name}
+            {company.name
+              .split(" ")
+              .map(
+                (word) =>
+                  word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+              )
+              .join(" ")}
           </h2>
           <h4 className="text-sm md:text-lg font-bold text-gray-400 mt-1">
             {company.email}
@@ -582,7 +588,13 @@ const CompanyProf = () => {
                 Name:
               </p>
               <p className="text-gray-600 bg-gray-200 p-5 rounded-lg shadow-inner">
-                {company.name}
+                {company.name
+                  .split(" ")
+                  .map(
+                    (word) =>
+                      word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+                  )
+                  .join(" ")}
               </p>
             </div>
             <div className="mb-4">
@@ -593,7 +605,13 @@ const CompanyProf = () => {
                 Address:
               </p>
               <p className="text-gray-600 bg-gray-200 p-5 rounded-lg shadow-inner">
-                {company.address}
+                {company.address
+                  .split(" ")
+                  .map(
+                    (word) =>
+                      word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+                  )
+                  .join(" ")}
               </p>
             </div>
           </div>

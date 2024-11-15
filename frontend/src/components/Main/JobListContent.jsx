@@ -672,7 +672,7 @@ const JobListing = () => {
                           <span className="material-symbols-outlined text-sm md:text-base mr-1">
                             payments
                           </span>
-                          {job.salary}
+                          ₱ {job.salary}
                         </p>
                       ) : (
                         <p className="font-semibold text-xs md:text-base text-white flex items-center">
@@ -767,7 +767,7 @@ const JobListing = () => {
                           <span className="material-symbols-outlined mr-1 text-base">
                             payments
                           </span>
-                          {job.salary}
+                          ₱{job.salary}
                         </p>
                       ) : (
                         <p className="text-sm mb-2 text-gray-700 flex items-center">
@@ -1055,7 +1055,7 @@ const JobListing = () => {
                     <span className="material-symbols-outlined mr-2">
                       payments
                     </span>
-                    {selectedJob.salary}
+                    ₱ {selectedJob.salary}
                   </p>
                 ) : (
                   <p className="text-lg mb-4 text-gray-700 flex items-center">
@@ -1158,7 +1158,7 @@ const JobListing = () => {
                           email
                         </span>
                         <span className="font-medium">Email:</span>{" "}
-                        (selectedJob.companyEmail)
+                        {selectedJob.companyEmail}
                       </p>
 
                       <p className="flex items-center">
@@ -1293,7 +1293,7 @@ const JobListing = () => {
                       <th className="py-2 px-2 sm:px-4">Position</th>
                       <th className="py-2 px-2 sm:px-4">Company</th>
                       <th className="py-2 px-2 sm:px-4">Status</th>
-                      <th className="py-2 px-2 sm:px-4">Date</th>
+                      <th className="py-2 px-2 sm:px-4">Date Applied</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1308,10 +1308,24 @@ const JobListing = () => {
                             handleJobClick(application.position_name)
                           }
                         >
-                          {application.position_name}
+                          {application.position_name
+                            .split(" ")
+                            .map(
+                              (word) =>
+                                word.charAt(0).toUpperCase() +
+                                word.slice(1).toLowerCase()
+                            )
+                            .join(" ")}
                         </td>
                         <td className="py-2 px-2 sm:px-4 whitespace-normal break-words">
-                          {application.company_name}
+                          {application.company_name
+                            .split(" ")
+                            .map(
+                              (word) =>
+                                word.charAt(0).toUpperCase() +
+                                word.slice(1).toLowerCase()
+                            )
+                            .join(" ")}
                         </td>
                         <td className="py-2 px-2 sm:px-4">
                           <span
