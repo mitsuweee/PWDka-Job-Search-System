@@ -739,7 +739,14 @@ const AdminVerifyComp = () => {
                     <div>
                       <p className="text-black font-semibold">City:</p>
                       <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
-                        {selectedCompany.city}
+                        {selectedCompany.city
+                          .split(" ")
+                          .map(
+                            (word) =>
+                              word.charAt(0).toUpperCase() +
+                              word.slice(1).toLowerCase()
+                          )
+                          .join(" ")}
                       </p>
                     </div>
                   </div>
@@ -754,7 +761,14 @@ const AdminVerifyComp = () => {
                   <div>
                     <p className="text-black font-semibold">Address:</p>
                     <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
-                      {selectedCompany.address}
+                      {selectedCompany.address
+                        .split(" ")
+                        .map(
+                          (word) =>
+                            word.charAt(0).toUpperCase() +
+                            word.slice(1).toLowerCase()
+                        )
+                        .join(" ")}
                     </p>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

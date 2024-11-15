@@ -14,7 +14,7 @@ const AdminViewUsers = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedJobId, setSelectedJobId] = useState(null);
-  const [sortOrder, setSortOrder] = useState("A-Z");
+  const [sortOrder, setSortOrder] = useState("Newest");
   const [filteredJobListings, setFilteredJobListings] = useState([]);
   const usersPerPage = 10;
   const navigate = useNavigate();
@@ -774,7 +774,14 @@ const AdminViewUsers = () => {
                   Address:
                 </p>
                 <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
-                  {user.address}
+                  {user.address
+                    .split(" ")
+                    .map(
+                      (word) =>
+                        word.charAt(0).toUpperCase() +
+                        word.slice(1).toLowerCase()
+                    )
+                    .join(" ")}
                 </p>
               </div>
               <div>
@@ -785,7 +792,14 @@ const AdminViewUsers = () => {
                   City:
                 </p>
                 <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
-                  {user.city}
+                  {user.city
+                    .split(" ")
+                    .map(
+                      (word) =>
+                        word.charAt(0).toUpperCase() +
+                        word.slice(1).toLowerCase()
+                    )
+                    .join(" ")}
                 </p>
               </div>
               <div>

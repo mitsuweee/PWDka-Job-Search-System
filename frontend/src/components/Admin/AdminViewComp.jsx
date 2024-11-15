@@ -14,7 +14,7 @@ const AdminViewComp = () => {
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
-  const [sortOrder, setSortOrder] = useState("A-Z");
+  const [sortOrder, setSortOrder] = useState("Newest");
   const companiesPerPage = 10;
   const [admin, setAdmin] = useState({
     firstName: "",

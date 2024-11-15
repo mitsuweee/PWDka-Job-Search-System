@@ -697,7 +697,14 @@ const AdminVerifyUsers = () => {
                       Full Name:
                     </p>
                     <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
-                      {selectedUser.fullName}
+                      {selectedUser.fullName
+                        .split(" ")
+                        .map(
+                          (word) =>
+                            word.charAt(0).toUpperCase() +
+                            word.slice(1).toLowerCase()
+                        )
+                        .join(" ")}
                     </p>
                   </div>
                   <div>
@@ -730,7 +737,14 @@ const AdminVerifyUsers = () => {
                       Address:
                     </p>
                     <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
-                      {selectedUser.address}
+                      {selectedUser.address
+                        .split(" ")
+                        .map(
+                          (word) =>
+                            word.charAt(0).toUpperCase() +
+                            word.slice(1).toLowerCase()
+                        )
+                        .join(" ")}
                     </p>
                   </div>
                   <div>
@@ -741,7 +755,14 @@ const AdminVerifyUsers = () => {
                       City:
                     </p>
                     <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
-                      {selectedUser.city}
+                      {selectedUser.city
+                        .split(" ")
+                        .map(
+                          (word) =>
+                            word.charAt(0).toUpperCase() +
+                            word.slice(1).toLowerCase()
+                        )
+                        .join(" ")}
                     </p>
                   </div>
                   <div>

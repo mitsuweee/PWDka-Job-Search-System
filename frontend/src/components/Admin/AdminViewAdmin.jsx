@@ -12,7 +12,7 @@ const AdminViewAdmin = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [sortOrder, setSortOrder] = useState("A-Z");
+  const [sortOrder, setSortOrder] = useState("Newest");
   const [currentPage, setCurrentPage] = useState(1);
   const [currentAdmin, setCurrentAdmin] = useState({
     firstName: "",

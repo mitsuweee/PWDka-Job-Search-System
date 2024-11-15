@@ -215,7 +215,9 @@ const AdminViewJobs = () => {
         const jobDataArray = response.data.data;
         setJobListings(jobDataArray);
         setLoading(false);
-        toast.success("Job listings loaded successfully");
+        setTimeout(() => {
+          toast.success("Job listings loaded successfully");
+        }, 200);
       })
       .catch((error) => {
         setLoading(false);
@@ -939,7 +941,14 @@ const AdminViewJobs = () => {
                     Position Type:
                   </p>
                   <p className="text-gray-600 mt-2 text-sm leading-relaxed bg-gray-100 p-4 rounded-lg shadow-inner">
-                    {job.positionType}
+                    {job.positionType
+                      .split(" ")
+                      .map(
+                        (word) =>
+                          word.charAt(0).toUpperCase() +
+                          word.slice(1).toLowerCase()
+                      )
+                      .join(" ")}
                   </p>
                 </div>
               </div>
