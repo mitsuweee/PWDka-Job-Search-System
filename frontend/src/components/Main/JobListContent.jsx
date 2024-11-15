@@ -11,7 +11,7 @@ const JobListing = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [locationSearchTerm, setLocationSearchTerm] = useState(""); // For location search
   const [jobType, setJobType] = useState(""); // For full-time or part-time filter
-  const [jobLevel, setJobLevel] = useState(""); // New state for job level filter
+  const [jobLevel, setJobLevel] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [sortOption, setSortOption] = useState("Newest");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
