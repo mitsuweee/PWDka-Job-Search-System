@@ -351,6 +351,11 @@ const UserProf = () => {
     setIsChangingPassword(true);
     setIsChangingEmail(false);
     setIsModalOpen(true);
+    setPasswords({
+      currentPassword: "",
+      newPassword: "",
+      confirmNewPassword: "",
+    });
   };
   const handleEmailModal = () => {
     setIsEditing(false);

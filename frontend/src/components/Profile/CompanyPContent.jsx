@@ -382,6 +382,11 @@ const CompanyProf = () => {
     setIsPasswordChanging(true);
     setIsEmailChanging(false);
     setIsModalOpen(true);
+    setPasswords({
+      currentPassword: "",
+      newPassword: "",
+      confirmNewPassword: "",
+    });
   };
 
   const handleUpdate = () => {
