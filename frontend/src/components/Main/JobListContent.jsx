@@ -1158,7 +1158,7 @@ const JobListing = () => {
                           email
                         </span>
                         <span className="font-medium">Email:</span>{" "}
-                        {toSentenceCase(selectedJob.companyEmail)}
+                        (selectedJob.companyEmail)
                       </p>
 
                       <p className="flex items-center">
