@@ -292,6 +292,28 @@ const UserProf = () => {
       toast.error("Please upload a jpeg/png file.");
     }
   };
+  const [resume, setResume] = useState(""); // Resume file in Base64 format
+  const [isResumeModalOpen, setIsResumeModalOpen] = useState(false); // Controls the resume modal
+
+  const handleResumeFileChange = (e) => {
+    const file = e.target.files[0];
+
+    if (file && file.type === "application/pdf") {
+      if (file.size <= MAX_FILE_SIZE) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const base64Data = reader.result.split(",")[1];
+          setResume(base64Data);
+        };
+        reader.readAsDataURL(file);
+        toast.success("Resume uploaded successfully!");
+      } else {
+        toast.error("File size exceeds 16MB. Please upload a smaller file.");
+      }
+    } else {
+      toast.error("Please upload a valid PDF file.");
+    }
+  };
 
   const handleProfilePictureEdit = () => {
     setIsProfilePictureModalOpen(true);

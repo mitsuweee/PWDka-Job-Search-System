@@ -118,6 +118,7 @@ const Signup = () => {
         idPicture: "",
         profilePicture: "",
         selfieWithID: "",
+        resume: "", // add
       });
     } else {
       setCompanyFormValues({
@@ -175,6 +176,7 @@ const Signup = () => {
             formal_picture: userFormValues.profilePicture,
             picture_with_id: userFormValues.selfieWithID,
             picture_of_pwd_id: userFormValues.idPicture,
+            resume: userFormValues.resume, //added resume par
           }
     );
 
@@ -606,6 +608,25 @@ const Signup = () => {
             onChange={(e) => handleFileChange(e, "selfieWithID")}
             className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-1 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
             accept="image/*"
+          />
+        </div>
+
+        {/* {added resume} */}
+        <div className="col-span-12">
+          <label
+            htmlFor="resume"
+            className="block text-lg font-medium text-gray-700"
+          >
+            Upload Resume (PDF only) <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="file"
+            id="resume"
+            name="resume"
+            onChange={(e) => handleFileChange(e, "resume")}
+            className="mt-2 w-full h-10 text-gray-600 bg-gray-100 p-1 rounded-lg focus:outline-none shadow-2xl border border-gray-300 focus:border-blue-500 transition duration-300"
+            accept="application/pdf"
+            required
           />
         </div>
       </div>
