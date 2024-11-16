@@ -243,6 +243,11 @@ const PostJob = () => {
       );
       return;
     }
+    // Validation for maximum salary limit (6 digits)
+    if (jobDetails.maxSalary.toString().length > 6) {
+      toast.error("Maximum Salary must not exceed ₱999,999.");
+      return;
+    }
 
     setIsSubmitModalOpen(true);
   };
@@ -312,6 +317,13 @@ const PostJob = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    // Validate maxSalary length
+    if (name === "maxSalary" && value.length > 6) {
+      toast.error("Maximum Salary must not exceed 7 digits.");
+      return;
+    }
+
     setJobDetails({ ...jobDetails, [name]: value });
   };
 
