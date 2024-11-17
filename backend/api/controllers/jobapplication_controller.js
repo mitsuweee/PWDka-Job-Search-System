@@ -6,9 +6,8 @@ const util = require("./util");
 const uploadResume = async (req, res, next) => {
   let user_id = req.body.user_id;
   let joblisting_id = req.body.joblisting_id;
-  let resume = req.body.resume;
 
-  if (!user_id || !joblisting_id || !resume) {
+  if (!user_id || !joblisting_id) {
     return res.status(400).json({
       successful: false,
       message: "One or more details are missing",
@@ -48,7 +47,6 @@ const uploadResume = async (req, res, next) => {
             await knex("job_application").insert({
               user_id,
               joblisting_id,
-              resume,
             });
 
             return res.status(200).json({
@@ -101,7 +99,7 @@ const viewAllUsersApplicationsViaJobListingId = async (req, res, next) => {
           "user.birth_date",
           "user.contact_number",
           "user.formal_picture",
-          "job_application.resume",
+          "user.resume",
           "job_listing.position_name",
           "job_application.date_created" // Include date_created field
         )
@@ -234,7 +232,7 @@ const viewAllUsersByStatus = async (req, res, next) => {
             "user.birth_date",
             "user.contact_number",
             "user.formal_picture",
-            "resume",
+            "user.resume",
             "job_application.date_created",
             "job_listing.position_name"
           )
@@ -439,7 +437,7 @@ const getAllApplicantsByStatus = async (req, res) => {
         "user.birth_date",
         "user.contact_number",
         "user.formal_picture",
-        "job_application.resume",
+        "user.resume",
         "job_application.status",
         "job_listing.position_name",
         "job_application.date_created"
@@ -527,7 +525,6 @@ const getApplicantCount = async (req, res) => {
   }
 };
 
-
 module.exports = {
   uploadResume,
   viewAllUsersApplicationsViaJobListingId,
@@ -536,5 +533,5 @@ module.exports = {
   deleteJobApplication,
   updateJobApplicationStatus,
   getAllApplicantsByStatus,
-  getApplicantCount
+  getApplicantCount,
 };

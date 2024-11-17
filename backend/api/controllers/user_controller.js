@@ -24,6 +24,7 @@ const registerUser = async (req, res, next) => {
   let formal_picture = req.body.formal_picture;
   let picture_with_id = req.body.picture_with_id;
   let picture_of_pwd_id = req.body.picture_of_pwd_id;
+  let resume = req.body.resume;
 
   if (
     !id ||
@@ -40,7 +41,8 @@ const registerUser = async (req, res, next) => {
     !disability_id ||
     !formal_picture ||
     !picture_with_id ||
-    !picture_of_pwd_id
+    !picture_of_pwd_id ||
+    !resume
   ) {
     return res.status(400).json({
       successful: false,
@@ -192,6 +194,7 @@ const registerUser = async (req, res, next) => {
             formal_picture: compressedFormalPicture.toString("base64"),
             picture_with_id: compressedPictureWithId.toString("base64"),
             picture_of_pwd_id: compressedPictureOfPwdId.toString("base64"),
+            resume,
           });
 
           // Send verification email
@@ -369,6 +372,41 @@ const updateUser = async (req, res, next) => {
   }
 };
 
+const updateResume = async (req, res, next) => {
+  const id = req.params.id;
+  const resume = req.body.resume;
+
+  if (!id || !resume) {
+    return res.status(404).json({
+      successful: false,
+      message: "One or more details are missing",
+    });
+  } else {
+    try {
+      const result = await knex("user").where({ id }).update({
+        resume,
+      });
+
+      if (result === 0) {
+        return res.status(404).json({
+          successful: false,
+          message: "User not found",
+        });
+      } else {
+        return res.status(200).json({
+          successful: true,
+          message: "User Resume updated successfully",
+        });
+      }
+    } catch (err) {
+      return res.status(500).json({
+        successful: false,
+        message: err.message,
+      });
+    }
+  }
+};
+
 const updateUserProfilePicture = async (req, res, next) => {
   const id = req.params.id;
   const formalPicture = req.body.formal_picture;
@@ -515,7 +553,8 @@ const viewUserViaId = async (req, res, next) => {
           "user.contact_number",
           "user.formal_picture",
           "user.picture_with_id",
-          "user.picture_of_pwd_id"
+          "user.picture_of_pwd_id",
+          "user.resume"
         );
 
       if (rows.length === 0) {
@@ -536,6 +575,7 @@ const viewUserViaId = async (req, res, next) => {
           picture_of_pwd_id: rows[0].picture_of_pwd_id
             ? rows[0].picture_of_pwd_id.toString()
             : null,
+          resume: rows[0].resume ? rows[0].resume.toString() : null,
         };
 
         return res.status(200).json({
@@ -714,6 +754,7 @@ module.exports = {
   loginUser,
   updateUser,
   updateUserProfilePicture,
+  updateResume,
   userChangePassword,
   viewUserViaId,
   updateUserEmail,
