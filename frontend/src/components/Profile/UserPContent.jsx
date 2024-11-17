@@ -25,6 +25,8 @@ const UserProf = () => {
   const [isChangingEmail, setIsChangingEmail] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
 
+  const [isViewResumeModalOpen, setIsViewResumeModalOpen] = useState(false);
+
   const [isOptionsModalOpen, setIsOptionsModalOpen] = useState(false);
 
   const [deactivationPasswordVisible, setDeactivationPasswordVisible] =
@@ -612,15 +614,29 @@ const UserProf = () => {
             </p>
             <p className="text-gray-600">{user.disability}</p>
           </div>
-          <button
-            onClick={() => setIsOptionsModalOpen(true)}
-            className="w-full md:w-auto mt-4 px-3 py-1.5 bg-blue-600 text-white font-medium rounded-md shadow-md hover:bg-blue-700 transition duration-300 flex items-center justify-center"
-          >
-            <span className="material-symbols-outlined text-lg mr-1.5">
-              settings
-            </span>
-            Settings
-          </button>
+          {/* Button Container */}
+          <div className="flex justify-center md:justify-start space-x-4 mt-4">
+            {/* Settings Button */}
+            <button
+              onClick={() => setIsOptionsModalOpen(true)}
+              className="px-3 py-1.5 bg-blue-600 text-white font-medium rounded-md shadow-md hover:bg-blue-700 transition duration-300 flex items-center justify-center"
+            >
+              <span className="material-symbols-outlined text-lg mr-1.5">
+                settings
+              </span>
+              Settings
+            </button>
+            {/* Resume Button */}
+            <button
+              onClick={() => setIsViewResumeModalOpen(true)}
+              className="px-3 py-1.5 bg-blue-600 text-white font-medium rounded-md shadow-md hover:bg-blue-700 transition duration-300 flex items-center justify-center"
+            >
+              <span className="material-symbols-outlined text-lg mr-1.5">
+                description
+              </span>
+              Resume
+            </button>
+          </div>
         </div>
 
         {/* Back and Logout Buttons */}
@@ -779,6 +795,59 @@ const UserProf = () => {
                 className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
               >
                 Update Picture
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Resume Preview Modal */}
+      {isViewResumeModalOpen && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
+            <div className="flex justify-between items-center border-b pb-3 mb-4">
+              <h2 className="text-2xl font-semibold text-gray-800">
+                My Resume
+              </h2>
+              <button
+                onClick={() => setIsViewResumeModalOpen(false)}
+                className="text-gray-500 hover:text-gray-800 transition duration-200"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div className="mb-4">
+              {resume ? (
+                <embed
+                  src={`data:application/pdf;base64,${resume}`}
+                  type="application/pdf"
+                  className="w-full h-96 rounded-md shadow-md"
+                />
+              ) : (
+                <p className="text-gray-600">
+                  No resume uploaded. Please upload your resume in the settings.
+                </p>
+              )}
+            </div>
+            <div className="flex justify-end">
+              <button
+                onClick={() => setIsViewResumeModalOpen(false)}
+                className="px-4 py-2 bg-gray-300 text-gray-800 font-semibold rounded-lg hover:bg-gray-400 transition duration-200"
+              >
+                Close
               </button>
             </div>
           </div>

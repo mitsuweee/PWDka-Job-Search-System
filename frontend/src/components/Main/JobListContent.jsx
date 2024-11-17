@@ -22,6 +22,7 @@ const JobListing = () => {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [currentJobSpeech, setCurrentJobSpeech] = useState(null);
   const [loading, setLoading] = useState(false);
+
   const [applicationHistory, setApplicationHistory] = useState([]); // New state for application history
   const [isApplicationHistoryModalOpen, setIsApplicationHistoryModalOpen] =
     useState(false); // New state for modal visibility
@@ -358,6 +359,10 @@ const JobListing = () => {
     }
   };
 
+  const handleNavigate = () => {
+    navigate("/applicationhistory"); // Navigate to the Application History page
+  };
+
   const handleToggleVoice = (job) => {
     if (!isVoiceEnabled) {
       playJobListingMessage(job);
@@ -581,7 +586,7 @@ const JobListing = () => {
               {userFullName.charAt(0).toUpperCase() + userFullName.slice(1)}
             </h1>
             <button
-              onClick={fetchApplicationHistory}
+              onClick={handleNavigate}
               className="ml-4 px-4 md:px-5 py-1 md:py-2 bg-gradient-to-r from-blue-400 to-blue-600 text-white font-semibold rounded-lg shadow-md hover:from-blue-500 hover:to-blue-700 hover:shadow-lg transform hover:-translate-y-0.5 transition duration-200 ease-in-out text-sm md:text-base"
             >
               Application History

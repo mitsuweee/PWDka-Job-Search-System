@@ -33,6 +33,7 @@ import RedirectAuthenticated from "./redirectauthenticated.js";
 import AdminProfile from "./pages/AdminProfile.jsx";
 import AdminSignups from "./pages/AdminSignups.jsx";
 import AdminViewA from "./pages/AdminVA.jsx";
+import AppliHistory from "./pages/ApplicHistory.jsx";
 
 function App() {
   return (
@@ -91,6 +92,15 @@ function App() {
           element={
             <ProtectedRoute role="user">
               <JobListingPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/applicationhistory"
+          element={
+            <ProtectedRoute role="user">
+              <AppliHistory />
             </ProtectedRoute>
           }
         />
