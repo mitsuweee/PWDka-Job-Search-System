@@ -29,7 +29,12 @@ adminRouter.put("/update/deactivate/user/:id", adminController.deactivateUser); 
 adminRouter.put(
   "/update/deactivate/company/:id",
   adminController.deactivateCompany
-); //Deactivate User
+); //Deactivate comp
+
+adminRouter.put(
+  "/update/deactivate/joblisting/:id",
+  adminController.deactivateJobListing
+); //Deactivate Job Listing
 
 adminRouter.delete("/delete/user/:id", adminController.deleteUser); // Delete User
 adminRouter.delete("/delete/admin/:id", adminController.deleteAdmin); // Delete Admin
