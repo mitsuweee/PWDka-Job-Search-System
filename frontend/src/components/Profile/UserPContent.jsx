@@ -315,6 +315,32 @@ const UserProf = () => {
     }
   };
 
+  const handleResumeSubmit = () => {
+    const userId = localStorage.getItem("Id");
+    const config = {
+      method: "put",
+      url: `/user/update/resume/${userId}`,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: {
+        resume: resume, // Base64 encoded resume
+      },
+    };
+
+    axios(config)
+      .then(() => {
+        toast.success("Resume updated successfully!");
+        setIsResumeModalOpen(false);
+      })
+      .catch((error) => {
+        toast.error(
+          error.response?.data?.message ||
+            "An error occurred while updating resume."
+        );
+      });
+  };
+
   const handleProfilePictureEdit = () => {
     setIsProfilePictureModalOpen(true);
   };
@@ -1292,6 +1318,19 @@ const UserProf = () => {
                   <button
                     onClick={() => {
                       setIsOptionsModalOpen(false);
+                      setIsResumeModalOpen(true); // Open Resume Modal
+                    }}
+                    className="w-full px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-700 hover:shadow-xl transition duration-300 flex items-center justify-center"
+                  >
+                    <span className="material-symbols-outlined text-xl mr-2">
+                      description
+                    </span>
+                    Update Resume
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setIsOptionsModalOpen(false);
                       setIsDeactivateModalOpen(true); // Open Deactivate Account modal
                     }}
                     className="w-full px-6 py-3 bg-red-500 text-white font-semibold rounded-lg shadow-lg hover:bg-red-600 hover:shadow-xl transition duration-300 flex items-center justify-center"
@@ -1311,6 +1350,65 @@ const UserProf = () => {
                   className="px-6 py-2 bg-gray-300 text-gray-800 font-semibold rounded-lg shadow hover:bg-gray-400 transition duration-200"
                 >
                   Close
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Modal for Changing Resume */}
+        {isResumeModalOpen && (
+          <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
+              <div className="flex justify-between items-center border-b pb-3 mb-4">
+                <h2 className="text-2xl font-semibold text-gray-800">
+                  Update Resume
+                </h2>
+                <button
+                  onClick={() => setIsResumeModalOpen(false)}
+                  className="text-gray-500 hover:text-gray-800 transition duration-200"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2}
+                    stroke="currentColor"
+                    className="w-6 h-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-gray-600 font-semibold mb-2">
+                  Select your resume (PDF only):
+                </label>
+                <input
+                  type="file"
+                  accept="application/pdf"
+                  onChange={handleResumeFileChange}
+                  className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                />
+              </div>
+
+              <div className="flex justify-end space-x-4">
+                <button
+                  onClick={() => setIsResumeModalOpen(false)}
+                  className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-200"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleResumeSubmit} // Function to upload the resume
+                  className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
+                >
+                  Save Resume
                 </button>
               </div>
             </div>
