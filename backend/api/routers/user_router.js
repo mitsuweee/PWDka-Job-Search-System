@@ -13,6 +13,8 @@ userRouter.get("/view/verify/status/:id", userController.verifyUserStatus); //Vi
 userRouter.put("/update/:id", userController.updateUser); //Update User Details
 userRouter.put("/update/email/:id", userController.updateUserEmail); //Update User email
 
+userRouter.put("/update/resume/:id", userController.updateResume); //Update User resume
+
 userRouter.put("/update/picture/:id", userController.updateUserProfilePicture); //Update User Profle Picture
 
 userRouter.put("/update/password/:id", userController.userChangePassword); // Change User Password

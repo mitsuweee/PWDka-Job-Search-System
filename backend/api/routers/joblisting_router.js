@@ -15,6 +15,11 @@ joblistingRouter.get(
   jobListingController.viewJobsCreatedByCompanyNewestToOldest
 ); // View Job Listing Via Company ID Newest To OLDEST
 joblistingRouter.put("/update/:id", jobListingController.updateJobListing); //Update Job Listing
+joblistingRouter.put(
+  "/update/deactivate/:id",
+  jobListingController.deactivateJobListing
+); //Deactivate Job Listing
+
 joblistingRouter.delete("/delete/:id", jobListingController.deleteJob); // Delete Job Listing
 
 module.exports = joblistingRouter;

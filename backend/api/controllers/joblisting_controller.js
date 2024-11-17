@@ -730,6 +730,42 @@ const viewCounts = async (req, res, next) => {
   }
 };
 
+const deactivateJobListing = async (req, res, next) => {
+  const id = req.params.id;
+
+  if (!id) {
+    return res.status(400).json({
+      successful: false,
+      message: "Job Listing ID is missing",
+    });
+  } else {
+    try {
+      await knex.transaction(async (trx) => {
+        const result = await trx("job_listing").where("id", id).update({
+          status: "DEACTIVATE",
+        });
+
+        if (result === 0) {
+          return res.status(404).json({
+            successful: false,
+            message: "Job Listing not found",
+          });
+        }
+      });
+
+      return res.status(200).json({
+        successful: true,
+        message: "Job Listing deactivated successfully",
+      });
+    } catch (err) {
+      return res.status(500).json({
+        successful: false,
+        message: err.message,
+      });
+    }
+  }
+};
+
 module.exports = {
   postJobs,
   viewJobListing,
@@ -738,5 +774,5 @@ module.exports = {
   updateJobListing,
   deleteJob,
   viewCounts,
-  viewCounts,
+  deactivateJobListing,
 };
