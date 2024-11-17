@@ -29,6 +29,10 @@ const JobListing = () => {
   const jobsPerPage = 4;
   const navigate = useNavigate();
 
+  useEffect(() => {
+    setCurrentPage(1); // Reset to the first page when filters or sort options change
+  }, [searchTerm, locationSearchTerm, jobType, jobLevel, sortOption]);
+
   const toSentenceCase = (str) => {
     if (!str) return "";
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
