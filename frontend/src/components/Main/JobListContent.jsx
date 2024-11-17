@@ -207,6 +207,39 @@ const JobListing = () => {
     }
   };
 
+  const applyForJob = async (jobId) => {
+    const userId = localStorage.getItem("Id");
+
+    if (!userId || !jobId) {
+      toast.error("User ID or Job ID is missing.");
+      return;
+    }
+
+    try {
+      const response = await axios.post("/jobapplication/upload/resume", {
+        user_id: userId,
+        joblisting_id: jobId,
+      });
+
+      if (response.data.successful) {
+        toast.success("Application submitted successfully!");
+
+        // Update job's `isApplied` state
+        setJobs((prevJobs) =>
+          prevJobs.map((job) =>
+            job.id === jobId ? { ...job, isApplied: true } : job
+          )
+        );
+      } else {
+        toast.error(response.data.message || "Failed to apply for the job.");
+      }
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || "An error occurred while applying."
+      );
+    }
+  };
+
   useEffect(() => {
     const userId = localStorage.getItem("Id");
 
@@ -857,21 +890,22 @@ const JobListing = () => {
                       )}
 
                       <div className="mt-4 flex flex-col md:flex-row md:space-x-4 items-center space-y-3 md:space-y-0">
-                        <a
-                          href={`/apply?id=${job.id}`}
-                          className="w-full md:w-auto"
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation(); // Prevent triggering the parent click event
+                            if (!job.isApplied) {
+                              applyForJob(job.id); // Call the applyForJob function
+                            }
+                          }}
+                          className={`w-full md:w-auto py-2 px-4 rounded-lg transition-all duration-300 ${
+                            job.isApplied
+                              ? "bg-gray-400 cursor-not-allowed text-gray-200"
+                              : "bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg"
+                          }`}
+                          disabled={job.isApplied} // Disable the button if the job is already applied
                         >
-                          <button
-                            className={`w-full md:w-auto py-2 px-4 rounded-lg transition-all duration-300 ${
-                              job.isApplied
-                                ? "bg-gray-400 cursor-not-allowed text-gray-200"
-                                : "bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg"
-                            }`}
-                            disabled={job.isApplied}
-                          >
-                            {job.isApplied ? "Already Applied" : "Apply Now"}
-                          </button>
-                        </a>
+                          {job.isApplied ? "Already Applied" : "Apply Now"}
+                        </button>
                         <button
                           className="w-full md:w-auto bg-transparent border-2 border-blue-600 text-blue-600 py-2 px-4 rounded-lg shadow-md hover:bg-blue-600 hover:text-white hover:shadow-lg transition-all duration-300 transform hover:scale-105"
                           onClick={() =>
@@ -1120,28 +1154,29 @@ const JobListing = () => {
                 </ul>
 
                 <div className="mt-6 flex flex-col md:flex-row md:space-x-4 items-center space-y-4 md:space-y-0">
-                  <a
-                    href={`/apply?id=${selectedJob.id}`}
-                    className="w-full md:w-auto"
+                  <button
+                    onClick={() => {
+                      if (!selectedJob.isApplied) {
+                        applyForJob(selectedJob.id); // Call the applyForJob function
+                      }
+                    }}
+                    className={`w-full md:w-auto py-3 px-6 rounded-lg transition-all duration-300 ${
+                      selectedJob.isApplied
+                        ? "bg-gray-400 cursor-not-allowed text-gray-200"
+                        : "bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg"
+                    }`}
+                    disabled={selectedJob.isApplied} // Disable the button if already applied
                   >
-                    <button
-                      className={`w-full md:w-auto py-3 px-6 rounded-lg transition-all duration-300 ${
-                        selectedJob.isApplied
-                          ? "bg-gray-400 cursor-not-allowed text-gray-200"
-                          : "bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg"
-                      }`}
-                      disabled={selectedJob.isApplied}
-                    >
-                      {selectedJob.isApplied ? "Already Applied" : "Apply Now"}
-                    </button>
-                  </a>
+                    {selectedJob.isApplied ? "Already Applied" : "Apply Now"}
+                  </button>
                   <button
                     className="w-full md:w-auto bg-transparent border-2 border-blue-600 text-blue-600 py-3 px-6 rounded-lg shadow-md hover:bg-blue-600 hover:text-white hover:shadow-lg transition-all duration-300 transform hover:scale-105"
-                    onClick={() => setIsMoreInfoVisible(!isMoreInfoVisible)}
+                    onClick={() => setIsMoreInfoVisible(!isMoreInfoVisible)} // Toggle Learn More section
                   >
                     Learn More
                   </button>
                 </div>
+
                 {isMoreInfoVisible && (
                   <div className="mt-6 p-8 bg-white rounded-lg shadow-2xl">
                     <div className="flex justify-between items-center mb-6">

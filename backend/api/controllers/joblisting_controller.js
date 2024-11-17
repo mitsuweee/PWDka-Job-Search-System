@@ -73,11 +73,28 @@ const postJobs = async (req, res, next) => {
       });
     }
 
+    // Check if a job with the same position name and level already exists for the company
+    const existingJob = await knex("job_listing")
+      .select("id")
+      .where({
+        position_name: position_name.trim().toLowerCase(),
+        level: level.trim().toLowerCase(),
+        company_id,
+      })
+      .first();
+
+    if (existingJob) {
+      return res.status(400).json({
+        successful: false,
+        message: `A job listing for "${position_name}" at "${level}" already exists. Please revise and try again.`,
+      });
+    }
+
     // Insert the job listing
     const [jobListingId] = await knex("job_listing")
       .insert({
-        position_name,
-        level,
+        position_name: position_name.trim().toLowerCase(),
+        level: level.trim().toLowerCase(),
         description,
         qualification,
         requirement,
@@ -111,7 +128,6 @@ const postJobs = async (req, res, next) => {
       }
     }
 
-    // Move the success response outside the loop
     return res.status(200).json({
       successful: true,
       message: "Job listing posted successfully!",

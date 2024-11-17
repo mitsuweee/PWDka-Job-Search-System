@@ -452,10 +452,10 @@ const ViewJobs = () => {
       });
   };
 
-  const handleDeleteJobListing = (id) => {
-    setSelectedJobId(id);
-    setIsDeleteModalOpen(true);
-  };
+  // const handleDeleteJobListing = (id) => {
+  //   setSelectedJobId(id);
+  //   setIsDeleteModalOpen(true);
+  // };
 
   const handleCheckboxChange = (e) => {
     const normalizedValue = normalizeText(e.target.value);
@@ -470,11 +470,16 @@ const ViewJobs = () => {
     }
   };
 
-  const confirmDelete = () => {
+  const handleDeactivateJobListing = (id) => {
+    setSelectedJobId(id);
+    setIsDeleteModalOpen(true); // Open confirmation modal
+  };
+
+  const confirmDeactivate = () => {
     if (selectedJobId) {
       const config = {
-        method: "delete",
-        url: `/joblisting/delete/${selectedJobId}`,
+        method: "put", // Use PUT method for deactivating
+        url: `/joblisting/update/deactivate/${selectedJobId}`, // Deactivate endpoint
         headers: {
           "Content-Type": "application/json",
         },
@@ -483,25 +488,62 @@ const ViewJobs = () => {
       setIsLoading(true);
       axios(config)
         .then(() => {
-          toast.success("Job listing deleted successfully!");
+          toast.success("Job listing deactivated successfully!");
           setJobListings((prevListings) =>
-            prevListings.filter((job) => job.id !== selectedJobId)
+            prevListings.map((job) =>
+              job.id === selectedJobId ? { ...job, status: "INACTIVE" } : job
+            )
           );
           setFilteredJobListings((prevListings) =>
-            prevListings.filter((job) => job.id !== selectedJobId)
+            prevListings.map((job) =>
+              job.id === selectedJobId ? { ...job, status: "INACTIVE" } : job
+            )
           );
         })
         .catch(() => {
-          toast.error("An error occurred while deleting the job listing.");
+          toast.error("An error occurred while deactivating the job listing.");
         })
         .finally(() => {
           setIsLoading(false);
         });
 
-      setIsDeleteModalOpen(false);
+      setIsDeleteModalOpen(false); // Close modal
       setSelectedJobId(null);
     }
   };
+
+  // const confirmDelete = () => {
+  //   if (selectedJobId) {
+  //     const config = {
+  //       method: "delete",
+  //       url: `/joblisting/delete/${selectedJobId}`,
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //     };
+
+  //     setIsLoading(true);
+  //     axios(config)
+  //       .then(() => {
+  //         toast.success("Job listing deleted successfully!");
+  //         setJobListings((prevListings) =>
+  //           prevListings.filter((job) => job.id !== selectedJobId)
+  //         );
+  //         setFilteredJobListings((prevListings) =>
+  //           prevListings.filter((job) => job.id !== selectedJobId)
+  //         );
+  //       })
+  //       .catch(() => {
+  //         toast.error("An error occurred while deleting the job listing.");
+  //       })
+  //       .finally(() => {
+  //         setIsLoading(false);
+  //       });
+
+  //     setIsDeleteModalOpen(false);
+  //     setSelectedJobId(null);
+  //   }
+  // };
   const toggleDisabilityOptions = () => {
     setShowDisabilityOptions(!showDisabilityOptions);
   };
@@ -844,7 +886,7 @@ const ViewJobs = () => {
                           </span>
                         </button>
                         <button
-                          onClick={() => handleDeleteJobListing(job.id)}
+                          onClick={() => handleDeactivateJobListing(job.id)}
                           className="bg-red-500 text-white flex items-center justify-center px-2 py-1 rounded-full shadow-sm hover:bg-red-700 transition duration-200"
                         >
                           <span className="material-symbols-outlined text-sm sm:text-base">
@@ -854,6 +896,7 @@ const ViewJobs = () => {
                             Delete
                           </span>
                         </button>
+
                         <button
                           onClick={() => handleUpdateJob(job)}
                           className="bg-yellow-500 text-white flex items-center justify-center px-2 py-1 rounded-full shadow-sm hover:bg-yellow-700 transition duration-200"
@@ -1510,15 +1553,15 @@ const ViewJobs = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
             <h3 className="text-xl font-semibold mb-4 text-center">
-              Confirm Deletion
+              Confirm Deactivation
             </h3>
             <p className="text-gray-600 mb-6">
-              Are you sure you want to delete this job listing? This will also
-              delete all job applications for this listing.
+              Are you sure you want to deactivate this job listing? Applicants
+              will no longer see it.
             </p>
             <div className="flex justify-center space-x-4">
               <button
-                onClick={confirmDelete}
+                onClick={confirmDeactivate}
                 className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors"
               >
                 Confirm

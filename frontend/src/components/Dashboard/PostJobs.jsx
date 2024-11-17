@@ -233,22 +233,25 @@ const PostJob = () => {
 
     // Validation for minimum salary
     if (parseFloat(jobDetails.minSalary) < 12900) {
-      toast.error("Minimum Salary must be at least ₱12900.");
+      toast.error("Minimum Salary must be at least ₱12,900.");
       return;
     }
 
+    // Validation for maximum salary being greater or equal to minimum salary
     if (parseFloat(jobDetails.maxSalary) < parseFloat(jobDetails.minSalary)) {
       toast.error(
-        "Maximum Salary must be equal or greater than Minimum Salary."
+        "Maximum Salary must be equal to or greater than the Minimum Salary."
       );
       return;
     }
-    // Validation for maximum salary limit (6 digits)
+
+    // Validation for maximum salary limit (up to 6 digits)
     if (jobDetails.maxSalary.toString().length > 6) {
       toast.error("Maximum Salary must not exceed ₱999,999.");
       return;
     }
 
+    // Proceed to confirm modal if validation passes
     setIsSubmitModalOpen(true);
   };
 

@@ -292,33 +292,64 @@ const AdminViewJobs = () => {
     setSelectedJobId(null); // Resets selected job ID
   };
 
-  const confirmDelete = () => {
+  // const confirmDelete = () => {
+  //   if (selectedJobId) {
+  //     // Checks if a job ID is selected
+  //     const config = {
+  //       method: "delete",
+  //       url: `/admin/delete/joblisting/${selectedJobId}`, // API endpoint for deleting a job listing
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //     };
+
+  //     setLoading(true); // Shows loading indicator
+  //     axios(config)
+  //       .then(() => {
+  //         toast.success("Job listing deleted successfully!"); // Shows success message
+  //         setJobListings(
+  //           (prevListings) =>
+  //             prevListings.filter((job) => job.id !== selectedJobId) // Removes deleted job from list
+  //         );
+  //       })
+  //       .catch(() => {
+  //         toast.error("An error occurred while deleting the job listing."); // Shows error message
+  //       })
+  //       .finally(() => {
+  //         setLoading(false); // Hides loading indicator
+  //         setIsDeleteModalOpen(false); // Closes delete modal
+  //         setSelectedJobId(null); // Resets selected job ID
+  //       });
+  //   }
+  // };
+
+  const confirmDeactivate = () => {
     if (selectedJobId) {
-      // Checks if a job ID is selected
       const config = {
-        method: "delete",
-        url: `/admin/delete/joblisting/${selectedJobId}`, // API endpoint for deleting a job listing
+        method: "put",
+        url: `/admin/update/deactivate/joblisting/${selectedJobId}`, // Deactivate endpoint
         headers: {
           "Content-Type": "application/json",
         },
       };
 
-      setLoading(true); // Shows loading indicator
+      setLoading(true);
       axios(config)
         .then(() => {
-          toast.success("Job listing deleted successfully!"); // Shows success message
-          setJobListings(
-            (prevListings) =>
-              prevListings.filter((job) => job.id !== selectedJobId) // Removes deleted job from list
+          toast.success("Job listing deactivated successfully!");
+          setJobListings((prevListings) =>
+            prevListings.map((job) =>
+              job.id === selectedJobId ? { ...job, status: "INACTIVE" } : job
+            )
           );
         })
         .catch(() => {
-          toast.error("An error occurred while deleting the job listing."); // Shows error message
+          toast.error("An error occurred while deactivating the job listing.");
         })
         .finally(() => {
-          setLoading(false); // Hides loading indicator
-          setIsDeleteModalOpen(false); // Closes delete modal
-          setSelectedJobId(null); // Resets selected job ID
+          setLoading(false);
+          setIsDeleteModalOpen(false);
+          setSelectedJobId(null);
         });
     }
   };
@@ -713,7 +744,7 @@ const AdminViewJobs = () => {
                       View
                     </button>
                     <button
-                      onClick={() => handleDeleteJobListing(job.id)} // Opens delete modal with job ID
+                      onClick={() => handleDeleteJobListing(job.id)} // Opens the delete modal
                       className="bg-red-500 text-white text-xs md:text-sm px-3 py-1 ml-2 rounded-full shadow-sm hover:bg-red-700 transition duration-200 font-medium"
                     >
                       Delete
@@ -988,21 +1019,21 @@ const AdminViewJobs = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
             <h3 className="text-xl font-semibold mb-4 text-center">
-              Confirm Deletion
+              Confirm Deactivation
             </h3>
             <p className="text-gray-600 mb-6">
-              Are you sure you want to delete this job listing? This will also
-              delete all job applications for this listing.
+              Are you sure you want to deactivate this job listing? Applicants
+              will no longer see it.
             </p>
             <div className="flex justify-center space-x-4">
               <button
-                onClick={confirmDelete} // Confirms deletion
+                onClick={confirmDeactivate} // Calls the deactivation function
                 className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors"
               >
                 Confirm
               </button>
               <button
-                onClick={closeDeleteModal} // Cancels deletion
+                onClick={closeDeleteModal} // Cancels the action
                 className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400 transition-colors"
               >
                 Cancel
