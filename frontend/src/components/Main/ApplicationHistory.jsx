@@ -46,7 +46,7 @@ const ApplicationHistory = () => {
       {/* Back Button */}
       <button
         className="mb-6 flex items-center space-x-2 bg-gradient-to-r from-blue-500 to-blue-700 text-white px-6 py-3 rounded-lg shadow-md hover:from-blue-600 hover:to-blue-800 hover:shadow-lg transform hover:-translate-y-1 transition duration-200 ease-in-out"
-        onClick={() => navigate("/")}
+        onClick={() => navigate("/joblist")}
       >
         <span className="text-lg">←</span>
         <span>Back to Job Listings</span>
