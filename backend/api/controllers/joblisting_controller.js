@@ -780,99 +780,37 @@ const viewCounts = async (req, res, next) => {
 
 const deactivateJobListing = async (req, res, next) => {
   const id = req.params.id;
-  const { reason } = req.body; // Get the reason for deactivation
 
   if (!id) {
     return res.status(400).json({
       successful: false,
       message: "Job Listing ID is missing",
     });
-  }
+  } else {
+    try {
+      await knex.transaction(async (trx) => {
+        const result = await trx("job_listing").where("id", id).update({
+          status: "DEACTIVATE",
+        });
 
-  if (!reason) {
-    return res.status(400).json({
-      successful: false,
-      message: "Reason for deactivating the job listing is required",
-    });
-  }
+        if (result === 0) {
+          return res.status(404).json({
+            successful: false,
+            message: "Job Listing not found",
+          });
+        }
+      });
 
-  try {
-    // Deactivate the job listing
-    const result = await knex("job_listing").where("id", id).update({
-      status: "DEACTIVATE",
-    });
-
-    if (result === 0) {
-      return res.status(404).json({
+      return res.status(200).json({
+        successful: true,
+        message: "Job Listing deactivated successfully",
+      });
+    } catch (err) {
+      return res.status(500).json({
         successful: false,
-        message: "Job Listing not found",
+        message: err.message,
       });
     }
-
-    // Fetch the job listing details including position_name, level, and company_id
-    const jobListing = await knex("job_listing")
-      .select("position_name", "level", "company_id")
-      .where("id", id)
-      .first();
-
-    if (!jobListing) {
-      return res.status(404).json({
-        successful: false,
-        message: "Job Listing not found",
-      });
-    }
-
-    const { position_name, level, company_id } = jobListing;
-
-    // Fetch the company's email address
-    const company = await knex("company")
-      .select("email", "name")
-      .where("id", company_id)
-      .first();
-
-    if (!company) {
-      return res.status(404).json({
-        successful: false,
-        message: "Company not found",
-      });
-    }
-
-    // Send an email to the company
-    const transporter = nodemailer.createTransport({
-      service: "Gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD,
-      },
-    });
-
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: company.email,
-      subject: "Job Listing Deactivated",
-      text: `Dear ${company.name},
-
-Your job listing with the position of "${position_name}" at level of "${level}" has been deactivated.
-
-Reason for deactivation: "${reason}"
-
-If you have any questions, please contact support.
-
-Best regards,
-PWDKA TEAM`,
-    };
-
-    await transporter.sendMail(mailOptions);
-
-    return res.status(200).json({
-      successful: true,
-      message: "Job Listing deactivated and email sent to the company",
-    });
-  } catch (err) {
-    return res.status(500).json({
-      successful: false,
-      message: err.message,
-    });
   }
 };
 

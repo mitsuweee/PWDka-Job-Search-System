@@ -369,6 +369,13 @@ const ViewJobs = () => {
 
   const normalizeText = (text) => text.toLowerCase().trim();
 
+  const capitalizeWords = (str) => {
+    return str
+      .split("-")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join("-");
+  };
+
   const handleUpdateJob = (jobData) => {
     setJobUpdate({
       id: jobData.id,
@@ -379,18 +386,13 @@ const ViewJobs = () => {
       minimumSalary: jobData.minimum_salary,
       maximumSalary: jobData.maximum_salary,
       salaryVisibility: jobData.salary_visibility || "HIDE",
-      level: jobData.level,
+      level: capitalizeWords(jobData.level || ""), // Normalize case here
       status: jobData.status || "ACTIVE",
       positionType: jobData.position_type || "full-time",
       disabilityCategories: jobData.disability_types
         ? jobData.disability_types.split(",").map((item) => item.trim())
         : [],
     });
-
-    console.log(
-      "Mapped Position Type after setting jobUpdate:",
-      jobData.position_type || ""
-    );
 
     setSelectedDisabilityCategories(
       jobData.disability_types
@@ -399,6 +401,7 @@ const ViewJobs = () => {
     );
 
     setIsUpdateModalOpen(true);
+    console.log(jobData);
   };
 
   const handleChange = (e) => {
@@ -408,6 +411,36 @@ const ViewJobs = () => {
 
   const handleSubmitUpdate = (e) => {
     e.preventDefault();
+
+    // Validation for minimum salary
+    if (parseFloat(jobUpdate.minimumSalary) < 12900) {
+      toast.error("Minimum Salary must be at least ₱12,900.");
+      return;
+    }
+
+    // Validation for maximum salary being greater or equal to minimum salary
+    if (
+      parseFloat(jobUpdate.maximumSalary) < parseFloat(jobUpdate.minimumSalary)
+    ) {
+      toast.error(
+        "Maximum Salary must be equal to or greater than the Minimum Salary."
+      );
+      return;
+    }
+
+    // Validation for maximum salary limit (up to 6 digits)
+    if (jobUpdate.maximumSalary.toString().length > 6) {
+      toast.error("Maximum Salary must not exceed ₱999,999.");
+      return;
+    }
+
+    // Validation for job description length (must be <= 3,500 characters)
+    if (jobUpdate.description.length > 3500) {
+      toast.error("Job Description must not exceed 3,500 characters.");
+      return;
+    }
+
+    // Proceed with job update if all validations pass
     const config = {
       method: "put",
       url: `/joblisting/update/${jobUpdate.id}`,
@@ -424,7 +457,6 @@ const ViewJobs = () => {
         salary_visibility: jobUpdate.salaryVisibility,
         level: jobUpdate.level,
         status: jobUpdate.status,
-
         positiontype_id:
           jobUpdate.positionType === "full-time"
             ? 1
@@ -449,13 +481,11 @@ const ViewJobs = () => {
             ? error.response.data.message
             : "Error updating job. Please try again.";
         toast.error(errorMessage);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
-
-  // const handleDeleteJobListing = (id) => {
-  //   setSelectedJobId(id);
-  //   setIsDeleteModalOpen(true);
-  // };
 
   const handleCheckboxChange = (e) => {
     const normalizedValue = normalizeText(e.target.value);
@@ -499,6 +529,8 @@ const ViewJobs = () => {
               job.id === selectedJobId ? { ...job, status: "INACTIVE" } : job
             )
           );
+          // Reload the page to ensure updated data is reflected
+          window.location.reload();
         })
         .catch(() => {
           toast.error("An error occurred while deactivating the job listing.");
@@ -512,38 +544,6 @@ const ViewJobs = () => {
     }
   };
 
-  // const confirmDelete = () => {
-  //   if (selectedJobId) {
-  //     const config = {
-  //       method: "delete",
-  //       url: `/joblisting/delete/${selectedJobId}`,
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //     };
-
-  //     setIsLoading(true);
-  //     axios(config)
-  //       .then(() => {
-  //         toast.success("Job listing deleted successfully!");
-  //         setJobListings((prevListings) =>
-  //           prevListings.filter((job) => job.id !== selectedJobId)
-  //         );
-  //         setFilteredJobListings((prevListings) =>
-  //           prevListings.filter((job) => job.id !== selectedJobId)
-  //         );
-  //       })
-  //       .catch(() => {
-  //         toast.error("An error occurred while deleting the job listing.");
-  //       })
-  //       .finally(() => {
-  //         setIsLoading(false);
-  //       });
-
-  //     setIsDeleteModalOpen(false);
-  //     setSelectedJobId(null);
-  //   }
-  // };
   const toggleDisabilityOptions = () => {
     setShowDisabilityOptions(!showDisabilityOptions);
   };
@@ -851,7 +851,16 @@ const ViewJobs = () => {
 
                     {/* Job Level and Salary for Tablet/Desktop */}
                     <td className="py-4 px-4 sm:px-6 text-gray-800 text-xs sm:text-sm break-words hidden sm:table-cell">
-                      {job.level ? job.level : "N/A"}
+                      {job.level
+                        ? job.level
+                            .split(" ")
+                            .map(
+                              (word) =>
+                                word.charAt(0).toUpperCase() +
+                                word.slice(1).toLowerCase()
+                            )
+                            .join(" ")
+                        : "N/A"}
                     </td>
                     <td className="py-4 px-4 sm:px-6 text-gray-800 text-xs sm:text-sm break-words hidden sm:table-cell">
                       {job.minimum_salary && job.maximum_salary

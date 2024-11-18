@@ -24,6 +24,7 @@ const PostJob = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [companyName, setCompanyName] = useState("");
   const [isSuccessCardVisible, setIsSuccessCardVisible] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(false); // Track form validity
   const [showSalaryDetails, setShowSalaryDetails] = useState(false);
 
   const navigate = useNavigate();
@@ -228,6 +229,39 @@ const PostJob = () => {
     setIsModalOpen(false);
   };
 
+  // Function to check if the form is valid
+  const validateForm = () => {
+    const {
+      positionName,
+      jobDescription,
+      requirements,
+      qualifications,
+      minSalary,
+      maxSalary,
+      positionType,
+      level,
+      disabilityCategories,
+    } = jobDetails;
+
+    // Check if all required fields have a value
+    const isValid =
+      positionName.trim() &&
+      jobDescription.trim() &&
+      requirements.trim() &&
+      qualifications.trim() &&
+      minSalary.trim() &&
+      maxSalary.trim() &&
+      positionType.trim() &&
+      level.trim() &&
+      disabilityCategories.length > 0;
+
+    setIsFormValid(isValid);
+  };
+
+  useEffect(() => {
+    validateForm();
+  }, [jobDetails]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -317,17 +351,23 @@ const PostJob = () => {
     setShowDisabilityOptions(false);
     setIsSuccessCardVisible(false);
   };
-
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    // Allow only valid numeric input
+    if (name === "minSalary" || name === "maxSalary") {
+      if (!/^\d*$/.test(value)) {
+        return; // Ignore non-numeric input
+      }
+    }
+
+    // Update state temporarily
+    setJobDetails({ ...jobDetails, [name]: value });
 
     // Validate maxSalary length
     if (name === "maxSalary" && value.length > 6) {
       toast.error("Maximum Salary must not exceed 7 digits.");
-      return;
     }
-
-    setJobDetails({ ...jobDetails, [name]: value });
   };
 
   const handleCheckboxChange = (e) => {
@@ -778,10 +818,14 @@ const PostJob = () => {
                 </div>
               </div>
             )}
-
             <button
               type="submit"
-              className="bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-green-600 transition"
+              className={`px-6 py-3 rounded-lg shadow-lg transition duration-200 ${
+                isFormValid
+                  ? "bg-green-500 hover:bg-green-600 text-white cursor-pointer"
+                  : "bg-gray-400 text-gray-200 cursor-not-allowed"
+              }`}
+              disabled={!isFormValid} // Disable button if form is invalid
             >
               Post Job
             </button>
