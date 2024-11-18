@@ -299,7 +299,7 @@ const ViewApplicants = () => {
         setApplicants((prev) =>
           prev.map((applicant) =>
             applicant.id === rejectingApplicantId
-              ? { ...applicant, status: "Rejected" }
+              ? { ...applicant, status: "REJECTED" }
               : applicant
           )
         );
@@ -347,7 +347,7 @@ const ViewApplicants = () => {
   };
 
   const handleStatusChange = (applicantId, newStatus) => {
-    if (newStatus === "Rejected") {
+    if (newStatus === "REJECTED") {
       openRejectionModal(applicantId); // Open modal for rejection reason
     } else {
       axios
@@ -589,7 +589,7 @@ const ViewApplicants = () => {
               <option value="Under Review">Under Review</option>
               <option value="Reviewed">Reviewed</option>
               <option value="Pending">Pending</option>
-              <option value="Rejected">Rejected</option>
+              <option value="REJECTED">Rejected</option>
             </select>
 
             {/* Sorting Options Dropdown */}
@@ -659,7 +659,7 @@ const ViewApplicants = () => {
                         <option value="Under Review">Under Review</option>
                         <option value="Reviewed">Reviewed</option>
                         <option value="Pending">Pending</option>
-                        <option value="Rejected">Rejected</option>
+                        <option value="REJECTED">Rejected</option>
                       </select>
                     </td>
                     <td className="py-4 px-6 text-center hidden sm:flex justify-center space-x-2">
@@ -717,7 +717,7 @@ const ViewApplicants = () => {
                           <option value="Under Review">Under Review</option>
                           <option value="Reviewed">Reviewed</option>
                           <option value="Pending">Pending</option>
-                          <option value="Rejected">Rejected</option>
+                          <option value="REJECTED">Rejected</option>
                         </select>
 
                         <div className="flex space-x-1">
@@ -757,7 +757,6 @@ const ViewApplicants = () => {
             </tbody>
           </table>
         </div>
-
         {/* Rejection Modal */}
         {isRejectionModalOpen && (
           <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
