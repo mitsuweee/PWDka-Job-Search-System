@@ -14,6 +14,8 @@ const AdminViewAdmin = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOrder, setSortOrder] = useState("Newest");
   const [currentPage, setCurrentPage] = useState(1);
+  const [statusFilter, setStatusFilter] = useState("ACTIVE"); // Default to Verified
+
   const [currentAdmin, setCurrentAdmin] = useState({
     firstName: "",
     lastName: "",
@@ -219,38 +221,41 @@ const AdminViewAdmin = () => {
       console.error("Failed to check admin status.");
     }
   };
+  const fetchAdmins = async () => {
+    setLoading(true);
+    const currentAdminId = localStorage.getItem("Id"); // Get current admin ID from localStorage
+
+    try {
+      const response = await axios.get("/admin/view/admins", {
+        params: { status: statusFilter }, // Dynamically fetch based on statusFilter
+      });
+      // Filter admins if necessary (e.g., to exclude the current admin)
+      const filteredAdmins = response.data.data.filter(
+        (admin) => admin.id.toString() !== currentAdminId
+      );
+      setAdmins(filteredAdmins);
+      toast.success(
+        `Successfully loaded ${
+          statusFilter === "ACTIVE" ? "active" : "deactivated"
+        } admins`
+      );
+    } catch (error) {
+      toast.error("Failed to load admins");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchAdmins = async () => {
-      setLoading(true);
-      const currentAdminId = localStorage.getItem("Id"); // Get current admin ID from localStorage
-
-      try {
-        const response = await axios.get("/admin/view/admins");
-        // Filter out deactivated admins and the current admin by checking id as a string
-        const activeAdmins = response.data.data.filter(
-          (admin) =>
-            admin.status !== "DEACTIVATE" &&
-            admin.id.toString() !== currentAdminId
-        );
-        setAdmins(activeAdmins);
-        toast.success("Admins loaded successfully");
-      } catch (error) {
-        toast.error("Failed to load admins");
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     const interval = setInterval(() => {
       checkAdminStatus(); // Calls the function that verifies admin status
     }, 5000);
 
-    fetchAdmins();
+    fetchAdmins(); // Fetch admins whenever statusFilter changes
 
     return () => clearInterval(interval);
-  }, []);
+  }, [statusFilter]); // Add statusFilter as a dependency
 
   const handleViewAdmin = (adminId) => {
     const selectedAdmin = admins.find((admin) => admin.id === adminId);
@@ -291,8 +296,6 @@ const AdminViewAdmin = () => {
 
   const indexOfLastAdmin = currentPage * adminsPerPage;
   const indexOfFirstAdmin = indexOfLastAdmin - adminsPerPage;
-
-  const [statusFilter, setStatusFilter] = useState("Verified"); // Default to Verified
   const filteredAdmins = admins
     .filter((admin) => {
       // Apply the status filter
@@ -559,13 +562,15 @@ const AdminViewAdmin = () => {
             }
             className={`px-4 py-2 rounded-lg font-semibold transition duration-200 shadow ${
               statusFilter === "DEACTIVATE"
-                ? "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                : "bg-blue-500 text-white hover:bg-blue-600"
+                ? "bg-green-500 text-white hover:bg-green-600" // Green for "View Active Admins"
+                : "bg-red-500 text-white hover:bg-red-600" // Red for "View Deactivated Admins"
             }`}
           >
-            {statusFilter === "DEACTIVATE"
-              ? "View Active Admins"
-              : "View Deactivated Admins"}
+            {
+              statusFilter === "DEACTIVATE"
+                ? "View Active Admins" // Text for green button
+                : "View Deactivated Admins" // Text for red button
+            }
           </button>
         </div>
 
