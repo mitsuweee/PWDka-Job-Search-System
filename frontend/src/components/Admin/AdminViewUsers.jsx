@@ -589,7 +589,7 @@ const AdminViewUsers = () => {
             }
             className={`px-4 py-2 rounded-lg font-semibold transition duration-200 shadow ${
               statusFilter === "Deactivate"
-                ? "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                ? "bg-green-500 text-white hover:bg-green-600"
                 : "bg-red-500 text-white hover:bg-red-600"
             }`}
           >

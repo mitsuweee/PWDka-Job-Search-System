@@ -234,13 +234,12 @@ const AdminViewAdmin = () => {
         (admin) => admin.id.toString() !== currentAdminId
       );
       setAdmins(filteredAdmins);
-      toast.success(
+      console.success(
         `Successfully loaded ${
           statusFilter === "ACTIVE" ? "active" : "deactivated"
         } admins`
       );
     } catch (error) {
-      toast.error("Failed to load admins");
       console.error(error);
     } finally {
       setLoading(false);
