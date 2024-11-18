@@ -2,6 +2,7 @@ const { json } = require("body-parser");
 const knex = require("../models/connection_db");
 const jobApplicationModel = require("../models/jobapplication_model");
 const util = require("./util");
+const nodemailer = require("nodemailer");
 
 const uploadResume = async (req, res, next) => {
   let user_id = req.body.user_id;
@@ -366,9 +367,10 @@ const deleteJobApplication = async (req, res, next) => {
 
 // akin to- mits ewan ko kung tama ba to or mali
 const updateJobApplicationStatus = async (req, res, next) => {
-  let id = req.params.id;
-  let status = req.body.status;
+  const { id } = req.params;
+  const { status, rejectionReason } = req.body;
 
+  // Validate the presence of ID and status
   if (!id || !status) {
     return res.status(400).json({
       successful: false,
@@ -377,30 +379,73 @@ const updateJobApplicationStatus = async (req, res, next) => {
   }
 
   try {
-    const applicationExists = await knex("job_application")
-      .where({ id })
-      .first();
+    // Check if the job application exists
+    const application = await knex("job_application").where({ id }).first();
 
-    if (!applicationExists) {
+    if (!application) {
       return res.status(404).json({
         successful: false,
         message: "Job application not found",
       });
     }
 
-    // Update the status in the database
-    await knex("job_application").where({ id }).update({ status: status });
+    // If status is 'REJECTED', ensure a rejection reason is provided
+    if (status.toUpperCase() === "REJECTED" && !rejectionReason) {
+      return res.status(400).json({
+        successful: false,
+        message: "Rejection reason is required when status is 'REJECTED'",
+      });
+    }
 
-    // Fetch the updated applicant data
-    const updatedApplicant = await knex("job_application")
-      .select("id", "status") // Add other fields as needed
-      .where({ id })
+    // Update the status in the database
+    await knex("job_application").where({ id }).update({ status });
+
+    // Fetch updated job application details with user email, position name, and company name
+    const updatedApplication = await knex("job_application")
+      .join("user", "job_application.user_id", "user.id")
+      .join("job_listing", "job_application.joblisting_id", "job_listing.id")
+      .join("company", "job_listing.company_id", "company.id")
+      .select(
+        "job_application.id",
+        "job_application.status",
+        "user.email",
+        "job_listing.position_name",
+        "company.name as company_name"
+      )
+      .where("job_application.id", id)
       .first();
+
+    // If status is 'REJECTED', send a rejection email
+    if (status.toUpperCase() === "REJECTED" && updatedApplication.email) {
+      // Configure the email transport
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.EMAIL_USER, // Your email address
+          pass: process.env.EMAIL_PASS, // Your email password or app-specific password
+        },
+      });
+
+      // Send the rejection email
+      await transporter.sendMail({
+        from: process.env.EMAIL_USER,
+        to: updatedApplication.email,
+        subject: "Job Application Status Update",
+        text: `Dear Applicant,\n\nWe regret to inform you that your application for the position of "${updatedApplication.position_name}" at "${updatedApplication.company_name}" has been rejected.\n\nReason: ${rejectionReason}\n\nBest Regards,\n${updatedApplication.company_name} HR Team`,
+      });
+
+      console.log(
+        `Rejection email sent to ${updatedApplication.email} for position "${updatedApplication.position_name}" at "${updatedApplication.company_name}"`
+      );
+    }
 
     return res.status(200).json({
       successful: true,
       message: `Successfully updated Job Application status to '${status}'!`,
-      data: updatedApplicant, // Include updated data in response
+      data: {
+        id: updatedApplication.id,
+        status: updatedApplication.status,
+      },
     });
   } catch (err) {
     return res.status(500).json({
