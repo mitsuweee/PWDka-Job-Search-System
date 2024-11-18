@@ -296,16 +296,18 @@ const AdminViewAdmin = () => {
   const filteredAdmins = admins
     .filter((admin) => {
       // Apply the status filter
-      if (statusFilter === "Verified" && admin.status !== "VERIFIED")
+      if (statusFilter === "ACTIVE" && admin.status !== "ACTIVE") return false;
+      if (statusFilter === "DEACTIVATE" && admin.status !== "DEACTIVATE")
         return false;
-      if (statusFilter === "Deactivated" && admin.status !== "DEACTIVATE")
-        return false;
+
+      // Apply search filter
       const combinedFields =
         `${admin.first_name} ${admin.last_name} ${admin.email}`.toLowerCase();
       return combinedFields.includes(searchTerm.toLowerCase());
     })
 
     .sort((a, b) => {
+      // Sorting logic
       if (sortOrder === "A-Z") return a.first_name.localeCompare(b.first_name);
       if (sortOrder === "Z-A") return b.first_name.localeCompare(a.first_name);
       if (sortOrder === "Newest")
@@ -552,17 +554,17 @@ const AdminViewAdmin = () => {
           <button
             onClick={() =>
               setStatusFilter(
-                statusFilter === "Deactivated" ? "Verified" : "Deactivated"
+                statusFilter === "DEACTIVATE" ? "ACTIVE" : "DEACTIVATE"
               )
             }
             className={`px-4 py-2 rounded-lg font-semibold transition duration-200 shadow ${
-              statusFilter === "Deactivated"
+              statusFilter === "DEACTIVATE"
                 ? "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                : "bg-red-500 text-white hover:bg-red-600"
+                : "bg-blue-500 text-white hover:bg-blue-600"
             }`}
           >
-            {statusFilter === "Deactivated"
-              ? "View Verified Admins"
+            {statusFilter === "DEACTIVATE"
+              ? "View Active Admins"
               : "View Deactivated Admins"}
           </button>
         </div>
