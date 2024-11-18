@@ -620,11 +620,14 @@ const AdminViewAdmin = () => {
                         View
                       </button>
                       <button
-                        onClick={() => handleDeactivateAdmin(admin.id)}
+                        onClick={() =>
+                          admin.status !== "DEACTIVATE" &&
+                          handleDeactivateAdmin(admin.id)
+                        } // Prevent click if already deactivated
                         className={`text-xs md:text-sm px-3 py-1 rounded-full shadow-sm transition duration-200 font-medium ${
                           admin.status === "DEACTIVATE"
-                            ? "bg-gray-400 text-gray-600 cursor-not-allowed" // Grayed out and unclickable style
-                            : "bg-yellow-500 text-white hover:bg-yellow-700" // Normal active style
+                            ? "bg-gray-400 text-white cursor-not-allowed" // Grayed out and unclickable style
+                            : "bg-red-500 text-white hover:bg-red-600" // Normal active style
                         }`}
                         disabled={admin.status === "DEACTIVATE"} // Disable the button if status is DEACTIVATE
                       >

@@ -649,19 +649,18 @@ const AdminViewComp = () => {
                   <td className="py-4 px-6 text-center">
                     <button
                       onClick={() => handleViewCompany(company.id)}
-                      className="bg-blue-500 text-white text-xs md:text-sm px-3 py-1 rounded-full shadow-sm hover:bg-blue-700 transition duration-200 font-medium "
+                      className="bg-blue-500 text-white text-xs md:text-sm px-3 py-1 rounded-full shadow-sm hover:bg-blue-700 transition duration-200 font-medium"
                     >
                       View
                     </button>
-                    {/* Deactivate Button */}
                     <button
                       onClick={() => handleDeactivateCompany(company.id)}
                       className={`text-xs md:text-sm px-3 py-1 rounded-full shadow-sm transition duration-200 font-medium ml-2 ${
                         company.status === "DEACTIVATE"
-                          ? "bg-red-400 text-white cursor-not-allowed" // Disabled style
-                          : "bg-yellow-500 hover:bg-yellow-700" // Active style
+                          ? "bg-gray-400 text-white cursor-not-allowed" // Disabled style
+                          : "bg-red-500 text-white hover:bg-red-600" // Active style
                       }`}
-                      disabled={company.status === "DEACTIVATE"} // Disable button if already deactivated
+                      disabled={company.status === "DEACTIVATE"} // Disable button if deactivated
                     >
                       {company.status === "DEACTIVATE"
                         ? "Deactivated"

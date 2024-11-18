@@ -651,10 +651,10 @@ const AdminViewUsers = () => {
                         } // Prevent click if deactivated
                         className={`${
                           user.status === "DEACTIVATE"
-                            ? "bg-red-400 text-white cursor-not-allowed" // Non-clickable style for deactivated
-                            : "bg-yellow-500 hover:bg-yellow-700" // Active button style
+                            ? "bg-gray-400 text-white cursor-not-allowed" // Disabled style
+                            : "bg-red-500 text-white hover:bg-red-600" // Active style
                         } text-xs md:text-sm px-3 py-1 rounded-full shadow-sm transition duration-200 font-medium`}
-                        disabled={user.status === "DEACTIVATED"} // Disable button if deactivated
+                        disabled={user.status === "DEACTIVATE"} // Disable button if deactivated
                       >
                         {user.status === "DEACTIVATE"
                           ? "Deactivated"
