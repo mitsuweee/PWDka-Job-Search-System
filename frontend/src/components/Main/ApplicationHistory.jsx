@@ -8,6 +8,18 @@ const ApplicationHistory = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [tokenValid, setTokenValid] = useState(false); // New state for token validation
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedJob, setSelectedJob] = useState(null);
+
+  const openJobModal = (job) => {
+    setSelectedJob(job);
+    setIsModalOpen(true);
+  };
+
+  const closeJobModal = () => {
+    setIsModalOpen(false);
+    setSelectedJob(null);
+  };
 
   const checkUserStatus = async () => {
     try {
@@ -232,11 +244,16 @@ const ApplicationHistory = () => {
                     <td className="py-4 px-4 sm:px-6 text-gray-800 text-xs sm:text-sm break-words">
                       <span
                         className="text-blue-600 hover:underline cursor-pointer"
-                        onClick={() =>
-                          navigate(`/job-details/${application.job_id}`)
-                        }
+                        onClick={() => openJobModal(application)} // Pass the application as the selected job
                       >
-                        {application.position_name}
+                        {application?.position_name
+                          .split(" ")
+                          .map(
+                            (word) =>
+                              word.charAt(0).toUpperCase() +
+                              word.slice(1).toLowerCase()
+                          )
+                          .join(" ")}
                       </span>
                       {/* Mobile Additional Info */}
                       <div className="sm:hidden mt-2 text-gray-600 text-xs">
@@ -305,6 +322,214 @@ const ApplicationHistory = () => {
             <p className="text-2xl text-gray-500">
               No application history found.
             </p>
+          </div>
+        )}
+
+        {isModalOpen && selectedJob && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-3xl">
+              <div className="flex justify-between items-center border-b pb-3">
+                <h2 className="text-2xl font-semibold">
+                  {selectedJob?.position_name
+                    .split(" ")
+                    .map(
+                      (word) =>
+                        word.charAt(0).toUpperCase() +
+                        word.slice(1).toLowerCase()
+                    )
+                    .join(" ")}
+                </h2>
+                <button
+                  onClick={closeJobModal}
+                  className="text-gray-500 hover:text-gray-800 transition duration-200"
+                >
+                  ✕
+                </button>
+              </div>
+              {/* Scrollable Content */}
+              <div
+                className="mt-4 space-y-4 overflow-y-auto"
+                style={{ maxHeight: "70vh" }} // Adjust height as needed
+              >
+                <div className="bg-gray-100 p-4 rounded-lg shadow-inner">
+                  <p className="text-black font-semibold flex items-center">
+                    <span className="material-symbols-outlined mr-1">
+                      business
+                    </span>{" "}
+                    Company Name:
+                  </p>
+                  <p className="text-gray-600 mt-2">
+                    {selectedJob.company_name}
+                  </p>
+                </div>
+
+                <div className="bg-gray-100 p-4 rounded-lg shadow-inner">
+                  <p className="text-black font-semibold flex items-center">
+                    <span className="material-symbols-outlined mr-1">
+                      radar
+                    </span>{" "}
+                    Job Level:
+                  </p>
+                  <p className="text-gray-600 mt-2">{selectedJob.level}</p>
+                </div>
+
+                <div className="bg-gray-100 p-4 rounded-lg shadow-inner">
+                  <p className="text-black font-semibold flex items-center">
+                    <span className="material-symbols-outlined mr-1">
+                      description
+                    </span>{" "}
+                    Job Description:
+                  </p>
+                  {selectedJob?.description
+                    .split(" ")
+                    .map(
+                      (word) =>
+                        word.charAt(0).toUpperCase() +
+                        word.slice(1).toLowerCase()
+                    )
+                    .join(" ")}
+                </div>
+
+                <div className="bg-gray-100 p-4 rounded-lg shadow-inner">
+                  <p className="text-black font-semibold flex items-center">
+                    <span className="material-symbols-outlined mr-1">
+                      build
+                    </span>{" "}
+                    Qualifications:
+                  </p>
+                  <ul className="text-gray-600 mt-2 text-sm leading-relaxed list-disc pl-4">
+                    {selectedJob.qualification &&
+                      selectedJob.qualification
+                        .split("\n")
+                        .map((part, index) => (
+                          <li key={index}>
+                            {part.trim().charAt(0).toUpperCase() +
+                              part.trim().slice(1).toLowerCase()}
+                          </li>
+                        ))}
+                  </ul>
+                </div>
+
+                <div className="bg-gray-100 p-4 rounded-lg shadow-inner">
+                  <p className="text-black font-semibold flex items-center">
+                    <span className="material-symbols-outlined mr-1">
+                      check_circle
+                    </span>{" "}
+                    Requirements:
+                  </p>
+                  <ul className="text-gray-600 mt-2 text-sm leading-relaxed list-disc pl-4">
+                    {selectedJob.requirement &&
+                      selectedJob.requirement
+                        .split("\n")
+                        .map((part, index) => (
+                          <li key={index}>
+                            {part.trim().charAt(0).toUpperCase() +
+                              part.trim().slice(1).toLowerCase()}
+                          </li>
+                        ))}
+                  </ul>
+                </div>
+
+                <div className="bg-gray-100 p-3 rounded-lg shadow-inner">
+                  <div className="flex flex-col sm:flex-row justify-start items-start sm:items-center text-left space-y-1 sm:space-y-0">
+                    <div className="flex flex-row w-full sm:w-auto justify-start items-center">
+                      <span className="material-symbols-outlined text-black text-base sm:text-sm mr-2">
+                        payments
+                      </span>
+                      {selectedJob.minimum_salary ===
+                      selectedJob.maximum_salary ? (
+                        <div className="flex flex-col items-start">
+                          <span className="text-black font-semibold text-sm sm:text-base">
+                            Salary
+                          </span>
+                          <span className="text-gray-600 text-xs sm:text-sm">
+                            ₱ {selectedJob.minimum_salary.toLocaleString()}
+                          </span>
+                        </div>
+                      ) : (
+                        <>
+                          <div className="flex flex-col items-start">
+                            <span className="text-black font-semibold text-sm sm:text-base">
+                              Min Salary
+                            </span>
+                            <span className="text-gray-600 text-xs sm:text-sm">
+                              ₱ {selectedJob.minimum_salary.toLocaleString()}
+                            </span>
+                          </div>
+                          <span className="text-black font-semibold text-sm mx-2">
+                            -
+                          </span>
+                          <div className="flex flex-col items-start">
+                            <span className="text-black font-semibold text-sm sm:text-base">
+                              Max Salary
+                            </span>
+                            <span className="text-gray-600 text-xs sm:text-sm">
+                              ₱ {selectedJob.maximum_salary.toLocaleString()}
+                            </span>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-gray-100 p-4 rounded-lg shadow-inner">
+                  <p className="text-black font-semibold flex items-center">
+                    <span className="material-symbols-outlined mr-1">
+                      location_on
+                    </span>{" "}
+                    Address:
+                  </p>
+                  <p className="text-gray-600 mt-2">
+                    {[selectedJob.company_address, selectedJob.company_city]
+                      .map((item) =>
+                        item
+                          .split(" ")
+                          .map(
+                            (word) =>
+                              word.charAt(0).toUpperCase() +
+                              word.slice(1).toLowerCase()
+                          )
+                          .join(" ")
+                      )
+                      .join(", ")}
+                  </p>
+                </div>
+
+                <div className="bg-gray-100 p-4 rounded-lg shadow-inner">
+                  <p className="text-black font-semibold flex items-center">
+                    <span className="material-symbols-outlined mr-1">
+                      phone
+                    </span>{" "}
+                    Contact:
+                  </p>
+                  <p className="text-gray-600 mt-2">
+                    {selectedJob.company_contact_number}
+                  </p>
+                </div>
+
+                <div className="bg-gray-100 p-4 rounded-lg shadow-inner">
+                  <p className="text-black font-semibold flex items-center">
+                    <span className="material-symbols-outlined mr-1">
+                      email
+                    </span>{" "}
+                    Email:
+                  </p>
+                  <p className="text-gray-600 mt-2">
+                    {selectedJob.company_email}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex justify-end mt-6">
+                <button
+                  onClick={closeJobModal}
+                  className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-200"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
           </div>
         )}
       </div>
