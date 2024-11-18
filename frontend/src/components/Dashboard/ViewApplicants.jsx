@@ -759,27 +759,42 @@ const ViewApplicants = () => {
         </div>
         {/* Rejection Modal */}
         {isRejectionModalOpen && (
-          <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
-              <h2 className="text-2xl font-semibold mb-4">
-                Rejection Confirmation
-              </h2>
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md mx-4 sm:mx-6">
+              {/* Modal Header */}
+              <div className="flex justify-between items-center border-b pb-3 mb-4">
+                <h2 className="text-xl sm:text-2xl font-semibold text-gray-800">
+                  Rejection Confirmation
+                </h2>
+                <button
+                  className="text-gray-500 hover:text-gray-700 transition duration-200 focus:outline-none"
+                  onClick={closeRejectionModal}
+                >
+                  <span className="material-symbols-outlined text-2xl">
+                    close
+                  </span>
+                </button>
+              </div>
+
+              {/* Rejection Reason Textarea */}
               <textarea
-                className="w-full p-2 border rounded-lg mb-4"
+                className="w-full p-3 border border-gray-300 rounded-lg mb-4 text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none"
                 rows="4"
-                placeholder="Enter reason for rejection"
+                placeholder="Enter the reason for rejection..."
                 value={rejectionReason}
                 onChange={(e) => setRejectionReason(e.target.value)}
               ></textarea>
-              <div className="flex justify-end space-x-4">
+
+              {/* Buttons */}
+              <div className="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-4">
                 <button
-                  className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg"
+                  className="w-full sm:w-auto bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-200"
                   onClick={closeRejectionModal}
                 >
                   Cancel
                 </button>
                 <button
-                  className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg"
+                  className="w-full sm:w-auto bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
                   onClick={confirmRejection}
                 >
                   Reject
