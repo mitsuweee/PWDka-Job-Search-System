@@ -192,8 +192,15 @@ const viewCounts = async (req, res, next) => {
 const viewAdmins = async (req, res, next) => {
   try {
     const rows = await knex("admin")
-      .select("id", "first_name", "last_name", "email", "date_created")
-      .where({ status: "ACTIVE" }); // Filter to only include ACTIVE admins
+      .select(
+        "id",
+        "first_name",
+        "last_name",
+        "email",
+        "date_created",
+        "status"
+      )
+      .whereIn("status", ["ACTIVE", "DEACTIVATE"]);
 
     return res.status(200).json({
       successful: true,
@@ -220,6 +227,7 @@ const viewUsers = async (req, res, next) => {
         "user.last_name",
         "user.date_created",
         "email",
+        "status",
         "address",
         "city",
         "gender",
@@ -229,7 +237,7 @@ const viewUsers = async (req, res, next) => {
         "picture_with_id",
         "picture_of_pwd_id"
       )
-      .where("status", "VERIFIED");
+      .whereIn("status", ["VERIFIED", "DEACTIVATE"]);
 
     const formattedUsers = users.map((user) => ({
       ...user,
@@ -263,6 +271,7 @@ const viewCompanies = async (req, res, next) => {
       .select(
         "id",
         "name",
+        "status",
         "description",
         "date_created",
         "address",
@@ -272,8 +281,7 @@ const viewCompanies = async (req, res, next) => {
         "profile_picture",
         "date_created"
       )
-      .where("status", "VERIFIED");
-
+      .whereIn("status", ["VERIFIED", "DEACTIVATE"]);
     // Convert BLOB data to String
     const processedCompanies = companies.map((company) => ({
       ...company,
@@ -374,6 +382,97 @@ const viewAllJobListingNewestToOldest = async (req, res, next) => {
       return res.status(200).json({
         successful: true,
         message: "Successfully Retrieved All Job Listings",
+        data: processedRows,
+      });
+    }
+  } catch (err) {
+    return res.status(500).json({
+      successful: false,
+      message: err.message,
+    });
+  }
+};
+
+const viewAllDeactivatedJobListings = async (req, res, next) => {
+  const { order } = req.query; // New code: get order parameter from frontend
+  const sortOrder = order === "Oldest" ? "asc" : "desc"; // New code: determine sort order
+  try {
+    const rows = await knex("job_listing")
+      .join(
+        "position_type",
+        "job_listing.positiontype_id",
+        "=",
+        "position_type.id"
+      )
+      .join("company", "job_listing.company_id", "=", "company.id")
+      .join(
+        "disability_job_listing",
+        "job_listing.id",
+        "=",
+        "disability_job_listing.joblisting_id"
+      )
+      .join(
+        "disability",
+        "disability_job_listing.disability_id",
+        "=",
+        "disability.id"
+      )
+      .select(
+        "job_listing.id",
+        "job_listing.position_name",
+        "job_listing.level",
+        "job_listing.status",
+        "job_listing.description",
+        "job_listing.date_created",
+        "job_listing.qualification",
+        "job_listing.requirement",
+        "job_listing.minimum_salary",
+        "job_listing.maximum_salary",
+        "job_listing.salary_visibility",
+        "position_type.type AS position_type",
+        "company.name AS company_name",
+        "company.profile_picture AS company_profile_picture",
+        knex.raw(
+          "GROUP_CONCAT(disability.type SEPARATOR ', ') AS disability_types"
+        )
+      )
+      .where("company.status", "VERIFIED")
+      .whereIn("job_listing.status", ["DEACTIVATE"])
+      .groupBy(
+        "job_listing.id",
+        "job_listing.position_name",
+        "job_listing.level",
+        "job_listing.status",
+        "job_listing.description",
+        "job_listing.date_created",
+        "job_listing.qualification",
+        "job_listing.requirement",
+        "job_listing.minimum_salary",
+        "job_listing.maximum_salary",
+        "job_listing.salary_visibility",
+        "position_type.type",
+        "company.profile_picture",
+        "company.name"
+      )
+      .orderBy("job_listing.date_created", sortOrder); // New code: apply dynamic sort order
+
+    if (rows.length === 0) {
+      return res.status(404).json({
+        successful: false,
+        message: "Job Listing not found",
+      });
+    } else {
+      // Convert BLOB data to String
+      const processedRows = rows.map((row) => ({
+        ...row,
+        profile_picture: row.profile_picture
+          ? row.profile_picture.toString()
+          : null,
+      }));
+
+      return res.status(200).json({
+        successful: true,
+        message: "Successfully Retrieved All DEACTIVATE Job Listings",
         data: processedRows,
       });
     }
@@ -1231,4 +1330,5 @@ module.exports = {
   deactivateCompany,
   verifyAdminStatus,
   deactivateJobListing,
+  viewAllDeactivatedJobListings,
 };

@@ -14,6 +14,11 @@ adminRouter.get(
   "/view/all/joblisting/newesttooldest",
   adminController.viewAllJobListingNewestToOldest
 ); //get all Job Listing Newest To Oldest
+
+adminRouter.get(
+  "/view/all/deactivated/joblisting",
+  adminController.viewAllDeactivatedJobListings
+); //get all Deactivated
 adminRouter.get("/view/joblisting/:id", adminController.viewJobListing); //get Job Listing
 adminRouter.get("/view/:id", adminController.viewAdminViaId); //View Company Via ID
 adminRouter.get("/view/verify/status/:id", adminController.verifyAdminStatus); //Verify Admin Status
