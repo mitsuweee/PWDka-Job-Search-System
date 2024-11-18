@@ -234,6 +234,41 @@ const UserProf = () => {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    const userId = localStorage.getItem("Id");
+
+    const fetchUserProfile = async () => {
+      try {
+        const response = await axios.get(`/user/view/${userId}`, {
+          headers: { "Content-Type": "application/json" },
+        });
+        const userData = response.data.data;
+        setUser({
+          firstName: userData.first_name,
+          middleInitial: userData.middle_initial || "",
+          lastName: userData.last_name,
+          disability: userData.type,
+          city: userData.city,
+          address: userData.address,
+          contactNumber: userData.contact_number,
+          gender: userData.gender,
+          birthdate: new Date(userData.birth_date).toLocaleDateString("en-US"),
+          email: userData.email,
+          profilePicture: `data:image/png;base64,${userData.formal_picture}`,
+        });
+
+        // Fetch resume from signup
+        if (userData.resume) {
+          setResume(userData.resume); // Base64 resume from backend
+        }
+      } catch (error) {
+        console.error("Failed to fetch user profile:", error.message);
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
+
   const handleDeactivateUser = () => {
     const userId = localStorage.getItem("Id");
 
@@ -628,7 +663,13 @@ const UserProf = () => {
             </button>
             {/* Resume Button */}
             <button
-              onClick={() => setIsViewResumeModalOpen(true)}
+              onClick={() => {
+                if (resume) {
+                  setIsViewResumeModalOpen(true); // Open the modal if resume exists
+                } else {
+                  toast.error("No resume uploaded. Please update your resume.");
+                }
+              }}
               className="px-3 py-1.5 bg-blue-600 text-white font-medium rounded-md shadow-md hover:bg-blue-700 transition duration-300 flex items-center justify-center"
             >
               <span className="material-symbols-outlined text-lg mr-1.5">
