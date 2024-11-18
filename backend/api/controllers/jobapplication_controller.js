@@ -370,7 +370,6 @@ const updateJobApplicationStatus = async (req, res, next) => {
   const { id } = req.params;
   const { status, rejectionReason } = req.body;
 
-  // Validate the presence of ID and status
   if (!id || !status) {
     return res.status(400).json({
       successful: false,
@@ -415,14 +414,12 @@ const updateJobApplicationStatus = async (req, res, next) => {
       .where("job_application.id", id)
       .first();
 
-    // If status is 'REJECTED', send a rejection email
     if (status.toUpperCase() === "REJECTED" && updatedApplication.email) {
-      // Configure the email transport
       const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
-          user: process.env.EMAIL_USER, // Your email address
-          pass: process.env.EMAIL_PASS, // Your email password or app-specific password
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS,
         },
       });
 
