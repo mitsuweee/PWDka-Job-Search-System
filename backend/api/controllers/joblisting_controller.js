@@ -86,7 +86,7 @@ const postJobs = async (req, res, next) => {
     if (existingJob) {
       return res.status(400).json({
         successful: false,
-        message: `A job listing for "${position_name}" at "${level}" already exists. Please revise and try again.`,
+        message: `There is a job listing already posted with a position name of: "${position_name}" and with the level of: "${level}".`,
       });
     }
 
