@@ -14,6 +14,7 @@ const AdminViewJobs = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOrder, setSortOrder] = useState("Newest");
+  const [deactivationReason, setDeactivationReason] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [admin, setAdmin] = useState({
     firstName: "",
@@ -323,34 +324,41 @@ const AdminViewJobs = () => {
   //   }
   // };
 
-  const confirmDeactivate = () => {
-    if (selectedJobId) {
-      const config = {
-        method: "put",
-        url: `/admin/update/deactivate/joblisting/${selectedJobId}`, // Deactivate endpoint
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
+  const handleDeactivateJob = (jobId) => {
+    setSelectedJobId(jobId); // Set selected job ID
+    setDeactivationReason(""); // Clear previous reason
+    setIsDeleteModalOpen(true); // Open modal
+  };
 
-      setLoading(true);
-      axios(config)
-        .then(() => {
+  const confirmDeactivate = async () => {
+    if (selectedJobId) {
+      if (!deactivationReason.trim()) {
+        toast.error("Please provide a reason for deactivating the job.");
+        return;
+      }
+
+      try {
+        const response = await axios.put(
+          `/admin/update/deactivate/joblisting/${selectedJobId}`,
+          {
+            reason: deactivationReason, // Include the reason
+          }
+        );
+
+        if (response.data.successful) {
           toast.success("Job listing deactivated successfully!");
           setJobListings((prevListings) =>
             prevListings.map((job) =>
-              job.id === selectedJobId ? { ...job, status: "DEACTIVATE" } : job
+              job.id === selectedJobId
+                ? { ...job, status: "DEACTIVATE" } // Update job status locally
+                : job
             )
           );
-        })
-        .catch(() => {
-          toast.error("An error occurred while deactivating the job listing.");
-        })
-        .finally(() => {
-          setLoading(false);
-          setIsDeleteModalOpen(false);
-          setSelectedJobId(null);
-        });
+          setIsDeleteModalOpen(false); // Close modal
+        }
+      } catch (error) {
+        toast.error("Failed to deactivate the job listing.");
+      }
     }
   };
 
@@ -1047,26 +1055,55 @@ const AdminViewJobs = () => {
 
       {isDeleteModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-            <h3 className="text-xl font-semibold mb-4 text-center">
-              Confirm Deactivation
-            </h3>
-            <p className="text-gray-600 mb-6">
-              Are you sure you want to deactivate this job listing? Applicants
-              will no longer see it.
-            </p>
-            <div className="flex justify-center space-x-4">
+          <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-lg">
+            {/* Header Section */}
+            <div className="flex justify-between items-center border-b pb-4 mb-6">
+              <h3 className="text-2xl font-bold text-gray-800">
+                Deactivate Job
+              </h3>
               <button
-                onClick={confirmDeactivate} // Calls the deactivation function
-                className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors"
+                onClick={closeDeleteModal}
+                className="text-gray-500 hover:text-gray-800 transition duration-200"
               >
-                Confirm
+                <span className="material-symbols-outlined text-2xl">
+                  close
+                </span>
               </button>
+            </div>
+
+            {/* Modal Content */}
+            <p className="text-gray-600 text-sm md:text-base mb-4">
+              Please confirm if you want to deactivate this job listing. Once
+              deactivated, applicants will no longer see this job posting.
+            </p>
+            <label
+              htmlFor="deactivationReason"
+              className="block text-sm font-semibold text-gray-700 mb-2"
+            >
+              Reason for deactivation:
+            </label>
+            <textarea
+              id="deactivationReason"
+              placeholder="Enter the reason (required)"
+              value={deactivationReason}
+              onChange={(e) => setDeactivationReason(e.target.value)}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 mb-6"
+              rows={4}
+            />
+
+            {/* Action Buttons */}
+            <div className="flex justify-end space-x-4">
               <button
-                onClick={closeDeleteModal} // Cancels the action
-                className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400 transition-colors"
+                onClick={closeDeleteModal}
+                className="px-5 py-2 bg-gray-100 text-gray-800 font-medium rounded-lg hover:bg-gray-200 transition-colors"
               >
                 Cancel
+              </button>
+              <button
+                onClick={confirmDeactivate}
+                className="px-5 py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors"
+              >
+                Confirm
               </button>
             </div>
           </div>
