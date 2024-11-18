@@ -330,8 +330,17 @@ const AdminViewComp = () => {
   const indexOfLastCompany = currentPage * companiesPerPage;
   const indexOfFirstCompany = indexOfLastCompany - companiesPerPage;
 
+  const [statusFilter, setStatusFilter] = useState("Verified"); // Default to Verified
+
   const filteredCompanies = companies
     .filter((company) => {
+      // Apply the status filter
+      if (statusFilter === "Verified" && company.status !== "VERIFIED")
+        return false;
+      if (statusFilter === "Deactivated" && company.status !== "DEACTIVATE")
+        return false;
+
+      // Combine fields for general search
       const combinedFields = `${company.name} ${company.city}`.toLowerCase();
       return combinedFields.includes(searchTerm.toLowerCase());
     })
@@ -555,14 +564,17 @@ const AdminViewComp = () => {
 
         {/* Search and Filter Bar */}
         <div className="flex items-center justify-center mt-6 mb-4 p-4 bg-white rounded-lg shadow-md space-x-4">
+          {/* Search Input */}
           <input
             type="text"
             placeholder="Search"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-1/2 px-4 py-2 border border-gray-300 bg-gray-100 text-black rounded-lg focus:outline-none focus:border-blue-500 shadow-inner"
-            style={{ boxShadow: "inset 0px 4px 8px rgba(0, 0, 0, 0.1)" }}
+            style={{ boxShadow: "inset 0px 4px rgba(0, 0, 0, 0.1)" }}
           />
+
+          {/* Sort Dropdown */}
           <div className="relative">
             <select
               value={sortOrder}
@@ -578,6 +590,24 @@ const AdminViewComp = () => {
               <span className="material-symbols-outlined text-white">sort</span>
             </span>
           </div>
+
+          {/* Toggle Button */}
+          <button
+            onClick={() =>
+              setStatusFilter(
+                statusFilter === "Deactivated" ? "Verified" : "Deactivated"
+              )
+            }
+            className={`px-4 py-2 rounded-lg font-semibold transition duration-200 shadow ${
+              statusFilter === "Deactivated"
+                ? "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                : "bg-red-500 text-white hover:bg-red-600"
+            }`}
+          >
+            {statusFilter === "Deactivated"
+              ? "View Verified Companies"
+              : "View Deactivated Companies"}
+          </button>
         </div>
 
         <div className="overflow-x-auto">
@@ -623,11 +653,19 @@ const AdminViewComp = () => {
                     >
                       View
                     </button>
+                    {/* Deactivate Button */}
                     <button
                       onClick={() => handleDeactivateCompany(company.id)}
-                      className="bg-yellow-500 text-white text-xs md:text-sm px-3 py-1 rounded-full shadow-sm hover:bg-yellow-700 transition duration-200 font-medium ml-2"
+                      className={`text-xs md:text-sm px-3 py-1 rounded-full shadow-sm transition duration-200 font-medium ml-2 ${
+                        company.status === "DEACTIVATE"
+                          ? "bg-red-400 text-white cursor-not-allowed" // Disabled style
+                          : "bg-yellow-500 hover:bg-yellow-700" // Active style
+                      }`}
+                      disabled={company.status === "DEACTIVATE"} // Disable button if already deactivated
                     >
-                      Deactivate
+                      {company.status === "DEACTIVATE"
+                        ? "Deactivated"
+                        : "Deactivate"}
                     </button>
                   </td>
                 </tr>

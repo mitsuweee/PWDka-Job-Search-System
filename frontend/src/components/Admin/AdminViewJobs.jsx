@@ -339,7 +339,7 @@ const AdminViewJobs = () => {
           toast.success("Job listing deactivated successfully!");
           setJobListings((prevListings) =>
             prevListings.map((job) =>
-              job.id === selectedJobId ? { ...job, status: "INACTIVE" } : job
+              job.id === selectedJobId ? { ...job, status: "DEACTIVATE" } : job
             )
           );
         })
@@ -399,6 +399,15 @@ const AdminViewJobs = () => {
         .toLowerCase()
         .replace(/^\w/, (c) => c.toUpperCase());
 
+      // Default: Show only Active and Inactive if no statusFilter is set
+      if (
+        !statusFilter &&
+        jobStatusTitleCase !== "Active" &&
+        jobStatusTitleCase !== "Inactive"
+      ) {
+        return false;
+      }
+
       // Filter by job status if statusFilter is set
       if (statusFilter && jobStatusTitleCase !== statusFilter) {
         return false;
@@ -407,17 +416,27 @@ const AdminViewJobs = () => {
       // Combine fields for general search
       const combinedFields =
         `${job.position_name} ${job.company_name} ${job.level}`.toLowerCase();
+
+      // Check if combined fields include the search term
       return combinedFields.includes(searchTerm.toLowerCase());
     })
     .sort((a, b) => {
-      if (sortOrder === "A-Z")
+      if (sortOrder === "A-Z") {
         return a.position_name.localeCompare(b.position_name);
-      if (sortOrder === "Z-A")
+      }
+      if (sortOrder === "Z-A") {
         return b.position_name.localeCompare(a.position_name);
-      if (sortOrder === "Newest")
-        return new Date(b.date_created) - new Date(a.date_created); // Updated to use date_created
-      if (sortOrder === "Oldest")
-        return new Date(a.date_created) - new Date(b.date_created); // Updated to use date_created
+      }
+      if (sortOrder === "Newest") {
+        // Sort by date_created, newest first
+        return new Date(b.date_created) - new Date(a.date_created);
+      }
+      if (sortOrder === "Oldest") {
+        // Sort by date_created, oldest first
+        return new Date(a.date_created) - new Date(b.date_created);
+      }
+
+      // Default: No sorting
       return 0;
     });
 
@@ -662,10 +681,11 @@ const AdminViewJobs = () => {
               onChange={(e) => setStatusFilter(e.target.value)}
               className="px-3 py-2 w-[130px] border border-gray-300 rounded-lg bg-blue-500 text-white font-semibold hover:bg-blue-600 focus:outline-none focus:border-blue-500 transition duration-200"
             >
-              <option value="">Status</option>{" "}
-              {/* Shows all jobs if no status filter is selected */}
+              <option value="">Status</option>
+              {/* Default "Status" will only include Active and Inactive */}
               <option value="Active">Active</option>
               <option value="Inactive">Inactive</option>
+              <option value="Deactivate">Deactivate</option>
             </select>
             <span className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
               <span className="material-symbols-outlined text-white">
@@ -744,10 +764,20 @@ const AdminViewJobs = () => {
                       View
                     </button>
                     <button
-                      onClick={() => handleDeleteJobListing(job.id)} // Opens the delete modal
-                      className="bg-red-500 text-white text-xs md:text-sm px-3 py-1 ml-2 rounded-full shadow-sm hover:bg-red-700 transition duration-200 font-medium"
+                      onClick={() =>
+                        job.status !== "DEACTIVATE" &&
+                        handleDeleteJobListing(job.id)
+                      } // Prevent click if already deactivated
+                      className={`${
+                        job.status === "DEACTIVATE"
+                          ? "bg-gray-400 text-gray-700 cursor-not-allowed"
+                          : "bg-red-500 text-white hover:bg-red-700"
+                      } text-xs md:text-sm px-3 py-1 ml-2 rounded-full shadow-sm transition duration-200 font-medium`}
+                      disabled={job.status === "DEACTIVATE"} // Disable button if deactivated
                     >
-                      Delete
+                      {job.status === "DEACTIVATE"
+                        ? "Deactivated"
+                        : "Deactivate"}
                     </button>
                   </td>
                 </tr>

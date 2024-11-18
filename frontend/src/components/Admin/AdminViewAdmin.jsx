@@ -292,8 +292,14 @@ const AdminViewAdmin = () => {
   const indexOfLastAdmin = currentPage * adminsPerPage;
   const indexOfFirstAdmin = indexOfLastAdmin - adminsPerPage;
 
+  const [statusFilter, setStatusFilter] = useState("Verified"); // Default to Verified
   const filteredAdmins = admins
     .filter((admin) => {
+      // Apply the status filter
+      if (statusFilter === "Verified" && admin.status !== "VERIFIED")
+        return false;
+      if (statusFilter === "Deactivated" && admin.status !== "DEACTIVATE")
+        return false;
       const combinedFields =
         `${admin.first_name} ${admin.last_name} ${admin.email}`.toLowerCase();
       return combinedFields.includes(searchTerm.toLowerCase());
@@ -543,6 +549,22 @@ const AdminViewAdmin = () => {
               <span className="material-symbols-outlined text-white">sort</span>
             </span>
           </div>
+          <button
+            onClick={() =>
+              setStatusFilter(
+                statusFilter === "Deactivated" ? "Verified" : "Deactivated"
+              )
+            }
+            className={`px-4 py-2 rounded-lg font-semibold transition duration-200 shadow ${
+              statusFilter === "Deactivated"
+                ? "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                : "bg-red-500 text-white hover:bg-red-600"
+            }`}
+          >
+            {statusFilter === "Deactivated"
+              ? "View Verified Admins"
+              : "View Deactivated Admins"}
+          </button>
         </div>
 
         <div className="overflow-x-auto mt-4">
@@ -592,9 +614,16 @@ const AdminViewAdmin = () => {
                       </button>
                       <button
                         onClick={() => handleDeactivateAdmin(admin.id)}
-                        className="bg-yellow-500 text-white text-xs md:text-sm px-3 py-1 rounded-full shadow-sm hover:bg-yellow-700 transition duration-200 font-medium"
+                        className={`text-xs md:text-sm px-3 py-1 rounded-full shadow-sm transition duration-200 font-medium ${
+                          admin.status === "DEACTIVATE"
+                            ? "bg-gray-400 text-gray-600 cursor-not-allowed" // Grayed out and unclickable style
+                            : "bg-yellow-500 text-white hover:bg-yellow-700" // Normal active style
+                        }`}
+                        disabled={admin.status === "DEACTIVATE"} // Disable the button if status is DEACTIVATE
                       >
-                        Deactivate
+                        {admin.status === "DEACTIVATE"
+                          ? "Deactivated"
+                          : "Deactivate"}
                       </button>
                     </td>
                   </tr>

@@ -13,9 +13,7 @@ const AdminViewUsers = () => {
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedJobId, setSelectedJobId] = useState(null);
   const [sortOrder, setSortOrder] = useState("Newest");
-  const [filteredJobListings, setFilteredJobListings] = useState([]);
   const usersPerPage = 10;
   const navigate = useNavigate();
   const [admin, setAdmin] = useState({
@@ -323,8 +321,16 @@ const AdminViewUsers = () => {
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
 
+  const [statusFilter, setStatusFilter] = useState("Verified"); // Default to showing active users
   const filteredUsers = users
     .filter((user) => {
+      // Apply the status filter
+      if (statusFilter === "Verified" && user.status !== "VERIFIED")
+        return false;
+      if (statusFilter === "Deactivate" && user.status !== "DEACTIVATE")
+        return false;
+
+      // Combine fields for general search
       const combinedFields =
         `${user.first_name} ${user.last_name} ${user.type}`.toLowerCase();
       return combinedFields.includes(searchTerm.toLowerCase());
@@ -333,9 +339,9 @@ const AdminViewUsers = () => {
       if (sortOrder === "A-Z") return a.first_name.localeCompare(b.first_name);
       if (sortOrder === "Z-A") return b.first_name.localeCompare(a.first_name);
       if (sortOrder === "Newest")
-        return new Date(b.date_created) - new Date(a.date_created); // Updated to use date_created
+        return new Date(b.date_created) - new Date(a.date_created);
       if (sortOrder === "Oldest")
-        return new Date(a.date_created) - new Date(b.date_created); // Updated to use date_created
+        return new Date(a.date_created) - new Date(b.date_created);
       return 0;
     });
 
@@ -547,6 +553,7 @@ const AdminViewUsers = () => {
         </h1>
         {/* Search and Filter Bar */}
         <div className="flex items-center justify-center mt-6 mb-4 p-4 bg-white rounded-lg shadow-md space-x-4">
+          {/* Search Input */}
           <input
             type="text"
             placeholder="Search"
@@ -555,6 +562,8 @@ const AdminViewUsers = () => {
             className="w-1/2 px-4 py-2 border border-gray-300 bg-gray-100 text-black rounded-lg focus:outline-none focus:border-blue-500 shadow-inner"
             style={{ boxShadow: "inset 0px 4px 8px rgba(0, 0, 0, 0.1)" }}
           />
+
+          {/* Sort Dropdown */}
           <div className="relative">
             <select
               value={sortOrder}
@@ -570,6 +579,24 @@ const AdminViewUsers = () => {
               <span className="material-symbols-outlined text-white">sort</span>
             </span>
           </div>
+
+          {/* Deactivated Users Button */}
+          <button
+            onClick={() =>
+              setStatusFilter(
+                statusFilter === "Deactivate" ? "Verified" : "Deactivate"
+              )
+            }
+            className={`px-4 py-2 rounded-lg font-semibold transition duration-200 shadow ${
+              statusFilter === "Deactivate"
+                ? "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                : "bg-red-500 text-white hover:bg-red-600"
+            }`}
+          >
+            {statusFilter === "Deactivate"
+              ? "View Verified Users"
+              : "View Deactivated Users"}
+          </button>
         </div>
 
         <div className="overflow-x-auto">
@@ -618,10 +645,20 @@ const AdminViewUsers = () => {
                         View
                       </button>
                       <button
-                        onClick={() => handleDeactivateUser(user.id)}
-                        className="bg-yellow-500 text-white text-xs md:text-sm px-3 py-1 rounded-full shadow-sm hover:bg-yellow-700 transition duration-200 font-medium"
+                        onClick={() =>
+                          user.status !== "DEACTIVATE" &&
+                          handleDeactivateUser(user.id)
+                        } // Prevent click if deactivated
+                        className={`${
+                          user.status === "DEACTIVATE"
+                            ? "bg-red-400 text-white cursor-not-allowed" // Non-clickable style for deactivated
+                            : "bg-yellow-500 hover:bg-yellow-700" // Active button style
+                        } text-xs md:text-sm px-3 py-1 rounded-full shadow-sm transition duration-200 font-medium`}
+                        disabled={user.status === "DEACTIVATED"} // Disable button if deactivated
                       >
-                        Deactivate
+                        {user.status === "DEACTIVATE"
+                          ? "Deactivated"
+                          : "Deactivate"}
                       </button>
                     </div>
                   </td>
