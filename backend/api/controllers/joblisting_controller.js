@@ -550,6 +550,36 @@ const updateJobListing = async (req, res, next) => {
           message: "Position Type Id is invalid",
         });
       } else {
+        // Fetch the company ID associated with the job listing
+        const jobListing = await knex("job_listing").where("id", id).first();
+
+        if (!jobListing) {
+          return res.status(404).json({
+            successful: false,
+            message: "Job Listing not found",
+          });
+        }
+
+        const companyId = jobListing.company_id;
+
+        // Check for existing job listings with the same position name and level for the same company
+        const duplicateJob = await knex("job_listing")
+          .where({
+            company_id: companyId,
+            position_name: position_name,
+            level: level,
+          })
+          .andWhereNot({ id }) // Exclude the current job listing being updated
+          .first();
+
+        if (duplicateJob) {
+          return res.status(400).json({
+            successful: false,
+            message:
+              "A job listing with the same position name and level already exists for this company",
+          });
+        }
+
         // Begin transaction
         await knex.transaction(async (trx) => {
           const result = await trx("job_listing").where("id", id).update({
