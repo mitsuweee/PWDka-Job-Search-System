@@ -29,6 +29,7 @@ const Signup = () => {
     idPicture: "",
     profilePicture: "",
     selfieWithID: "",
+    resume: "",
   });
 
   const [companyFormValues, setCompanyFormValues] = useState({
@@ -46,7 +47,38 @@ const Signup = () => {
   const handleFileChange = (e, type) => {
     const file = e.target.files[0];
 
-    if (file && (file.type === "image/png" || file.type === "image/jpeg")) {
+    if (!file) {
+      toast.error("No file selected. Please upload a file.");
+      return;
+    }
+
+    if (type === "resume") {
+      // Handle only PDF files for resume
+      if (file.type === "application/pdf") {
+        if (file.size <= MAX_FILE_SIZE) {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            const base64Data = reader.result.split(",")[1];
+            setUserFormValues((prevState) => ({
+              ...prevState,
+              resume: base64Data,
+            }));
+          };
+          reader.readAsDataURL(file);
+          toast.success("Resume uploaded successfully!");
+        } else {
+          toast.error(
+            "File size exceeds 16MB. Please upload a smaller resume."
+          );
+        }
+      } else {
+        toast.error("Only PDF files are allowed for the resume.");
+      }
+      return;
+    }
+
+    // Handle other file types (image/png, image/jpeg)
+    if (file.type === "image/png" || file.type === "image/jpeg") {
       if (file.size <= MAX_FILE_SIZE) {
         const reader = new FileReader();
         reader.onloadend = () => {
@@ -612,7 +644,7 @@ const Signup = () => {
         </div>
 
         {/* {added resume} */}
-        <div className="col-span-12">
+        <div className="mt-4">
           <label
             htmlFor="resume"
             className="block text-lg font-medium text-gray-700"
