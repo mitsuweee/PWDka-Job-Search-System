@@ -18,6 +18,9 @@ const ViewApplicants = () => {
   const [companyName, setCompanyName] = useState("");
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [rejectionReason, setRejectionReason] = useState(""); // Store rejection reason
+  const [isRejectionModalOpen, setIsRejectionModalOpen] = useState(false); // Modal visibility
+  const [rejectingApplicantId, setRejectingApplicantId] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const applicantsPerPage = 7; // Customize this value as needed
 
@@ -273,6 +276,45 @@ const ViewApplicants = () => {
       });
   }, []);
 
+  const confirmRejection = async () => {
+    if (!rejectionReason.trim()) {
+      toast.error("Please provide a reason for rejection.");
+      return;
+    }
+
+    try {
+      const response = await axios.put(
+        `/jobapplication/status/${rejectingApplicantId}`,
+        {
+          status: "REJECTED",
+          rejectionReason,
+        }
+      );
+
+      if (response.data.successful) {
+        toast.success(
+          response.data.message || "Applicant rejected successfully."
+        );
+        setIsLoading(true); // Set loading to true at the start
+        setApplicants((prev) =>
+          prev.map((applicant) =>
+            applicant.id === rejectingApplicantId
+              ? { ...applicant, status: "Rejected" }
+              : applicant
+          )
+        );
+        closeRejectionModal();
+      }
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message || "Failed to reject applicant.";
+      toast.error(errorMessage);
+      closeRejectionModal();
+    } finally {
+      setIsLoading(false); // Always set loading to false at the end
+    }
+  };
+
   const handleSortChange = (option) => {
     setSortOption(option);
     setIsFilterOpen(false);
@@ -285,6 +327,17 @@ const ViewApplicants = () => {
     window.location.href = "/login";
   };
 
+  const openRejectionModal = (applicantId) => {
+    setRejectingApplicantId(applicantId);
+    setIsRejectionModalOpen(true);
+  };
+
+  const closeRejectionModal = () => {
+    setRejectionReason("");
+    setRejectingApplicantId(null);
+    setIsRejectionModalOpen(false);
+  };
+
   const handleLogout = () => {
     setIsLogoutModalOpen(true);
   };
@@ -294,23 +347,27 @@ const ViewApplicants = () => {
   };
 
   const handleStatusChange = (applicantId, newStatus) => {
-    axios
-      .put(`/jobapplication/status/${applicantId}`, { status: newStatus })
-      .then((response) => {
-        toast.success("Status updated successfully");
-        setApplicants((prev) =>
-          prev.map((applicant) =>
-            applicant.id === applicantId
-              ? { ...applicant, status: newStatus }
-              : applicant
-          )
-        );
-      })
-      .catch((error) => {
-        const errorMessage =
-          error.response?.data?.message || "Failed to update status";
-        toast.error(errorMessage);
-      });
+    if (newStatus === "Rejected") {
+      openRejectionModal(applicantId); // Open modal for rejection reason
+    } else {
+      axios
+        .put(`/jobapplication/status/${applicantId}`, { status: newStatus })
+        .then((response) => {
+          toast.success("Status updated successfully");
+          setApplicants((prev) =>
+            prev.map((applicant) =>
+              applicant.id === applicantId
+                ? { ...applicant, status: newStatus }
+                : applicant
+            )
+          );
+        })
+        .catch((error) => {
+          const errorMessage =
+            error.response?.data?.message || "Failed to update status";
+          toast.error(errorMessage);
+        });
+    }
   };
 
   const openDeleteModal = (applicantId) => {
@@ -700,6 +757,39 @@ const ViewApplicants = () => {
             </tbody>
           </table>
         </div>
+
+        {/* Rejection Modal */}
+        {isRejectionModalOpen && (
+          <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
+              <h2 className="text-2xl font-semibold mb-4">
+                Rejection Confirmation
+              </h2>
+              <textarea
+                className="w-full p-2 border rounded-lg mb-4"
+                rows="4"
+                placeholder="Enter reason for rejection"
+                value={rejectionReason}
+                onChange={(e) => setRejectionReason(e.target.value)}
+              ></textarea>
+              <div className="flex justify-end space-x-4">
+                <button
+                  className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg"
+                  onClick={closeRejectionModal}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg"
+                  onClick={confirmRejection}
+                >
+                  Reject
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Pagination */}
         <div className="flex justify-center mt-6">
           <ol className="flex justify-center gap-1 text-xs font-medium">
