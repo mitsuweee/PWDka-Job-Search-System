@@ -164,7 +164,18 @@ const viewUserJobApplicationStatus = async (req, res, next) => {
         const applications = await knex("job_application")
           .select(
             "job_listing.position_name",
+            "job_listing.level",
+            "job_listing.description",
+            "job_listing.qualification",
+            "job_listing.requirement",
+            "job_listing.maximum_salary",
+            "job_listing.minimum_salary",
             "company.name as company_name",
+            "company.address as company_address",
+            "company.city as company_city",
+            "company.description as company_description",
+            "company.contact_number as company_contact_number",
+            "company.email as company_email",
             "company.status",
             "job_application.status",
             "job_application.date_created"
