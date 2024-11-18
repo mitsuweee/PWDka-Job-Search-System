@@ -413,6 +413,7 @@ const viewJobsCreatedByCompanyNewestToOldest = async (req, res, next) => {
         "disability.id"
       )
       .where("company.id", id)
+      .whereIn("job_listing.status", ["ACTIVE", "INACTIVE"])
       .groupBy(
         "job_listing.id",
         "job_listing.status",
