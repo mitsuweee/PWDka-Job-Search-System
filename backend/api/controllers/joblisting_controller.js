@@ -60,12 +60,24 @@ const postJobs = async (req, res, next) => {
         "Maximum Salary must only contain numbers that are Equal or greater than minimum Salary",
     });
   }
-  // Validate expiration time: must be at least 1 hour from current time
-  const currentTime = new Date();
-  const expirationTime = new Date(expiration);
+  // Parse the expiration datetime (ensure correct format)
+  const expirationDate = new Date(expiration.replace(" ", "T")); // Convert space to 'T' for ISO format
 
-  if (expirationTime <= currentTime || expirationTime - currentTime < 3600000) {
-    // 1 hour = 3600000 ms
+  // Normalize expiration time to ignore seconds and milliseconds
+  expirationDate.setSeconds(0);
+  expirationDate.setMilliseconds(0);
+
+  const currentDate = new Date();
+
+  // Normalize current time to ignore seconds and milliseconds
+  currentDate.setSeconds(0);
+  currentDate.setMilliseconds(0);
+
+  // Calculate the minimum allowed expiration time (current time + 1 hour)
+  const oneHourLater = new Date(currentDate.getTime() + 60 * 60 * 1000);
+
+  // Check if the expiration date is at least 1 hour ahead of the current time
+  if (expirationDate < oneHourLater) {
     return res.status(400).json({
       successful: false,
       message: "Expiration must be at least 1 hour from the current time",
@@ -106,7 +118,7 @@ const postJobs = async (req, res, next) => {
     // Insert the job listing
     const [jobListingId] = await knex("job_listing")
       .insert({
-        expiration,
+        expirationDate,
         position_name: position_name.trim().toLowerCase(),
         level: level.trim().toLowerCase(),
         description,
