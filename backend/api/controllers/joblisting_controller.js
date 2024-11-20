@@ -23,7 +23,6 @@ const postJobs = async (req, res, next) => {
   // Input validation
   if (
     !position_name ||
-    !expiration ||
     !level ||
     !description ||
     !qualification ||
@@ -834,14 +833,6 @@ const deactivateJobListing = async (req, res, next) => {
 const updateJobListingExpiration = async (req, res, next) => {
   const id = req.params.id;
   const expiration = req.body.expiration;
-
-  // Check if expiration is provided
-  if (!expiration) {
-    return res.status(400).json({
-      successful: false,
-      message: "Expiration datetime is required",
-    });
-  }
 
   // Parse the expiration datetime
   const expirationDate = new Date(expiration);

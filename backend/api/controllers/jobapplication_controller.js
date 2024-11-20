@@ -33,27 +33,39 @@ const uploadResume = async (req, res, next) => {
             message: "Job Listing ID is invalid",
           });
         } else {
-          // Check if the user has already applied for this job listing
-          const existingApplication = await knex("job_application")
-            .where({ user_id, joblisting_id })
-            .first();
+          // Check if the job listing has expired
+          const expirationDate = new Date(jobListingExists.expiration);
+          const currentDate = new Date();
 
-          if (existingApplication) {
+          if (currentDate > expirationDate) {
             return res.status(400).json({
               successful: false,
-              message: "User has already applied for this job listing",
+              message:
+                "The job listing has expired. Resume upload is not allowed.",
             });
           } else {
-            // Insert new job application
-            await knex("job_application").insert({
-              user_id,
-              joblisting_id,
-            });
+            // Check if the user has already applied for this job listing
+            const existingApplication = await knex("job_application")
+              .where({ user_id, joblisting_id })
+              .first();
 
-            return res.status(200).json({
-              successful: true,
-              message: "Successfully uploaded resume",
-            });
+            if (existingApplication) {
+              return res.status(400).json({
+                successful: false,
+                message: "User has already applied for this job listing",
+              });
+            } else {
+              // Insert new job application
+              await knex("job_application").insert({
+                user_id,
+                joblisting_id,
+              });
+
+              return res.status(200).json({
+                successful: true,
+                message: "Successfully uploaded resume",
+              });
+            }
           }
         }
       }
