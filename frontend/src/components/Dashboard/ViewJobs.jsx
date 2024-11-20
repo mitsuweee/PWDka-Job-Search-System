@@ -487,6 +487,50 @@ const ViewJobs = () => {
       });
   };
 
+  const handleUpdateExpiration = async (jobId, expiration) => {
+    try {
+      // Format expiration date to ISO string
+      const formattedExpiration = expiration
+        ? new Date(expiration).toISOString()
+        : null;
+
+      // Send the request to update expiration
+      const response = await axios.put(
+        `/joblisting/update/joblisting/expiration/${jobId}`,
+        {
+          expiration: formattedExpiration,
+        }
+      );
+
+      toast.success("Expiration date updated successfully!");
+
+      // Update jobListings state with new expiration and ACTIVE status
+      setJobListings((prevListings) =>
+        prevListings.map((job) =>
+          job.id === jobId
+            ? { ...job, expiration: formattedExpiration, status: "ACTIVE" }
+            : job
+        )
+      );
+
+      // Update filteredJobListings state similarly
+      setFilteredJobListings((prevListings) =>
+        prevListings.map((job) =>
+          job.id === jobId
+            ? { ...job, expiration: formattedExpiration, status: "ACTIVE" }
+            : job
+        )
+      );
+    } catch (error) {
+      console.error("Error updating expiration:", error);
+
+      // Provide specific feedback based on backend response
+      const errorMessage =
+        error.response?.data?.message || "Failed to update expiration date.";
+      toast.error(errorMessage);
+    }
+  };
+
   const handleCheckboxChange = (e) => {
     const normalizedValue = normalizeText(e.target.value);
     const { checked } = e.target;
@@ -781,6 +825,9 @@ const ViewJobs = () => {
                 <th className="py-4 px-4 sm:px-6 font-semibold hidden sm:table-cell">
                   Status
                 </th>
+                <th className="py-4 px-4 sm:px-6 font-semibold hidden sm:table-cell">
+                  Expiration
+                </th>{" "}
                 <th className="py-4 px-4 sm:px-6 font-semibold text-center">
                   Actions
                 </th>
@@ -879,6 +926,36 @@ const ViewJobs = () => {
                       }`}
                     >
                       {job.status ? job.status : "Not specified"}
+                    </td>
+
+                    {/* New Expiration Column */}
+                    <td className="py-4 px-4 sm:px-6 text-gray-800 text-xs sm:text-sm break-words hidden sm:table-cell">
+                      <input
+                        type="datetime-local"
+                        value={
+                          job.expiration
+                            ? new Date(job.expiration)
+                                .toISOString()
+                                .slice(0, 16) // Format for datetime-local
+                            : "" // Empty if no expiration
+                        }
+                        onChange={(e) => {
+                          const expirationDate = new Date(e.target.value);
+                          const currentDate = new Date();
+                          const oneHourLater = new Date(
+                            currentDate.getTime() + 60 * 60 * 1000
+                          );
+
+                          if (expirationDate >= oneHourLater) {
+                            handleUpdateExpiration(job.id, e.target.value);
+                          } else {
+                            toast.error(
+                              "Expiration must be at least 1 hour from the current time."
+                            );
+                          }
+                        }}
+                        className="p-2 border rounded w-full text-gray-800"
+                      />
                     </td>
 
                     <td className="py-4 px-4 sm:px-6 text-center">

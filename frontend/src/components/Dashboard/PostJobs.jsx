@@ -17,6 +17,7 @@ const PostJob = () => {
     disabilityCategories: [],
     salaryVisibility: "HIDE", // Default to "HIDE"
     level: "",
+    expiration: "",
   });
   const [showDisabilityOptions, setShowDisabilityOptions] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -241,9 +242,15 @@ const PostJob = () => {
       positionType,
       level,
       disabilityCategories,
+      expiration,
     } = jobDetails;
 
-    // Check if all required fields have a value
+    // Ensure expiration is valid if provided
+    if (expiration && new Date(expiration) <= new Date()) {
+      toast.error("Expiration must be in the future.");
+      return false;
+    }
+
     const isValid =
       positionName.trim() &&
       jobDescription.trim() &&
@@ -296,6 +303,9 @@ const PostJob = () => {
     const data = JSON.stringify({
       company_id: parseFloat(localStorage.getItem("Id")),
       position_name: jobDetails.positionName,
+      expiration: jobDetails.expiration
+        ? new Date(jobDetails.expiration).toISOString()
+        : null,
       description: jobDetails.jobDescription,
       requirement: jobDetails.requirements,
       qualification: jobDetails.qualifications,
@@ -720,6 +730,39 @@ const PostJob = () => {
             </div>
 
             <div className="col-span-1">
+              <label className="block mb-2 text-gray-700 font-semibold">
+                Expiration Date & Time (Optional)
+              </label>
+              <div className="flex items-center space-x-4">
+                <input
+                  type="checkbox"
+                  checked={jobDetails.expiration !== ""}
+                  onChange={() =>
+                    setJobDetails((prev) => ({
+                      ...prev,
+                      expiration: prev.expiration
+                        ? ""
+                        : new Date().toISOString().slice(0, 16),
+                    }))
+                  }
+                />
+                <label className="text-gray-600">Set Expiration</label>
+              </div>
+              <input
+                type="datetime-local"
+                name="expiration"
+                value={jobDetails.expiration}
+                onChange={handleChange}
+                disabled={!jobDetails.expiration}
+                className={`p-3 w-full border-2 rounded-lg shadow-sm ${
+                  jobDetails.expiration
+                    ? "border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    : "bg-gray-200 cursor-not-allowed"
+                }`}
+              />
+            </div>
+
+            <div className="col-span-1">
               <button
                 type="button"
                 onClick={toggleDisabilityOptions}
@@ -731,47 +774,6 @@ const PostJob = () => {
               </button>
             </div>
 
-            {/* {showDisabilityOptions && (
-              <div className="col-span-1 bg-gray-100 p-4 rounded-lg shadow-md border border-gray-300">
-                <label className="block mb-2 text-gray-700 font-bold">
-                  Disability Categories
-                </label>
-                <div className="flex flex-col space-y-2">
-                  <button
-                    type="button"
-                    onClick={handleSelectAll}
-                    className="mb-2 p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                  >
-                    {jobDetails.disabilityCategories.length ===
-                    disabilityCategories.length
-                      ? "Deselect All"
-                      : "Select All"}
-                  </button>
-                  {[
-                    "Visual Disability",
-                    "Deaf or Hard of Hearing",
-                    "Learning Disability",
-                    "Mental Disability",
-                    "Physical Disability (Orthopedic)",
-                    "Psychosocial Disability",
-                    "Speech and Language Impairment",
-                    "Intellectual Disability",
-                    "Cancer (RA11215)",
-                    "Rare Disease (RA10747)",
-                  ].map((category) => (
-                    <label key={category} className="flex items-center">
-                      <input
-                        type="checkbox"
-                        value={category}
-                        onChange={handleCheckboxChange}
-                        className="mr-2"
-                      />
-                      {category}
-                    </label>
-                  ))}
-                </div>
-              </div>
-            )} */}
             {showDisabilityOptions && (
               <div className="col-span-1 bg-white p-6 rounded-lg shadow-lg border border-gray-200 transition duration-200 ease-in-out">
                 <label className="block mb-4 text-gray-800 text-lg font-semibold">
