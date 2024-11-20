@@ -836,17 +836,18 @@ const updateJobListingExpiration = async (req, res, next) => {
   const id = req.params.id;
   const expiration = req.body.expiration;
 
-  // Parse the expiration datetime
-  const expirationDate = new Date(expiration);
+  // Parse the expiration datetime (ensure correct format)
+  const expirationDate = new Date(expiration.replace(" ", "T")); // Convert space to 'T' for ISO format
   const currentDate = new Date();
 
-  // Check if the expiration is exactly 1 hour from the current time
+  // Calculate the minimum allowed expiration time (current time + 1 hour)
   const oneHourLater = new Date(currentDate.getTime() + 60 * 60 * 1000);
 
-  if (expirationDate.getTime() !== oneHourLater.getTime()) {
+  // Check if the expiration date is at least 1 hour ahead of the current time
+  if (expirationDate < oneHourLater) {
     return res.status(400).json({
       successful: false,
-      message: "Expiration must be exactly 1 hour from the current time",
+      message: "Expiration must be at least 1 hour from the current time",
     });
   }
 
@@ -863,10 +864,11 @@ const updateJobListingExpiration = async (req, res, next) => {
 
     // Begin transaction
     await knex.transaction(async (trx) => {
-      // Update the expiration of the job listing
-      const result = await trx("job_listing")
-        .where("id", id)
-        .update({ expiration: expirationDate });
+      // Update the expiration and set the status to ACTIVE
+      const result = await trx("job_listing").where("id", id).update({
+        expiration: expirationDate,
+        status: "ACTIVE", // Update status to ACTIVE
+      });
 
       if (result === 0) {
         return res.status(404).json({
@@ -877,7 +879,7 @@ const updateJobListingExpiration = async (req, res, next) => {
 
       return res.status(200).json({
         successful: true,
-        message: "Job Listing expiration updated successfully",
+        message: "Job Listing expiration and status updated successfully",
       });
     });
   } catch (err) {
