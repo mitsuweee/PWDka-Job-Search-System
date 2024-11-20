@@ -167,6 +167,7 @@ const viewJobListing = async (req, res, next) => {
       const rows = await knex("job_listing")
         .select(
           "job_listing.id",
+          "job_listing.expiration",
           "job_listing.position_name",
           "job_listing.level",
           "job_listing.description",
@@ -206,6 +207,7 @@ const viewJobListing = async (req, res, next) => {
         .where("job_listing.id", id)
         .groupBy(
           "job_listing.id",
+          "job_listing.expiration",
           "job_listing.position_name",
           "job_listing.level",
           "job_listing.description",
