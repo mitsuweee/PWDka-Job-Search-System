@@ -333,6 +333,7 @@ const viewJobListingViaUserNewestToOldest = async (req, res, next) => {
         .select(
           "job_listing.id",
           "job_listing.status",
+          "job_listing.expiration",
           "job_listing.position_name",
           "job_listing.level",
           "job_listing.description",
@@ -432,6 +433,7 @@ const viewJobsCreatedByCompanyNewestToOldest = async (req, res, next) => {
       .groupBy(
         "job_listing.id",
         "job_listing.status",
+        "job_listing.expiration",
         "job_listing.position_name",
         "job_listing.level",
 
@@ -448,6 +450,7 @@ const viewJobsCreatedByCompanyNewestToOldest = async (req, res, next) => {
       .select(
         "job_listing.id",
         "job_listing.status",
+        "job_listing.expiration",
         "job_listing.position_name",
         "job_listing.level",
 
