@@ -20,6 +20,11 @@ joblistingRouter.put(
   jobListingController.deactivateJobListing
 ); //Deactivate Job Listing
 
+joblistingRouter.put(
+  "/update/joblisting/expiration/:id",
+  jobListingController.updateJobListingExpiration
+); //Update Job Listing Expiration
+
 joblistingRouter.delete("/delete/:id", jobListingController.deleteJob); // Delete Job Listing
 
 module.exports = joblistingRouter;

@@ -7,6 +7,7 @@ const nodemailer = require("nodemailer");
 const postJobs = async (req, res, next) => {
   let {
     position_name,
+    expiration,
     level,
     description,
     qualification,
@@ -22,6 +23,7 @@ const postJobs = async (req, res, next) => {
   // Input validation
   if (
     !position_name ||
+    !expiration ||
     !level ||
     !description ||
     !qualification ||
@@ -59,6 +61,17 @@ const postJobs = async (req, res, next) => {
         "Maximum Salary must only contain numbers that are Equal or greater than minimum Salary",
     });
   }
+  // Validate expiration time: must be at least 1 hour from current time
+  const currentTime = new Date();
+  const expirationTime = new Date(expiration);
+
+  if (expirationTime <= currentTime || expirationTime - currentTime < 3600000) {
+    // 1 hour = 3600000 ms
+    return res.status(400).json({
+      successful: false,
+      message: "Expiration must be at least 1 hour from the current time",
+    });
+  }
 
   try {
     // Check if position type exists
@@ -94,6 +107,7 @@ const postJobs = async (req, res, next) => {
     // Insert the job listing
     const [jobListingId] = await knex("job_listing")
       .insert({
+        expiration,
         position_name: position_name.trim().toLowerCase(),
         level: level.trim().toLowerCase(),
         description,
@@ -814,6 +828,70 @@ const deactivateJobListing = async (req, res, next) => {
   }
 };
 
+const updateJobListingExpiration = async (req, res, next) => {
+  const id = req.params.id;
+  const expiration = req.body.expiration;
+
+  // Check if expiration is provided
+  if (!expiration) {
+    return res.status(400).json({
+      successful: false,
+      message: "Expiration datetime is required",
+    });
+  }
+
+  // Parse the expiration datetime
+  const expirationDate = new Date(expiration);
+  const currentDate = new Date();
+
+  // Check if the expiration is exactly 1 hour from the current time
+  const oneHourLater = new Date(currentDate.getTime() + 60 * 60 * 1000);
+
+  if (expirationDate.getTime() !== oneHourLater.getTime()) {
+    return res.status(400).json({
+      successful: false,
+      message: "Expiration must be exactly 1 hour from the current time",
+    });
+  }
+
+  try {
+    // Fetch the job listing by ID
+    const jobListing = await knex("job_listing").where("id", id).first();
+
+    if (!jobListing) {
+      return res.status(404).json({
+        successful: false,
+        message: "Job Listing not found",
+      });
+    }
+
+    // Begin transaction
+    await knex.transaction(async (trx) => {
+      // Update the expiration of the job listing
+      const result = await trx("job_listing")
+        .where("id", id)
+        .update({ expiration: expirationDate });
+
+      if (result === 0) {
+        return res.status(404).json({
+          successful: false,
+          message: "Job Listing not found",
+        });
+      }
+
+      return res.status(200).json({
+        successful: true,
+        message: "Job Listing expiration updated successfully",
+      });
+    });
+  } catch (err) {
+    return res.status(500).json({
+      successful: false,
+      message: err.message,
+    });
+  }
+};
+
 module.exports = {
   postJobs,
   viewJobListing,
@@ -823,4 +901,5 @@ module.exports = {
   deleteJob,
   viewCounts,
   deactivateJobListing,
+  updateJobListingExpiration,
 };
