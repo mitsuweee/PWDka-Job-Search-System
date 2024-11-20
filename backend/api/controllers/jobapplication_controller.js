@@ -4,6 +4,80 @@ const jobApplicationModel = require("../models/jobapplication_model");
 const util = require("./util");
 const nodemailer = require("nodemailer");
 
+// const uploadResume = async (req, res, next) => {
+//   let user_id = req.body.user_id;
+//   let joblisting_id = req.body.joblisting_id;
+
+//   if (!user_id || !joblisting_id) {
+//     return res.status(400).json({
+//       successful: false,
+//       message: "One or more details are missing",
+//     });
+//   } else {
+//     try {
+//       // Check if the user ID is valid
+//       const userExists = await knex("user").where({ id: user_id }).first();
+//       if (!userExists) {
+//         return res.status(400).json({
+//           successful: false,
+//           message: "User ID is invalid",
+//         });
+//       } else {
+//         // Check if the job listing ID is valid
+//         const jobListingExists = await knex("job_listing")
+//           .where({ id: joblisting_id })
+//           .first();
+//         if (!jobListingExists) {
+//           return res.status(400).json({
+//             successful: false,
+//             message: "Job Listing ID is invalid",
+//           });
+//         } else {
+//           // Check if the job listing has expired
+//           const expirationDate = new Date(jobListingExists.expiration);
+//           const currentDate = new Date();
+
+//           if (currentDate > expirationDate) {
+//             return res.status(400).json({
+//               successful: false,
+//               message:
+//                 "The job listing has expired. Resume upload is not allowed.",
+//             });
+//           } else {
+//             // Check if the user has already applied for this job listing
+//             const existingApplication = await knex("job_application")
+//               .where({ user_id, joblisting_id })
+//               .first();
+
+//             if (existingApplication) {
+//               return res.status(400).json({
+//                 successful: false,
+//                 message: "User has already applied for this job listing",
+//               });
+//             } else {
+//               // Insert new job application
+//               await knex("job_application").insert({
+//                 user_id,
+//                 joblisting_id,
+//               });
+
+//               return res.status(200).json({
+//                 successful: true,
+//                 message: "Successfully uploaded resume",
+//               });
+//             }
+//           }
+//         }
+//       }
+//     } catch (err) {
+//       return res.status(500).json({
+//         successful: false,
+//         message: err.message,
+//       });
+//     }
+//   }
+// };
+
 const uploadResume = async (req, res, next) => {
   let user_id = req.body.user_id;
   let joblisting_id = req.body.joblisting_id;
@@ -33,39 +107,42 @@ const uploadResume = async (req, res, next) => {
             message: "Job Listing ID is invalid",
           });
         } else {
-          // Check if the job listing has expired
-          const expirationDate = new Date(jobListingExists.expiration);
-          const currentDate = new Date();
+          // Check if the job listing has an expiration date
+          if (jobListingExists.expiration) {
+            // If expiration exists, check if it has expired
+            const expirationDate = new Date(jobListingExists.expiration);
+            const currentDate = new Date();
 
-          if (currentDate > expirationDate) {
-            return res.status(400).json({
-              successful: false,
-              message:
-                "The job listing has expired. Resume upload is not allowed.",
-            });
-          } else {
-            // Check if the user has already applied for this job listing
-            const existingApplication = await knex("job_application")
-              .where({ user_id, joblisting_id })
-              .first();
-
-            if (existingApplication) {
+            if (currentDate > expirationDate) {
               return res.status(400).json({
                 successful: false,
-                message: "User has already applied for this job listing",
-              });
-            } else {
-              // Insert new job application
-              await knex("job_application").insert({
-                user_id,
-                joblisting_id,
-              });
-
-              return res.status(200).json({
-                successful: true,
-                message: "Successfully uploaded resume",
+                message:
+                  "The job listing has expired. Resume upload is not allowed.",
               });
             }
+          }
+
+          // Check if the user has already applied for this job listing
+          const existingApplication = await knex("job_application")
+            .where({ user_id, joblisting_id })
+            .first();
+
+          if (existingApplication) {
+            return res.status(400).json({
+              successful: false,
+              message: "User has already applied for this job listing",
+            });
+          } else {
+            // Insert new job application
+            await knex("job_application").insert({
+              user_id,
+              joblisting_id,
+            });
+
+            return res.status(200).json({
+              successful: true,
+              message: "Successfully uploaded resume",
+            });
           }
         }
       }
