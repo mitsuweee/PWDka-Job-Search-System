@@ -118,7 +118,7 @@ const postJobs = async (req, res, next) => {
     // Insert the job listing
     const [jobListingId] = await knex("job_listing")
       .insert({
-        expirationDate,
+        expiration: expirationDate,
         position_name: position_name.trim().toLowerCase(),
         level: level.trim().toLowerCase(),
         description,
