@@ -835,10 +835,18 @@ const deactivateJobListing = async (req, res, next) => {
 const updateJobListingExpiration = async (req, res, next) => {
   const id = req.params.id;
   const expiration = req.body.expiration;
-
   // Parse the expiration datetime (ensure correct format)
   const expirationDate = new Date(expiration.replace(" ", "T")); // Convert space to 'T' for ISO format
+
+  // Normalize expiration time to ignore seconds and milliseconds
+  expirationDate.setSeconds(0);
+  expirationDate.setMilliseconds(0);
+
   const currentDate = new Date();
+
+  // Normalize current time to ignore seconds and milliseconds
+  currentDate.setSeconds(0);
+  currentDate.setMilliseconds(0);
 
   // Calculate the minimum allowed expiration time (current time + 1 hour)
   const oneHourLater = new Date(currentDate.getTime() + 60 * 60 * 1000);
