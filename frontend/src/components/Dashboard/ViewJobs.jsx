@@ -928,16 +928,18 @@ const ViewJobs = () => {
                       {job.status ? job.status : "Not specified"}
                     </td>
 
-                    {/* New Expiration Column */}
                     <td className="py-4 px-4 sm:px-6 text-gray-800 text-xs sm:text-sm break-words hidden sm:table-cell">
                       <input
                         type="datetime-local"
                         value={
                           job.expiration
-                            ? new Date(job.expiration)
+                            ? new Date(
+                                new Date(job.expiration).getTime() -
+                                  new Date().getTimezoneOffset() * 60000
+                              )
                                 .toISOString()
-                                .slice(0, 16) // Format for datetime-local
-                            : "" // Empty if no expiration
+                                .slice(0, 16) // Adjust for local time zone
+                            : "" // Handle empty expiration
                         }
                         onChange={(e) => {
                           const expirationDate = new Date(e.target.value);

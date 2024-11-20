@@ -742,8 +742,13 @@ const PostJob = () => {
                     setJobDetails((prev) => ({
                       ...prev,
                       expiration: prev.expiration
-                        ? ""
-                        : new Date().toISOString().slice(0, 16),
+                        ? "" // Clear expiration if unchecked
+                        : new Date(
+                            new Date().getTime() -
+                              new Date().getTimezoneOffset() * 60000
+                          )
+                            .toISOString()
+                            .slice(0, 16), // Local timezone adjustment
                     }))
                   }
                 />
@@ -753,7 +758,12 @@ const PostJob = () => {
                 type="datetime-local"
                 name="expiration"
                 value={jobDetails.expiration}
-                onChange={handleChange}
+                onChange={(e) =>
+                  setJobDetails((prev) => ({
+                    ...prev,
+                    expiration: e.target.value,
+                  }))
+                }
                 disabled={!jobDetails.expiration}
                 className={`p-3 w-full border-2 rounded-lg shadow-sm ${
                   jobDetails.expiration
