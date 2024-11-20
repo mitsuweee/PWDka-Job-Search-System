@@ -17,8 +17,9 @@ const PostJob = () => {
     disabilityCategories: [],
     salaryVisibility: "HIDE", // Default to "HIDE"
     level: "",
-    expiration: "",
+    expiration: "", // Default empty string
   });
+
   const [showDisabilityOptions, setShowDisabilityOptions] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
@@ -305,7 +306,7 @@ const PostJob = () => {
       position_name: jobDetails.positionName,
       expiration: jobDetails.expiration
         ? new Date(jobDetails.expiration).toISOString()
-        : null,
+        : null, // Set to null if expiration is not provided
       description: jobDetails.jobDescription,
       requirement: jobDetails.requirements,
       qualification: jobDetails.qualifications,
