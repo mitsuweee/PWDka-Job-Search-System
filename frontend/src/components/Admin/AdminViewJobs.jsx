@@ -421,10 +421,12 @@ const AdminViewJobs = () => {
       if (statusFilter && jobStatusTitleCase !== statusFilter) {
         return false;
       }
+      const expirationFormatted = new Date(job.expiration).toISOString().split('T')[0]; // Search-friendly format (YYYY-MM-DD)
+      const monthFormatted = new Date(job.expiration).toLocaleString('default', { month: 'long' }).toLowerCase(); // Full month name (e.g., "november")
 
-      // Combine fields for general search
-      const combinedFields =
-        `${job.position_name} ${job.company_name} ${job.level}`.toLowerCase();
+
+      // Combine fields for searching (convert to lowercase for case-insensitive search)
+      const combinedFields = `${job.position_name} ${job.company_name} ${job.level} ${expirationFormatted} ${monthFormatted}`.toLowerCase();
 
       // Check if combined fields include the search term
       return combinedFields.includes(searchTerm.toLowerCase());
