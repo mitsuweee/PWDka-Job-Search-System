@@ -428,9 +428,9 @@ const ViewJobs = () => {
       return;
     }
 
-    // Validation for maximum salary limit (up to 6 digits)
-    if (jobUpdate.maximumSalary.toString().length > 6) {
-      toast.error("Maximum Salary must not exceed ₱999,999.");
+    // Validation for maximum salary limit (up to 7 digits)
+    if (jobUpdate.maximumSalary.toString().length > 7) {
+      toast.error("Maximum Salary must not exceed ₱9,999,999.");
       return;
     }
 

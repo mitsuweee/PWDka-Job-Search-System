@@ -288,8 +288,8 @@ const PostJob = () => {
     }
 
     // Validation for maximum salary limit (up to 6 digits)
-    if (jobDetails.maxSalary.toString().length > 6) {
-      toast.error("Maximum Salary must not exceed ₱999,999.");
+    if (jobDetails.maxSalary.toString().length > 7) {
+      toast.error("Maximum Salary must not exceed ₱9,999,999.");
       return;
     }
 
@@ -376,8 +376,8 @@ const PostJob = () => {
     setJobDetails({ ...jobDetails, [name]: value });
 
     // Validate maxSalary length
-    if (name === "maxSalary" && value.length > 6) {
-      toast.error("Maximum Salary must not exceed 7 digits.");
+    if (name === "maxSalary" && value.length > 7) {
+      toast.error("Maximum Salary must not exceed 8 digits.");
     }
   };
 
