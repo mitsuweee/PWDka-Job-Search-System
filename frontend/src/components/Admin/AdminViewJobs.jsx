@@ -375,6 +375,7 @@ const AdminViewJobs = () => {
     maximumSalary: jobData.maximum_salary,
     positionType: jobData.position_type,
     disabilityTypes: jobData.disability_types,
+    expiration: jobData.expiration
   });
 
   const closeModal = () => {
@@ -711,6 +712,7 @@ const AdminViewJobs = () => {
                 <th className="py-4 px-6 font-semibold">Job Title</th>
                 <th className="py-4 px-6 font-semibold">Job Level</th>
                 <th className="py-4 px-6 font-semibold">Status</th>{" "}
+                <th className="py-4 px-6 font-semibold">Expiration</th>
                 {/* New Job Status header */}
                 <th className="py-4 px-6 text-center font-semibold">Actions</th>
               </tr>
@@ -763,6 +765,16 @@ const AdminViewJobs = () => {
                   >
                     {job.status ? job.status : "Not specified"}
                   </td>
+
+                  <td className="py-4 px-6 text-gray-800 text-sm md:text-base break-words">
+                   {new Date(job.expiration).toLocaleDateString('en-US', {
+                     
+                     year: 'numeric', // full year
+                       month: 'long',   // full month name (e.g., January)
+                      day: 'numeric'   // numeric day
+                    })}
+                  </td>
+
 
                   <td className="py-4 px-6 text-center">
                     <button
