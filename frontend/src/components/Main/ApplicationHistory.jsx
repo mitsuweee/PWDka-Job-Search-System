@@ -238,23 +238,18 @@ const ApplicationHistory = () => {
                 {applicationHistory.map((application, index) => (
                   <tr
                     key={index}
-                    className="border-b border-gray-200 hover:bg-gray-50 transition duration-300"
+                    className="border-b border-gray-200 transition duration-300 cursor-pointer hover:bg-gray-100 active:bg-gray-200"
+                    onClick={() => openJobModal(application)} // Pass the application as the selected job
                   >
                     {/* Position */}
-                    <td className="py-4 px-4 sm:px-6 text-gray-800 text-xs sm:text-sm break-words">
-                      <span
-                        className="text-blue-600 hover:underline cursor-pointer"
-                        onClick={() => openJobModal(application)} // Pass the application as the selected job
-                      >
+                    <td className="py-4 px-4 sm:px-6 text-gray-800 text-xs sm:text-sm break-words hover:scale-105 transform transition-all duration-200 ease-in-out">
                         {application?.position_name
                           .split(" ")
                           .map(
                             (word) =>
-                              word.charAt(0).toUpperCase() +
-                              word.slice(1).toLowerCase()
+                              word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
                           )
                           .join(" ")}
-                      </span>
                       {/* Mobile Additional Info */}
                       <div className="sm:hidden mt-2 text-gray-600 text-xs">
                         <div>
@@ -277,20 +272,18 @@ const ApplicationHistory = () => {
                         </div>
                         <div>
                           <strong>Date:</strong>{" "}
-                          {new Date(
-                            application.date_created
-                          ).toLocaleDateString()}
+                          {new Date(application.date_created).toLocaleDateString()}
                         </div>
                       </div>
                     </td>
 
                     {/* Company */}
-                    <td className="py-4 px-4 sm:px-6 text-gray-800 text-xs sm:text-sm break-words">
+                    <td className="py-4 px-4 sm:px-6 text-gray-800 text-xs sm:text-sm break-words hover:scale-105 transform transition-all duration-200 ease-in-out">
                       {application.company_name}
                     </td>
 
                     {/* Status (Desktop) */}
-                    <td className="py-4 px-4 sm:px-6 text-xs sm:text-sm hidden sm:table-cell">
+                    <td className="py-4 px-4 sm:px-6 text-xs sm:text-sm hidden sm:table-cell hover:scale-105 transform transition-all duration-200 ease-in-out">
                       <span
                         className={`inline-block rounded-full px-3 py-1 ${
                           application.status === "Approved"
@@ -309,12 +302,14 @@ const ApplicationHistory = () => {
                     </td>
 
                     {/* Date Applied (Desktop) */}
-                    <td className="py-4 px-4 sm:px-6 text-gray-800 text-xs sm:text-sm hidden sm:table-cell">
+                    <td className="py-4 px-4 sm:px-6 text-gray-800 text-xs sm:text-sm hidden sm:table-cell hover:scale-105 transform transition-all duration-200 ease-in-out">
                       {new Date(application.date_created).toLocaleDateString()}
                     </td>
                   </tr>
                 ))}
               </tbody>
+
+
             </table>
           </div>
         ) : (
