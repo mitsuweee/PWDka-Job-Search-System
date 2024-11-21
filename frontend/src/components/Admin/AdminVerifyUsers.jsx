@@ -338,7 +338,9 @@ const AdminVerifyUsers = () => {
     setShowModal(false);
   };
 
-  const confirmDecline = () => {
+  const confirmDecline = async () => {
+    setLoading(true); // Show loader when "Confirm Decline" is pressed
+
     const config = {
       method: "delete",
       url: `/verification/user/${selectedUser}`,
@@ -348,24 +350,21 @@ const AdminVerifyUsers = () => {
       data: { reason: declineReason }, // Include decline reason
     };
 
-    setLoading(true);
-    axios(config)
-      .then(function () {
-        toast.success("User declined successfully");
-        setUsers((prevUsers) =>
-          prevUsers.filter((user) => user.id !== selectedUser)
-        );
-        setSelectedUser(null);
-        setShowDeclineModal(false);
-        setShowModal(false);
-        setLoading(false);
-        setDeclineReason(""); // Reset decline reason
-      })
-      .catch(function (error) {
-        setLoading(false);
-        toast.error("An error occurred while declining the user");
-        console.log(error);
-      });
+    try {
+      await axios(config);
+      toast.success("User declined successfully");
+      setUsers((prevUsers) =>
+        prevUsers.filter((user) => user.id !== selectedUser)
+      );
+      setSelectedUser(null);
+      setShowDeclineModal(false);
+      setDeclineReason(""); // Reset decline reason
+    } catch (error) {
+      toast.error("An error occurred while declining the user");
+      console.error(error);
+    } finally {
+      setLoading(false); // Hide loader after the process completes
+    }
   };
 
   const handleView = (user) => {
