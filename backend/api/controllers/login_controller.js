@@ -84,15 +84,14 @@ const login = async (req, res, next) => {
 
         if (existingToken) {
           // If the existing token's expiration has passed, update the token
-          if (new Date(existingToken.token_expiration) <= new Date()) {
-            // Update the existing token if the expiration date has passed
-            await knex(tokenTable)
-              .where({ [`${user.role}_id`]: user.id })
-              .update({
-                refresh_token: refreshToken,
-                token_expiration: tokenExpiration,
-              });
-          }
+
+          // Update the existing token if the expiration date has passed
+          await knex(tokenTable)
+            .where({ [`${user.role}_id`]: user.id })
+            .update({
+              refresh_token: refreshToken,
+              token_expiration: tokenExpiration,
+            });
         } else {
           // If no existing token is found, insert a new one
           await knex(tokenTable).insert({

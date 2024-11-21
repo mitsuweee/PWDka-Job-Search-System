@@ -422,31 +422,32 @@ const verifyToken = (req, res, next) => {
                   });
                 }
 
-                // Get the current date and token expiration date
-                const currentDate = new Date(); // Get current date and time
-                const tokenExpirationDate = new Date(
-                  tokenRecord.token_expiration
-                ); // Convert token expiration to Date object
-
-                // Compare current date with the expiration date
-                if (currentDate > tokenExpirationDate) {
-                  return res.status(400).json({
-                    successful: false,
-                    message: "Invalid refresh token, token has expired",
-                  });
-                }
-
-                // Log the retrieved refresh token
-                console.log(
-                  "Retrieved refresh token:",
-                  tokenRecord.refresh_token
+                jwt.verify(
+                  tokenRecord.refresh_token,
+                  SECRET_KEY,
+                  (err, decoded) => {
+                    if (err) {
+                      if (err.name === "TokenExpiredError") {
+                        return res.status(400).json({
+                          successful: false,
+                          message: "Invalid refresh token, token has expired",
+                        });
+                      }
+                    } else {
+                      // Log the retrieved refresh token
+                      console.log(
+                        "Retrieved refresh token:",
+                        tokenRecord.refresh_token
+                      );
+                      // Return the refresh token from the table
+                      return res.status(200).json({
+                        successful: true,
+                        message: "Refresh token retrieved successfully",
+                        refresh_token: tokenRecord.refresh_token, // Return the existing refresh token
+                      });
+                    }
+                  }
                 );
-                // Return the refresh token from the table
-                return res.status(200).json({
-                  successful: true,
-                  message: "Refresh token retrieved successfully",
-                  refresh_token: tokenRecord.refresh_token, // Return the existing refresh token
-                });
               });
           } catch (err) {
             return res.status(500).json({
