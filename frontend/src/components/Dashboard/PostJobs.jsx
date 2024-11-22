@@ -675,7 +675,17 @@ const PostJob = () => {
                   type="number"
                   name="maxSalary"
                   value={jobDetails.maxSalary}
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    const value = e.target.value;
+
+                    // Prevent more than 8 digits
+                    if (value.length > 8) {
+                      toast.error("Maximum Salary must not exceed 8 digits.");
+                      return;
+                    }
+
+                    handleChange(e); // Proceed with the regular change handler
+                  }}
                   className="p-3 w-full border-2 border-blue-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                   required
                   step="1"
