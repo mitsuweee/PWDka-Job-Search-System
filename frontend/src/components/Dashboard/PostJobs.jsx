@@ -293,6 +293,11 @@ const PostJob = () => {
       return;
     }
 
+    if (jobDetails.jobDescription.length > 3500) {
+      toast.error("Job Description must not exceed 3,500 characters.");
+      return;
+    }
+
     // Proceed to confirm modal if validation passes
     setIsSubmitModalOpen(true);
   };
