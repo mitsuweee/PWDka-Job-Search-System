@@ -4,168 +4,6 @@ const { jobListingModel } = require("../models/joblisting_model");
 const util = require("./util");
 const nodemailer = require("nodemailer");
 
-// const postJobs = async (req, res, next) => {
-//   let {
-//     position_name,
-//     expiration,
-//     level,
-//     description,
-//     qualification,
-//     requirement,
-//     minimum_salary,
-//     maximum_salary,
-//     salary_visibility,
-//     positiontype_id,
-//     company_id,
-//     disability_ids,
-//   } = req.body;
-
-//   // Input validation
-//   if (
-//     !position_name ||
-//     !level ||
-//     !description ||
-//     !qualification ||
-//     !requirement ||
-//     !minimum_salary ||
-//     !maximum_salary ||
-//     !salary_visibility ||
-//     !positiontype_id ||
-//     !company_id ||
-//     !disability_ids ||
-//     disability_ids.length === 0
-//   ) {
-//     return res.status(404).json({
-//       successful: false,
-//       message: "One or more details are missing",
-//     });
-//   } else if (util.checkSpecialChar(position_name)) {
-//     return res.status(400).json({
-//       successful: false,
-//       message: "Position name must not contain special characters",
-//     });
-//   } else if (!util.checkNumbers(minimum_salary) || minimum_salary < 12900) {
-//     return res.status(400).json({
-//       successful: false,
-//       message:
-//         "Minimum Salary must only contain numbers that are greater than or equal to The Minimum wage (₱12900)",
-//     });
-//   } else if (
-//     !util.checkNumbers(maximum_salary) ||
-//     maximum_salary < minimum_salary
-//   ) {
-//     return res.status(400).json({
-//       successful: false,
-//       message:
-//         "Maximum Salary must only contain numbers that are Equal or greater than minimum Salary",
-//     });
-//   }
-//   // Parse the expiration datetime (ensure correct format)
-//   const expirationDate = new Date(expiration.replace(" ", "T")); // Convert space to 'T' for ISO format
-
-//   // Normalize expiration time to ignore seconds and milliseconds
-//   expirationDate.setSeconds(0);
-//   expirationDate.setMilliseconds(0);
-
-//   const currentDate = new Date();
-
-//   // Normalize current time to ignore seconds and milliseconds
-//   currentDate.setSeconds(0);
-//   currentDate.setMilliseconds(0);
-
-//   // Calculate the minimum allowed expiration time (current time + 1 hour)
-//   const oneHourLater = new Date(currentDate.getTime() + 60 * 60 * 1000);
-
-//   // Check if the expiration date is at least 1 hour ahead of the current time
-//   if (expirationDate < oneHourLater) {
-//     return res.status(400).json({
-//       successful: false,
-//       message: "Expiration must be at least 1 hour from the current time",
-//     });
-//   }
-
-//   try {
-//     // Check if position type exists
-//     const positionType = await knex("position_type")
-//       .select("id")
-//       .where("type", positiontype_id)
-//       .first();
-
-//     if (!positionType) {
-//       return res.status(400).json({
-//         successful: false,
-//         message: "Position Type Id is invalid",
-//       });
-//     }
-
-//     // Check if a job with the same position name and level already exists for the company
-//     const existingJob = await knex("job_listing")
-//       .select("id")
-//       .where({
-//         position_name: position_name.trim().toLowerCase(),
-//         level: level.trim().toLowerCase(),
-//         company_id,
-//       })
-//       .first();
-
-//     if (existingJob) {
-//       return res.status(400).json({
-//         successful: false,
-//         message: `There is a job listing already posted with a position name of: "${position_name}" and with the level of: "${level}".`,
-//       });
-//     }
-
-//     // Insert the job listing
-//     const [jobListingId] = await knex("job_listing")
-//       .insert({
-//         expiration: expirationDate,
-//         position_name: position_name.trim().toLowerCase(),
-//         level: level.trim().toLowerCase(),
-//         description,
-//         qualification,
-//         requirement,
-//         minimum_salary,
-//         maximum_salary,
-//         salary_visibility,
-//         positiontype_id: positionType.id,
-//         company_id,
-//       })
-//       .returning("id");
-
-//     // Insert all selected disability types
-//     for (const disability_id of disability_ids) {
-//       const disability = await knex("disability")
-//         .select("id")
-//         .where("type", disability_id)
-//         .first();
-
-//       if (!disability) {
-//         // Rollback job listing creation if disability_id is invalid
-//         await knex("job_listing").where("id", jobListingId).del();
-//         return res.status(400).json({
-//           successful: false,
-//           message: "Disability Id does not exist",
-//         });
-//       } else {
-//         await knex("disability_job_listing").insert({
-//           disability_id: disability.id,
-//           joblisting_id: jobListingId,
-//         });
-//       }
-//     }
-
-//     return res.status(200).json({
-//       successful: true,
-//       message: "Job listing posted successfully!",
-//     });
-//   } catch (err) {
-//     return res.status(500).json({
-//       successful: false,
-//       message: err.message,
-//     });
-//   }
-// };
-
 const postJobs = async (req, res, next) => {
   let {
     position_name,
@@ -684,17 +522,20 @@ const viewJobsCreatedByCompanyNewestToOldest = async (req, res, next) => {
 
 const updateJobListing = async (req, res, next) => {
   const id = req.params.id;
-  const status = req.body.status;
-  const position_name = req.body.position_name;
-  const level = req.body.level;
-  const description = req.body.description;
-  const qualification = req.body.qualification;
-  const requirement = req.body.requirement;
-  const minimum_salary = req.body.minimum_salary;
-  const maximum_salary = req.body.maximum_salary;
-  const salary_visibility = req.body.salary_visibility;
-  const positiontype_id = req.body.positiontype_id;
-  const disability_ids = req.body.disability_ids;
+  const {
+    status,
+    position_name,
+    level,
+    description,
+    qualification,
+    requirement,
+    minimum_salary,
+    maximum_salary,
+    salary_visibility,
+    positiontype_id,
+    disability_ids,
+  } = req.body;
+
   if (
     !id ||
     !status ||
@@ -736,7 +577,6 @@ const updateJobListing = async (req, res, next) => {
     });
   } else {
     try {
-      // Check if position type exists
       const positionTypeExists = await knex("position_type")
         .where("id", positiontype_id)
         .first();
@@ -747,7 +587,6 @@ const updateJobListing = async (req, res, next) => {
           message: "Position Type Id is invalid",
         });
       } else {
-        // Fetch the company ID associated with the job listing
         const jobListing = await knex("job_listing").where("id", id).first();
 
         if (!jobListing) {
@@ -759,14 +598,13 @@ const updateJobListing = async (req, res, next) => {
 
         const companyId = jobListing.company_id;
 
-        // Check for existing job listings with the same position name and level for the same company
         const duplicateJob = await knex("job_listing")
           .where({
             company_id: companyId,
             position_name: position_name,
             level: level,
           })
-          .andWhereNot({ id }) // Exclude the current job listing being updated
+          .andWhereNot({ id })
           .first();
 
         if (duplicateJob) {
@@ -777,20 +615,37 @@ const updateJobListing = async (req, res, next) => {
           });
         }
 
-        // Begin transaction
+        // Determine the expiration date
+        let updateExpiration = jobListing.expiration; // Use current expiration date
+
+        if (updateExpiration) {
+          const currentDate = new Date();
+          const expirationDate = new Date(updateExpiration);
+
+          if (expirationDate < currentDate) {
+            updateExpiration = null; // Expired, set to null
+          }
+        }
+
+        // Check if status is changing from INACTIVE to ACTIVE
+        const updateData = {
+          status,
+          position_name,
+          level,
+          description,
+          qualification,
+          requirement,
+          minimum_salary,
+          maximum_salary,
+          salary_visibility,
+          positiontype_id,
+          expiration: updateExpiration, // Update expiration date
+        };
+
         await knex.transaction(async (trx) => {
-          const result = await trx("job_listing").where("id", id).update({
-            status,
-            position_name,
-            level,
-            description,
-            qualification,
-            requirement,
-            minimum_salary,
-            maximum_salary,
-            salary_visibility,
-            positiontype_id,
-          });
+          const result = await trx("job_listing")
+            .where("id", id)
+            .update(updateData);
 
           if (result === 0) {
             return res.status(404).json({
@@ -798,12 +653,10 @@ const updateJobListing = async (req, res, next) => {
               message: "Job Listing not found",
             });
           } else {
-            // Fetch existing disabilities for the job listing
             const existingDisabilities = await trx("disability_job_listing")
               .where("joblisting_id", id)
               .pluck("disability_id");
 
-            // Fetch the IDs corresponding to the provided disability types
             const disabilities = await trx("disability")
               .select("id", "type")
               .whereIn("type", disability_ids);
@@ -819,17 +672,14 @@ const updateJobListing = async (req, res, next) => {
               });
             }
 
-            // Find new disabilities to add
             const disabilitiesToAdd = disabilityIds.filter(
               (disability_id) => !existingDisabilities.includes(disability_id)
             );
 
-            // Find disabilities to remove (optional)
             const disabilitiesToRemove = existingDisabilities.filter(
               (disability_id) => !disabilityIds.includes(disability_id)
             );
 
-            // Insert new disabilities that are not already associated with the job listing
             for (const disability_id of disabilitiesToAdd) {
               await trx("disability_job_listing").insert({
                 disability_id: disability_id,
@@ -845,6 +695,7 @@ const updateJobListing = async (req, res, next) => {
             }
           }
         });
+
         return res.status(200).json({
           successful: true,
           message: "Job Listing updated successfully",

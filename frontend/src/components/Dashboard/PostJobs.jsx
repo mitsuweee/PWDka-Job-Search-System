@@ -278,6 +278,11 @@ const PostJob = () => {
       toast.error("Minimum Salary must be at least ₱12,900.");
       return;
     }
+    // Validation for minimum salary (maximum 8 digits)
+    if (jobDetails.minSalary.toString().length > 8) {
+      toast.error("Minimum Salary must not exceed 8 digits.");
+      return;
+    }
 
     // Validation for maximum salary being greater or equal to minimum salary
     if (parseFloat(jobDetails.maxSalary) < parseFloat(jobDetails.minSalary)) {
@@ -574,7 +579,17 @@ const PostJob = () => {
               <textarea
                 name="jobDescription"
                 value={jobDetails.jobDescription}
-                onChange={handleChange}
+                onChange={(e) => {
+                  const value = e.target.value;
+
+                  // Limit to 3500 characters
+                  if (value.length > 3500) {
+                    toast.error("Job Description is too long.");
+                    return;
+                  }
+
+                  handleChange(e); // Proceed with the regular change handler
+                }}
                 className="p-3 w-full border-2 border-blue-300 rounded-lg shadow-sm h-28 focus:outline-none focus:ring-2 focus:ring-blue-400"
                 required
               />
@@ -665,7 +680,17 @@ const PostJob = () => {
                   type="number"
                   name="minSalary"
                   value={jobDetails.minSalary}
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    const value = e.target.value;
+
+                    // Prevent more than 8 digits
+                    if (value.length > 8) {
+                      toast.error("Minimum Salary must not exceed 8 digits.");
+                      return;
+                    }
+
+                    handleChange(e); // Proceed with the regular change handler
+                  }}
                   className="p-3 w-full border-2 border-blue-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                   required
                   step="1"
