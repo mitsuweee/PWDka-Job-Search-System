@@ -347,9 +347,16 @@ const ViewJobs = () => {
           return false;
         }
 
+        const expirationFormatted = new Date(job.expiration)
+          .toISOString()
+          .split("T")[0]; // Search-friendly format (YYYY-MM-DD)
+        const monthFormatted = new Date(job.expiration)
+          .toLocaleString("default", { month: "long" })
+          .toLowerCase(); // Full month name (e.g., "november")
+
         // Combine fields for general search
         const combinedFields =
-          `${job.position_name} ${job.position_type} ${job.level}`.toLowerCase();
+          `${job.position_name} ${job.position_type} ${job.level} ${expirationFormatted} ${monthFormatted}`.toLowerCase();
         return combinedFields.includes(searchValue.toLowerCase());
       })
       .sort((a, b) => {
