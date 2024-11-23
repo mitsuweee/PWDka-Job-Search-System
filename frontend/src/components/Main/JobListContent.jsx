@@ -1045,7 +1045,11 @@ const JobListing = () => {
         </div>
 
         {/* Job Details on Desktop */}
-        <div className={`lg:w-1/2 p-4 hidden lg:block relative`}>
+        {/* Job Details on Desktop */}
+        <div
+          className={`lg:w-1/2 p-4 hidden lg:block relative`}
+          style={{ overflowY: "auto", maxHeight: "90vh" }} // Add scroll bar for overflow
+        >
           {selectedJobId && isDetailsVisible ? (
             <div>
               {/* Job Details and Learn More content for desktop */}
@@ -1177,6 +1181,7 @@ const JobListing = () => {
                   </button>
                 </div>
 
+                {/* Company Overview */}
                 {isMoreInfoVisible && (
                   <div className="mt-6 p-8 bg-white rounded-lg shadow-2xl">
                     <div className="flex justify-between items-center mb-6">
