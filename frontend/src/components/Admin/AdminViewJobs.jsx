@@ -375,7 +375,7 @@ const AdminViewJobs = () => {
     maximumSalary: jobData.maximum_salary,
     positionType: jobData.position_type,
     disabilityTypes: jobData.disability_types,
-    expiration: jobData.expiration
+    expiration: jobData.expiration,
   });
 
   const closeModal = () => {
@@ -421,12 +421,16 @@ const AdminViewJobs = () => {
       if (statusFilter && jobStatusTitleCase !== statusFilter) {
         return false;
       }
-      const expirationFormatted = new Date(job.expiration).toISOString().split('T')[0]; // Search-friendly format (YYYY-MM-DD)
-      const monthFormatted = new Date(job.expiration).toLocaleString('default', { month: 'long' }).toLowerCase(); // Full month name (e.g., "november")
-
+      const expirationFormatted = new Date(job.expiration)
+        .toISOString()
+        .split("T")[0]; // Search-friendly format (YYYY-MM-DD)
+      const monthFormatted = new Date(job.expiration)
+        .toLocaleString("default", { month: "long" })
+        .toLowerCase(); // Full month name (e.g., "november")
 
       // Combine fields for searching (convert to lowercase for case-insensitive search)
-      const combinedFields = `${job.position_name} ${job.company_name} ${job.level} ${expirationFormatted} ${monthFormatted}`.toLowerCase();
+      const combinedFields =
+        `${job.position_name} ${job.company_name} ${job.level} ${expirationFormatted} ${monthFormatted}`.toLowerCase();
 
       // Check if combined fields include the search term
       return combinedFields.includes(searchTerm.toLowerCase());
@@ -769,14 +773,15 @@ const AdminViewJobs = () => {
                   </td>
 
                   <td className="py-4 px-6 text-gray-800 text-sm md:text-base break-words">
-                   {new Date(job.expiration).toLocaleDateString('en-US', {
-                     
-                     year: 'numeric', // full year
-                       month: 'long',   // full month name (e.g., January)
-                      day: 'numeric'   // numeric day
-                    })}
+                    {job.expiration === null ||
+                    job.expiration === "1970-01-01T00:00:00.000Z"
+                      ? "No Expiration"
+                      : new Date(job.expiration).toLocaleDateString("en-US", {
+                          year: "numeric", // Full year
+                          month: "long", // Full month name (e.g., January)
+                          day: "numeric", // Numeric day
+                        })}
                   </td>
-
 
                   <td className="py-4 px-6 text-center">
                     <button
