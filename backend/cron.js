@@ -1,8 +1,7 @@
 const cron = require("node-cron");
 const knex = require("./api/models/connection_db");
 
-// Schedule a cron job to run every minute
-cron.schedule("*/10 * * * * *", async () => {
+cron.schedule("0 0 * * *", async () => {
   try {
     console.log("Running job expiration check...");
 
