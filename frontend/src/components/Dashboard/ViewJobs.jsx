@@ -494,6 +494,10 @@ const ViewJobs = () => {
       });
   };
 
+  const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
+  const [selectedJobForConfirmation, setSelectedJobForConfirmation] =
+    useState(null);
+
   const handleUpdateExpiration = async (jobId, expiration) => {
     try {
       // Format expiration date to ISO string
@@ -511,23 +515,12 @@ const ViewJobs = () => {
 
       toast.success("Expiration date updated successfully!");
 
-      // Update jobListings state with new expiration and ACTIVE status
-      setJobListings((prevListings) =>
-        prevListings.map((job) =>
-          job.id === jobId
-            ? { ...job, expiration: formattedExpiration, status: "ACTIVE" }
-            : job
-        )
-      );
-
-      // Update filteredJobListings state similarly
-      setFilteredJobListings((prevListings) =>
-        prevListings.map((job) =>
-          job.id === jobId
-            ? { ...job, expiration: formattedExpiration, status: "ACTIVE" }
-            : job
-        )
-      );
+      // Open the confirmation modal after expiration update is successful
+      setSelectedJobForConfirmation({
+        id: jobId,
+        expiration: formattedExpiration,
+      });
+      setIsConfirmationModalOpen(true); // Open confirmation modal
     } catch (error) {
       console.error("Error updating expiration:", error);
 
@@ -536,6 +529,46 @@ const ViewJobs = () => {
         error.response?.data?.message || "Failed to update expiration date.";
       toast.error(errorMessage);
     }
+  };
+
+  const handleConfirmExpirationUpdate = () => {
+    if (selectedJobForConfirmation) {
+      // Update jobListings state with new expiration and ACTIVE status
+      setJobListings((prevListings) =>
+        prevListings.map((job) =>
+          job.id === selectedJobForConfirmation.id
+            ? {
+                ...job,
+                expiration: selectedJobForConfirmation.expiration,
+                status: "ACTIVE",
+              }
+            : job
+        )
+      );
+
+      // Update filteredJobListings state similarly
+      setFilteredJobListings((prevListings) =>
+        prevListings.map((job) =>
+          job.id === selectedJobForConfirmation.id
+            ? {
+                ...job,
+                expiration: selectedJobForConfirmation.expiration,
+                status: "ACTIVE",
+              }
+            : job
+        )
+      );
+
+      // Close the confirmation modal after confirmation
+      setIsConfirmationModalOpen(false);
+      setSelectedJobForConfirmation(null); // Reset selected job
+    }
+  };
+
+  // Cancel function to close the modal without making updates
+  const handleCancelConfirmation = () => {
+    setIsConfirmationModalOpen(false);
+    setSelectedJobForConfirmation(null); // Reset selected job
   };
 
   const handleCheckboxChange = (e) => {
@@ -945,7 +978,7 @@ const ViewJobs = () => {
                                   new Date().getTimezoneOffset() * 60000
                               )
                                 .toISOString()
-                                .slice(0, 16) // Adjust for local time zone
+                                .slice(0, 16)
                             : "" // Handle empty expiration
                         }
                         onChange={(e) => {
@@ -1639,6 +1672,40 @@ const ViewJobs = () => {
                   </button>
                 </div>
               </form>
+            </div>
+          </div>
+        </div>
+      )}
+      {isConfirmationModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+            <h3 className="text-lg font-semibold mb-4">
+              Confirm Expiration Update
+            </h3>
+            <p>
+              Are you sure you want to set the expiration date for this job?
+              <br />
+              <br />
+              <strong>
+                New Expiration:{" "}
+                {new Date(
+                  selectedJobForConfirmation?.expiration
+                ).toLocaleString()}
+              </strong>
+            </p>
+            <div className="mt-4 flex justify-end space-x-4">
+              <button
+                onClick={handleCancelConfirmation} // Cancel action
+                className="py-2 px-4 bg-gray-300 text-black rounded-lg"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirmExpirationUpdate} // Confirm action
+                className="py-2 px-4 bg-blue-500 text-white rounded-lg"
+              >
+                Confirm
+              </button>
             </div>
           </div>
         </div>

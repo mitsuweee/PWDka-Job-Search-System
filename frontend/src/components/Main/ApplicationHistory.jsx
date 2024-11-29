@@ -232,6 +232,9 @@ const ApplicationHistory = () => {
                   <th className="py-4 px-4 sm:px-6 font-semibold hidden sm:table-cell">
                     Date Applied
                   </th>
+                  <th className="py-4 px-4 sm:px-6 font-semibold hidden sm:table-cell">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -243,13 +246,14 @@ const ApplicationHistory = () => {
                   >
                     {/* Position */}
                     <td className="py-4 px-4 sm:px-6 text-gray-800 text-xs sm:text-sm break-words hover:scale-105 transform transition-all duration-200 ease-in-out">
-                        {application?.position_name
-                          .split(" ")
-                          .map(
-                            (word) =>
-                              word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-                          )
-                          .join(" ")}
+                      {application?.position_name
+                        .split(" ")
+                        .map(
+                          (word) =>
+                            word.charAt(0).toUpperCase() +
+                            word.slice(1).toLowerCase()
+                        )
+                        .join(" ")}
                       {/* Mobile Additional Info */}
                       <div className="sm:hidden mt-2 text-gray-600 text-xs">
                         <div>
@@ -272,7 +276,9 @@ const ApplicationHistory = () => {
                         </div>
                         <div>
                           <strong>Date:</strong>{" "}
-                          {new Date(application.date_created).toLocaleDateString()}
+                          {new Date(
+                            application.date_created
+                          ).toLocaleDateString()}
                         </div>
                       </div>
                     </td>
@@ -303,13 +309,18 @@ const ApplicationHistory = () => {
 
                     {/* Date Applied (Desktop) */}
                     <td className="py-4 px-4 sm:px-6 text-gray-800 text-xs sm:text-sm hidden sm:table-cell hover:scale-105 transform transition-all duration-200 ease-in-out">
-                      {new Date(application.date_created).toLocaleDateString()}
+                      {new Date(application.date_created).toLocaleDateString(
+                        "en-US",
+                        {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        }
+                      )}
                     </td>
                   </tr>
                 ))}
               </tbody>
-
-
             </table>
           </div>
         ) : (
