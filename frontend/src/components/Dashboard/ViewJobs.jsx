@@ -505,12 +505,6 @@ const ViewJobs = () => {
         ? new Date(expiration).toISOString()
         : null;
 
-      // Only close the calendar if a date has been selected, and the modal is confirmed
-      if (formattedExpiration) {
-        // Blur the active element (close calendar) only if a valid date is selected
-        document.activeElement.blur();
-      }
-
       // Send the request to update expiration
       const response = await axios.put(
         `/joblisting/update/joblisting/expiration/${jobId}`,
