@@ -128,7 +128,7 @@ const verifyCompany = async (req, res, next) => {
       from: process.env.EMAIL_USER,
       to: company.email,
       subject: "ACCOUNT VERIFIED!",
-      text: `Dear User,\n\nCongratulations! Your company has been successfully verified. You can now access our platform.\n\nBest regards,\nPWDKA TEAM`,
+      text: `Dear User,\n\nCongratulations! Your company has been successfully verified. You can now access our platform.\n\nIf you have any inquiries, feel free to email us at pwdkateam@gmail.com.\n\nBest regards,\nPWDKA TEAM`,
     };
 
     await transporter.sendMail(mailOptions);
@@ -198,6 +198,9 @@ Your request to verify your company has been declined for the following reason:
 
 Please ensure the company is legitimate and all data entered is correct. You can request verification again by re-registering.
 
+If you have any inquiries, feel free to email us at pwdkateam@gmail.com.
+
+
 Sincerely Yours,
 PWDKA TEAM`,
     };
@@ -259,7 +262,7 @@ const verifyUser = async (req, res, next) => {
       from: process.env.EMAIL_USER,
       to: user.email,
       subject: "ACCOUNT VERIFIED!",
-      text: `Dear User,\n\nCongratulations! Your account has been successfully verified. You can now access our platform.\n\nBest regards,\nPWDKA TEAM`,
+      text: `Dear User,\n\nCongratulations! Your account has been successfully verified. You can now access our platform.\n\nIf you have any inquiries, feel free to email us at pwdkateam@gmail.com.\n\nBest regards,\nPWDKA TEAM`,
     };
 
     await transporter.sendMail(mailOptions);
@@ -328,6 +331,8 @@ Your request to verify your account has been declined for the following reason:
 "${reason}"
 
 Please ensure that all data entered is correct. You can request verification again by re-registering.
+
+If you have any inquiries, feel free to email us at pwdkateam@gmail.com.
 
 Sincerely Yours,
 PWDKA TEAM`,

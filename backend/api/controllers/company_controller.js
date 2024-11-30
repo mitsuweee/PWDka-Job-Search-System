@@ -135,6 +135,8 @@ Here are the details you provided:
 - Contact Number: ${contact_number}
 - Email: ${email}
 
+If you have any inquiries, feel free to email us at pwdkateam@gmail.com.
+
 Best regards,
 PWDKA TEAM`,
         };

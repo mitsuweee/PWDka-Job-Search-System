@@ -226,6 +226,9 @@ const registerUser = async (req, res, next) => {
                     - Contact Number: ${contact_number}
                     - Disability: ${disability.type}
 
+                    If you have any inquiries, feel free to email us at pwdkateam@gmail.com.
+
+                    
                     Best regards,
                     PWDKA Team
                 `,

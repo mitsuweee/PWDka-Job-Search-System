@@ -519,10 +519,6 @@ const updateJobApplicationStatus = async (req, res, next) => {
         subject: "Job Application Status Update",
         text: `Dear Applicant,\n\nWe regret to inform you that your application for the position of "${updatedApplication.position_name}" at "${updatedApplication.company_name}" has been rejected.\n\nReason: ${rejectionReason}\n\nBest Regards,\n${updatedApplication.company_name} HR Team`,
       });
-
-      console.log(
-        `Rejection email sent to ${updatedApplication.email} for position "${updatedApplication.position_name}" at "${updatedApplication.company_name}"`
-      );
     }
 
     return res.status(200).json({
