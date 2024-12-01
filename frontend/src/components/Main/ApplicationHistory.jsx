@@ -263,7 +263,7 @@ const ApplicationHistory = () => {
           </div>
         ) : applicationHistory.length > 0 ? (
           <div className="w-full overflow-x-auto">
-            <table className="table-auto w-full bg-white mt-4 rounded-xl shadow-lg overflow-hidden">
+            <table className="table-auto w-full bg-white mt-4 rounded-lg shadow-xl overflow-hidden">
               <thead>
                 <tr className="bg-blue-600 text-white text-left text-xs sm:text-sm uppercase tracking-wider">
                   <th className="py-4 px-4 sm:px-6 font-semibold">Position</th>
@@ -283,8 +283,7 @@ const ApplicationHistory = () => {
                 {applicationHistory.map((application, index) => (
                   <tr
                     key={index}
-                    className="border-b border-gray-200 transition duration-300 cursor-pointer hover:bg-gray-100 active:bg-gray-200"
-                    onClick={() => openJobModal(application)} // Pass the application as the selected job
+                    className="border-b border-gray-200 transition duration-300 hover:bg-gray-50 active:bg-gray-100"
                   >
                     {/* Position */}
                     <td className="py-4 px-4 sm:px-6 text-gray-800 text-xs sm:text-sm break-words hover:scale-105 transform transition-all duration-200 ease-in-out">
@@ -361,17 +360,31 @@ const ApplicationHistory = () => {
                       )}
                     </td>
 
-                    <td className="py-4 px-4 sm:px-6">
+                    {/* Actions */}
+                    <td className="py-4 px-4 sm:px-6 flex items-center justify-start space-x-4">
+                      {/* View Job Info Button with Larger Icon Only */}
+                      <button
+                        onClick={() => openJobModal(application)} // Pass the application as the selected job
+                        className="flex items-center justify-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-200"
+                      >
+                        <span className="material-symbols-outlined text-3xl">
+                          visibility
+                        </span>
+                      </button>
+
+                      {/* Play/Stop Voice Button with Larger Icon Only */}
                       {userDisabilityType !== "Deaf or Hard of Hearing" && (
                         <button
                           onClick={() => toggleVoice(application)}
-                          className={`px-4 py-2 rounded-lg ${
+                          className={`flex items-center justify-center px-4 py-2 rounded-lg ${
                             isSpeaking
                               ? "bg-red-500 text-white"
                               : "bg-green-500 text-white"
                           }`}
                         >
-                          {isSpeaking ? "Stop" : "Play"}
+                          <span className="material-symbols-outlined text-3xl">
+                            {isSpeaking ? "stop" : "record_voice_over"}
+                          </span>
                         </button>
                       )}
                     </td>
@@ -414,6 +427,7 @@ const ApplicationHistory = () => {
                 className="mt-4 space-y-4 overflow-y-auto"
                 style={{ maxHeight: "70vh" }} // Adjust height as needed
               >
+                {/* Job Details Modal Content */}
                 <div className="bg-gray-100 p-4 rounded-lg shadow-inner">
                   <p className="text-black font-semibold flex items-center">
                     <span className="material-symbols-outlined mr-1">
@@ -443,14 +457,9 @@ const ApplicationHistory = () => {
                     </span>{" "}
                     Job Description:
                   </p>
-                  {selectedJob?.description
-                    .split(" ")
-                    .map(
-                      (word) =>
-                        word.charAt(0).toUpperCase() +
-                        word.slice(1).toLowerCase()
-                    )
-                    .join(" ")}
+                  <p className="text-gray-600 mt-2">
+                    {selectedJob.description}
+                  </p>
                 </div>
 
                 <div className="bg-gray-100 p-4 rounded-lg shadow-inner">
@@ -465,10 +474,7 @@ const ApplicationHistory = () => {
                       selectedJob.qualification
                         .split("\n")
                         .map((part, index) => (
-                          <li key={index}>
-                            {part.trim().charAt(0).toUpperCase() +
-                              part.trim().slice(1).toLowerCase()}
-                          </li>
+                          <li key={index}>{part.trim()}</li>
                         ))}
                   </ul>
                 </div>
@@ -485,10 +491,7 @@ const ApplicationHistory = () => {
                       selectedJob.requirement
                         .split("\n")
                         .map((part, index) => (
-                          <li key={index}>
-                            {part.trim().charAt(0).toUpperCase() +
-                              part.trim().slice(1).toLowerCase()}
-                          </li>
+                          <li key={index}>{part.trim()}</li>
                         ))}
                   </ul>
                 </div>
