@@ -326,7 +326,13 @@ const ApplicationHistory = () => {
 
                     {/* Company */}
                     <td className="py-4 px-4 sm:px-6 text-gray-800 text-xs sm:text-sm break-words hover:scale-105 transform transition-all duration-200 ease-in-out">
-                      {application.company_name}
+                      {application.company_name
+                        .toLowerCase()
+                        .split(" ")
+                        .map(
+                          (word) => word.charAt(0).toUpperCase() + word.slice(1)
+                        )
+                        .join(" ")}
                     </td>
 
                     {/* Status (Desktop) */}
