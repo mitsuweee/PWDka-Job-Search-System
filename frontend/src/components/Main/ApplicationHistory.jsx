@@ -189,6 +189,48 @@ const ApplicationHistory = () => {
     return () => clearInterval(interval);
   }, []);
 
+  const [userDisabilityType, setUserDisabilityType] = useState(null);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      const userId = localStorage.getItem("Id");
+      try {
+        const response = await axios.get(`/user/view/${userId}`);
+        setUserDisabilityType(response.data.data.type); // Update with the correct field
+      } catch (error) {
+        console.error("Failed to fetch user details", error);
+      }
+    };
+
+    fetchUserDetails();
+  }, []);
+
+  const toggleVoice = (application) => {
+    if (!application || userDisabilityType === "Deaf or Hard of Hearing")
+      return;
+
+    const { position_name, company_name, status, date_created } = application;
+    const readableDate = new Date(date_created).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+
+    const textToRead = `Position: ${position_name}. Company: ${company_name}. Status: ${status}. Date Applied: ${readableDate}.`;
+
+    if (isSpeaking) {
+      speechSynthesis.cancel();
+      setIsSpeaking(false);
+    } else {
+      const utterance = new SpeechSynthesisUtterance(textToRead);
+      utterance.lang = "en-US";
+      utterance.onend = () => setIsSpeaking(false);
+      speechSynthesis.speak(utterance);
+      setIsSpeaking(true);
+    }
+  };
+
   return (
     <div
       className="p-6 min-h-screen bg-cover bg-center"
@@ -316,6 +358,21 @@ const ApplicationHistory = () => {
                           month: "long",
                           day: "numeric",
                         }
+                      )}
+                    </td>
+
+                    <td className="py-4 px-4 sm:px-6">
+                      {userDisabilityType !== "Deaf or Hard of Hearing" && (
+                        <button
+                          onClick={() => toggleVoice(application)}
+                          className={`px-4 py-2 rounded-lg ${
+                            isSpeaking
+                              ? "bg-red-500 text-white"
+                              : "bg-green-500 text-white"
+                          }`}
+                        >
+                          {isSpeaking ? "Stop" : "Play"}
+                        </button>
                       )}
                     </td>
                   </tr>
